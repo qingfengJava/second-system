@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"> <!-- 设置HTML页面的字符集  utf-8-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- 使用IE最新的渲染模式展示页面-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>用户登录</title>
+
+    <!-- 以下三个都是BootStrap依赖的样式和脚本 -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/jquery-1.11.3.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+
+    <script>
+        /* 表单校验 */
+        //非空校验
+        function checkNotNull(nid) {
+            //1、获取用户名表单输入元素对象
+            let nodex = document.getElementById(nid);
+            //获取对应的错误信息回显	label元素
+            let msg = document.getElementById("msg");
+            //获取对应的Div
+            let div = document.getElementById(nid + "Div");
+            //2、给对应的值进行非空判断。
+            let reg = /^\s*$/; //如果有0~多个空白符，就为true。
+            if (reg.test(nodex.value)) {
+                //信息不合格
+                div.className += " has-error";
+                if (nid == "username"){
+                    msg.innerHTML = "账号不能为空！";
+                    return false;
+                }
+                if (nid == "password"){
+                    msg.innerHTML = "密码不能为空！";
+                    return false;
+                }
+                if(nid == "code"){
+                    msg.innerHTML = "验证码不能为空！";
+                    return false;
+                }
+            } else {
+                //信息合格
+                div.className = "form-group";
+                msg.innerHTML = "";
+                return true;
+            }
+        }
+
+
+        //表单校验方法
+        function checkForm() {
+            //用户名
+            let flag1 = checkNotNull("username");
+            if (flag1){
+                //密码
+                let flag2 = checkNotNull("password");
+                if (flag2){
+                    //验证码
+                    let flag3 = checkNotNull("code");
+                    return flag3;
+                }else {
+                    return flag2;
+                }
+            }else {
+                return flag1;
+            }
+        }
+    </script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row" style="background: rgba(0, 0, 0, .5);" >
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 "  >
+            <img th:src="@{/img/logo.png}" alt="学院logo" style="width: 800px" >
+        </div>
+    </div>
+    <div class="row row-mid">
+        <div class="div-body col-lg-4 col-md-4 col-sm-4 col-xs-4 col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4" >
+            <div class="div-logo"><img class="div-img" th:src="@{/img/学生系统.png}"><span class="div-font">第二课堂管理系统</span></div>
+            <diV id="div-msg" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <span id="msg" th:if="${session.msg != null}" th:text="${session.msg}"></span>
+            </div>
+            <!-- 表单部分 -->`
+            <form th:action="@{/userLogin/login}" class="form-horizontal" method="post" onsubmit="return checkForm()">
+                <div id="usernameDiv" class="form-group">
+                    <label class="col-xs-2 col-xs-offset-1 control-label" for="username">账&nbsp;&nbsp;&nbsp;&nbsp;号:</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="默认为学号...">
+                    </div>
+                </div>
+                <div id="passwordDiv" class="form-group">
+                    <label class="col-xs-2  col-xs-offset-1 control-label" for="password">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
+                    <div class="col-xs-8">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="默认为身份证后八位...">
+                    </div>
+                </div>
+
+                <div id="codeDiv" class="form-group">
+                    <label class="col-xs-2 col-xs-offset-1 control-label" for="code">验证码:</label>
+                    <div class="col-xs-3">
+                        <input type="text" class="form-control" id="code" name="code" style="width: 120px" placeholder="验证码..." >
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <img id="img_code" th:src="@{/userLogin/generateImageCode}" />
+                    </div>
+                    <div class="col-xs-3 yan-img">
+                        <a class="a-img" href="javascript:;" onclick="changeImageCode()">换一张</a>
+                        <script>
+                            function changeImageCode(){
+                                document.getElementById("img_code").src = '[[@{/userLogin/generateImageCode}]]?'+(new Date()).getTime();
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-4  col-xs-offset-1 control-label" for="password">
+                        <input class="check-left" type="checkbox"/><span class="check-font">自动登录</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                        <input type="submit" class="sub btn btn-danger btn-lg" value="登&nbsp;&nbsp;&nbsp;&nbsp;录"/>
+                        <input type="reset" class="btn btn-default btn-lg" value="重&nbsp;&nbsp;&nbsp;&nbsp;置" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- footer部分 -->
+    <div class="div-footer row">
+        <div class="col-xs-12 text-center footer">
+            Copyriht &copy; 2021-2022 攀枝花学院 Web应用开发专业团队 版权所有
+        </div>
+    </div>
+</div>
+</body>
+</html>

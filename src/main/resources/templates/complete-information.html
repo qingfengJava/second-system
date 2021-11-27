@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
+
+<head>
+
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <title>完善信息</title>
+    <meta name="description" content="AdminLTE2定制版">
+    <meta name="keywords" content="AdminLTE2定制版">
+
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/ionicons/css/ionicons.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/iCheck/square/blue.css}">
+    <link rel="stylesheet" th:href="@{/plugins/morris/morris.css}">
+    <link rel="stylesheet" th:href="@{/plugins/jvectormap/jquery-jvectormap-1.2.2.css}">
+    <link rel="stylesheet" th:href="@{/plugins/datepicker/datepicker3.css}">
+    <link rel="stylesheet" th:href="@{/plugins/daterangepicker/daterangepicker.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/datatables/dataTables.bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/plugins/treeTable/jquery.treetable.css}">
+    <link rel="stylesheet" th:href="@{/plugins/treeTable/jquery.treetable.theme.default.css}">
+    <link rel="stylesheet" th:href="@{/plugins/select2/select2.css}">
+    <link rel="stylesheet" th:href="@{/plugins/colorpicker/bootstrap-colorpicker.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/adminLTE/css/AdminLTE.css}">
+    <link rel="stylesheet" th:href="@{/plugins/adminLTE/css/skins/_all-skins.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/plugins/ionslider/ion.rangeSlider.css}">
+    <link rel="stylesheet" th:href="@{/plugins/ionslider/ion.rangeSlider.skinNice.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-slider/slider.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css}">
+</head>
+
+<body class="hold-transition skin-purple sidebar-mini">
+
+<div class="wrapper" style="background-color: #0d2e79">
+
+    <!-- 页面头部 -->
+    <header class="main-header">
+        <div class="row" style="background-color: #0d2e79">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">
+                <img th:src="@{/img/logo_up.png}" alt="数计学院logo" style="width: 300px">
+                <span style="font-size:30px;color: white;font-family: 华文新魏;">数计学院第二课堂管理系统</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"
+                 style="text-align: right;margin-top: 20px;padding-right: 20px">
+                <div>
+                    <span style="font-size:15px;color: white;">欢迎同学：</span>
+                    <div width="40px" style="display: inline-block;border-radius: 20px;">
+                        <img th:src="@{/img/默认头像.png}" alt="默认头像"
+                             style="width: 40px;height:40px;border-radius: 20px"/>
+                    </div>
+                    <span style="font-size:15px;color: white;" th:if="${session.user.realName != null}" th:text="${session.user.realName}">无姓名</span>&nbsp;&nbsp;
+                    <span style="font-size:15px;color: white;" th:text="${session.user.username}">无账号</span>
+                </div>
+                <div>
+                    <span style="font-size:15px;color: white;" th:text="${session.day}"></span>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- 页面头部 /-->
+
+    <!-- 导航侧栏 -->
+    <aside class="main-sidebar" style="margin-top: 40px;background-color: #0d2e79">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+
+                <li id="admin-index">
+                    <a th:href="@{/userLogin/index}">
+                        <i class="fa fa-dashboard"></i>
+                        <span style="font-size:15px;color: white;">首页</span>
+                    </a>
+                </li>
+
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-folder"></i>
+                        <span style="font-size:15px;color: white;">信息管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li id="admin-dataform">
+                            <a href="data-form.html">
+                                <i class="fa fa-circle-o"></i> 基本信息
+                            </a>
+                        </li>
+
+                        <li id="admin-complete">
+                            <a th:href="@{/user/goToComInfo}">
+                                <i class="fa fa-circle-o"></i> 完善信息
+                            </a>
+                        </li>
+
+                        <li id="personal-center">
+                            <a href="personal-center.html">
+                                <i class="fa fa-circle-o"></i> 个人中心
+                            </a>
+                        </li>
+
+                        <li id="change-password">
+                            <a th:href="@{/user/changePwd}">
+                                <i class="fa fa-circle-o"></i> 修改密码
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-laptop"></i>
+                        <span style="font-size:15px;color: white;">活动管理</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li id="class-instruction">
+                            <a href="class-instruction.html">
+                                <i class="fa fa-circle-o"></i> 课堂说明
+                            </a>
+                        </li>
+
+                        <li id="activity-registration">
+                            <a href="activity-registration.html">
+                                <i class="fa fa-circle-o"></i> 活动报名
+                            </a>
+                        </li>
+
+                        <li id="elements-icons">
+                            <a href="all-elements-icons.html">
+                                <i class="fa fa-circle-o"></i> 参与详情
+                            </a>
+                        </li>
+
+                        <li id="elements-buttons">
+                            <a href="all-elements-buttons.html">
+                                <i class="fa fa-circle-o"></i> 活动申请
+                            </a>
+                        </li>
+
+                        <li id="elements-sliders">
+                            <a href="all-elements-sliders.html">
+                                <i class="fa fa-circle-o"></i> 详情查看
+                            </a>
+                        </li>
+
+                        <li id="elements-modals">
+                            <a href="all-elements-modals.html">
+                                <i class="fa fa-circle-o"></i> 活动加分
+                            </a>
+                        </li>
+
+                        <li id="elements-widgets">
+                            <a href="all-elements-widgets.html">
+                                <i class="fa fa-circle-o"></i> 组织介绍
+                            </a>
+                        </li>
+
+                        <li id="elements-shenghe">
+                            <a href="all-elements-widgets.html">
+                                <i class="fa fa-circle-o"></i> 活动审核
+                            </a>
+                        </li>
+
+                        <li id="elements-gonggao">
+                            <a href="all-elements-widgets.html">
+                                <i class="fa fa-circle-o"></i> 活动公告
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-edit"></i>
+                        <span style="font-size:15px;color: white;">学生管理</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li id="form-general">
+                            <a href="all-form-general.html">
+                                <i class="fa fa-circle-o"></i> 基础表单元素
+                            </a>
+                        </li>
+
+                        <li id="form-advanced">
+                            <a href="all-form-advanced.html">
+                                <i class="fa fa-circle-o"></i> 高级表单元素
+                            </a>
+                        </li>
+
+                        <li id="form-editors">
+                            <a href="all-form-editors.html">
+                                <i class="fa fa-circle-o"></i> 编辑器
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-table"></i>
+                        <span style="font-size:15px;color: white;">成绩单管理</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                    </a>
+                    <ul class="treeview-menu">
+
+                        <li id="tables-simple">
+                            <a href="all-tables-simple.html">
+                                <i class="fa fa-circle-o"></i> 简单表格
+                            </a>
+                        </li>
+
+                        <li id="tables-data">
+                            <a href="all-tables-data.html">
+                                <i class="fa fa-circle-o"></i> 数据表格
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <!-- 菜单 /-->
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+    <!-- 导航侧栏 /-->
+
+
+    <!-- 内容区域 -->
+    <div class="content-wrapper">
+
+        <!-- 内容头部 -->
+        <section class="content-header">
+            <h1>
+                信息管理
+                <small>完善信息</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/userLogin/index}"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a href="#">信息管理</a></li>
+                <li class="active">完善信息</li>
+            </ol>
+        </section>
+        <!-- 内容头部 /-->
+
+        <!-- 正文区域 -->
+        <section class="content">
+
+            <div class="box-body">
+
+                <!--tab页-->
+                <div class="nav-tabs-custom">
+                    <div class="container">
+                        <a th:href="@{/userLogin/index}" style="font-size: 20px;"><strong>返回首页></strong></a>
+                        <div class="row" style="margin-top: 5%;margin-bottom: 10%;">
+                            <div class="col-xs-10 col-xs-offset-1">
+                                <div class="col-xs-12" style="border: 5px solid gainsboro;background-color: white;">
+                                    <div class="row text-center" style="font-size: 30px;">完善信息</div>
+                                    <!-- 表单部分 -->
+                                    <form action="" id="form" class="form-horizontal" style="margin-top: 30px">
+                                        <div id="realNameDiv" class="form-group">
+                                            <label for="realName" class="col-xs-2  col-xs-offset-1 control-label">真实姓名:</label>
+                                            <div class="col-xs-7">
+                                                <input type="text" th:if="${session.user.realName != null}" th:value="${session.user.realName}"  class="form-control" id="realName" name="realName" placeholder="请输入真实姓名">
+                                            </div>
+                                        </div>
+                                        <div id="nickNameDiv" class="form-group">
+                                            <label for="nickName" class="col-xs-2  col-xs-offset-1 control-label">昵称:</label>
+                                            <div class="col-xs-7">
+                                                <input type="text" th:if="${session.user.nickName != null}" th:value="${session.user.nickName}" class="form-control" id="nickName" name="nickName" placeholder="请输入昵称">
+                                            </div>
+                                        </div>
+                                        <div id="telPhoneDiv" class="form-group">
+                                            <label for="telPhone" class="col-xs-2  col-xs-offset-1 control-label">电话号码:</label>
+                                            <div class="col-xs-7">
+                                                <input type="text" th:if="${session.user.telPhone != null}" th:value="${session.user.telPhone}" class="form-control" id="telPhone" name="telPhone" placeholder="请输入电话号码">
+                                            </div>
+                                        </div>
+                                        <div id="qqDiv" class="form-group">
+                                            <label for="qq" class="col-xs-2  col-xs-offset-1 control-label">QQ号:</label>
+                                            <div class="col-xs-7">
+                                                <input type="text" th:if="${session.user.qq != null}" th:value="${session.user.qq}"  class="form-control" id="qq" name="qq" placeholder="请输入QQ号">
+                                            </div>
+                                        </div>
+                                        <div id="emailDiv" class="form-group">
+                                            <label for="email" class="col-xs-2  col-xs-offset-1 control-label">Email邮箱:</label>
+                                            <div class="col-xs-7">
+                                                <input type="text" th:if="${session.user.email != null}" th:value="${session.user.email}" class="form-control" id="email" name="email" placeholder="请输入电子邮箱">
+                                            </div>
+                                        </div>
+                                        <div id="photoDiv" class="form-group">
+                                            <label for="photo" class="col-xs-2  col-xs-offset-1 control-label" style="margin-top: 80px">选择头像:</label>
+                                            <div class="col-xs-3">
+                                                <div style="width: 200px; height: 200px;text-align: center;" >
+                                                    <img th:if="${session.user.photo != null}" th:src="@{/img/默认头像.png}" style="width: 170px;vertical-align: middle;">
+                                                </div>
+                                                <input type="file" id="photo" name="photo">
+                                            </div>
+                                        </div>
+                                        <div id="hobyDesDiv" class="form-group">
+                                            <label for="hobyDes" class="col-xs-2  col-xs-offset-1 control-label">兴趣描述:</label>
+                                            <div class="col-xs-7">
+                                                <textarea id="hobyDes" th:if="${session.user.hobyDes != null}" th:text="${session.user.hobyDes}" name="hobyDes" cols="68" rows="10">
+
+                                                </textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-xs-6 text-center">
+                                                <input type="submit" class="btn btn-danger btn-lg" style="background-color: #00c0ef" value="提&nbsp;&nbsp;&nbsp;&nbsp;交" />
+                                            </div>
+                                            <div class="col-xs-6 text-center">
+                                                <input type="reset" class="btn btn-default btn-lg" value="重&nbsp;&nbsp;&nbsp;&nbsp;置" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+        <!-- 正文区域 /-->
+
+    </div>
+    <!-- 内容区域 /-->
+
+</div>
+
+<!-- 底部导航 -->
+<div class="row text-center" style="margin: 20px">
+    <strong>Copyriht &copy; 2021-2022 攀枝花学院 Web应用开发专业团队 版权所有
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统维护：Web应用开发专业团队</strong>
+</div>
+<!-- 底部导航 /-->
+<script th:src="@{/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<script th:src="@{/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script th:src="@{/plugins/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/plugins/raphael/raphael-min.js}"></script>
+<script th:src="@{/plugins/morris/morris.min.js}"></script>
+<script th:src="@{/plugins/sparkline/jquery.sparkline.min.js}"></script>
+<script th:src="@{/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+<script th:src="@{/plugins/knob/jquery.knob.js}"></script>
+<script th:src="@{/plugins/daterangepicker/moment.min.js}"></script>
+<script th:src="@{/plugins/daterangepicker/daterangepicker.js}"></script>
+<script th:src="@{/plugins/daterangepicker/daterangepicker.zh-CN.js}"></script>
+<script th:src="@{/plugins/datepicker/bootstrap-datepicker.js}"></script>
+<script th:src="@{/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js}"></script>
+<script th:src="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+<script th:src="@{/plugins/slimScroll/jquery.slimscroll.min.js}"></script>
+<script th:src="@{/plugins/fastclick/fastclick.js}"></script>
+<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+<script th:src="@{/plugins/adminLTE/js/app.min.js}"></script>
+<script th:src="@{/plugins/treeTable/jquery.treetable.js}"></script>
+<script th:src="@{/plugins/select2/select2.full.min.js}"></script>
+<script th:src="@{/plugins/colorpicker/bootstrap-colorpicker.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.zh-CN.js}"></script>
+<script th:src="@{/plugins/bootstrap-markdown/js/bootstrap-markdown.js}"></script>
+<script th:src="@{/plugins/bootstrap-markdown/locale/bootstrap-markdown.zh.js}"></script>
+<script th:src="@{/plugins/bootstrap-markdown/js/markdown.js}"></script>
+<script th:src="@{/plugins/bootstrap-markdown/js/to-markdown.js}"></script>
+<script th:src="@{/plugins/ckeditor/ckeditor.js}"></script>
+<script th:src="@{/plugins/input-mask/jquery.inputmask.js}"></script>
+<script th:src="@{/plugins/input-mask/jquery.inputmask.date.extensions.js}"></script>
+<script th:src="@{/plugins/input-mask/jquery.inputmask.extensions.js}"></script>
+<script th:src="@{/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/plugins/datatables/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/plugins/chartjs/Chart.min.js}"></script>
+<script th:src="@{/plugins/flot/jquery.flot.min.js}"></script>
+<script th:src="@{/plugins/flot/jquery.flot.resize.min.js}"></script>
+<script th:src="@{/plugins/flot/jquery.flot.pie.min.js}"></script>
+<script th:src="@{/plugins/flot/jquery.flot.categories.min.js}"></script>
+<script th:src="@{/plugins/ionslider/ion.rangeSlider.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-slider/bootstrap-slider.js}"></script>
+<script th:src="@{/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js}"></script>
+<script th:src="@{/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+<script>
+    $(document).ready(function () {
+        // 选择框
+        $(".select2").select2();
+
+        // WYSIHTML5编辑器
+        $(".textarea").wysihtml5({
+            locale: 'zh-CN'
+        });
+    });
+
+
+    // 设置激活菜单
+    function setSidebarActive(tagUri) {
+        var liObj = $("#" + tagUri);
+        if (liObj.length > 0) {
+            liObj.parent().parent().addClass("active");
+            liObj.addClass("active");
+        }
+    }
+
+
+    $(document).ready(function () {
+        // 激活导航位置
+        setSidebarActive("admin-complete");
+    });
+</script>
+</body>
+
+</html>

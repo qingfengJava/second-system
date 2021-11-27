@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.mapper.UserMapper">
+
+    <resultMap id="userMap" type="com.qingfeng.entity.User">
+        <id column="uId" property="uid" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="realName" property="realName" />
+        <result column="nickName" property="nickName" />
+        <result column="telPhone" property="telPhone" />
+        <result column="qq" property="qq" />
+        <result column="email" property="email" />
+        <result column="photo" property="photo" />
+        <result column="is_admin" property="isAdmin" />
+        <result column="is_delete" property="isDelete" />
+        <result column="hobyDes" property="hobyDes" />
+    </resultMap>
+
+    <!-- 根据用户名查询用户对象 -->
+    <select id="findByUserName" resultMap="userMap" parameterType="java.lang.String">
+        select uId,username,password,realName,nickName,telPhone,qq,email,photo,is_admin,is_delete,hobyDes from tb_users where username=#{username}
+    </select>
+
+    <update id="updatePassword">
+        update tb_users set password=#{newPassword} where username=#{username}
+    </update>
+
+</mapper>

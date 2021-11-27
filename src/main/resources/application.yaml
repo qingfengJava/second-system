@@ -1,0 +1,39 @@
+server:
+  port: 9999
+  servlet:
+    context-path: /system
+
+#spring相关配置   datasource 数据源    thymeleaf的相关配置（模板引擎）
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/  # 默认就是这个
+    suffix: .html  # 指定文件后缀
+
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/second_system?rewriteBatchedStatements=true&useSSL=true&serverTimezone=GMT%2B8&characterEncoding=UTF-8
+    username: root
+    password: root
+
+  web:
+    resources:
+      static-locations: classpath:/static/,file:${photo.file.dir} #暴露那些资源可以通过项目名访问，但是注意：static下面的可以直接访问。
+
+#mybatis配置
+mybatis:
+  mapper-locations: classpath:com/qingfeng/mapper/*.xml  #指定mapper映射文件的位置
+  type-aliases-package: com.boot.entity  #给实体类取别名
+
+#日志配置
+logging:
+  level:
+    root: info
+    com.boot: debug
+
+#指定文件上传的位置
+photo:
+  file:
+    dir: D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的第二课堂管理系统\second_management_system\images
