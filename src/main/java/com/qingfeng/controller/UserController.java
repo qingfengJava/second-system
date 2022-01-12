@@ -2,11 +2,16 @@ package com.qingfeng.controller;
 
 import com.qingfeng.entity.User;
 import com.qingfeng.service.UserService;
+import com.qingfeng.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 用户的控制层
@@ -21,6 +26,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Value("${photo.file.dir}")
+    private String realPath;
+
 
     /**
      * 跳转到修改密码页面
@@ -84,5 +93,50 @@ public class UserController {
         //注意：跳转到完善信息页面的时候，应该确保session域中有user对象，首先要做的就是信息的回显。
         // 因为登录的时候已经保存了user对象，所以这里就不需要再查询用户对象了
         return "complete-information";
+    }
+
+    @RequestMapping("/updateMessage")
+    public String updateMessage(User user, MultipartFile img, HttpSession session) throws IOException {
+        //判断是否更新头像  空是true，表示没有更新头像
+        boolean notEempty = !img.isEmpty();
+        User oldUser = (User) session.getAttribute("user");
+        //不为空
+        if (notEempty){
+            //因为有默认的头像，所以头像用户的头像不可能为空，直接从Session域中获取用户的头像
+            String oldUserPhoto = oldUser.getPhoto();
+            File file = new File(realPath, oldUserPhoto);
+            if (file.exists()) {
+                //如果文件存在，就删除文件
+                if (!oldUserPhoto.contains("默认头像")){
+                    //如果不是默认头像就删除老照片
+                    file.delete();
+                }
+            }
+
+            //处理新的头像上传   1、处理头像的上传 & 修改文件名
+            String newFileName = FileUtils.uploadFile(img, realPath);
+            oldUser.setPhoto(newFileName);
+            //修改用户头像的信息
+            user.setPhoto(newFileName);
+        }else{
+            //否则使用原来的头像
+            user.setPhoto(oldUser.getPhoto());
+        }
+
+        //还要设置用户id
+        user.setUid(oldUser.getUid());
+
+        //更新完善用户信
+        userService.updateByUid(user);
+        //更新用户session
+        oldUser.setRealName(user.getRealName());
+        oldUser.setNickName(user.getNickName());
+        oldUser.setTelPhone(user.getTelPhone());
+        oldUser.setQq(user.getQq());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setHobyDes(user.getHobyDes());
+        session.setAttribute("user",oldUser);
+        //更新成功，重定向到完善信息页面
+        return "redirect:/user/goToComInfo";
     }
 }

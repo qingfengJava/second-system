@@ -57,7 +57,7 @@
                 <div>
                     <span style="font-size:15px;color: white;">欢迎同学：</span>
                     <div width="40px" style="display: inline-block;border-radius: 20px;">
-                        <img th:src="@{/img/默认头像.png}" alt="默认头像"
+                        <img th:src="@{/}+${session.user.photo}" alt="默认头像"
                              style="width: 40px;height:40px;border-radius: 20px"/>
                     </div>
                     <span style="font-size:15px;color: white;" th:if="${session.user.realName != null}" th:text="${session.user.realName}">无姓名</span>&nbsp;&nbsp;
@@ -285,7 +285,7 @@
                                 <div class="col-xs-12" style="border: 5px solid gainsboro;background-color: white;">
                                     <div class="row text-center" style="font-size: 30px;">完善信息</div>
                                     <!-- 表单部分 -->
-                                    <form action="" id="form" class="form-horizontal" style="margin-top: 30px">
+                                    <form th:action="@{/user/updateMessage}"  method="post" enctype="multipart/form-data" id="form" class="form-horizontal" style="margin-top: 30px">
                                         <div id="realNameDiv" class="form-group">
                                             <label for="realName" class="col-xs-2  col-xs-offset-1 control-label">真实姓名:</label>
                                             <div class="col-xs-7">
@@ -320,9 +320,9 @@
                                             <label for="photo" class="col-xs-2  col-xs-offset-1 control-label" style="margin-top: 80px">选择头像:</label>
                                             <div class="col-xs-3">
                                                 <div style="width: 200px; height: 200px;text-align: center;" >
-                                                    <img th:if="${session.user.photo != null}" th:src="@{/img/默认头像.png}" style="width: 170px;vertical-align: middle;">
+                                                    <img th:if="${session.user.photo != null}" th:src="@{/}+${session.user.photo}" style="width: 170px;height:200px;vertical-align: middle;">
                                                 </div>
-                                                <input type="file" id="photo" name="photo">
+                                                <input type="file" id="photo" name="img">
                                             </div>
                                         </div>
                                         <div id="hobyDesDiv" class="form-group">

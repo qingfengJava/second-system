@@ -36,4 +36,4 @@ logging:
 #指定文件上传的位置
 photo:
   file:
-    dir: D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的第二课堂管理系统\second_management_system\images
+    dir: D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的第二课堂管理系统\second_management_system\src\main\resources\static\images

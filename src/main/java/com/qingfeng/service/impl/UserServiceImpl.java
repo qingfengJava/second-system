@@ -64,4 +64,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("修改密码失败！");
         }
     }
+
+    @Override
+    public void updateByUid(User user) {
+        //根据用户Id，修改完善用户信息
+        userMapper.updateByUid(user);
+    }
 }

@@ -26,4 +26,10 @@ public interface UserMapper {
      * @param newPassword 要修改的密码
      */
     void updatePassword(String username, String newPassword);
+
+    /**
+     * 根据用户Id，修改完善用户信息
+     * @param user
+     */
+    void updateByUid(User user);
 }
