@@ -49,6 +49,7 @@ public class SwaggerConfig {
                 .contact(new Contact("清风学Java","www.qingfeng.com","qingfeng@qq.com"));
         ApiInfo apiInfo= apiInfoBuilder.build();
 
+
         //参数指定文档风格(生成策略)
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 //指定生成的文档中的封面信息：文档标题、版本、作者
