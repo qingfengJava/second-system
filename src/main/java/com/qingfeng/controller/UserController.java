@@ -37,7 +37,7 @@ public class UserController {
      */
     @RequestMapping("/changePwd")
     public String goToUpdatePwd(){
-        return "change-password";
+        return "data/change-password";
     }
 
     /**
@@ -56,7 +56,7 @@ public class UserController {
             String oldCode = (String) session.getAttribute("code");
             //获取code之后，就将session中的code移除
             session.removeAttribute("code");
-            if (!oldCode.equals(code)){
+            if (!oldCode.equalsIgnoreCase(code)){
                 //说明验证码输入不正确
                 session.setAttribute("update_msg","验证码输入错误！");
                 //重新跳转回修改密码页面
@@ -92,7 +92,7 @@ public class UserController {
     public String goToCompleteInfo() {
         //注意：跳转到完善信息页面的时候，应该确保session域中有user对象，首先要做的就是信息的回显。
         // 因为登录的时候已经保存了user对象，所以这里就不需要再查询用户对象了
-        return "complete-information";
+        return "data/complete-information";
     }
 
     @RequestMapping("/updateMessage")

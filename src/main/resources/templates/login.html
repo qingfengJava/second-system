@@ -15,6 +15,11 @@
     <link rel="stylesheet" th:href="@{/css/login.css}">
 
     <script>
+        //页面框架
+        if (window.top != window.self) {
+            window.top.location = window.self.location;
+        }
+
         /* 表单校验 */
         //非空校验
         function checkNotNull(nid) {
@@ -119,7 +124,7 @@
 
                 <div class="form-group">
                     <label class="col-xs-4  col-xs-offset-1 control-label" for="password">
-                        <input class="check-left" type="checkbox"/><span class="check-font">自动登录</span>
+                        <input class="check-left" type="checkbox"/><span class="check-font" style="vertical-align: center;">自动登录</span>
                     </label>
                 </div>
 

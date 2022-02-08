@@ -4,10 +4,10 @@
     <!-- 页面meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>第二课堂素质拓展学分管理系统</title>
+    <title>第二课堂首页</title>
     <meta name="description" content="AdminLTE2定制版">
     <meta name="keywords" content="AdminLTE2定制版">
-
+    <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -35,15 +35,34 @@
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-slider/slider.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css}">
 </head>
-<!-- 定义框架 -->
-<frameset rows="12%,88%,*" framespacing="0" scroll="no" border="0" frameborder="0">
-    <frame th:src="@{/index/top.html}" marginwidth="0" marginheight="0" scrolling="auto" noresize />
-    <frameset cols="13%,*" framespacing="0" border="0" frameborder="0">
-        <frame th:src="@{/index/left.html}" marginwidth="0" marginheight="0" scrolling="auto" noresize />
-        <frame name="center" th:src="@{/index/index.html}" />
-    </frameset>
-</frameset>
-<body>
+<body style="background-color: #0d2e79">
+
+<!-- 页面头部 -->
+<header class="main-header">
+    <div class="row" style="background-color: #0d2e79">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">
+            <img th:src="@{/img/logo_up.png}" alt="数计学院logo" style="width: 300px">
+            <span style="font-size:30px;color: white;font-family: 华文新魏;">第二课堂素质拓展学分管理系统</span>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"
+             style="text-align: right;margin-top: 20px;padding-right: 20px">
+            <div>
+                <span style="font-size:15px;color: white;">欢迎同学：</span>
+                <div width="40px" style="display: inline-block;border-radius: 20px;">
+                    <img th:src="@{/images/}+${session.user.photo}" alt="默认头像"
+                         style="width: 40px;height:40px;border-radius: 20px"/>
+                </div>
+                <span style="font-size:15px;color: white;" th:if="${session.user.realName != null}" th:text="${session.user.realName}">无姓名</span>&nbsp;&nbsp;
+                <span style="font-size:15px;color: white;" th:text="${session.user.username}">无账号</span>
+            </div>
+            <div>
+                <span style="font-size:15px;color: white;" th:text="${session.day}"></span>
+            </div>
+
+        </div>
+    </div>
+</header>
+<!-- 页面头部 /-->
 
 <script th:src="@{/plugins/jQuery/jquery-2.2.3.min.js}"></script>
 <script th:src="@{/plugins/jQueryUI/jquery-ui.min.js}"></script>

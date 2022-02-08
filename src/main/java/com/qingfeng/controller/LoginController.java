@@ -61,7 +61,7 @@ public class LoginController {
             String oldCode = (String) session.getAttribute("code");
             //获取code之后，就将session中的code移除
             session.removeAttribute("code");
-            if (!oldCode.equals(code)){
+            if (!oldCode.equalsIgnoreCase(code)){
                 //说明验证码输入不正确
                 session.setAttribute("msg","验证码输入错误！");
                 return "redirect:/login";
@@ -83,7 +83,7 @@ public class LoginController {
         }
 
         //跳转到主页面
-        return "redirect:/userLogin/index";
+        return "index";
     }
 
     /**
@@ -96,6 +96,6 @@ public class LoginController {
     public String goToIndex(HttpSession session) throws ParseException {
         //将年月日，星期几存入session域中，并要保证每跳转一个界面，就要重新存入，保证时间实时刷新
         session.setAttribute("day", GetDayForWeek.getDateDayForWeek());
-        return "index";
+        return "/index/index";
     }
 }
