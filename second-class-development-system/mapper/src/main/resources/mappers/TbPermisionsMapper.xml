@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.dao.TbPermisionsMapper">
+  <resultMap id="BaseResultMap" type="com.qingfeng.entity.TbPermisions">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="permision_id" jdbcType="INTEGER" property="permisionId" />
+    <result column="permision_code" jdbcType="VARCHAR" property="permisionCode" />
+    <result column="permision_name" jdbcType="VARCHAR" property="permisionName" />
+  </resultMap>
+</mapper>

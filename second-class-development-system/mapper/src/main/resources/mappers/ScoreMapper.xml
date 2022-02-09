@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.dao.ScoreMapper">
+  <resultMap id="BaseResultMap" type="com.qingfeng.entity.Score">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="scoreId" jdbcType="INTEGER" property="scoreid" />
+    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="ideology_politics_score" jdbcType="DOUBLE" property="ideologyPoliticsScore" />
+    <result column="science_technology_score" jdbcType="DOUBLE" property="scienceTechnologyScore" />
+    <result column="culture_art_score" jdbcType="DOUBLE" property="cultureArtScore" />
+    <result column="club_job_score" jdbcType="DOUBLE" property="clubJobScore" />
+    <result column="social_volunteer_score" jdbcType="DOUBLE" property="socialVolunteerScore" />
+    <result column="skill_train_score" jdbcType="DOUBLE" property="skillTrainScore" />
+    <result column="total_score" jdbcType="DOUBLE" property="totalScore" />
+  </resultMap>
+</mapper>

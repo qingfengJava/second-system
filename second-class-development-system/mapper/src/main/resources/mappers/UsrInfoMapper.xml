@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.dao.UsrInfoMapper">
+  <resultMap id="BaseResultMap" type="com.qingfeng.entity.UsrInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="bid" jdbcType="INTEGER" property="bid" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="student_num" jdbcType="VARCHAR" property="studentNum" />
+    <result column="stu_name" jdbcType="VARCHAR" property="stuName" />
+    <result column="stu_sex" jdbcType="BIT" property="stuSex" />
+    <result column="birth" jdbcType="DATE" property="birth" />
+    <result column="nation" jdbcType="VARCHAR" property="nation" />
+    <result column="politics_status" jdbcType="VARCHAR" property="politicsStatus" />
+    <result column="enter_time" jdbcType="DATE" property="enterTime" />
+    <result column="graduate_time" jdbcType="DATE" property="graduateTime" />
+    <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="hukou" jdbcType="BIT" property="hukou" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="we_chat" jdbcType="VARCHAR" property="weChat" />
+    <result column="native_place" jdbcType="VARCHAR" property="nativePlace" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="state_school" jdbcType="VARCHAR" property="stateSchool" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="major" jdbcType="VARCHAR" property="major" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+    <result column="class" jdbcType="VARCHAR" property="class" />
+    <result column="hoby_des" jdbcType="VARCHAR" property="hobyDes" />
+    <result column="is_change" jdbcType="BIT" property="isChange" />
+  </resultMap>
+</mapper>

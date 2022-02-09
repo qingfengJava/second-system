@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.dao.RegistMapper">
+  <resultMap id="BaseResultMap" type="com.qingfeng.entity.Regist">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="active_reg_id" jdbcType="INTEGER" property="activeRegId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="student_id" jdbcType="VARCHAR" property="studentId" />
+    <result column="student_name" jdbcType="VARCHAR" property="studentName" />
+    <result column="student_college" jdbcType="VARCHAR" property="studentCollege" />
+    <result column="student_major" jdbcType="VARCHAR" property="studentMajor" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="student_sex" jdbcType="INTEGER" property="studentSex" />
+    <result column="student_tel" jdbcType="VARCHAR" property="studentTel" />
+    <result column="student_qq" jdbcType="VARCHAR" property="studentQq" />
+    <result column="reg_create_time" jdbcType="TIMESTAMP" property="regCreateTime" />
+    <result column="is_success" jdbcType="INTEGER" property="isSuccess" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="is_sign" jdbcType="INTEGER" property="isSign" />
+  </resultMap>
+</mapper>

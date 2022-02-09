@@ -1,5 +1,6 @@
 package com.qingfeng.generaldao;
 
+import com.qingfeng.entity.TbUrs;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
 
