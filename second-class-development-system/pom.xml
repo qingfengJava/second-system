@@ -13,7 +13,7 @@
 
     <groupId>com.qingfeng</groupId>
     <artifactId>second-class-development-system</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <modules>
         <module>api</module>
         <module>service</module>

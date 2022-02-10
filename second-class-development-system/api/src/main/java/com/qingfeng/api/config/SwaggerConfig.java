@@ -44,7 +44,7 @@ public class SwaggerConfig {
                 //描述信息
                 .description("此文档详细说明了攀枝花学院第二课堂素质拓展学分管理系统后端接口规范...")
                 //版本
-                .version("v 1.0.0")
+                .version("v 2.0.0")
                 //联系人
                 .contact(new Contact("清风学Java","www.qingfeng.com","qingfeng@qq.com"));
         ApiInfo apiInfo= apiInfoBuilder.build();
