@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 配置缓存管理 -->
+<ehcache updateCheck="false" dynamicConfig="false">
+
+    <diskStore path="D:\TEMP" />
+
+    <cache name="users"  timeToLiveSeconds="300"  maxEntriesLocalHeap="1000"/>
+
+    <defaultCache name="defaultCache"
+                  maxElementsInMemory="10000"
+                  eternal="false"
+                  timeToIdleSeconds="120"
+                  timeToLiveSeconds="120"
+                  overflowToDisk="false"
+                  maxElementsOnDisk="100000"
+                  diskPersistent="false"
+                  diskExpiryThreadIntervalSeconds="120"
+                  memoryStoreEvictionPolicy="LRU"/>
+            <!--缓存淘汰策略：当缓存空间比较紧张时，我们要存储新的数据进来，就必然要删除一些老的数据
+                LRU 最近最少使用
+                FIFO 先进先出
+                LFU  最少使用
+            -->
+</ehcache>

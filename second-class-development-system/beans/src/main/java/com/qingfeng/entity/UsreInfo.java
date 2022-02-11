@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Table(name = "usr_info")
-public class UsrInfo {
+public class UsreInfo {
     /**
      * 主键，无实意
      */
@@ -555,7 +555,7 @@ public class UsrInfo {
      *
      * @param clazz 班级
      */
-    public void setClass(String clazz) {
+    public void setClazz(String clazz) {
         this.clazz = clazz;
     }
 

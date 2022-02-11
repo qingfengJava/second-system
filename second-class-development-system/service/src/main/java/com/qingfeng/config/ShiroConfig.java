@@ -97,9 +97,6 @@ public class ShiroConfig {
          * logout	表示指定退出的url
          */
 
-        //过滤器授权
-        filterMap.put("/c_add.html","perms[sys:c:save]");
-
         //拦截的资源
         //设置退出登录状态，实际上就是subject退出  这是shiro内部自己定义的规则
         filterMap.put("/exit","logout");
@@ -170,7 +167,7 @@ public class ShiroConfig {
         // matcher就是用来指定加密规则   加密方式
         matcher.setHashAlgorithmName("md5");
         // 指定hash加密循环的次数
-        matcher.setHashIterations(1);
+        matcher.setHashIterations(3);
         return matcher;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qingfeng.dao.UsrInfoMapper">
-  <resultMap id="BaseResultMap" type="com.qingfeng.entity.UsrInfo">
+<mapper namespace="com.qingfeng.dao.UsreInfoMapper">
+  <resultMap id="BaseResultMap" type="com.qingfeng.entity.UsreInfo">
     <!--
       WARNING - @mbg.generated
     -->
@@ -27,7 +27,7 @@
     <result column="department" jdbcType="VARCHAR" property="department" />
     <result column="major" jdbcType="VARCHAR" property="major" />
     <result column="grade" jdbcType="VARCHAR" property="grade" />
-    <result column="class" jdbcType="VARCHAR" property="class" />
+    <result column="class" jdbcType="VARCHAR" property="clazz" />
     <result column="hoby_des" jdbcType="VARCHAR" property="hobyDes" />
     <result column="is_change" jdbcType="BIT" property="isChange" />
   </resultMap>

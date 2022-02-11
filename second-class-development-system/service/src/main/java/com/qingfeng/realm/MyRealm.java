@@ -1,13 +1,19 @@
 package com.qingfeng.realm;
 
+import com.qingfeng.dao.TbPermisionsMapper;
+import com.qingfeng.dao.TbRoleMapper;
+import com.qingfeng.dao.UsersMapper;
+import com.qingfeng.entity.Users;
 import lombok.SneakyThrows;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * 自定义Realm
@@ -23,12 +29,12 @@ import org.apache.shiro.subject.PrincipalCollection;
  */
 public class MyRealm extends AuthorizingRealm {
 
-    /*@Resource
-    private UserDao userDao;
-    @Resource
-    private RoleDao roleDao;
-    @Resource
-    private PermissionDao permissionDao;*/
+    @Autowired
+    private UsersMapper usersMapper;
+    @Autowired
+    private TbRoleMapper roleMapper;
+    @Autowired
+    private TbPermisionsMapper permisionsMapper;
 
     /**
      * 获取授权数据（将当前用户的角色及权限信息查询出来，设置给securityManager）
@@ -73,13 +79,15 @@ public class MyRealm extends AuthorizingRealm {
         String username = token.getUsername();
 
         //根据用户名，从数据库查询当前用户的安全数据
-//        User user = userDao.queryUserByUsername(username);
+        Example example = new Example(Users.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("username",username);
+        List<Users> users = usersMapper.selectByExample(example);
+        Users user = users.get(0);
         //如果数据库中用户的密码是加了盐的，则需要传入盐
-//        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(username, user.getUserPwd(), ByteSource.Util.bytes(user.getPwdSalt()), getName());
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(username, user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
 
-
-//        return simpleAuthenticationInfo;
-        return null;
+        return simpleAuthenticationInfo;
     }
 
     /**

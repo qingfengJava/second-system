@@ -1,4 +1,4 @@
-package com.qingfeng.api.config;
+package com.qingfeng.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,7 +56,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo)
                 .select()
                 //对那个类生成api文档
-                .apis(RequestHandlerSelectors.basePackage("com.qingfeng.api.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.qingfeng.controller"))
                 .paths(PathSelectors.any())
                 .build();
 
