@@ -1,5 +1,6 @@
 package com.qingfeng.service;
 
+import com.qingfeng.entity.Users;
 import com.qingfeng.vo.ResultVO;
 
 /**
@@ -27,4 +28,21 @@ public interface UserService {
      * @return
      */
     ResultVO userAdd(String username, String password, int isAdmin);
+
+    /**
+     * 根据用户Id，修改用户密码
+     * @param uid
+     * @param password
+     * @return
+     */
+    ResultVO updatePassword(String uid, String password);
+
+    /**
+     * 根据用户Id，完善用户信息
+     * @param uid
+     * @param users
+     * @param img
+     * @return
+     */
+    ResultVO updateMessage(String uid, Users users);
 }

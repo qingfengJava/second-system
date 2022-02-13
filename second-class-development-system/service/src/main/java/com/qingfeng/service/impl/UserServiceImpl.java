@@ -115,4 +115,46 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
+
+    @Override
+    public ResultVO updatePassword(String uid, String password) {
+        System.out.println(uid);
+        //根据用户Id修改用户密码  先获取一个完整的用户
+        Users users = usersMapper.selectByPrimaryKey(uid);
+        //封装要修改的信息
+        //1、生成随机盐
+        String salt = SaltUtils.getSalt(8);
+        //3、明文密码进行md5+salt+hash散列
+        Md5Hash md5Hash = new Md5Hash(password, salt, 3);
+        //得到加密后的密码
+        String newPassWord = md5Hash.toHex();
+        users.setPassword(newPassWord);
+        users.setSalt(salt);
+        int i = usersMapper.updateByPrimaryKeySelective(users);
+        if (i > 0){
+            //说明修改成功
+            return  new ResultVO(ResStatus.OK,"修改密码成功，前去登录！",users);
+        }
+        return new ResultVO(ResStatus.NO,"网络异常，修改密码失败!",null);
+    }
+
+    @Override
+    public ResultVO updateMessage(String uid, Users users) {
+        //根据用户Id来完善信息  先获取一个完整的用户对象，然后再进行修改
+        Users user = usersMapper.selectByPrimaryKey(uid);
+        //将信息全部封装到user里
+        user.setRealname(users.getRealname());
+        user.setNickname(users.getNickname());
+        user.setTelphone(users.getTelphone());
+        user.setQq(users.getQq());
+        user.setEmail(users.getEmail());
+        user.setPhoto(users.getPhoto());
+        user.setHobydes(users.getHobydes());
+        int i = usersMapper.updateByPrimaryKey(user);
+        if (i > 0){
+            return new ResultVO(ResStatus.OK,"信息保存成功！！！",user);
+        }else{
+            return new ResultVO(ResStatus.NO,"信息保存失败！！！",null);
+        }
+    }
 }
