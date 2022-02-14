@@ -8,8 +8,8 @@
     <id column="apply_id" jdbcType="INTEGER" property="applyId" />
     <result column="apply_user_id" jdbcType="INTEGER" property="applyUserId" />
     <result column="active_name" jdbcType="VARCHAR" property="activeName" />
-    <result column="active_num" jdbcType="VARCHAR" property="activeNum" />
-    <result column="active_type" jdbcType="VARCHAR" property="activeType" />
+    <result column="active_num" jdbcType="INTEGER" property="activeNum" />
+    <result column="active_type" jdbcType="INTEGER" property="activeType" />
     <result column="active_level" jdbcType="VARCHAR" property="activeLevel" />
     <result column="host_name" jdbcType="VARCHAR" property="hostName" />
     <result column="belong_department" jdbcType="VARCHAR" property="belongDepartment" />
@@ -19,10 +19,11 @@
     <result column="teacher_telephone_num" jdbcType="VARCHAR" property="teacherTelephoneNum" />
     <result column="active_location" jdbcType="VARCHAR" property="activeLocation" />
     <result column="active_time" jdbcType="VARCHAR" property="activeTime" />
-    <result column="active-score" jdbcType="DOUBLE" property="activeScore" />
+    <result column="active_score" jdbcType="DOUBLE" property="activeScore" />
     <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction" />
     <result column="active_content" jdbcType="VARCHAR" property="activeContent" />
     <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime" />
+    <result column="is_agree" jdbcType="INTEGER" property="isAgree" />
     <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
   </resultMap>
 </mapper>

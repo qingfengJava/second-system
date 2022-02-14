@@ -76,7 +76,7 @@ public class Users {
     private String photo;
 
     /**
-     * 是否是管理员，0-学生，1-普通管理员（具有权限的学生和老师），2-终极管理员
+     * 用户身份： 1：学生  2：学生社团工作部  3:校团委   4：校领导   5：超级管理员
      */
     @Column(name = "is_admin")
     private Integer isAdmin;

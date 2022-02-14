@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/user")
-@Api(value = "提供用户的登录和添加的接口",tags = "用户管理")
+@Api(value = "提供用户管理模块的功能",tags = "用户管理")
 @CrossOrigin
 public class UserController {
 
@@ -70,17 +70,17 @@ public class UserController {
 
     @ApiOperation("完善用户信息接口")
     @PostMapping("/updateMessage/{uid}")
-    public ResultVO updateMsg(@PathVariable("uid") String uid,@RequestBody Users users,String photo, MultipartFile img){
+    public ResultVO updateMsg(@PathVariable("uid") String uid,Users users,String oldPhoto, MultipartFile img){
         try {
             //判断是否更新头像  空是true，表示没有更新头像
-            boolean notEempty = !img.isEmpty();
+            boolean notEempty = (img != null);
             //不为空
             if (notEempty){
                 //检查就照片是否存在，存在就将其删除掉，再保存新照片
-                File file = new File(realPath,photo);
+                File file = new File(realPath,oldPhoto);
                 if (file.exists()) {
                     //如果文件存在，就删除文件
-                    if (!photo.equals("default.png")){
+                    if (!oldPhoto.equals("default.png")){
                         //如果不是默认头像就删除老照片
                         file.delete();
                     }
@@ -91,7 +91,7 @@ public class UserController {
                 users.setPhoto(newFileName);
             }else {
                 //否则不修改头像
-                users.setPhoto(photo);
+                users.setPhoto(oldPhoto);
             }
             //调用service层完善用户信息的方法
             return userService.updateMessage(uid,users);
