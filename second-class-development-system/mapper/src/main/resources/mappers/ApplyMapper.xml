@@ -1,29 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qingfeng.dao.ApplyMapper">
-  <resultMap id="BaseResultMap" type="com.qingfeng.entity.Apply">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="apply_id" jdbcType="INTEGER" property="applyId" />
-    <result column="apply_user_id" jdbcType="INTEGER" property="applyUserId" />
-    <result column="active_name" jdbcType="VARCHAR" property="activeName" />
-    <result column="active_num" jdbcType="INTEGER" property="activeNum" />
-    <result column="active_type" jdbcType="INTEGER" property="activeType" />
-    <result column="active_level" jdbcType="VARCHAR" property="activeLevel" />
-    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
-    <result column="belong_department" jdbcType="VARCHAR" property="belongDepartment" />
-    <result column="active_principal" jdbcType="VARCHAR" property="activePrincipal" />
-    <result column="active_principal_tel_num" jdbcType="VARCHAR" property="activePrincipalTelNum" />
-    <result column="teacher_name" jdbcType="VARCHAR" property="teacherName" />
-    <result column="teacher_telephone_num" jdbcType="VARCHAR" property="teacherTelephoneNum" />
-    <result column="active_location" jdbcType="VARCHAR" property="activeLocation" />
-    <result column="active_time" jdbcType="VARCHAR" property="activeTime" />
-    <result column="active_score" jdbcType="DOUBLE" property="activeScore" />
-    <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction" />
-    <result column="active_content" jdbcType="VARCHAR" property="activeContent" />
-    <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime" />
-    <result column="is_agree" jdbcType="INTEGER" property="isAgree" />
-    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.qingfeng.entity.Apply">
+        <id column="apply_id" jdbcType="INTEGER" property="applyId"/>
+        <result column="apply_user_id" jdbcType="INTEGER" property="applyUserId"/>
+        <result column="active_name" jdbcType="VARCHAR" property="activeName"/>
+        <result column="active_num" jdbcType="INTEGER" property="activeNum"/>
+        <result column="active_type" jdbcType="INTEGER" property="activeType"/>
+        <result column="active_level" jdbcType="VARCHAR" property="activeLevel"/>
+        <result column="host_name" jdbcType="VARCHAR" property="hostName"/>
+        <result column="belong_department" jdbcType="VARCHAR" property="belongDepartment"/>
+        <result column="active_principal" jdbcType="VARCHAR" property="activePrincipal"/>
+        <result column="active_principal_tel_num" jdbcType="VARCHAR" property="activePrincipalTelNum"/>
+        <result column="teacher_name" jdbcType="VARCHAR" property="teacherName"/>
+        <result column="teacher_telephone_num" jdbcType="VARCHAR" property="teacherTelephoneNum"/>
+        <result column="active_location" jdbcType="VARCHAR" property="activeLocation"/>
+        <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
+        <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
+        <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
+        <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
+        <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
+        <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
+        <result column="is_end" jdbcType="INTEGER" property="isEnd" />
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+    </resultMap>
+
+    <select id="queryApplyById" resultMap="BaseResultMap">
+        select apply_id,
+               apply_user_id,
+               active_name,
+               active_num,
+               active_type,
+               active_level,
+               host_name,
+               belong_department,
+               active_principal,
+               active_principal_tel_num,
+               teacher_name,
+               teacher_telephone_num,
+               active_location,
+               active_time,
+               active_score,
+               active_introduction,
+               active_content,
+               apply_create_time,
+               is_agree,
+               is_end,
+               is_delete
+        from apply where apply_id = #{applyId}
+    </select>
+
+    <select id="queryApply" resultMap="BaseResultMap">
+        select apply_id,
+               apply_user_id,
+               active_name,
+               active_num,
+               active_type,
+               active_level,
+               host_name,
+               belong_department,
+               active_principal,
+               active_principal_tel_num,
+               teacher_name,
+               teacher_telephone_num,
+               active_location,
+               active_time,
+               active_score,
+               active_introduction,
+               active_content,
+               apply_create_time,
+               is_agree,
+               is_end,
+               is_delete
+        from apply where is_end = 0
+        limit #{start},#{limit}
+    </select>
 </mapper>

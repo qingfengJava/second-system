@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Regist {
+public class RegistVo {
     /**
      * 报名表主键Id
      */
@@ -111,4 +111,8 @@ public class Regist {
     @Column(name = "is_sign")
     private Integer isSign;
 
+    /**
+     * 在报名表中维护一个活动申请表
+     */
+    private Apply apply;
 }

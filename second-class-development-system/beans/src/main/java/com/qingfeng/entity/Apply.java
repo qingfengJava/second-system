@@ -137,6 +137,12 @@ public class Apply {
     private Integer isAgree;
 
     /**
+     * 活动报名是否结束  0：未结束  1：已结束
+     */
+    @Column(name = "is_end")
+    private Integer isEnd;
+
+    /**
      * 是否删除（0：未删除  1：已删除）
      */
     @Column(name = "is_delete")
