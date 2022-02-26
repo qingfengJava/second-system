@@ -1,7 +1,5 @@
 package com.qingfeng.service;
 
-import com.qingfeng.entity.Apply;
-import com.qingfeng.entity.Regist;
 import com.qingfeng.vo.ResultVO;
 
 /**
@@ -13,20 +11,7 @@ import com.qingfeng.vo.ResultVO;
  */
 public interface ActiveService {
 
-    /**
-     * 申请活动
-     * @param apply
-     * @return
-     */
-    ResultVO applyActive(Apply apply);
 
-    /**
-     * 活动报名
-     * @param applyId
-     * @param regist
-     * @return
-     */
-    ResultVO registrationActive(Integer applyId,Regist regist);
 
     /**
      * 根据学生的Id分页查询学生报名待参与的活动
@@ -44,4 +29,11 @@ public interface ActiveService {
      * @return
      */
     ResultVO queryApply(int pageNum, int limit);
+
+    /**
+     * 根据活动id查询对应活动的详情信息
+     * @param applyId
+     * @return
+     */
+    ResultVO queryApplyDetails(String applyId);
 }

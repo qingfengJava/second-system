@@ -157,4 +157,13 @@ public class UserServiceImpl implements UserService {
             return new ResultVO(ResStatus.NO,"信息保存失败！！！",null);
         }
     }
+
+    @Override
+    public ResultVO checkUser(String uid) {
+        Users users = usersMapper.selectByPrimaryKey(uid);
+        if (users != null){
+            return new ResultVO(ResStatus.OK,"success",users);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
+    }
 }

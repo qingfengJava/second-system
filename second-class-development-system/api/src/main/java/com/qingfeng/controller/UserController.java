@@ -70,7 +70,7 @@ public class UserController {
 
     @ApiOperation("完善用户信息接口")
     @PostMapping("/updateMessage/{uid}")
-    public ResultVO updateMsg(@PathVariable("uid") String uid,Users users,String oldPhoto, MultipartFile img){
+    public ResultVO updateMsg(@PathVariable("uid") String uid,Users user,String oldPhoto, MultipartFile img){
         try {
             //判断是否更新头像  空是true，表示没有更新头像
             boolean notEempty = (img != null);
@@ -88,16 +88,22 @@ public class UserController {
                 //处理新的头像上传   1、处理头像的上传 & 修改文件名
                 String newFileName = FileUtils.uploadFile(img, realPath);
                 //修改用户头像的信息
-                users.setPhoto(newFileName);
+                user.setPhoto(newFileName);
             }else {
                 //否则不修改头像
-                users.setPhoto(oldPhoto);
+                user.setPhoto(oldPhoto);
             }
             //调用service层完善用户信息的方法
-            return userService.updateMessage(uid,users);
+            return userService.updateMessage(uid,user);
         } catch (IOException e) {
             e.printStackTrace();
             return new ResultVO(ResStatus.NO,"完善信息出现未知的异常！",null);
         }
+    }
+
+    @ApiOperation("查询用户信息接口")
+    @PostMapping("/checkUser/{uid}")
+    public ResultVO checkUser(@PathVariable("uid") String uid){
+        return userService.checkUser(uid);
     }
 }

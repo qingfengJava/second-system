@@ -1,7 +1,5 @@
 package com.qingfeng.controller;
 
-import com.qingfeng.entity.Apply;
-import com.qingfeng.entity.Regist;
 import com.qingfeng.service.ActiveService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -25,19 +23,6 @@ public class ActiveController {
     @Autowired
     private ActiveService activeService;
 
-    @ApiOperation("活动申请接口")
-    @PostMapping("/apply")
-    public ResultVO applyActive(@RequestBody Apply apply){
-        //将用户Id存入apply对象中
-        return activeService.applyActive(apply);
-    }
-
-    @ApiOperation("活动报名接口")
-    @PostMapping("/registration/{applyId}")
-    public ResultVO registrationActive(@PathVariable("applyId") Integer applyId, @RequestBody Regist regist){
-        //将用户Id存入apply对象中
-        return activeService.registrationActive(applyId,regist);
-    }
 
     @ApiOperation("学生活动报名列表查询接口")
     @ApiImplicitParams({
@@ -58,5 +43,11 @@ public class ActiveController {
     @PostMapping("/queryApply")
     public ResultVO queryApply(int pageNum,int limit){
         return activeService.queryApply(pageNum,limit);
+    }
+
+    @ApiOperation("活动详情查询接口")
+    @PostMapping("/queryActive/{applyId}")
+    public ResultVO queryApplyById(@PathVariable("applyId") String applyId){
+        return activeService.queryApplyDetails(applyId);
     }
 }

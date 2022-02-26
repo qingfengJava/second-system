@@ -63,9 +63,9 @@ public class Regist {
     private String studentMajor;
 
     /**
-     * 参与者类型
+     * 参与者类型   1：参与者   2：组织者
      */
-    private String type;
+    private Integer type;
 
     /**
      * 学生性别（1：男  2：女）
@@ -100,6 +100,17 @@ public class Regist {
     private Integer isSuccess;
 
     /**
+     * 审核状态  0：身份待审核    1：直接报名就成功的   2：审核身份通过   3：审核身份不通过
+     */
+    private Integer status;
+
+    /**
+     * 审核的信息
+     */
+    @Column(name = "check_img")
+    private String checkImg;
+
+    /**
      * 是否删除（0：未删除  1：已删除）
      */
     @Column(name = "is_delete")
@@ -110,5 +121,6 @@ public class Regist {
      */
     @Column(name = "is_sign")
     private Integer isSign;
+
 
 }

@@ -45,4 +45,11 @@ public interface UserService {
      * @return
      */
     ResultVO updateMessage(String uid, Users users);
+
+    /**
+     * 根据用户Id查询用户信息
+     * @param uid
+     * @return
+     */
+    ResultVO checkUser(String uid);
 }
