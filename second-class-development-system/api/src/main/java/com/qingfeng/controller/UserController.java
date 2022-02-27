@@ -101,9 +101,15 @@ public class UserController {
         }
     }
 
-    @ApiOperation("查询用户信息接口")
+    @ApiOperation("查询用户基本信息接口")
     @PostMapping("/checkUser/{uid}")
     public ResultVO checkUser(@PathVariable("uid") String uid){
         return userService.checkUser(uid);
+    }
+
+    @ApiOperation(("查询用户详情信息接口"))
+    @PostMapping("/checkUserInfo/{uid}")
+    public ResultVO checkUserInfo(@PathVariable("uid") String uid){
+        return userService.checkUserInfo(uid);
     }
 }

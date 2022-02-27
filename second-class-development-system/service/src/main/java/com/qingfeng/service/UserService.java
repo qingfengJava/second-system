@@ -52,4 +52,11 @@ public interface UserService {
      * @return
      */
     ResultVO checkUser(String uid);
+
+    /**
+     * 根据用户id查询用户详情信息
+     * @param uid
+     * @return
+     */
+    ResultVO checkUserInfo(String uid);
 }

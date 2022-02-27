@@ -34,7 +34,7 @@
         <javaClientGenerator targetPackage="com.qingfeng.dao" targetProject="src/main/java" type="XMLMAPPER"/>
 
         <!-- 配置需要指定生成的数据库和表，% 代表所有表 -->
-        <table tableName="%">
+        <table tableName="grade">
             <!-- mysql 配置 -->
             <!--<generatedKey column="user_id" sqlStatement="JDBC"/>-->
         </table>

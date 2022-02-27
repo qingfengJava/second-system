@@ -1,7 +1,9 @@
 package com.qingfeng.service.impl;
 
 import com.qingfeng.dao.UsersMapper;
+import com.qingfeng.dao.UserInfoMapper;
 import com.qingfeng.entity.Users;
+import com.qingfeng.entity.UserInfo;
 import com.qingfeng.service.UserService;
 import com.qingfeng.utils.SaltUtils;
 import com.qingfeng.vo.ResStatus;
@@ -34,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UsersMapper usersMapper;
+    @Autowired
+    private UserInfoMapper usreInfoMapper;
 
     @Override
     public ResultVO checkLogin(String username, String password) {
@@ -163,6 +167,16 @@ public class UserServiceImpl implements UserService {
         Users users = usersMapper.selectByPrimaryKey(uid);
         if (users != null){
             return new ResultVO(ResStatus.OK,"success",users);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
+    }
+
+    @Override
+    public ResultVO checkUserInfo(String uid) {
+        UserInfo userInfo = usreInfoMapper.selectByPrimaryKey(uid);
+        if (userInfo != null){
+            //说明查询成功
+            return new ResultVO(ResStatus.OK,"success", userInfo);
         }
         return new ResultVO(ResStatus.NO,"fail",null);
     }

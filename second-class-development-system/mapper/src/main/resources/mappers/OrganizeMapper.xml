@@ -10,7 +10,8 @@
     <result column="organize_name" jdbcType="VARCHAR" property="organizeName" />
     <result column="organize_department" jdbcType="VARCHAR" property="organizeDepartment" />
     <result column="organize_inroduce" jdbcType="VARCHAR" property="organizeInroduce" />
-    <result column="img" jdbcType="VARCHAR" property="img" />
+    <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime" />
     <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 </mapper>
