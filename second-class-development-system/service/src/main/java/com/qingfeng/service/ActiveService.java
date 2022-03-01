@@ -35,5 +35,12 @@ public interface ActiveService {
      * @param applyId
      * @return
      */
-    ResultVO queryApplyDetails(String applyId);
+    ResultVO queryApplyById(String applyId);
+
+    /**
+     * 根据申请活动的Id查询活动的详情信息，包括社团用户，社团组织等信息
+     * @param applyId
+     * @return
+     */
+    ResultVO queryApplyDetails(Integer applyId);
 }

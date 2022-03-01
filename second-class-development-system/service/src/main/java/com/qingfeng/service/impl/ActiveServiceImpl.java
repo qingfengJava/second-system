@@ -3,6 +3,7 @@ package com.qingfeng.service.impl;
 import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.RegistMapper;
 import com.qingfeng.entity.Apply;
+import com.qingfeng.entity.ApplyVo;
 import com.qingfeng.entity.Regist;
 import com.qingfeng.entity.RegistVo;
 import com.qingfeng.service.ActiveService;
@@ -27,8 +28,6 @@ public class ActiveServiceImpl implements ActiveService {
     private ApplyMapper applyMapper;
     @Autowired
     private RegistMapper registMapper;
-
-
 
     @Override
     public ResultVO checkRegistration(String uid,int pageNum,int limit) {
@@ -84,7 +83,7 @@ public class ActiveServiceImpl implements ActiveService {
     }
 
     @Override
-    public ResultVO queryApplyDetails(String applyId) {
+    public ResultVO queryApplyById(String applyId) {
         Example example = new Example(Apply.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applyId",applyId);
@@ -94,6 +93,17 @@ public class ActiveServiceImpl implements ActiveService {
         }else {
             return new ResultVO(ResStatus.NO,"网络异常，信息不存在！",null);
         }
+    }
+
+    @Override
+    public ResultVO queryApplyDetails(Integer applyId) {
+        //首先要根据活动申请Id查询对应的信息
+        ApplyVo applyVo = applyMapper.selectApplyById(applyId);
+        if (applyVo != null){
+            //说明查到了数据
+            return new ResultVO(ResStatus.OK,"success",applyVo);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
     }
 
 }

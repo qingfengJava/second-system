@@ -45,9 +45,25 @@ public class ActiveController {
         return activeService.queryApply(pageNum,limit);
     }
 
-    @ApiOperation("活动详情查询接口")
+    /**
+     * 活动申请信息查询，做数据回显使用
+     * @param applyId
+     * @return
+     */
+    @ApiOperation("活动申请信息查询接口")
     @PostMapping("/queryActive/{applyId}")
     public ResultVO queryApplyById(@PathVariable("applyId") String applyId){
+        return activeService.queryApplyById(applyId);
+    }
+
+    /**
+     * 根据申请Id查询活动申请的详细信息
+     * @param applyId
+     * @return
+     */
+    @ApiOperation("活动申请详情信息查询接口")
+    @PostMapping("/queryActiveDetails/{applyId}")
+    public ResultVO queryApplyDetails(@PathVariable("applyId") Integer applyId){
         return activeService.queryApplyDetails(applyId);
     }
 }

@@ -33,4 +33,12 @@ public interface ApplyService {
      * @return
      */
     ResultVO deleteApplyActive(Integer applyId);
+
+    /**
+     * 修改申请活动的信息
+     * @param applyId
+     * @param apply
+     * @return
+     */
+    ResultVO updateApplyActive(Integer applyId, Apply apply);
 }

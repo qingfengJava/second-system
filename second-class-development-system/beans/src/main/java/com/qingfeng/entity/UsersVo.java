@@ -13,14 +13,16 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * @author 用户实体类
+ * 用户实体类（主要是社团组织用户），维护社团组织实体
+ *
+ * @author 清风学Java
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Table(name = "tb_users")
-public class Users {
+public class UsersVo {
     /**
      * 主键，无实意
      */
@@ -100,5 +102,10 @@ public class Users {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column(name = "create_time")
     private Date createTime;
+
+    /**
+     * 社团组织对象实体
+     */
+    private Organize organize;
 
 }

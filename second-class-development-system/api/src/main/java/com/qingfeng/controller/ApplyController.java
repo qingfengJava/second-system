@@ -44,4 +44,12 @@ public class ApplyController {
         //根据活动申请表的Id删除要申请的活动
         return applyService.deleteApplyActive(applyId);
     }
+
+    @ApiOperation("活动申请信息修改")
+    @PostMapping("/update/{applyId}")
+    public ResultVO updateApplyActive(@PathVariable("applyId") Integer applyId,@RequestBody Apply apply){
+        //根据社团申请活动的主键Id修改活动申请的信息
+        return applyService.updateApplyActive(applyId,apply);
+
+    }
 }

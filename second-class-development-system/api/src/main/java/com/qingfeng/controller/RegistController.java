@@ -43,4 +43,11 @@ public class RegistController {
         return registService.deleteRegistration(activeRegId);
     }
 
+    @ApiOperation("修改报名信息")
+    @PostMapping("/update/{activeRegId}")
+    public ResultVO updateRegistration(@PathVariable("activeRegId") Integer activeRegId, @RequestBody Regist regist){
+        //根据报名表的Id，进行用户报名信息的修改
+        return registService.updateRegistration(activeRegId,regist);
+    }
+
 }

@@ -62,4 +62,16 @@ public class ApplyServiceImpl implements ApplyService {
         }
         return new ResultVO(ResStatus.NO,"网络异常，删除活动申请失败！",null);
     }
+
+    @Override
+    public ResultVO updateApplyActive(Integer applyId, Apply apply) {
+        //将申请表的主键Id设置到apply中
+        apply.setApplyId(applyId);
+        int i = applyMapper.updateByPrimaryKeySelective(apply);
+        if (i > 0){
+            //i>0 说明信息修改成功
+            return new ResultVO(ResStatus.OK,"修改活动申请信息成功！",apply);
+        }
+        return new ResultVO(ResStatus.NO,"网络异常，修改信息申请信息失败！",null);
+    }
 }

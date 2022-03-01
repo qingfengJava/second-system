@@ -34,4 +34,12 @@ public interface RegistService {
      * @return
      */
     ResultVO deleteRegistration(Integer activeRegId);
+
+    /**
+     * 根据学生报名表的主键Id，修改学生报名的相关信息
+     * @param activeRegId
+     * @param regist
+     * @return
+     */
+    ResultVO updateRegistration(Integer activeRegId, Regist regist);
 }

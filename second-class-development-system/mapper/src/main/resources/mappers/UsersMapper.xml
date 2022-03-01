@@ -2,21 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qingfeng.dao.UsersMapper">
 
-  <resultMap id="BaseResultMap" type="com.qingfeng.entity.Users">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="uId" jdbcType="INTEGER" property="uid" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="realName" jdbcType="VARCHAR" property="realname" />
-    <result column="nickName" jdbcType="VARCHAR" property="nickname" />
-    <result column="telPhone" jdbcType="VARCHAR" property="telphone" />
-    <result column="qq" jdbcType="VARCHAR" property="qq" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="photo" jdbcType="VARCHAR" property="photo" />
-    <result column="is_admin" jdbcType="BIT" property="isAdmin" />
-    <result column="is_delete" jdbcType="BIT" property="isDelete" />
-    <result column="hobyDes" jdbcType="VARCHAR" property="hobydes" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.qingfeng.entity.Users">
+        <id column="uId" jdbcType="INTEGER" property="uid"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="realName" jdbcType="VARCHAR" property="realname"/>
+        <result column="nickName" jdbcType="VARCHAR" property="nickname"/>
+        <result column="telPhone" jdbcType="VARCHAR" property="telphone"/>
+        <result column="qq" jdbcType="VARCHAR" property="qq"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="photo" jdbcType="VARCHAR" property="photo"/>
+        <result column="is_admin" jdbcType="BIT" property="isAdmin"/>
+        <result column="is_delete" jdbcType="BIT" property="isDelete"/>
+        <result column="hobyDes" jdbcType="VARCHAR" property="hobydes"/>
+    </resultMap>
+
+    <resultMap id="usersVoMap" type="com.qingfeng.entity.UsersVo">
+        <id column="uId" jdbcType="INTEGER" property="uid"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="realName" jdbcType="VARCHAR" property="realname"/>
+        <result column="nickName" jdbcType="VARCHAR" property="nickname"/>
+        <result column="telPhone" jdbcType="VARCHAR" property="telphone"/>
+        <result column="qq" jdbcType="VARCHAR" property="qq"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="photo" jdbcType="VARCHAR" property="photo"/>
+        <result column="is_admin" jdbcType="BIT" property="isAdmin"/>
+        <result column="is_delete" jdbcType="BIT" property="isDelete"/>
+        <result column="hobyDes" jdbcType="VARCHAR" property="hobydes"/>
+
+        <!-- 一对一映射关系查询社团组织信息 -->
+        <association property="organize" select="com.qingfeng.dao.OrganizeMapper.selectOrganizeByUserId" column="uId" />
+    </resultMap>
+
+
+    <!-- 根据用户Id关联查询社团组织信息 -->
+    <select id="selectByUserId" resultMap="usersVoMap">
+        select uId,
+               username,
+               password,
+               salt,
+               realName,
+               nickName,
+               telPhone,
+               qq,
+               email,
+               photo,
+               is_admin,
+               is_delete,
+               hobyDes,
+               create_time
+        from tb_users
+        where uid = #{uid}
+
+    </select>
 </mapper>

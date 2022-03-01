@@ -1,6 +1,7 @@
 package com.qingfeng.dao;
 
 import com.qingfeng.entity.Apply;
+import com.qingfeng.entity.ApplyVo;
 import com.qingfeng.generaldao.GeneralDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,11 @@ public interface ApplyMapper extends GeneralDao<Apply> {
      */
     List<Apply> queryApply(@Param("start") int start,
                            @Param("limit") int limit);
+
+    /**
+     * 根据申请活动的Id查询对应的申请活动的详情信息
+     * @param applyId
+     * @return
+     */
+    ApplyVo selectApplyById(Integer applyId);
 }

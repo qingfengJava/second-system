@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qingfeng.dao.OrganizeMapper">
-  <resultMap id="BaseResultMap" type="com.qingfeng.entity.Organize">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="organize_id" jdbcType="INTEGER" property="organizeId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="organize_name" jdbcType="VARCHAR" property="organizeName" />
-    <result column="organize_department" jdbcType="VARCHAR" property="organizeDepartment" />
-    <result column="organize_inroduce" jdbcType="VARCHAR" property="organizeInroduce" />
-    <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime" />
-    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.qingfeng.entity.Organize">
+        <id column="organize_id" jdbcType="INTEGER" property="organizeId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="organize_name" jdbcType="VARCHAR" property="organizeName"/>
+        <result column="organize_department" jdbcType="VARCHAR" property="organizeDepartment"/>
+        <result column="organize_inroduce" jdbcType="VARCHAR" property="organizeInroduce"/>
+        <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <!-- 根据用户Id查询对应的社团组织信息 -->
+    <select id="selectOrganizeByUserId" resultMap="BaseResultMap">
+        select organize_id,
+               user_id,
+               organize_name,
+               organize_department,
+               organize_inroduce,
+               birth_time,
+               is_delete,
+               create_time
+        from organize
+        where user_id = #{uid}
+    </select>
 </mapper>

@@ -95,8 +95,18 @@ public class RegistServiceImpl implements RegistService {
         int i = registMapper.updateByPrimaryKeySelective(regist);
         if (i > 0){
             return new ResultVO(ResStatus.OK,"删除报名信息成功！",null);
-        }else{
-            return new ResultVO(ResStatus.NO,"网络异常，删除失败！",null);
         }
+        return new ResultVO(ResStatus.NO,"网络异常，删除失败！",null);
+    }
+
+    @Override
+    public ResultVO updateRegistration(Integer activeRegId, Regist regist) {
+        //将主键Id设置到报名对象中
+        regist.setActiveRegId(activeRegId);
+        int i = registMapper.updateByPrimaryKeySelective(regist);
+        if (i > 0){
+            return new ResultVO(ResStatus.OK,"修改报名信息成功！",regist);
+        }
+        return new ResultVO(ResStatus.NO,"网络异常，修改信息报名失败！",null);
     }
 }
