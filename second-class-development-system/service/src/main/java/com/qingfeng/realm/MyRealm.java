@@ -1,7 +1,7 @@
 package com.qingfeng.realm;
 
-import com.qingfeng.dao.TbPermisionsMapper;
-import com.qingfeng.dao.TbRoleMapper;
+import com.qingfeng.dao.PermisionsMapper;
+import com.qingfeng.dao.RoleMapper;
 import com.qingfeng.dao.UsersMapper;
 import com.qingfeng.entity.Users;
 import lombok.SneakyThrows;
@@ -32,9 +32,9 @@ public class MyRealm extends AuthorizingRealm {
     @Autowired
     private UsersMapper usersMapper;
     @Autowired
-    private TbRoleMapper roleMapper;
+    private RoleMapper roleMapper;
     @Autowired
-    private TbPermisionsMapper permisionsMapper;
+    private PermisionsMapper permisionsMapper;
 
     /**
      * 获取授权数据（将当前用户的角色及权限信息查询出来，设置给securityManager）

@@ -6,15 +6,16 @@
       WARNING - @mbg.generated
     -->
     <id column="notice_id" jdbcType="INTEGER" property="noticeId" />
-    <result column="organize_id" jdbcType="INTEGER" property="organizeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="public_name" jdbcType="VARCHAR" property="publicName" />
     <result column="duty" jdbcType="VARCHAR" property="duty" />
     <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="release_object" jdbcType="INTEGER" property="releaseObject" />
     <result column="leader" jdbcType="VARCHAR" property="leader" />
     <result column="leader_post" jdbcType="VARCHAR" property="leaderPost" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
   </resultMap>
 </mapper>
