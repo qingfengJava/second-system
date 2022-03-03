@@ -107,6 +107,20 @@ public class ApplyVo {
     private String activeTime;
 
     /**
+     * 活动报名截止时间
+     */
+    @Column(name = "registration_deadline")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private Date registrationDeadline;
+
+    /**
+     * 活动报名是否限额
+     */
+    @Column(name = "is_quota")
+    private Integer isQuota;
+
+    /**
      * 活动分值
      */
     @Column(name = "active_score")

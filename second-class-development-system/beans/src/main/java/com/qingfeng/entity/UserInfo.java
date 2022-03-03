@@ -25,7 +25,8 @@ public class UserInfo {
      * 主键，无实意
      */
     @Id
-    private Integer bid;
+    @Column(name = "user_info_id")
+    private Integer userInfoId;
 
     /**
      * 学生表的外键，关联学生表信息

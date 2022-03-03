@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 用户持久层
+ * 用户基础控制层
  *
  * @author 清风学Java
  * @version 1.0.0
@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/user")
-@Api(value = "提供用户管理模块的功能",tags = "用户管理")
+@Api(value = "提供用户管理模块的功能",tags = "用户管理层接口")
 @CrossOrigin
 public class UserController {
 
@@ -50,17 +50,6 @@ public class UserController {
         return userService.checkLogin(username, password);
     }
 
-    @ApiOperation("用户添加接口")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "string",name = "username",value = "用户名/账号",required = true),
-            @ApiImplicitParam(paramType = "string",name = "password",value = "密码",required = true),
-            @ApiImplicitParam(paramType = "int",name = "isAdmin",value = "用户类型",required = true)
-    })
-    @PostMapping("/add")
-    public ResultVO userAdd(String username, String password, int isAdmin){
-        return userService.userAdd(username,password,isAdmin);
-    }
-
     @ApiOperation("用户修改密码接口")
     @ApiImplicitParam(paramType = "string",name = "password",value = "新密码",required = true)
     @GetMapping("/update/{uid}")
@@ -68,7 +57,7 @@ public class UserController {
         return userService.updatePassword(uid,password);
     }
 
-    @ApiOperation("完善用户信息接口")
+    @ApiOperation("完善用户基本信息接口")
     @PostMapping("/updateMessage/{uid}")
     public ResultVO updateMsg(@PathVariable("uid") String uid,Users user,String oldPhoto, MultipartFile img){
         try {
@@ -101,15 +90,15 @@ public class UserController {
         }
     }
 
-    @ApiOperation("查询用户基本信息接口")
+    @ApiOperation("查询学生用户基本信息接口")
     @PostMapping("/checkUser/{uid}")
     public ResultVO checkUser(@PathVariable("uid") String uid){
         return userService.checkUser(uid);
     }
 
-    @ApiOperation(("查询用户详情信息接口"))
+    @ApiOperation("查询用户详情信息接口")
     @PostMapping("/checkUserInfo/{uid}")
-    public ResultVO checkUserInfo(@PathVariable("uid") String uid){
-        return userService.checkUserInfo(uid);
+    public ResultVO checkUserInfo(@PathVariable("uid") String uid,Integer isAdmin){
+        return userService.checkUserInfo(uid,isAdmin);
     }
 }

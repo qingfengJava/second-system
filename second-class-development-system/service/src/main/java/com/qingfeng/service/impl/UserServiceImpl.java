@@ -1,13 +1,18 @@
 package com.qingfeng.service.impl;
 
-import com.qingfeng.dao.UsersMapper;
+import com.qingfeng.dao.OrganizeMapper;
+import com.qingfeng.dao.TeacherInfoMapper;
 import com.qingfeng.dao.UserInfoMapper;
-import com.qingfeng.entity.Users;
+import com.qingfeng.dao.UsersMapper;
+import com.qingfeng.entity.Organize;
+import com.qingfeng.entity.TeacherInfo;
 import com.qingfeng.entity.UserInfo;
+import com.qingfeng.entity.Users;
 import com.qingfeng.service.UserService;
 import com.qingfeng.utils.SaltUtils;
 import com.qingfeng.vo.ResStatus;
 import com.qingfeng.vo.ResultVO;
+import com.qingfeng.vo.UserStatus;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -38,6 +43,10 @@ public class UserServiceImpl implements UserService {
     private UsersMapper usersMapper;
     @Autowired
     private UserInfoMapper usreInfoMapper;
+    @Autowired
+    private TeacherInfoMapper teacherInfoMapper;
+    @Autowired
+    private OrganizeMapper organizeMapper;
 
     @Override
     public ResultVO checkLogin(String username, String password) {
@@ -107,7 +116,7 @@ public class UserServiceImpl implements UserService {
                 user.setPhoto("default.png");
                 user.setIsDelete(0);
                 user.setCreateTime(new Date());
-                //插入数据，并且实现主键回填
+                //插入数据，并且实现主键回填到user对象中
                 int i = usersMapper.insertUseGeneratedKeys(user);
                 if (i > 0){
                     return new ResultVO(ResStatus.OK,"添加用户成功",user);
@@ -172,12 +181,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultVO checkUserInfo(String uid) {
-        UserInfo userInfo = usreInfoMapper.selectByPrimaryKey(uid);
-        if (userInfo != null){
-            //说明查询成功
-            return new ResultVO(ResStatus.OK,"success", userInfo);
+    public ResultVO checkUserInfo(String uid,Integer isAdmin) {
+        //对用户身份进行判断，不同用户查询的详情信息不一样
+        if (isAdmin == UserStatus.STUDENT_CONSTANTS){
+            //学生身份，查询学生对应的信息
+            Example example = new Example(UserInfo.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("uid",uid);
+            UserInfo userInfo = usreInfoMapper.selectOneByExample(example);
+            if (userInfo != null){
+                //说明查询成功
+                return new ResultVO(ResStatus.OK,"success", userInfo);
+            }
+        }else if (isAdmin == UserStatus.CLUB_CONSTANTS || isAdmin == UserStatus.STUDENTS_UNION_CONSTANTS){
+            //说明是学生社团或学生社团发展中心的身份
+            Organize organize = organizeMapper.selectOrganizeByUserId(Integer.parseInt(uid));
+            if (organize != null){
+                return new ResultVO(ResStatus.OK,"success",organize);
+            }
+        }else if (isAdmin == UserStatus.LEADER_CONSTANTS || isAdmin == UserStatus.ADMIN_CONSTANTS){
+            //说明是校领导
+            Example example = new Example(TeacherInfo.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("uid",uid);
+            TeacherInfo teacherInfo = teacherInfoMapper.selectOneByExample(example);
+            if (teacherInfo != null){
+                return new ResultVO(ResStatus.OK,"success",teacherInfo);
+            }
         }
+        //如果没有查到直接返回失败
         return new ResultVO(ResStatus.NO,"fail",null);
     }
 }

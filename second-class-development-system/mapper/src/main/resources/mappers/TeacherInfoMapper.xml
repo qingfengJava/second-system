@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.dao.TeacherInfoMapper">
+  <resultMap id="BaseResultMap" type="com.qingfeng.entity.TeacherInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="teacher_info_id" jdbcType="INTEGER" property="teacherInfoId" />
+    <result column="birth" jdbcType="TIMESTAMP" property="birth" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="nation" jdbcType="VARCHAR" property="nation" />
+    <result column="sex" jdbcType="BIT" property="sex" />
+    <result column="politics_status" jdbcType="VARCHAR" property="politicsStatus" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="professional_title" jdbcType="BIT" property="professionalTitle" />
+    <result column="duty" jdbcType="VARCHAR" property="duty" />
+    <result column="research_orientation" jdbcType="VARCHAR" property="researchOrientation" />
+    <result column="postal_address" jdbcType="VARCHAR" property="postalAddress" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="cell_phone" jdbcType="VARCHAR" property="cellPhone" />
+    <result column="individual_resume" jdbcType="VARCHAR" property="individualResume" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+</mapper>

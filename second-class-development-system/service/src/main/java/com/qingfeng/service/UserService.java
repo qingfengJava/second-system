@@ -58,5 +58,5 @@ public interface UserService {
      * @param uid
      * @return
      */
-    ResultVO checkUserInfo(String uid);
+    ResultVO checkUserInfo(String uid,Integer isAdmin);
 }

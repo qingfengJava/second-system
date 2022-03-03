@@ -16,6 +16,8 @@
         <result column="teacher_telephone_num" jdbcType="VARCHAR" property="teacherTelephoneNum"/>
         <result column="active_location" jdbcType="VARCHAR" property="activeLocation"/>
         <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
+        <result column="registration_deadline" jdbcType="TIMESTAMP" property="registrationDeadline"/>
+        <result column="is_quota" jdbcType="INTEGER" property="isQuota" />
         <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
@@ -40,6 +42,8 @@
                teacher_telephone_num,
                active_location,
                active_time,
+               registration_deadline,
+               is_quota,
                active_score,
                active_introduction,
                active_content,
@@ -65,6 +69,8 @@
                teacher_telephone_num,
                active_location,
                active_time,
+               registration_deadline,
+               is_quota,
                active_score,
                active_introduction,
                active_content,
@@ -91,6 +97,8 @@
         <result column="teacher_telephone_num" jdbcType="VARCHAR" property="teacherTelephoneNum"/>
         <result column="active_location" jdbcType="VARCHAR" property="activeLocation"/>
         <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
+        <result column="registration_deadline" jdbcType="TIMESTAMP" property="registrationDeadline"/>
+        <result column="is_quota" jdbcType="INTEGER" property="isQuota" />
         <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
@@ -118,6 +126,8 @@
                teacher_telephone_num,
                active_location,
                active_time,
+               registration_deadline,
+               is_quota,
                active_score,
                active_introduction,
                active_content,

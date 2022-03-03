@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="bid" jdbcType="INTEGER" property="bid" />
+    <id column="user_info_id" jdbcType="INTEGER" property="userInfoId" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="student_num" jdbcType="VARCHAR" property="studentNum" />
     <result column="stu_name" jdbcType="VARCHAR" property="stuName" />
