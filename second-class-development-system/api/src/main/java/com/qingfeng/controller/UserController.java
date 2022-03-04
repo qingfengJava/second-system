@@ -1,5 +1,6 @@
 package com.qingfeng.controller;
 
+import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.service.UserService;
 import com.qingfeng.utils.FileUtils;
@@ -99,6 +100,14 @@ public class UserController {
     @ApiOperation("查询用户详情信息接口")
     @PostMapping("/checkUserInfo/{uid}")
     public ResultVO checkUserInfo(@PathVariable("uid") String uid,Integer isAdmin){
+        //查询用户详情，因为不同的角色对应的详情表不一样，因此要根据isAdmin做用户身份判断
         return userService.checkUserInfo(uid,isAdmin);
+    }
+
+    @ApiOperation("添加或修改学生用户详情接口")
+    @PostMapping("/updateUserInfo/{uid}")
+    public ResultVO updateUserInfo(@PathVariable("uid") Integer uid, UserInfo userInfo){
+        //添加或保存用户详情
+        return userService.updateUserInfo(uid,userInfo);
     }
 }

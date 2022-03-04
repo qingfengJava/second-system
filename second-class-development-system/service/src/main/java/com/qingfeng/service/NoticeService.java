@@ -19,4 +19,19 @@ public interface NoticeService {
      * @return
      */
     ResultVO addNotice(Integer userId, Notice notice);
+
+    /**
+     * 根据主键公告主键Id对公告信息进行修改
+     * @param noticeId
+     * @param notice
+     * @return
+     */
+    ResultVO updateNotice(Integer noticeId, Notice notice);
+
+    /**
+     * 根据公告表主键Id查询对应公告表详情信息
+     * @param noticeId
+     * @return
+     */
+    ResultVO queryDetails(Integer noticeId);
 }

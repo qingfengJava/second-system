@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * 社团组织轮播图实体类
+ * 用户公告实体类
  *
  * @author 清风学Java
  */
@@ -21,34 +21,34 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "organize_img")
-public class OrganizeImg {
+@Table(name = "user_notice")
+public class UserNotice {
     /**
-     * 轮播图主键Id
+     * 用户公告表主键Id
      */
     @Id
-    @Column(name = "img_id")
-    private Integer imgId;
+    @Column(name = "user_notice_id")
+    private Integer userNoticeId;
 
     /**
-     * 外键，社团部门Id
+     * 用户Id
      */
-    @Column(name = "organize_id")
-    private Integer organizeId;
+    private Integer uid;
 
     /**
-     * 轮播图路径
+     * 公告表Id
      */
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Column(name = "notice_id")
+    private Integer noticeId;
 
     /**
-     * 状态，是否删除
+     * 是否查看（0：未查看   1： 已查看）
      */
-    private Integer status;
+    @Column(name = "is_check")
+    private Integer isCheck;
 
     /**
-     * 创建的时间
+     * 创建时间（首次查看时间）
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -56,7 +56,7 @@ public class OrganizeImg {
     private Date createTime;
 
     /**
-     * 更新时间
+     * 更新时间（最后一次查看时间）
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

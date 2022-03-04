@@ -20,7 +20,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Notice {
+public class NoticeVo {
     /**
      * 社团公告主键Id
      */
@@ -93,4 +93,9 @@ public class Notice {
      */
     @Column(name = "is_delete")
     private Integer isDelete;
+
+    /**
+     * 公告表实体维护用户实体
+     */
+    private UsersVo usersVo;
 }

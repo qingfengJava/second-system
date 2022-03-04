@@ -1,7 +1,7 @@
 package com.qingfeng.controller;
 
-import com.qingfeng.entity.Notice;
-import com.qingfeng.service.NoticeService;
+import com.qingfeng.entity.Organize;
+import com.qingfeng.service.OrganizeService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,16 +22,12 @@ import org.springframework.web.bind.annotation.*;
 public class OrganizeController {
 
     @Autowired
-    private NoticeService noticeService;
+    private OrganizeService organizeService;
 
-    @ApiOperation("发布公告")
-    @PostMapping("/add/{uid}")
-    public ResultVO addNotice(@PathVariable("uid") Integer userId, Notice notice){
-        return noticeService.addNotice(userId,notice);
-    }
-
-    @ApiOperation("修改公告信息")
-    public ResultVO updateNotice(){
-        return null;
+    @ApiOperation("添加或修改社团组织详情接口")
+    @PostMapping("/updateOrganizeInfo/{uid}")
+    public ResultVO updateOrganizeInfo(@PathVariable("uid") Integer uid, Organize organize){
+        //添加或保存社团组织详情
+        return organizeService.updateOrganizeInfo(uid,organize);
     }
 }

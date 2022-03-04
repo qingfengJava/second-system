@@ -10,6 +10,7 @@
         <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     </resultMap>
 
     <!-- 根据用户Id查询对应的社团组织信息 -->
@@ -21,7 +22,8 @@
                organize_inroduce,
                birth_time,
                is_delete,
-               create_time
+               create_time,
+               update_time
         from organize
         where user_id = #{uid}
     </select>

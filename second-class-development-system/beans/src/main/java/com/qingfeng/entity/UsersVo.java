@@ -104,8 +104,12 @@ public class UsersVo {
     private Date createTime;
 
     /**
-     * 社团组织对象实体
+     * 关联社团组织对象实体
      */
     private Organize organize;
 
+    /**
+     * 关联校领导对象实体
+     */
+    private TeacherInfo teacherInfo;
 }

@@ -212,4 +212,69 @@ public class UserServiceImpl implements UserService {
         //如果没有查到直接返回失败
         return new ResultVO(ResStatus.NO,"fail",null);
     }
+
+    @Override
+    public ResultVO updateUserInfo(Integer uid, UserInfo userInfo) {
+        //先根据uid查询详情表是否有该学生的详情记录
+        Example example = new Example(UserInfo.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("uid",uid);
+        UserInfo oldUserInfo = usreInfoMapper.selectOneByExample(example);
+        //定义一个记录数
+        int count = 0;
+        if (oldUserInfo == null){
+            //说明没有记录，要进行添加操作
+            userInfo.setUid(uid);
+            userInfo.setCreateTime(new Date());
+            userInfo.setUpdateTime(new Date());
+            userInfo.setIsDelete(0);
+            userInfo.setIsChange(0);
+            //封装完信息进行保存操作
+            count = usreInfoMapper.insertUseGeneratedKeys(userInfo);
+        }else{
+            //说明是进行信息更新操作
+            userInfo.setUserInfoId(oldUserInfo.getUserInfoId());
+            userInfo.setUpdateTime(new Date());
+            //更新
+            count = usreInfoMapper.updateByPrimaryKeySelective(userInfo);
+        }
+        if (count > 0) {
+            //说明添加或更新信息成功
+            return new ResultVO(ResStatus.OK, "信息保存成功！", userInfo);
+        }else {
+            return new ResultVO(ResStatus.NO,"网络超时，信息保存失败！",null);
+        }
+    }
+
+    @Override
+    public ResultVO updateTeacherInfo(Integer uid, TeacherInfo teacherInfo) {
+        //先根据uid查询详情表是否有该校领导的详情记录
+        Example example = new Example(TeacherInfo.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("uid",uid);
+        TeacherInfo oldTeacherInfo = teacherInfoMapper.selectOneByExample(example);
+        //定义一个记录数
+        int count = 0;
+        if (oldTeacherInfo == null){
+            //说明没有记录，要进行添加操作
+            teacherInfo.setUid(uid);
+            teacherInfo.setCreateTime(new Date());
+            teacherInfo.setUpdateTime(new Date());
+            teacherInfo.setIsDelete(0);
+            //封装完信息进行保存操作
+            count = teacherInfoMapper.insertUseGeneratedKeys(teacherInfo);
+        }else{
+            //说明是进行信息更新操作
+            teacherInfo.setTeacherInfoId(oldTeacherInfo.getTeacherInfoId());
+            teacherInfo.setUpdateTime(new Date());
+            //更新
+            count = teacherInfoMapper.updateByPrimaryKeySelective(teacherInfo);
+        }
+        if (count > 0) {
+            //说明添加或更新信息成功
+            return new ResultVO(ResStatus.OK, "信息保存成功！", teacherInfo);
+        }else {
+            return new ResultVO(ResStatus.NO,"网络超时，信息保存失败！",null);
+        }
+    }
 }

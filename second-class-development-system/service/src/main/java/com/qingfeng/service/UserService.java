@@ -1,5 +1,7 @@
 package com.qingfeng.service;
 
+import com.qingfeng.entity.TeacherInfo;
+import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.vo.ResultVO;
 
@@ -54,9 +56,26 @@ public interface UserService {
     ResultVO checkUser(String uid);
 
     /**
-     * 根据用户id查询用户详情信息
+     * 根据用户id和身份标识查询用户详情信息
      * @param uid
+     * @param isAdmin
      * @return
      */
     ResultVO checkUserInfo(String uid,Integer isAdmin);
+
+    /**
+     * 根据学生用户Id添加或修改学生用户详情信息
+     * @param uid
+     * @param userInfo
+     * @return
+     */
+    ResultVO updateUserInfo(Integer uid, UserInfo userInfo);
+
+    /**
+     * 根据校领导用户Id添加或修改校领导详情信息
+     * @param uid
+     * @param teacherInfo
+     * @return
+     */
+    ResultVO updateTeacherInfo(Integer uid, TeacherInfo teacherInfo);
 }

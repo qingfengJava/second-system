@@ -11,4 +11,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TeacherInfoMapper extends GeneralDao<TeacherInfo> {
+
+    /**
+     * 根据用户Id查询校领导的详情信息
+     * @param uid
+     * @return
+     */
+    TeacherInfoMapper queryByUserId(Integer uid);
 }

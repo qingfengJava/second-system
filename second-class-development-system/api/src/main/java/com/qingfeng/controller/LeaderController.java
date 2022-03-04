@@ -1,5 +1,6 @@
 package com.qingfeng.controller;
 
+import com.qingfeng.entity.TeacherInfo;
 import com.qingfeng.service.UserService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -34,5 +35,11 @@ public class LeaderController {
     @PostMapping("/add")
     public ResultVO userAdd(String username, String password, int isAdmin){
         return userService.userAdd(username,password,isAdmin);
+    }
+
+    @ApiOperation("添加或修改校领导用户详情接口")
+    @PostMapping("/updateTeacherInfo/{uid}")
+    public ResultVO updateTeacherInfo(@PathVariable("uid") Integer uid, TeacherInfo teacherInfo){
+        return userService.updateTeacherInfo(uid, teacherInfo);
     }
 }
