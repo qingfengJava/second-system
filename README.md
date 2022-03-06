@@ -5,3 +5,5 @@
 
 develop分支为第二代基于SpringBoot+Vue实现前后端分离开发。后台采用Maven聚合工程实现（正在开发中）。
 
+技术：SpringBoot、mybatis、shiro、tkMapper、redis、Elasticsearch、rocketMQ
+
