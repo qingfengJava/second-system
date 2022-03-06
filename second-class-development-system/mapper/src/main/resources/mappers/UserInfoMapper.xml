@@ -7,14 +7,14 @@
         <result column="uid" jdbcType="INTEGER" property="uid"/>
         <result column="student_num" jdbcType="VARCHAR" property="studentNum"/>
         <result column="stu_name" jdbcType="VARCHAR" property="stuName"/>
-        <result column="stu_sex" jdbcType="BIT" property="stuSex"/>
+        <result column="stu_sex" jdbcType="INTEGER" property="stuSex"/>
         <result column="birth" jdbcType="DATE" property="birth"/>
         <result column="nation" jdbcType="VARCHAR" property="nation"/>
         <result column="politics_status" jdbcType="VARCHAR" property="politicsStatus"/>
         <result column="enter_time" jdbcType="DATE" property="enterTime"/>
         <result column="graduate_time" jdbcType="DATE" property="graduateTime"/>
         <result column="id_card" jdbcType="VARCHAR" property="idCard"/>
-        <result column="hukou" jdbcType="BIT" property="hukou"/>
+        <result column="hukou" jdbcType="INTEGER" property="hukou"/>
         <result column="telphone" jdbcType="VARCHAR" property="telphone"/>
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="qq" jdbcType="VARCHAR" property="qq"/>

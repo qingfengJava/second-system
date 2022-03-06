@@ -5,6 +5,8 @@ import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.vo.ResultVO;
 
+import java.util.List;
+
 /**
  * 用户业务层接口
  *
@@ -78,4 +80,11 @@ public interface UserService {
      * @return
      */
     ResultVO updateTeacherInfo(Integer uid, TeacherInfo teacherInfo);
+
+    /**
+     * 根据用户身份查询用户信息
+     * @param isAdmin
+     * @return
+     */
+    List<Users> selectByUserIdentity(Integer isAdmin);
 }

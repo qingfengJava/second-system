@@ -59,6 +59,7 @@ public class UserController {
     }
 
     @ApiOperation("完善用户基本信息接口")
+    @ApiImplicitParam(paramType = "string",name = "oldPhoto",value = "旧头像的名字",required = true)
     @PostMapping("/updateMessage/{uid}")
     public ResultVO updateMsg(@PathVariable("uid") String uid,Users user,String oldPhoto, MultipartFile img){
         try {
@@ -98,6 +99,7 @@ public class UserController {
     }
 
     @ApiOperation("查询用户详情信息接口")
+    @ApiImplicitParam(paramType = "Integer",name = "isAdmin", value = "用户身份标识",required = true)
     @PostMapping("/checkUserInfo/{uid}")
     public ResultVO checkUserInfo(@PathVariable("uid") String uid,Integer isAdmin){
         //查询用户详情，因为不同的角色对应的详情表不一样，因此要根据isAdmin做用户身份判断
@@ -106,7 +108,7 @@ public class UserController {
 
     @ApiOperation("添加或修改学生用户详情接口")
     @PostMapping("/updateUserInfo/{uid}")
-    public ResultVO updateUserInfo(@PathVariable("uid") Integer uid, UserInfo userInfo){
+    public ResultVO updateUserInfo(@PathVariable("uid") Integer uid, @RequestBody UserInfo userInfo){
         //添加或保存用户详情
         return userService.updateUserInfo(uid,userInfo);
     }

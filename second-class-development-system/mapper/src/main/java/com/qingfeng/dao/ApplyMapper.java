@@ -38,4 +38,20 @@ public interface ApplyMapper extends GeneralDao<Apply> {
      * @return
      */
     ApplyVo selectApplyById(Integer applyId);
+
+    /**
+     * 根据申请表主键id修改申请表的审核结果
+     * @param applyId
+     * @param isAgree
+     * @return
+     */
+    int updateByApplyId(@Param("applyId") Integer applyId,
+                        @Param("isAgree") Integer isAgree);
+
+    /**
+     * 根据申请表主键Id删除活动申请信息
+     * @param applyId
+     * @return
+     */
+    int deleteByApplyId(Integer applyId);
 }

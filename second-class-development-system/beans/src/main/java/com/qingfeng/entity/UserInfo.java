@@ -74,12 +74,16 @@ public class UserInfo {
     /**
      * 入学时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Column(name = "enter_time")
     private Date enterTime;
 
     /**
      * 毕业时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Column(name = "graduate_time")
     private Date graduateTime;
 
@@ -153,7 +157,7 @@ public class UserInfo {
     private String clazz;
 
     /**
-     * 兴趣描述
+     * 个人描述
      */
     @Column(name = "hoby_des")
     private String hobyDes;

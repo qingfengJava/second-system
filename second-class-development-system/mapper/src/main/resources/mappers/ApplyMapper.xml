@@ -137,4 +137,12 @@
                is_delete
         from apply where apply_id = #{applyId}
     </select>
+
+    <update id="updateByApplyId">
+        update apply set is_agree = #{isAgree} where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteByApplyId">
+        update apply set is_delete = 1 where apply_id = #{applyId}
+    </delete>
 </mapper>

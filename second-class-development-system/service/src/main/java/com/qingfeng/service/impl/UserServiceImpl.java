@@ -163,7 +163,8 @@ public class UserServiceImpl implements UserService {
         user.setEmail(users.getEmail());
         user.setPhoto(users.getPhoto());
         user.setHobydes(users.getHobydes());
-        int i = usersMapper.updateByPrimaryKey(user);
+        //根据主键更新属性不为null的值
+        int i = usersMapper.updateByPrimaryKeySelective(user);
         if (i > 0){
             return new ResultVO(ResStatus.OK,"信息保存成功！！！",user);
         }else{
@@ -210,7 +211,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         //如果没有查到直接返回失败
-        return new ResultVO(ResStatus.NO,"fail",null);
+        return new ResultVO(ResStatus.NO,"用户详情信息不存在！",null);
     }
 
     @Override
@@ -222,11 +223,11 @@ public class UserServiceImpl implements UserService {
         UserInfo oldUserInfo = usreInfoMapper.selectOneByExample(example);
         //定义一个记录数
         int count = 0;
+        userInfo.setUid(uid);
+        userInfo.setUpdateTime(new Date());
         if (oldUserInfo == null){
             //说明没有记录，要进行添加操作
-            userInfo.setUid(uid);
             userInfo.setCreateTime(new Date());
-            userInfo.setUpdateTime(new Date());
             userInfo.setIsDelete(0);
             userInfo.setIsChange(0);
             //封装完信息进行保存操作
@@ -234,7 +235,6 @@ public class UserServiceImpl implements UserService {
         }else{
             //说明是进行信息更新操作
             userInfo.setUserInfoId(oldUserInfo.getUserInfoId());
-            userInfo.setUpdateTime(new Date());
             //更新
             count = usreInfoMapper.updateByPrimaryKeySelective(userInfo);
         }
@@ -255,18 +255,18 @@ public class UserServiceImpl implements UserService {
         TeacherInfo oldTeacherInfo = teacherInfoMapper.selectOneByExample(example);
         //定义一个记录数
         int count = 0;
+        //设置公告需要设置的值
+        teacherInfo.setUid(uid);
+        teacherInfo.setUpdateTime(new Date());
         if (oldTeacherInfo == null){
             //说明没有记录，要进行添加操作
-            teacherInfo.setUid(uid);
             teacherInfo.setCreateTime(new Date());
-            teacherInfo.setUpdateTime(new Date());
             teacherInfo.setIsDelete(0);
             //封装完信息进行保存操作
             count = teacherInfoMapper.insertUseGeneratedKeys(teacherInfo);
         }else{
             //说明是进行信息更新操作
             teacherInfo.setTeacherInfoId(oldTeacherInfo.getTeacherInfoId());
-            teacherInfo.setUpdateTime(new Date());
             //更新
             count = teacherInfoMapper.updateByPrimaryKeySelective(teacherInfo);
         }
@@ -276,5 +276,13 @@ public class UserServiceImpl implements UserService {
         }else {
             return new ResultVO(ResStatus.NO,"网络超时，信息保存失败！",null);
         }
+    }
+
+    @Override
+    public List<Users> selectByUserIdentity(Integer isAdmin) {
+        Example example = new Example(Users.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isAdmin",isAdmin);
+        return usersMapper.selectByExample(example);
     }
 }

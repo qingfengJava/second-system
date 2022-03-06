@@ -33,6 +33,8 @@ public class TeacherInfo {
     /**
      * 出生日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date birth;
 
     /**
@@ -48,7 +50,7 @@ public class TeacherInfo {
     /**
      * 性别（1：男   2：女）
      */
-    private Boolean sex;
+    private Integer sex;
 
     /**
      * 政治面貌
@@ -70,7 +72,7 @@ public class TeacherInfo {
      * 职称（1：讲师  2：副教授  3：教授）
      */
     @Column(name = "professional_title")
-    private Boolean professionalTitle;
+    private Integer professionalTitle;
 
     /**
      * 职务

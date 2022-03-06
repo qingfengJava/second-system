@@ -7,11 +7,11 @@
         <result column="birth" jdbcType="TIMESTAMP" property="birth"/>
         <result column="uid" jdbcType="INTEGER" property="uid"/>
         <result column="nation" jdbcType="VARCHAR" property="nation"/>
-        <result column="sex" jdbcType="BIT" property="sex"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
         <result column="politics_status" jdbcType="VARCHAR" property="politicsStatus"/>
         <result column="department" jdbcType="VARCHAR" property="department"/>
         <result column="education" jdbcType="VARCHAR" property="education"/>
-        <result column="professional_title" jdbcType="BIT" property="professionalTitle"/>
+        <result column="professional_title" jdbcType="INTEGER" property="professionalTitle"/>
         <result column="duty" jdbcType="VARCHAR" property="duty"/>
         <result column="research_orientation" jdbcType="VARCHAR" property="researchOrientation"/>
         <result column="postal_address" jdbcType="VARCHAR" property="postalAddress"/>

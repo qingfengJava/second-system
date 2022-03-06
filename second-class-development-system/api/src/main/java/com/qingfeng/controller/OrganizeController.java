@@ -26,7 +26,7 @@ public class OrganizeController {
 
     @ApiOperation("添加或修改社团组织详情接口")
     @PostMapping("/updateOrganizeInfo/{uid}")
-    public ResultVO updateOrganizeInfo(@PathVariable("uid") Integer uid, Organize organize){
+    public ResultVO updateOrganizeInfo(@PathVariable("uid") Integer uid, @RequestBody Organize organize){
         //添加或保存社团组织详情
         return organizeService.updateOrganizeInfo(uid,organize);
     }

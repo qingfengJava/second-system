@@ -1,6 +1,7 @@
 package com.qingfeng.controller;
 
 import com.qingfeng.entity.Apply;
+import com.qingfeng.entity.AuditForm;
 import com.qingfeng.service.ApplyService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -25,17 +26,17 @@ public class ApplyController {
     private ApplyService applyService;
 
     @ApiOperation("活动申请接口")
-    @PostMapping("/apply")
-    public ResultVO applyActive(@RequestBody Apply apply){
-        //将用户Id存入apply对象中
-        return applyService.applyActive(apply);
+    @PostMapping("/apply/{uid}")
+    public ResultVO applyActive(@PathVariable("uid") Integer uid, @RequestBody Apply apply){
+        //如果活动申请成功，要给相关的负责人发送邮件以提醒审核
+        return applyService.applyActive(uid, apply);
     }
 
     @ApiOperation("活动申请审核")
     @PostMapping("/check/{applyId}")
-    public ResultVO checkApplyActive(@PathVariable("applyId") Integer applyId,Integer isAgree){
+    public ResultVO checkApplyActive(@PathVariable("applyId") Integer applyId,@RequestBody AuditForm auditForm){
         //根据活动申请Id进行活动名审核
-        return applyService.checkApplyActive(applyId,isAgree);
+        return applyService.checkApplyActive(applyId,auditForm);
     }
 
     @ApiOperation("活动申请删除")
@@ -49,7 +50,6 @@ public class ApplyController {
     @PostMapping("/update/{applyId}")
     public ResultVO updateApplyActive(@PathVariable("applyId") Integer applyId,@RequestBody Apply apply){
         //根据社团申请活动的主键Id修改活动申请的信息
-        return applyService.updateApplyActive(applyId,apply);
-
+        return applyService.updateApplyActive(applyId, apply);
     }
 }

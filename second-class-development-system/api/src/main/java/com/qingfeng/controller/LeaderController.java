@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
  * @date 2022/3/3
  */
 @RestController
-@RequestMapping("/leader")
 @Api(value = "提供学校领导及管理员的管理模块的功能",tags = "校领导管理层接口")
 @CrossOrigin
+@RequestMapping("/leader")
 public class LeaderController {
 
     @Autowired
@@ -39,7 +39,7 @@ public class LeaderController {
 
     @ApiOperation("添加或修改校领导用户详情接口")
     @PostMapping("/updateTeacherInfo/{uid}")
-    public ResultVO updateTeacherInfo(@PathVariable("uid") Integer uid, TeacherInfo teacherInfo){
+    public ResultVO updateTeacherInfo(@PathVariable("uid") Integer uid, @RequestBody TeacherInfo teacherInfo){
         return userService.updateTeacherInfo(uid, teacherInfo);
     }
 }

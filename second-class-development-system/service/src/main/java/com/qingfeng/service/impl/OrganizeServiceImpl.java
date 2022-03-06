@@ -32,18 +32,17 @@ public class OrganizeServiceImpl implements OrganizeService {
         Organize oldOrganize = organizeMapper.selectOneByExample(example);
         //定义一个记录数
         int count = 0;
+        organize.setUserId(uid);
+        organize.setUpdateTime(new Date());
         if (oldOrganize == null){
             //说明没有记录，要进行添加操作
-            organize.setUserId(uid);
             organize.setCreateTime(new Date());
-            organize.setUpdateTime(new Date());
             organize.setIsDelete(0);
             //封装完信息进行保存操作
             count = organizeMapper.insertUseGeneratedKeys(organize);
         }else{
             //说明是进行信息更新操作
             organize.setOrganizeId(oldOrganize.getOrganizeId());
-            organize.setUpdateTime(new Date());
             //更新
             count = organizeMapper.updateByPrimaryKeySelective(organize);
         }
