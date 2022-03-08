@@ -7,3 +7,6 @@ develop分支为第二代基于SpringBoot+Vue实现前后端分离开发。后�
 
 技术：SpringBoot、mybatis、shiro、tkMapper、redis、Elasticsearch、rocketMQ
 
+
+该项目是自己独立开发的一个项目，发布到git目前不会提供数据库和界面，也不用私信我，目前不会提供任何技术支持。请谅解！！！
+
