@@ -42,4 +42,5 @@ public interface RegistService {
      * @return
      */
     ResultVO updateRegistration(Integer activeRegId, Regist regist);
+
 }

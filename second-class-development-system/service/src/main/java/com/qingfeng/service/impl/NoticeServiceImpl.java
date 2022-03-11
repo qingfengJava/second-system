@@ -6,6 +6,7 @@ import com.qingfeng.entity.Notice;
 import com.qingfeng.entity.NoticeVo;
 import com.qingfeng.entity.UserNotice;
 import com.qingfeng.service.NoticeService;
+import com.qingfeng.utils.PageHelper;
 import com.qingfeng.vo.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 清风学Java
@@ -57,12 +59,19 @@ public class NoticeServiceImpl implements NoticeService {
             Example example = new Example(UserNotice.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("noticeId",noticeId);
-            UserNotice userNotice = new UserNotice();
-            userNotice.setIsCheck(0);
-            int k = userNoticeMapper.updateByExampleSelective(userNotice, example);
-            if (k > 0){
-                //说明修改成功
-                return new ResultVO(ResStatus.OK,"公告信息修改成功！",notice);
+            //先查询用户信息表有没有数据，有数据再进行修改
+            List<UserNotice> userNotices = userNoticeMapper.selectByExample(example);
+            if (userNotices.size() > 0){
+                UserNotice userNotice = new UserNotice();
+                userNotice.setIsCheck(0);
+                int k = userNoticeMapper.updateByExampleSelective(userNotice, example);
+                if (k > 0){
+                    //说明修改成功
+                    return new ResultVO(ResStatus.OK,"公告信息修改成功！",notice);
+                }else{
+                    //否则用户公告表信息修改失败    制造一个异常 让方法回滚
+                    int n = 1/0;
+                }
             }
         }
         return new ResultVO(ResStatus.NO,"网络异常，信息修改失败！",null);
@@ -77,4 +86,64 @@ public class NoticeServiceImpl implements NoticeService {
         }
         return new ResultVO(ResStatus.NO,"fail",null);
     }
+
+    /**
+     * 分页查询公告列表
+     * 注意：对于用户来说   要分已查看和未查看的
+     * @param pageNum
+     * @param limit
+     * @return
+     */
+    @Override
+    public ResultVO queryNotice(int pageNum, int limit) {
+        try {
+            //分页查询
+            int start = (pageNum - 1) * limit;
+            List<NoticeVo> noticeList = noticeMapper.queryNotice(start,limit);
+            //查询总计录数   注意是所有的
+            Example example = new Example(Notice.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isDelete",0);
+            int count = noticeMapper.selectCountByExample(example);
+            //计算总页数
+            int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+            //封装数据
+            PageHelper<NoticeVo> pageHelper = new PageHelper<>(count, pageCount, noticeList);
+            //不管查没查到直接返回数据
+            return new ResultVO(ResStatus.OK,"success",pageHelper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //防止查询出现异常情况
+            return new ResultVO(ResStatus.NO,"fail",null);
+        }
+    }
+
+    /**
+     * 查询学生需要处理的公告任务
+     * @param isAdmin
+     * @param pageNum
+     * @param limit
+     * @return
+     */
+    @Override
+    public ResultVO queryWaitTask(Integer isAdmin, Integer pageNum, Integer limit) {
+        try {
+            //分页查询
+            int start = (pageNum - 1) * limit;
+            List<NoticeVo> noticeTaskList = noticeMapper.queryTaskNotice(isAdmin,start,limit);
+            System.out.println(noticeTaskList);
+            int count = noticeMapper.selectCountTaskNotice(isAdmin);
+            //计算总页数
+            int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+            //封装数据
+            PageHelper<NoticeVo> pageHelper = new PageHelper<>(count, pageCount, noticeTaskList);
+            //不管查没查到直接返回数据
+            return new ResultVO(ResStatus.OK,"success",pageHelper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //防止查询出现异常情况
+            return new ResultVO(ResStatus.NO,"fail",null);
+        }
+    }
+
 }

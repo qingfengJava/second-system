@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 公告实体类
@@ -89,6 +90,12 @@ public class NoticeVo {
     private Date updateTime;
 
     /**
+     * 是否需要用户处理（0：不需要  1：需要处理）
+     */
+    @Column(name = "is_task")
+    private Integer isTask;
+
+    /**
      * 是否删除   0：未删除  1：已删除
      */
     @Column(name = "is_delete")
@@ -98,4 +105,10 @@ public class NoticeVo {
      * 公告表实体维护用户实体
      */
     private UsersVo usersVo;
+
+    /**
+     * 维护用户公告表
+     * 用户在查询公告列表的时候判断用户是否已经查看过该公告
+     */
+    private List<UserNotice> userNotice;
 }

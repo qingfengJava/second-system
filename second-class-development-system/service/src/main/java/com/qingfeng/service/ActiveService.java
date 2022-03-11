@@ -43,4 +43,12 @@ public interface ActiveService {
      * @return
      */
     ResultVO queryApplyDetails(Integer applyId);
+
+    /**
+     * 根据申请表Id查询学生报名详情信息
+     * @param uid
+     * @param applyId
+     * @return
+     */
+    ResultVO queryRegistActiveDetails(Integer uid,Integer applyId);
 }

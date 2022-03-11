@@ -107,8 +107,8 @@ public class Regist {
     /**
      * 审核的信息
      */
-    @Column(name = "check_img")
-    private String checkImg;
+    @Column(name = "check_msg")
+    private String checkMsg;
 
     /**
      * 是否删除（0：未删除  1：已删除）

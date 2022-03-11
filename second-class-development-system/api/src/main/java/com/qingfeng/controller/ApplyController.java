@@ -52,4 +52,5 @@ public class ApplyController {
         //根据社团申请活动的主键Id修改活动申请的信息
         return applyService.updateApplyActive(applyId, apply);
     }
+
 }

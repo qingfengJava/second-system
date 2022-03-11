@@ -1,9 +1,11 @@
 package com.qingfeng.service.impl;
 
 import com.qingfeng.dao.ApplyMapper;
+import com.qingfeng.dao.RegistMapper;
 import com.qingfeng.dao.UsersMapper;
 import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.AuditForm;
+import com.qingfeng.entity.Regist;
 import com.qingfeng.entity.Users;
 import com.qingfeng.service.EmailService;
 import com.qingfeng.service.UserService;
@@ -29,6 +31,8 @@ public class EmailServiceImpl implements EmailService {
     private UsersMapper usersMapper;
     @Autowired
     private ApplyMapper applyMapper;
+    @Autowired
+    private RegistMapper registMapper;
 
     /**
      * 发送需要审核的邮箱信息
@@ -100,6 +104,39 @@ public class EmailServiceImpl implements EmailService {
                         "审核时间："+auditForm.getCreateTime();
                 emailUtils.sendEmail(users.getEmail(),"活动审核结果",msg);
             }
+        }
+    }
+
+    /**
+     * 给报名活动身份需要审核的用户发送邮件消息，提醒及时参加活动
+     * @param activeRegId
+     */
+    @Override
+    public void sendCheckSuccess(Integer activeRegId) {
+        //根据报名表主键Id查询对应的报名全部信息
+        Regist regist = registMapper.selectByPrimaryKey(activeRegId);
+        //根据报名表中的申请表主键查询活动的详情信息
+        Apply apply = applyMapper.selectByPrimaryKey(regist.getApplyId());
+        //查询学生的详情信息
+        Users users = usersMapper.selectByPrimaryKey(regist.getUserId());
+        if (!"".equals(users.getEmail()) || users.getEmail() != null){
+            //可以发送邮件信息
+            String msg = "同学你好！你报名的"+apply.getActiveName()+"活动参与者身份已经审核，活动报名成功，请及时参加活动哟！";
+            emailUtils.sendEmail(users.getEmail(),"活动报名审核结果",msg);
+        }
+
+    }
+
+    @Override
+    public void sendCheckType(Regist regist) {
+        //查询申请表的信息
+        Apply apply = applyMapper.selectByPrimaryKey(regist.getApplyId());
+        //查询学生的详情信息
+        Users users = usersMapper.selectByPrimaryKey(apply.getApplyUserId());
+        if (!"".equals(users.getEmail()) || users.getEmail() != null){
+            //可以发送邮件信息
+            String msg = "有用户报名活动信息需要审核，请前往官网查看！";
+            emailUtils.sendEmail(users.getEmail(),"活动报名审核信息",msg);
         }
     }
 }

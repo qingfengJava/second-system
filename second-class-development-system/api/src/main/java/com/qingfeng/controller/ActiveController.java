@@ -66,4 +66,16 @@ public class ActiveController {
     public ResultVO queryApplyDetails(@PathVariable("applyId") Integer applyId){
         return activeService.queryApplyDetails(applyId);
     }
+
+    /**
+     * 报名活动详情查询：
+     *      既要查询用户报名表的信息，也要查询对应的活动申请表的信息
+     * @param applyId
+     * @return
+     */
+    @ApiOperation("报名活动详情接口查看")
+    @PostMapping("/queryApplyActiveDetails/{uid}/{applyId}")
+    public ResultVO queryRegistActiveDetails(@PathVariable("uid") Integer uid,@PathVariable("applyId") Integer applyId){
+        return activeService.queryRegistActiveDetails(uid,applyId);
+    }
 }

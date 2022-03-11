@@ -99,6 +99,18 @@ public class RegistVo {
     @Column(name = "is_success")
     private Integer isSuccess;
 
+
+    /**
+     * 审核状态  0：身份待审核    1：直接报名就成功的   2：审核身份通过   3：审核身份不通过
+     */
+    private Integer status;
+
+    /**
+     * 审核的信息
+     */
+    @Column(name = "check_msg")
+    private String checkMsg;
+
     /**
      * 是否删除（0：未删除  1：已删除）
      */

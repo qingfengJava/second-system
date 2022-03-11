@@ -2,6 +2,7 @@ package com.qingfeng.service;
 
 import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.AuditForm;
+import com.qingfeng.entity.Regist;
 
 /**
  * 发送邮件的业务层接口
@@ -32,4 +33,16 @@ public interface EmailService {
      * @param auditForm
      */
     void sendCheckNeedToUpdate(Integer applyId, AuditForm auditForm);
+
+    /**
+     * 给用户活动报名身份审核通过的用户发送邮件提醒参加活动
+     * @param activeRegId
+     */
+    void sendCheckSuccess(Integer activeRegId);
+
+    /**
+     * 给活动申请人发送审核用户申请的信息
+     * @param regist
+     */
+    void sendCheckType(Regist regist);
 }

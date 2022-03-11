@@ -81,6 +81,12 @@ public class Notice {
     private Date createTime;
 
     /**
+     * 是否需要用户处理（0：不需要  1：需要处理）
+     */
+    @Column(name = "is_task")
+    private Integer isTask;
+
+    /**
      * 更新时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

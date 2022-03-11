@@ -34,4 +34,23 @@ public interface NoticeService {
      * @return
      */
     ResultVO queryDetails(Integer noticeId);
+
+    /**
+     * 分页查询公告列表
+     * 注意：
+     *  对用户来说：要分已查看和未查看的公告
+     * @param pageNum
+     * @param limit
+     * @return
+     */
+    ResultVO queryNotice(int pageNum, int limit);
+
+    /**
+     * 对学生来说，活动有单独查看的地方，只处理公告
+     * @param isAdmin
+     * @param pageNum
+     * @param limit
+     * @return
+     */
+    ResultVO queryWaitTask(Integer isAdmin,Integer pageNum, Integer limit);
 }

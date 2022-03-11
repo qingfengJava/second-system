@@ -15,6 +15,8 @@
         <result column="student_qq" jdbcType="VARCHAR" property="studentQq"/>
         <result column="reg_create_time" jdbcType="TIMESTAMP" property="regCreateTime"/>
         <result column="is_success" jdbcType="INTEGER" property="isSuccess"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="check_msg" jdbcType="VARCHAR" property="checkMsg"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
         <result column="is_sign" jdbcType="INTEGER" property="isSign"/>
     </resultMap>
@@ -33,6 +35,8 @@
         <result column="student_qq" jdbcType="VARCHAR" property="studentQq"/>
         <result column="reg_create_time" jdbcType="TIMESTAMP" property="regCreateTime"/>
         <result column="is_success" jdbcType="INTEGER" property="isSuccess"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="check_msg" jdbcType="VARCHAR" property="checkMsg"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
         <result column="is_sign" jdbcType="INTEGER" property="isSign"/>
 
@@ -54,9 +58,45 @@
                student_qq,
                reg_create_time,
                is_success,
+               status,
+               check_msg,
                is_delete,
                is_sign
-        from regist where user_id = #{uid} and is_sign = 0
-        limit #{start},#{limit}
+        from regist
+        where user_id = #{uid} and is_sign = 0 limit #{start} , #{limit}
+    </select>
+
+    <!-- 审核修改报名表数据信息 -->
+    <update id="updateRegistById">
+        update regist
+        set is_success=#{isSuccess},
+            status=#{status},
+            check_msg=#{checkMsg}
+            <if test="type != null">
+                , type=#{type}
+            </if>
+        where active_reg_id = #{activeRegId}
+    </update>
+
+    <select id="queryRegistActiveDetails" resultMap="ResultMap">
+        select active_reg_id,
+               user_id,
+               apply_id,
+               student_id,
+               student_name,
+               student_college,
+               student_major,
+               type,
+               student_sex,
+               student_tel,
+               student_qq,
+               reg_create_time,
+               is_success,
+               status,
+               check_msg,
+               is_delete,
+               is_sign
+        from regist
+        where user_id = #{uid} and apply_id = #{applyId}
     </select>
 </mapper>

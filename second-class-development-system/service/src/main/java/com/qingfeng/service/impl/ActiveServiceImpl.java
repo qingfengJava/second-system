@@ -106,4 +106,14 @@ public class ActiveServiceImpl implements ActiveService {
         return new ResultVO(ResStatus.NO,"fail",null);
     }
 
+    @Override
+    public ResultVO queryRegistActiveDetails(Integer uid,Integer applyId) {
+        RegistVo registVo = registMapper.queryRegistActiveDetails(uid,applyId);
+        if (registVo != null){
+            //说明查到了数据
+            return new ResultVO(ResStatus.OK,"success",registVo);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
+    }
+
 }

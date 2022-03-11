@@ -26,4 +26,19 @@ public interface RegistMapper extends GeneralDao<Regist> {
     List<RegistVo> checkRegistration(@Param("uid") Integer uid,
                                      @Param("start") int start,
                                      @Param("limit") int limit);
+
+    /**
+     * 根据用户报名表的主键Id指定修改用户报名的信息
+     * @param regist
+     * @return
+     */
+    int updateRegistById(Regist regist);
+
+    /**
+     * 根据申请表Id查询学生报名活动的详情信息
+     * @param uid
+     * @param applyId
+     * @return
+     */
+    RegistVo queryRegistActiveDetails(Integer uid,Integer applyId);
 }

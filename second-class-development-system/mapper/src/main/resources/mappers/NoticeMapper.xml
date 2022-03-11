@@ -14,6 +14,7 @@
         <result column="leader_post" jdbcType="VARCHAR" property="leaderPost"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_task" jdbcType="INTEGER" property="isTask"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
     </resultMap>
 
@@ -29,10 +30,11 @@
         <result column="leader_post" jdbcType="VARCHAR" property="leaderPost"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_task" jdbcType="INTEGER" property="isTask"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
 
         <!-- 一对一管关联映射查询 -->
-        <association property="usersVo" select="com.qingfeng.dao.UsersMapper.selectByUserId" column="user_id" />
+        <association property="usersVo" select="com.qingfeng.dao.UsersMapper.selectByUserId" column="user_id"/>
     </resultMap>
 
     <!-- 查询公告详情信息 -->
@@ -48,8 +50,86 @@
                leader_post,
                create_time,
                update_time,
+               is_task,
                is_delete
         from notice
         where notice_id = #{noticeId}
+    </select>
+
+    <resultMap id="noticeVoMap2" type="com.qingfeng.entity.NoticeVo">
+        <id column="notice_id" jdbcType="INTEGER" property="noticeId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="public_name" jdbcType="VARCHAR" property="publicName"/>
+        <result column="duty" jdbcType="VARCHAR" property="duty"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="release_object" jdbcType="INTEGER" property="releaseObject"/>
+        <result column="leader" jdbcType="VARCHAR" property="leader"/>
+        <result column="leader_post" jdbcType="VARCHAR" property="leaderPost"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_task" jdbcType="INTEGER" property="isTask"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+
+        <!-- 一对一管关联映射查询 -->
+        <association property="userNotice" select="com.qingfeng.dao.UserNoticeMapper.queryByNoticeId"
+                     column="notice_id"/>
+    </resultMap>
+
+    <select id="queryNotice" resultMap="noticeVoMap2">
+        select notice_id,
+               user_id,
+               title,
+               public_name,
+               duty,
+               content,
+               release_object,
+               leader,
+               leader_post,
+               create_time,
+               update_time,
+               is_task,
+               is_delete
+        from notice
+        where is_delete = 0
+            limit #{start}
+            , #{limit}
+    </select>
+
+    <select id="queryTaskNotice" resultMap="noticeVoMap2">
+        select  notice_id,
+                user_id,
+                title,
+                public_name,
+                duty,
+                content,
+                release_object,
+                leader,
+                leader_post,
+                create_time,
+                update_time,
+                is_task,
+                is_delete
+        from notice
+        where is_delete = 0 and is_task = 1
+        <if test="isAdmin == 1">
+            and release_object = 1 or release_object = 2
+        </if>
+        <if test="isAdmin == 2 || isAdmin == 3">
+            and release_object = 1 or release_object = 3
+        </if>
+        limit #{start}, #{limit}
+    </select>
+
+    <select id="selectCountTaskNotice" resultType="java.lang.Integer">
+        select count(*)
+        from notice
+        where is_delete = 0 and is_task = 1
+        <if test="isAdmin == 1">
+            and release_object = 1 or release_object = 2
+        </if>
+        <if test="isAdmin == 2 || isAdmin == 3">
+            and release_object = 1 or release_object = 3
+        </if>
     </select>
 </mapper>

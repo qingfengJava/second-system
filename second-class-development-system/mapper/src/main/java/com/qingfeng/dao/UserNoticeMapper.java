@@ -12,4 +12,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserNoticeMapper extends GeneralDao<UserNotice> {
 
+    /**
+     * 根据用户Id查询用户
+     * @param uid
+     * @param noticeId
+     * @return
+     */
+    UserNotice queryByNoticeId(Integer noticeId);
 }

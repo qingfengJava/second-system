@@ -11,4 +11,14 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
+    <select id="queryByNoticeId" resultMap="BaseResultMap">
+        select user_notice_id,
+               uid,
+               notice_id,
+               is_check,
+               create_time,
+               update_time
+        from user_notice where notice_id=#{noticeId}
+    </select>
+
 </mapper>
