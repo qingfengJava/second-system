@@ -116,4 +116,19 @@ public class ActiveServiceImpl implements ActiveService {
         return new ResultVO(ResStatus.NO,"fail",null);
     }
 
+    @Override
+    public ResultVO queryRegistCount(Integer applyId) {
+        //主键Id   并且报名信息没有删除的  报名成功的
+        Example example = new Example(Regist.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applyId",applyId);
+        criteria.andEqualTo("isSuccess",1);
+        criteria.andEqualTo("isDelete",0);
+        int i = registMapper.selectCountByExample(example);
+        if (i >= 0){
+            return new ResultVO(ResStatus.OK,"success",i);
+        }
+        return new ResultVO(ResStatus.NO,"fail",0);
+    }
+
 }

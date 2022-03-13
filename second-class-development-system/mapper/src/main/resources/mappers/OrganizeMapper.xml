@@ -10,7 +10,7 @@
         <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
     <!-- 根据用户Id查询对应的社团组织信息 -->
@@ -26,5 +26,51 @@
                update_time
         from organize
         where user_id = #{uid}
+    </select>
+
+    <resultMap id="resultOrganizeVoMap" type="com.qingfeng.entity.OrganizeVo">
+        <id column="organize_id" jdbcType="INTEGER" property="organizeId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="organize_name" jdbcType="VARCHAR" property="organizeName"/>
+        <result column="organize_department" jdbcType="VARCHAR" property="organizeDepartment"/>
+        <result column="organize_inroduce" jdbcType="VARCHAR" property="organizeInroduce"/>
+        <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+
+        <collection property="organizeImg" select="com.qingfeng.dao.OrganizeImgMapper.selectOrganizeImgByOrganizationId"
+                    column="organize_id"/>
+    </resultMap>
+
+    <select id="checkOrganizeInfo" resultMap="resultOrganizeVoMap">
+        select organize_id,
+               user_id,
+               organize_name,
+               organize_department,
+               organize_inroduce,
+               birth_time,
+               is_delete,
+               create_time,
+               update_time
+        from organize
+        where user_id = #{uid}
+          and is_delete = 0;
+    </select>
+
+    <!-- 分页查询社团组织列表 -->
+    <select id="queryOrganize" resultMap="BaseResultMap">
+        select organize_id,
+               user_id,
+               organize_name,
+               organize_department,
+               organize_inroduce,
+               birth_time,
+               is_delete,
+               create_time,
+               update_time
+        from organize
+        where is_delete = 0
+        limit #{start}, #{limit}
     </select>
 </mapper>

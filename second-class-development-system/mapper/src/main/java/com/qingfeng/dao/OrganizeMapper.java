@@ -1,8 +1,12 @@
 package com.qingfeng.dao;
 
 import com.qingfeng.entity.Organize;
+import com.qingfeng.entity.OrganizeVo;
 import com.qingfeng.generaldao.GeneralDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 社团组织持久层接口
@@ -18,4 +22,20 @@ public interface OrganizeMapper extends GeneralDao<Organize> {
      * @return
      */
     Organize selectOrganizeByUserId(Integer uid);
+
+    /**
+     * 根据社团组织用户的主键Id查询社团组织的详情信息，含轮播图信息
+     * @param uid
+     * @return
+     */
+    OrganizeVo checkOrganizeInfo(Integer uid);
+
+    /**
+     * 分页查询社团组织列表
+     * @param start
+     * @param limit
+     * @return
+     */
+    List<Organize> queryOrganize(@Param("start") Integer start,
+                                 @Param("limit") Integer limit);
 }

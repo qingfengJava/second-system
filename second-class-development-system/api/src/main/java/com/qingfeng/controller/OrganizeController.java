@@ -30,4 +30,19 @@ public class OrganizeController {
         //添加或保存社团组织详情
         return organizeService.updateOrganizeInfo(uid,organize);
     }
+
+    @ApiOperation("查询社团组织详情信息")
+    @PostMapping("/checkOrganizeInfo/{uid}")
+    public ResultVO checkOrganizeInfo(@PathVariable("uid")Integer uid){
+        //根据用户主键Id查询社团组织信息详情，含轮播图信息
+        return organizeService.checkOrganizeInfo(uid);
+    }
+
+    @ApiOperation("分页查询社团组织列表")
+    @PostMapping("/queryOrganize")
+    public ResultVO queryOrganize(Integer pageNum, Integer limit){
+        //分页查询社团组织列表
+        return organizeService.queryOrganize(pageNum, limit);
+    }
+
 }

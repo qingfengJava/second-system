@@ -1,7 +1,6 @@
 package com.qingfeng.controller;
 
 import com.qingfeng.service.NoticeService;
-import com.qingfeng.service.RegistService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class TaskController {
 
-    @Autowired
-    private RegistService registService;
     @Autowired
     private NoticeService noticeService;
 

@@ -72,7 +72,7 @@
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
 
         <!-- 一对一管关联映射查询 -->
-        <association property="userNotice" select="com.qingfeng.dao.UserNoticeMapper.queryByNoticeId"
+        <collection property="userNotice" select="com.qingfeng.dao.UserNoticeMapper.queryByNoticeId"
                      column="notice_id"/>
     </resultMap>
 

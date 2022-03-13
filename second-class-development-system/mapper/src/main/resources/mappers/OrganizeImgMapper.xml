@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qingfeng.dao.OrganizeImgMapper">
-  <resultMap id="BaseResultMap" type="com.qingfeng.entity.OrganizeImg">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="img_id" jdbcType="INTEGER" property="imgId" />
-    <result column="organize_id" jdbcType="INTEGER" property="organizeId" />
-    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.qingfeng.entity.OrganizeImg">
+        <id column="img_id" jdbcType="INTEGER" property="imgId"/>
+        <result column="organize_id" jdbcType="INTEGER" property="organizeId"/>
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectOrganizeImgByOrganizationId" resultMap="BaseResultMap">
+        select img_id,
+               organize_id,
+               img_url,
+               status,
+               create_time,
+               update_time
+        from organize_img
+        where organize_id = #{organizeId}
+
+    </select>
 </mapper>

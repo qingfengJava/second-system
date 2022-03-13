@@ -51,4 +51,11 @@ public interface ActiveService {
      * @return
      */
     ResultVO queryRegistActiveDetails(Integer uid,Integer applyId);
+
+    /**
+     * 根据活动申请表的主键Id查询某个活动报名的总人数Id
+     * @param applyId
+     * @return
+     */
+    ResultVO queryRegistCount(Integer applyId);
 }

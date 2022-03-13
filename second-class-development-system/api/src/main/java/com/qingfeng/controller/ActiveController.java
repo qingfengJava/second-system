@@ -78,4 +78,15 @@ public class ActiveController {
     public ResultVO queryRegistActiveDetails(@PathVariable("uid") Integer uid,@PathVariable("applyId") Integer applyId){
         return activeService.queryRegistActiveDetails(uid,applyId);
     }
+
+    /**
+     * 查询某个具体活动的报名总人数Id
+     * @param applyId
+     * @return
+     */
+    @ApiOperation("具体活动报名总人数查询")
+    @PatchMapping("/queryRegistCount/{applyId}")
+    public ResultVO queryRegistCount(@PathVariable("applyId") Integer applyId){
+        return activeService.queryRegistCount(applyId);
+    }
 }

@@ -19,4 +19,19 @@ public interface OrganizeService {
      * @return
      */
     ResultVO updateOrganizeInfo(Integer uid, Organize organize);
+
+    /**
+     * 根据社团组织Id查询社团组织的详情信息，含轮播图
+     * @param uid
+     * @return
+     */
+    ResultVO checkOrganizeInfo(Integer uid);
+
+    /**
+     * 分页查询社团组织列表
+     * @param pageNum
+     * @param limit
+     * @return
+     */
+    ResultVO queryOrganize(Integer pageNum, Integer limit);
 }
