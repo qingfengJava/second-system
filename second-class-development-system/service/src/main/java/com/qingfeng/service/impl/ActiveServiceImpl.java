@@ -8,6 +8,7 @@ import com.qingfeng.entity.Regist;
 import com.qingfeng.entity.RegistVo;
 import com.qingfeng.service.ActiveService;
 import com.qingfeng.utils.PageHelper;
+import com.qingfeng.utils.SchoolYearUtils;
 import com.qingfeng.vo.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class ActiveServiceImpl implements ActiveService {
             //查询总记录数
             Example example = new Example(Regist.class);
             Example.Criteria criteria = example.createCriteria();
-            criteria.andLike("userId",uid);
+            criteria.andLike("userId","%"+uid+"%");
             criteria.andEqualTo("isSign",0);
             int count = registMapper.selectCountByExample(example);
             //计算总页数
@@ -129,6 +130,23 @@ public class ActiveServiceImpl implements ActiveService {
             return new ResultVO(ResStatus.OK,"success",i);
         }
         return new ResultVO(ResStatus.NO,"fail",0);
+    }
+
+    @Override
+    public ResultVO queryActiveYearCount(Integer userId) {
+        //获取学年
+        String str = SchoolYearUtils.getSchoolYearByOne();
+        String schoolYear = str.substring(0, str.lastIndexOf("-"));
+        Example example = new Example(Apply.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applyUserId",userId);
+        criteria.andLike("schoolYear","%"+schoolYear+"%");
+        int count = applyMapper.selectCountByExample(example);
+        if (count >= 0){
+            //说明查到了数据
+            return new ResultVO(ResStatus.OK,"success",count);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
     }
 
 }

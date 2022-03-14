@@ -18,6 +18,7 @@
         <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
         <result column="registration_deadline" jdbcType="TIMESTAMP" property="registrationDeadline"/>
         <result column="is_quota" jdbcType="INTEGER" property="isQuota" />
+        <result column="school_year" jdbcType="VARCHAR" property="schoolYear" />
         <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
@@ -44,6 +45,7 @@
                active_time,
                registration_deadline,
                is_quota,
+               school_year,
                active_score,
                active_introduction,
                active_content,
@@ -71,6 +73,7 @@
                active_time,
                registration_deadline,
                is_quota,
+               school_year,
                active_score,
                active_introduction,
                active_content,
@@ -99,6 +102,7 @@
         <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
         <result column="registration_deadline" jdbcType="TIMESTAMP" property="registrationDeadline"/>
         <result column="is_quota" jdbcType="INTEGER" property="isQuota" />
+        <result column="school_year" jdbcType="VARCHAR" property="schoolYear" />
         <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
@@ -128,6 +132,7 @@
                active_time,
                registration_deadline,
                is_quota,
+               school_year,
                active_score,
                active_introduction,
                active_content,

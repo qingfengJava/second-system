@@ -58,4 +58,11 @@ public interface ActiveService {
      * @return
      */
     ResultVO queryRegistCount(Integer applyId);
+
+    /**
+     * 根据社团用户Id查询该社团一个学年内举办活动的个数
+     * @param userId
+     * @return
+     */
+    ResultVO queryActiveYearCount(Integer userId);
 }

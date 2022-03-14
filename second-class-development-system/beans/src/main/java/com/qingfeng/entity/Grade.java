@@ -31,8 +31,8 @@ public class Grade {
     /**
      * 社团Id
      */
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "organize_id")
+    private Integer organizeId;
 
     /**
      * 学年

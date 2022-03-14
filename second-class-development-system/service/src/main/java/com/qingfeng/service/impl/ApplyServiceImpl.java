@@ -18,6 +18,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 清风学Java
@@ -36,46 +37,59 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Override
     public ResultVO applyActive(Integer uid, Apply apply) {
-        //首先要检查活动报名时间和活动开展时间是否符合逻辑规范（活动报名时间不能超过活动开展时间）
-        //活动开始的时间
-        String strDate = apply.getActiveTime().substring(0, apply.getActiveTime().indexOf("~") - 1);
-        //活动开始的日期
-        Date startDate = DateFormatUtils.strToDate(strDate, "yyyy-MM-dd");
-        //活动报名截止的日期
-        Date endDate = apply.getRegistrationDeadline();
+        //首先判断活动申请是否重复   同一个活动一学年只能办一个
+        String schoolYear = apply.getSchoolYear().substring(0, apply.getSchoolYear().indexOf("-"));
+        Example example = new Example(Apply.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("activeName",apply.getActiveName());
+        criteria.andLike("schoolYear","%"+schoolYear+"%");
+        criteria.andEqualTo("isDelete",0);
+        List<Apply> applyList = applyMapper.selectByExample(example);
+        if (applyList.size() == 0){
+            //活动不重复，可以申请
+            //首先要检查活动报名时间和活动开展时间是否符合逻辑规范（活动报名时间不能超过活动开展时间）
+            //活动开始的时间
+            String strDate = apply.getActiveTime().substring(0, apply.getActiveTime().indexOf("~") - 1);
+            //活动开始的日期
+            Date startDate = DateFormatUtils.strToDate(strDate, "yyyy-MM-dd");
+            //活动报名截止的日期
+            Date endDate = apply.getRegistrationDeadline();
 
-        //首先审查活动申请时间，活动申请时间比活动开始时间应该最少提前一周进行申请
-        //使用默认时区和语言环境获得一个日历。
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(startDate);
-        //取当前日期的前一周
-        cal.add(Calendar.DAY_OF_MONTH, -7);
-        Date time = cal.getTime();
-        //只要当前日期小于活动开始日期减1周的时间就行  返回的是false
-        if (!CompareDateUtils.compareDate(new Date(), time)){
-            //说明活动申请的时间没有问题
-            //进行日期的比较（活动报名日期不大于活动开始的日期） 比较返回值也是false
-            if(!CompareDateUtils.compareDate(endDate, startDate)){
-                //说明活动截止日期，没有问题
-                //给对象设置一些必填值
-                apply.setApplyUserId(uid);
-                apply.setApplyCreateTime(new Date());
-                apply.setIsAgree(0);
-                apply.setIsDelete(0);
-                int i = applyMapper.insertUseGeneratedKeys(apply);
-                if (i > 0){
-                    //活动申请成功，发送邮件通知负责人审核
-                    emailService.sendNeedToCheckEmail(UserStatus.STUDENTS_UNION_CONSTANTS,apply);
+            //首先审查活动申请时间，活动申请时间比活动开始时间应该最少提前一周进行申请
+            //使用默认时区和语言环境获得一个日历。
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startDate);
+            //取当前日期的前一周
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            Date time = cal.getTime();
+            //只要当前日期小于活动开始日期减1周的时间就行  返回的是false
+            if (!CompareDateUtils.compareDate(new Date(), time)){
+                //说明活动申请的时间没有问题
+                //进行日期的比较（活动报名日期不大于活动开始的日期） 比较返回值也是false
+                if(!CompareDateUtils.compareDate(endDate, startDate)){
+                    //说明活动截止日期，没有问题
+                    //给对象设置一些必填值
+                    apply.setApplyUserId(uid);
+                    apply.setApplyCreateTime(new Date());
+                    apply.setIsAgree(0);
+                    apply.setIsDelete(0);
+                    int i = applyMapper.insertUseGeneratedKeys(apply);
+                    if (i > 0){
+                        //活动申请成功，发送邮件通知负责人审核
+                        emailService.sendNeedToCheckEmail(UserStatus.STUDENTS_UNION_CONSTANTS,apply);
 
-                    return new ResultVO(ResStatus.OK,"活动申请成功，尽快通知负责人审核！",apply);
-                }else {
-                    return new ResultVO(ResStatus.NO,"服务器异常活动申请失败！！！",null);
+                        return new ResultVO(ResStatus.OK,"活动申请成功，尽快通知负责人审核！",apply);
+                    }else {
+                        return new ResultVO(ResStatus.NO,"服务器异常活动申请失败！！！",null);
+                    }
+                }else{
+                    return new ResultVO(ResStatus.NO,"活动报名截止日期不能长于活动开始时间！",null);
                 }
             }else{
-                return new ResultVO(ResStatus.NO,"活动报名截止日期不能长于活动开始时间！",null);
+                return new ResultVO(ResStatus.NO,"活动申请时间必须比活动开始时间提前一周以上才行！",null);
             }
         }else{
-            return new ResultVO(ResStatus.NO,"活动申请时间必须比活动开始时间提前一周以上才行！",null);
+            return new ResultVO(ResStatus.NO,"活动重复，该活动在这一学年里已经申请举办过了",null);
         }
     }
 
@@ -151,7 +165,7 @@ public class ApplyServiceImpl implements ApplyService {
     }
 
     /**
-     * 修改活动申请的注意事项：
+     * 修改活动申请的注意事项：  修改的活动暂时不审查活动是否重复
      *      1、必须是活动未开始之前。
      *      2、同时修改活动之后要重新经过审核才行。
      *      3、修改活动信息要对应修改初级审核表中的审核信息

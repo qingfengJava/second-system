@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.dao.QualityActiveMapper">
+  <resultMap id="BaseResultMap" type="com.qingfeng.entity.QualityActive">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="quality_active_id" jdbcType="INTEGER" property="qualityActiveId" />
+    <result column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="active_name" jdbcType="VARCHAR" property="activeName" />
+    <result column="organize_name" jdbcType="VARCHAR" property="organizeName" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
+    <result column="active_num" jdbcType="INTEGER" property="activeNum" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
+    <result column="introduce" jdbcType="VARCHAR" property="introduce" />
+    <result column="active_mean" jdbcType="VARCHAR" property="activeMean" />
+    <result column="active_time" jdbcType="TIMESTAMP" property="activeTime" />
+    <result column="school_year" jdbcType="VARCHAR" property="schoolYear" />
+    <result column="is_check" jdbcType="INTEGER" property="isCheck" />
+    <result column="is_confirm" jdbcType="INTEGER" property="isConfirm" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+</mapper>

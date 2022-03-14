@@ -85,8 +85,14 @@ public class ActiveController {
      * @return
      */
     @ApiOperation("具体活动报名总人数查询")
-    @PatchMapping("/queryRegistCount/{applyId}")
+    @PostMapping("/queryRegistCount/{applyId}")
     public ResultVO queryRegistCount(@PathVariable("applyId") Integer applyId){
         return activeService.queryRegistCount(applyId);
+    }
+
+    @ApiOperation("查询社团学年活动个数")
+    @PostMapping("/queryActiveYear/{userId}")
+    public ResultVO queryActiveYearCount(@PathVariable("userId") Integer userId){
+        return activeService.queryActiveYearCount(userId);
     }
 }

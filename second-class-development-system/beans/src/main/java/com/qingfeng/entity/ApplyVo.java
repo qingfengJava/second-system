@@ -121,6 +121,12 @@ public class ApplyVo {
     private Integer isQuota;
 
     /**
+     * 学期
+     */
+    @Column(name = "school_year")
+    private String schoolYear;
+
+    /**
      * 活动分值
      */
     @Column(name = "active_score")
