@@ -8,6 +8,7 @@ import com.qingfeng.service.ApplyService;
 import com.qingfeng.service.EmailService;
 import com.qingfeng.utils.CompareDateUtils;
 import com.qingfeng.utils.DateFormatUtils;
+import com.qingfeng.utils.SchoolYearUtils;
 import com.qingfeng.vo.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import com.qingfeng.vo.UserStatus;
@@ -245,5 +246,22 @@ public class ApplyServiceImpl implements ApplyService {
         }else{
             return new ResultVO(ResStatus.NO,"距离活动开始还有不足两天的时间，无法修改活动申请！",null);
         }
+    }
+
+    @Override
+    public ResultVO queryActiveYearCount(Integer userId) {
+        //获取学年
+        String str = SchoolYearUtils.getSchoolYearByOne();
+        String schoolYear = str.substring(0, str.lastIndexOf("-"));
+        Example example = new Example(Apply.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applyUserId",userId);
+        criteria.andLike("schoolYear","%"+schoolYear+"%");
+        int count = applyMapper.selectCountByExample(example);
+        if (count >= 0){
+            //说明查到了数据
+            return new ResultVO(ResStatus.OK,"success",count);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
     }
 }

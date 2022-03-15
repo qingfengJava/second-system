@@ -1,6 +1,10 @@
 package com.qingfeng.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -12,6 +16,10 @@ import java.util.Date;
  * 精品活动申请快照表
  * @author 清风学Java
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Table(name = "quality_active")
 public class QualityActive {
     /**
@@ -26,6 +34,12 @@ public class QualityActive {
      */
     @Column(name = "apply_id")
     private Integer applyId;
+
+    /**
+     * 社团组织外键Id
+     */
+    @Column(name = "organize_id")
+    private Integer organizeId;
 
     /**
      * 活动名称（快照）
@@ -82,13 +96,13 @@ public class QualityActive {
     private String schoolYear;
 
     /**
-     * 初级申请审核阶段（申请是否成功，不是认定）
+     * 初级申请审核阶段（申请是否成功，不是认定）（0：未成功   1： 已成功）
      */
     @Column(name = "is_check")
     private Integer isCheck;
 
     /**
-     * 是否确定为精品活动
+     * 是否确定为精品活动（0：未确定   1：未通过  2：已确定）
      */
     @Column(name = "is_confirm")
     private Integer isConfirm;
@@ -102,7 +116,7 @@ public class QualityActive {
     private Date createTime;
 
     /**
-     * 是否删除
+     * 是否删除 （0：未删除  1：已删除）
      */
     @Column(name = "is_delete")
     private Integer isDelete;

@@ -1,6 +1,10 @@
 package com.qingfeng.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -12,6 +16,10 @@ import java.util.Date;
  *
  * @author 清风学Java
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Approve {
 
     /**

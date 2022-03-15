@@ -53,4 +53,10 @@ public class ApplyController {
         return applyService.updateApplyActive(applyId, apply);
     }
 
+    @ApiOperation("查询社团学年活动个数")
+    @PostMapping("/queryActive/{userId}")
+    public ResultVO queryActiveYearCount(@PathVariable("userId") Integer userId){
+        return applyService.queryActiveYearCount(userId);
+    }
+
 }

@@ -2,9 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qingfeng.dao.ApproveMapper">
   <resultMap id="BaseResultMap" type="com.qingfeng.entity.Approve">
-    <!--
-      WARNING - @mbg.generated
-    -->
     <id column="approve_id" jdbcType="INTEGER" property="approveId" />
     <result column="quality_active_id" jdbcType="INTEGER" property="qualityActiveId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
