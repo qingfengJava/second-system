@@ -63,7 +63,7 @@
                is_delete,
                is_sign
         from regist
-        where user_id = #{uid} and is_sign = 0 limit #{start} , #{limit}
+        where user_id = #{uid} and is_sign = 0 and is_delete = 0 limit #{start} , #{limit}
     </select>
 
     <!-- 审核修改报名表数据信息 -->

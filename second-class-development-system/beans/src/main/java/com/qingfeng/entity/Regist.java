@@ -63,12 +63,12 @@ public class Regist {
     private String studentMajor;
 
     /**
-     * 参与者类型   1：参与者   2：组织者
+     * 参与者类型   0：参与者   1：组织者
      */
     private Integer type;
 
     /**
-     * 学生性别（1：男  2：女）
+     * 学生性别（0：男  1：女）
      */
     @Column(name = "student_sex")
     private Integer studentSex;

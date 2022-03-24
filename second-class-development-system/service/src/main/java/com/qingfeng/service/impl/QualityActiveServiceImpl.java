@@ -79,4 +79,24 @@ public class QualityActiveServiceImpl implements QualityActiveService {
             return new ResultVO(ResStatus.NO,"不能重复申请活动！",null);
         }
     }
+
+    /**
+     * 精品活动信息的修改
+     * @param qualityActive
+     * @return
+     */
+    @Override
+    public ResultVO updateQualityActive(QualityActive qualityActive) {
+        //这里进行修改之后，不需要额外的审核   只是针对原有的信息进行修改即可
+        qualityActive.setIsCheck(0);
+        qualityActive.setIsConfirm(0);
+        qualityActive.setCreateTime(new Date());
+        qualityActive.setIsDelete(0);
+        int i = qualityActiveMapper.updateByPrimaryKeySelective(qualityActive);
+        if (i > 0){
+            //说明修改成功
+            return new ResultVO(ResStatus.OK,"success",qualityActive);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
+    }
 }

@@ -25,4 +25,11 @@ public interface QualityActiveService {
      * @return
      */
     ResultVO addQualityActive(QualityActive qualityActive);
+
+    /**
+     * 根据精品社团活动的之间Id修改已经申请的精品活动的信息
+     * @param qualityActive
+     * @return
+     */
+    ResultVO updateQualityActive(QualityActive qualityActive);
 }

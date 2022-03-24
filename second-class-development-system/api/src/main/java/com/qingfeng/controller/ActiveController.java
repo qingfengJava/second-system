@@ -40,9 +40,9 @@ public class ActiveController {
             @ApiImplicitParam(paramType = "int",name = "pageNum",value = "页码",required = true),
             @ApiImplicitParam(paramType = "int",name = "limit",value = "每页条数",required = true)
     })
-    @PostMapping("/queryApply")
-    public ResultVO queryApply(int pageNum,int limit){
-        return activeService.queryApply(pageNum,limit);
+    @PostMapping("/queryApply/{uid}")
+    public ResultVO queryApply(@PathVariable("uid")Integer uid, int pageNum,int limit){
+        return activeService.queryApply(uid,pageNum,limit);
     }
 
     /**

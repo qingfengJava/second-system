@@ -51,7 +51,7 @@ public class RegistServiceImpl implements RegistService {
                 regist.setApplyId(applyId);
                 regist.setRegCreateTime(new Date());
                 //要根据用户报名的角色判断用户报名是否暂时成功
-                if (regist.getType() == 1) {
+                if (regist.getType() == 0) {
                     //参与者直接报名成功
                     regist.setIsSuccess(1);
                     regist.setStatus(1);
@@ -68,7 +68,7 @@ public class RegistServiceImpl implements RegistService {
                 //调用持久层，保存数据
                 int i = registMapper.insertUseGeneratedKeys(regist);
                 if (i > 0) {
-                    if (regist.getType() == 2){
+                    if (regist.getType() == 1){
                         //通知负责人审核信息
                         emailService.sendCheckType(regist);
                     }
@@ -102,7 +102,7 @@ public class RegistServiceImpl implements RegistService {
             regist.setCheckMsg("身份审核通过，报名成功！");
         } else if (status == 3) {
             //说明身份不正确，要进行修改
-            regist.setType(1);
+            regist.setType(0);
             regist.setCheckMsg("报名成功，身份审核不通过，系统已经自动修改！");
         }
         //对数据库信息进行修改
@@ -140,18 +140,20 @@ public class RegistServiceImpl implements RegistService {
             //将主键Id设置到报名对象中
             regist.setActiveRegId(activeRegId);
             //基本信息没有问题，要检查用户修改的信息  要检查用户修改参与者身份没有，如果修改了参与者身份要重新审核
-            if (regist.getType() == 2 && regist.getStatus() == 1) {
+            if (regist.getType() == 1 && regist.getStatus() == 1) {
                 //说明一定是修改过用户身份的
                 regist.setStatus(0);
+                regist.setIsSuccess(0);
                 regist.setCheckMsg("用户参与身份待审核！");
             }
-            if(regist.getType() == 1 && regist.getStatus() == 1){
+            if(regist.getType() == 0){
                 regist.setStatus(1);
+                regist.setIsSuccess(1);
                 regist.setCheckMsg("报名成功！");
             }
             int i = registMapper.updateByPrimaryKeySelective(regist);
             if (i > 0) {
-                if (regist.getType() == 2){
+                if (regist.getType() == 1){
                     //通知负责人审核信息
                     emailService.sendCheckType(regist);
                     return new ResultVO(ResStatus.OK, "修改报名信息成功，参与者身份待审核！", regist);

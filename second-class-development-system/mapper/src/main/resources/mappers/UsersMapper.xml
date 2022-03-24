@@ -54,6 +54,5 @@
                create_time
         from tb_users
         where uid = #{uid}
-
     </select>
 </mapper>

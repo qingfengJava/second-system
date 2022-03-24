@@ -17,14 +17,14 @@
         <result column="active_location" jdbcType="VARCHAR" property="activeLocation"/>
         <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
         <result column="registration_deadline" jdbcType="TIMESTAMP" property="registrationDeadline"/>
-        <result column="is_quota" jdbcType="INTEGER" property="isQuota" />
-        <result column="school_year" jdbcType="VARCHAR" property="schoolYear" />
+        <result column="is_quota" jdbcType="INTEGER" property="isQuota"/>
+        <result column="school_year" jdbcType="VARCHAR" property="schoolYear"/>
         <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
         <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
         <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
-        <result column="is_end" jdbcType="INTEGER" property="isEnd" />
+        <result column="is_end" jdbcType="INTEGER" property="isEnd"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
     </resultMap>
 
@@ -53,36 +53,57 @@
                is_agree,
                is_end,
                is_delete
-        from apply where apply_id = #{applyId}
+        from apply
+        where apply_id = #{applyId}
     </select>
 
     <select id="queryApply" resultMap="BaseResultMap">
-        select apply_id,
-               apply_user_id,
-               active_name,
-               active_num,
-               active_type,
-               active_level,
-               host_name,
-               belong_department,
-               active_principal,
-               active_principal_tel_num,
-               teacher_name,
-               teacher_telephone_num,
-               active_location,
-               active_time,
-               registration_deadline,
-               is_quota,
-               school_year,
-               active_score,
-               active_introduction,
-               active_content,
-               apply_create_time,
-               is_agree,
-               is_end,
-               is_delete
-        from apply where is_end = 0
-        limit #{start},#{limit}
+        select a.apply_id,
+               a.apply_user_id,
+               a.active_name,
+               a.active_num,
+               a.active_type,
+               a.active_level,
+               a.host_name,
+               a.belong_department,
+               a.active_principal,
+               a.active_principal_tel_num,
+               a.teacher_name,
+               a.teacher_telephone_num,
+               a.active_location,
+               a.active_time,
+               a.registration_deadline,
+               a.is_quota,
+               a.school_year,
+               a.active_score,
+               a.active_introduction,
+               a.active_content,
+               a.apply_create_time,
+               a.is_agree,
+               a.is_end,
+               a.is_delete
+        from apply a
+                 LEFT JOIN regist r
+                           on a.apply_id = r.apply_id
+        where a.is_delete = 0
+          and a.is_agree = 1
+          and a.is_end = 0
+          and DATEDIFF(a.registration_deadline, sysdate()) >= 0
+          and (r.is_delete != 0 or r.is_delete is null or r.user_id != #{uid})
+            limit #{start}, #{limit}
+    </select>
+
+    <!-- 查询新活动总记录数 -->
+    <select id="selectApplyCount" resultType="java.lang.Integer">
+        select count(*)
+        from apply a
+                 LEFT JOIN regist r
+                           on a.apply_id = r.apply_id
+        where a.is_delete = 0
+          and a.is_agree = 1
+          and a.is_end = 0
+          and DATEDIFF(a.registration_deadline, sysdate()) >= 0
+          and (r.is_delete != 0 or r.is_delete is null or r.user_id != #{uid})
     </select>
 
     <resultMap id="applyVoMap" type="com.qingfeng.entity.ApplyVo">
@@ -101,18 +122,18 @@
         <result column="active_location" jdbcType="VARCHAR" property="activeLocation"/>
         <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
         <result column="registration_deadline" jdbcType="TIMESTAMP" property="registrationDeadline"/>
-        <result column="is_quota" jdbcType="INTEGER" property="isQuota" />
-        <result column="school_year" jdbcType="VARCHAR" property="schoolYear" />
+        <result column="is_quota" jdbcType="INTEGER" property="isQuota"/>
+        <result column="school_year" jdbcType="VARCHAR" property="schoolYear"/>
         <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
         <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
         <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
-        <result column="is_end" jdbcType="INTEGER" property="isEnd" />
+        <result column="is_end" jdbcType="INTEGER" property="isEnd"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
 
         <!-- 一对一管关联映射查询 -->
-        <association property="usersVo" select="com.qingfeng.dao.UsersMapper.selectByUserId" column="apply_user_id" />
+        <association property="usersVo" select="com.qingfeng.dao.UsersMapper.selectByUserId" column="apply_user_id"/>
     </resultMap>
 
     <select id="selectApplyById" resultMap="applyVoMap">
@@ -140,14 +161,19 @@
                is_agree,
                is_end,
                is_delete
-        from apply where apply_id = #{applyId}
+        from apply
+        where apply_id = #{applyId}
     </select>
 
     <update id="updateByApplyId">
-        update apply set is_agree = #{isAgree} where apply_id = #{applyId}
+        update apply
+        set is_agree = #{isAgree}
+        where apply_id = #{applyId}
     </update>
 
     <delete id="deleteByApplyId">
-        update apply set is_delete = 1 where apply_id = #{applyId}
+        update apply
+        set is_delete = 1
+        where apply_id = #{applyId}
     </delete>
 </mapper>

@@ -17,11 +17,11 @@ public class ResStatus {
      */
     public static final int LOGIN_SUCCESS=2000;
     /**
-     * 用户未登录
+     * 用户名错误
      */
-    public static final int LOGIN_FAIL_NOT=2001;
+    public static final int LOGIN_FAIL_USERNAME=2001;
     /**
-     * 用户登录失败
+     * 用户密码错误
      */
-    public static final int LOGIN_FAIL_OVERDUE=2002;
+    public static final int LOGIN_FAIL_PASSWORD=2002;
 }

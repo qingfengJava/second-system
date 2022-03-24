@@ -24,11 +24,12 @@ public interface ActiveService {
 
     /**
      * 分页查询所有的新活动
+     * @param uid
      * @param pageNum
      * @param limit
      * @return
      */
-    ResultVO queryApply(int pageNum, int limit);
+    ResultVO queryApply(Integer uid,int pageNum, int limit);
 
     /**
      * 根据活动id查询对应活动的详情信息

@@ -9,7 +9,7 @@
         <result column="active_name" jdbcType="VARCHAR" property="activeName"/>
         <result column="organize_name" jdbcType="VARCHAR" property="organizeName"/>
         <result column="host_name" jdbcType="VARCHAR" property="hostName"/>
-        <result column="active_num" jdbcType="INTEGER" property="activeNum"/>
+        <result column="active_num" jdbcType="VARCHAR" property="activeNum"/>
         <result column="img" jdbcType="VARCHAR" property="img"/>
         <result column="introduce" jdbcType="VARCHAR" property="introduce"/>
         <result column="active_mean" jdbcType="VARCHAR" property="activeMean"/>

@@ -42,6 +42,7 @@ public class ActiveServiceImpl implements ActiveService {
             Example.Criteria criteria = example.createCriteria();
             criteria.andLike("userId","%"+uid+"%");
             criteria.andEqualTo("isSign",0);
+            criteria.andEqualTo("isDelete",0);
             int count = registMapper.selectCountByExample(example);
             //计算总页数
             int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
@@ -58,16 +59,15 @@ public class ActiveServiceImpl implements ActiveService {
     }
 
     @Override
-    public ResultVO queryApply(int pageNum, int limit) {
+    public ResultVO queryApply(Integer uid, int pageNum, int limit) {
         try {
+            //新活动查询的注意事项   在有效时间范围内   学生没有报名的新活动
+
             //分页查询
             int start = (pageNum - 1) * limit;
-            List<Apply> applyList = applyMapper.queryApply(start,limit);
+            List<Apply> applyList = applyMapper.queryApply(uid,start,limit);
             //查询总记录数
-            Example example = new Example(Apply.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("isEnd",0);
-            int count = applyMapper.selectCountByExample(example);
+            int count = applyMapper.selectApplyCount(uid,start,limit);
             //计算总页数
             int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
             //封装数据

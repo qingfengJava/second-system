@@ -63,7 +63,7 @@ public class QualityActive {
      * 活动规模（历届活动规模人数）
      */
     @Column(name = "active_num")
-    private Integer activeNum;
+    private String activeNum;
 
     /**
      * 历届活动图片

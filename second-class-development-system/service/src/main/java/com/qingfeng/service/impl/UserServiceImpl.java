@@ -81,11 +81,11 @@ public class UserServiceImpl implements UserService {
             return new ResultVO(ResStatus.LOGIN_SUCCESS,token,users.get(0));
         } catch (UnknownAccountException e) {
             e.printStackTrace();
-            return new ResultVO(ResStatus.LOGIN_FAIL_OVERDUE,"用户名错误！",null);
+            return new ResultVO(ResStatus.LOGIN_FAIL_USERNAME,"用户名错误！",null);
         } catch (IncorrectCredentialsException e){
             e.printStackTrace();
             System.out.println("密码错误！");
-            return new ResultVO(ResStatus.LOGIN_FAIL_OVERDUE,"密码错误！",null);
+            return new ResultVO(ResStatus.LOGIN_FAIL_PASSWORD,"密码错误！",null);
 
         }
     }

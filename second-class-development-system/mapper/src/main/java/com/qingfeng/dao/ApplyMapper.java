@@ -25,12 +25,25 @@ public interface ApplyMapper extends GeneralDao<Apply> {
 
     /**
      * 分页查询新活动
+     * @param uid
      * @param start
      * @param limit
      * @return
      */
-    List<Apply> queryApply(@Param("start") int start,
+    List<Apply> queryApply(@Param("uid") Integer uid,
+                           @Param("start") int start,
                            @Param("limit") int limit);
+
+    /**
+     * 查询新活动总记录数
+     * @param uid
+     * @param start
+     * @param limit
+     * @return
+     */
+    int selectApplyCount(@Param("uid") Integer uid,
+                         @Param("start") int start,
+                         @Param("limit") int limit);
 
     /**
      * 根据申请活动的Id查询对应的申请活动的详情信息
