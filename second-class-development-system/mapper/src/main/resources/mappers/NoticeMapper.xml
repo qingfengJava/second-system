@@ -92,8 +92,26 @@
                is_delete
         from notice
         where is_delete = 0
+        <if test="isAdmin == 1">
+            and release_object = 1 or release_object = 2
+        </if>
+        <if test="isAdmin == 2 || isAdmin == 3">
+            and release_object = 1 or release_object = 3
+        </if>
             limit #{start}
             , #{limit}
+    </select>
+
+    <select id="selectCountNotice" resultType="java.lang.Integer">
+        select count(*)
+        from notice
+        where is_delete = 0
+        <if test="isAdmin == 1">
+            and release_object = 1 or release_object = 2
+        </if>
+        <if test="isAdmin == 2 || isAdmin == 3">
+            and release_object = 1 or release_object = 3
+        </if>
     </select>
 
     <select id="queryTaskNotice" resultMap="noticeVoMap2">
@@ -132,4 +150,5 @@
             and release_object = 1 or release_object = 3
         </if>
     </select>
+
 </mapper>

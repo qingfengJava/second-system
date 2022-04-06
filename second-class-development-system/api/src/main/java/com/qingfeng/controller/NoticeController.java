@@ -51,9 +51,9 @@ public class NoticeController {
             @ApiImplicitParam(paramType = "int",name = "pageNum",value = "页码",required = true),
             @ApiImplicitParam(paramType = "int",name = "limit",value = "每页条数",required = true)
     })
-    @PostMapping("/query")
-    public ResultVO queryNotice(int pageNum,int limit){
+    @PostMapping("/query/{isAdmin}")
+    public ResultVO queryNotice(@PathVariable("isAdmin") Integer isAdmin, int pageNum,int limit){
         //分页查询公告列表
-        return noticeService.queryNotice(pageNum,limit);
+        return noticeService.queryNotice(isAdmin,pageNum,limit);
     }
 }

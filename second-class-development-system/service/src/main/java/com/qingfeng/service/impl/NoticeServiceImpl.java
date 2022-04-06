@@ -65,14 +65,13 @@ public class NoticeServiceImpl implements NoticeService {
                 UserNotice userNotice = new UserNotice();
                 userNotice.setIsCheck(0);
                 int k = userNoticeMapper.updateByExampleSelective(userNotice, example);
-                if (k > 0){
-                    //说明修改成功
-                    return new ResultVO(ResStatus.OK,"公告信息修改成功！",notice);
-                }else{
+                if (k <= 0){
                     //否则用户公告表信息修改失败    制造一个异常 让方法回滚
                     int n = 1/0;
                 }
             }
+            //说明修改成功
+            return new ResultVO(ResStatus.OK,"公告信息修改成功！",notice);
         }
         return new ResultVO(ResStatus.NO,"网络异常，信息修改失败！",null);
     }
@@ -95,16 +94,13 @@ public class NoticeServiceImpl implements NoticeService {
      * @return
      */
     @Override
-    public ResultVO queryNotice(int pageNum, int limit) {
+    public ResultVO queryNotice(Integer isAdmin, int pageNum, int limit) {
         try {
             //分页查询
             int start = (pageNum - 1) * limit;
-            List<NoticeVo> noticeList = noticeMapper.queryNotice(start,limit);
+            List<NoticeVo> noticeList = noticeMapper.queryNotice(isAdmin,start,limit);
             //查询总计录数   注意是所有的
-            Example example = new Example(Notice.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("isDelete",0);
-            int count = noticeMapper.selectCountByExample(example);
+            int count = noticeMapper.selectCountNotice(isAdmin);
             //计算总页数
             int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
             //封装数据
