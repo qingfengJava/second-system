@@ -24,16 +24,18 @@ public class ActiveController {
     private ActiveService activeService;
 
 
-    @ApiOperation("学生活动报名列表查询接口")
+    @ApiOperation("学生活动报名（参与）列表查询接口")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "int",name = "participate",value = "是报名的活动还是参与的活动",required = true),
             @ApiImplicitParam(paramType = "int",name = "pageNum",value = "页码",required = true),
             @ApiImplicitParam(paramType = "int",name = "limit",value = "每页条数",required = true)
     })
     @PostMapping("/checkRegistration/{uid}")
-    public ResultVO checkRegistration(@PathVariable("uid") String uid,int pageNum,int limit){
+    public ResultVO checkRegistration(@PathVariable("uid") String uid,int participate, int pageNum,int limit){
         //调用业务层接口，查询用户报名待参与的活动列表
-        return activeService.checkRegistration(uid,pageNum,limit);
+        return activeService.checkRegistration(uid,participate,pageNum,limit);
     }
+
 
     @ApiOperation("新活动查询接口")
     @ApiImplicitParams({

@@ -29,19 +29,28 @@ public class ActiveServiceImpl implements ActiveService {
     @Autowired
     private RegistMapper registMapper;
 
+    /**
+     * 查询学生已报名的活动列表
+     * @param uid
+     * @param pageNum
+     * @param limit
+     * @return
+     */
     @Override
-    public ResultVO checkRegistration(String uid,int pageNum,int limit) {
+    public ResultVO checkRegistration(String uid,int participate,int pageNum,int limit) {
         try {
             //分页查询
             int start = (pageNum - 1) * limit;
             //根据用户id调用持久层分页查询学生报名待参与的活动
-            List<RegistVo> registVoList = registMapper.checkRegistration(Integer.parseInt(uid),start,limit);
+            List<RegistVo> registVoList = registMapper.checkRegistration(Integer.parseInt(uid),participate,start,limit);
 
             //查询总记录数
             Example example = new Example(Regist.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andLike("userId","%"+uid+"%");
-            criteria.andEqualTo("isSign",0);
+            if (participate == 0) {
+                criteria.andEqualTo("isSign", 0);
+            }
             criteria.andEqualTo("isDelete",0);
             int count = registMapper.selectCountByExample(example);
             //计算总页数

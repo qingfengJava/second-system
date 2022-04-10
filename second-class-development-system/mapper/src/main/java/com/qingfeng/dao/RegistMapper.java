@@ -17,13 +17,14 @@ import java.util.List;
 public interface RegistMapper extends GeneralDao<Regist> {
 
     /**
-     * 根据用户id，关联查询用户报名待参与的活动列表
+     * 根据用户id，关联查询用户报名待参与(参与)的活动列表
      * @param uid
      * @param start
      * @param limit
      * @return
      */
     List<RegistVo> checkRegistration(@Param("uid") Integer uid,
+                                     @Param("participate") Integer participate,
                                      @Param("start") int start,
                                      @Param("limit") int limit);
 
@@ -41,4 +42,5 @@ public interface RegistMapper extends GeneralDao<Regist> {
      * @return
      */
     RegistVo queryRegistActiveDetails(Integer uid,Integer applyId);
+
 }

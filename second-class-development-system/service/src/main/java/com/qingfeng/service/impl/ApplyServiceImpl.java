@@ -2,8 +2,10 @@ package com.qingfeng.service.impl;
 
 import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.AuditFormMapper;
+import com.qingfeng.dao.RegistMapper;
 import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.AuditForm;
+import com.qingfeng.entity.Regist;
 import com.qingfeng.service.ApplyService;
 import com.qingfeng.service.EmailService;
 import com.qingfeng.utils.CompareDateUtils;
@@ -35,6 +37,8 @@ public class ApplyServiceImpl implements ApplyService {
     private AuditFormMapper auditFormMapper;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private RegistMapper registMapper;
 
     @Override
     public ResultVO applyActive(Integer uid, Apply apply) {
@@ -158,6 +162,15 @@ public class ApplyServiceImpl implements ApplyService {
             //说明申请表信息删除成功  再删除初级审核表中关联的信息
             int k = auditFormMapper.deleteByApplyId(applyId);
             if (k > 0){
+                //还要查询将学生已经报名的活动删除
+                Regist regist = new Regist();
+                regist.setIsDelete(1);
+                Example example = new Example(Regist.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo("applyId",applyId);
+                //封装条件将数据信息删除
+                registMapper.updateByExampleSelective(regist, example);
+
                 //说明删除活动申请成功
                 return new ResultVO(ResStatus.OK,"删除活动申请成功！",null);
             }
