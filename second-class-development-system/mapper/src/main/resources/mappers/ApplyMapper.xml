@@ -23,6 +23,7 @@
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
         <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
+        <result column="total_num" jdbcType="INTEGER" property="totalNum"/>
         <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
         <result column="is_end" jdbcType="INTEGER" property="isEnd"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
@@ -50,6 +51,7 @@
                active_introduction,
                active_content,
                apply_create_time,
+               total_num,
                is_agree,
                is_end,
                is_delete
@@ -79,6 +81,7 @@
                a.active_introduction,
                a.active_content,
                a.apply_create_time,
+               a.total_num,
                a.is_agree,
                a.is_end,
                a.is_delete
@@ -128,6 +131,7 @@
         <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
         <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
         <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
+        <result column="total_num" jdbcType="INTEGER" property="totalNum"/>
         <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
         <result column="is_end" jdbcType="INTEGER" property="isEnd"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
@@ -158,6 +162,7 @@
                active_introduction,
                active_content,
                apply_create_time,
+               total_num,
                is_agree,
                is_end,
                is_delete

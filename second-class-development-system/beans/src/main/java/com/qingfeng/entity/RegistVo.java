@@ -127,4 +127,9 @@ public class RegistVo {
      * 在报名表中维护一个活动申请表
      */
     private Apply apply;
+
+    /**
+     * 在报名表中维护一个评价表
+     */
+    private Evaluation evaluation;
 }

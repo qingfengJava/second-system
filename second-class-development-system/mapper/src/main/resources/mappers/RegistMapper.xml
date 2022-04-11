@@ -42,6 +42,8 @@
 
         <!-- 关联查询活动报名表 -->
         <association property="apply" select="com.qingfeng.dao.ApplyMapper.queryApplyById" column="apply_id"/>
+        <!-- 关联查询评价表 -->
+        <association property="evaluation" select="com.qingfeng.dao.EvaluationMapper.selectEvaluationByUid" column="{uid=user_id,applyId=apply_id}"/>
     </resultMap>
 
     <select id="checkRegistration" resultMap="ResultMap">

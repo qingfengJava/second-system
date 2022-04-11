@@ -1,7 +1,9 @@
 package com.qingfeng.service.impl;
 
+import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.RegistMapper;
 import com.qingfeng.dao.UsersMapper;
+import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.Regist;
 import com.qingfeng.entity.Users;
 import com.qingfeng.service.EmailService;
@@ -10,6 +12,7 @@ import com.qingfeng.vo.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -28,8 +31,11 @@ public class RegistServiceImpl implements RegistService {
     private UsersMapper usersMapper;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ApplyMapper applyMapper;
 
     @Override
+    @Transactional
     public ResultVO registrationActive(Integer applyId, Regist regist) {
         //学生报名  首先检查学生是否已经报名过该活动
         Example example = new Example(Regist.class);
@@ -72,7 +78,15 @@ public class RegistServiceImpl implements RegistService {
                         //通知负责人审核信息
                         emailService.sendCheckType(regist);
                     }
-                    return new ResultVO(ResStatus.OK, "活动报名成功，请按时参与活动！！！", regist);
+
+                    //修改活动申请表的报名人数
+                    Apply apply = applyMapper.selectByPrimaryKey(applyId);
+                    apply.setTotalNum(apply.getTotalNum() + 1);
+                    //进行修改
+                    int updateResult = applyMapper.updateByPrimaryKeySelective(apply);
+                    if (updateResult > 0) {
+                        return new ResultVO(ResStatus.OK, "活动报名成功，请按时参与活动！！！", regist);
+                    }
                 }
                 return new ResultVO(ResStatus.NO, "网络异常活动报名失败！！！", null);
             }else {
@@ -117,12 +131,26 @@ public class RegistServiceImpl implements RegistService {
 
     @Override
     public ResultVO deleteRegistration(Integer activeRegId) {
-        Regist regist = new Regist();
-        regist.setActiveRegId(activeRegId);
-        regist.setIsDelete(1);
-        int i = registMapper.updateByPrimaryKeySelective(regist);
+        Regist regist = registMapper.selectByPrimaryKey(activeRegId);
+        Regist newRegist = new Regist();
+        newRegist.setIsDelete(1);
+        Example example = new Example(Regist.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("activeRegId",activeRegId);
+        int i = registMapper.updateByExampleSelective(newRegist,example);
         if (i > 0) {
-            return new ResultVO(ResStatus.OK, "删除报名信息成功！", null);
+            //还要修改活动报名的人数
+            Apply apply = applyMapper.selectByPrimaryKey(regist.getApplyId());
+            Apply newApply = new Apply();
+            newApply .setTotalNum(apply.getTotalNum() - 1 == 0 ? 0:apply.getTotalNum() - 1);
+            //封装条件进行修改
+            Example example1 = new Example(Apply.class);
+            Example.Criteria criteria1 = example1.createCriteria();
+            criteria1.andEqualTo("applyId",apply.getApplyId());
+            int result = applyMapper.updateByExample(newApply, example1);
+            if(result > 0){
+                return new ResultVO(ResStatus.OK, "删除报名信息成功！", null);
+            }
         }
         return new ResultVO(ResStatus.NO, "网络异常，删除失败！", null);
     }

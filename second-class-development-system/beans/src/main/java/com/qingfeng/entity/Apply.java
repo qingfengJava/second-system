@@ -151,6 +151,12 @@ public class Apply {
     private Date applyCreateTime;
 
     /**
+     * 活动报名的总人数
+     */
+    @Column(name = "total_num")
+    private Integer totalNum;
+
+    /**
      * 活动申请是否同意，0：未同意  1：已同意
      */
     @Column(name = "is_agree")
