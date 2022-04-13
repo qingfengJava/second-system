@@ -1,6 +1,7 @@
-package com.qingfeng.entity;
+package com.qingfeng.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qingfeng.entity.OrganizeImg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

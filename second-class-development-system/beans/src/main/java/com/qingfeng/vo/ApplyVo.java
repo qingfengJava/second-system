@@ -1,4 +1,4 @@
-package com.qingfeng.entity;
+package com.qingfeng.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

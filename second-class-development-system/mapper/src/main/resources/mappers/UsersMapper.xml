@@ -17,7 +17,7 @@
         <result column="hobyDes" jdbcType="VARCHAR" property="hobydes"/>
     </resultMap>
 
-    <resultMap id="usersVoMap" type="com.qingfeng.entity.UsersVo">
+    <resultMap id="usersVoMap" type="com.qingfeng.vo.UsersVo">
         <id column="uId" jdbcType="INTEGER" property="uid"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>

@@ -21,7 +21,7 @@
         <result column="is_sign" jdbcType="INTEGER" property="isSign"/>
     </resultMap>
 
-    <resultMap id="ResultMap" type="com.qingfeng.entity.RegistVo">
+    <resultMap id="ResultMap" type="com.qingfeng.vo.RegistVo">
         <id column="active_reg_id" jdbcType="INTEGER" property="activeRegId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="apply_id" jdbcType="INTEGER" property="applyId"/>

@@ -1,4 +1,4 @@
-package com.qingfeng.vo;
+package com.qingfeng.constant;
 
 /**
  * 定义一个类，存储我们的响应状态码。

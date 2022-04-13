@@ -31,4 +31,29 @@
           and apply_active_id = #{applyId}
           and is_deleted = 0
     </select>
+
+    <!-- 查询活动成功参与的活动个数 -->
+    <select id="queryActiveLevelNum" resultType="java.lang.Integer">
+        select count(*)
+        from evaluation e
+                 LEFT JOIN apply a on e.apply_active_id = a.apply_id
+        where e.uid = #{uid}
+          and e.is_deleted = 0
+          and a.is_end = 1
+          and a.active_level = #{level}
+          and a.is_delete = 0
+    </select>
+
+    <!-- 查询思想道德类型的活动数量 -->
+    <select id="queryActiveTypeNum" resultType="java.lang.Integer">
+        select count(*)
+        from evaluation e
+                 LEFT JOIN apply a on e.apply_active_id = a.apply_id
+        where e.uid = #{uid}
+          and e.is_deleted = 0
+          and a.is_end = 1
+          and a.active_type = #{type}
+          and a.is_delete = 0
+    </select>
+
 </mapper>

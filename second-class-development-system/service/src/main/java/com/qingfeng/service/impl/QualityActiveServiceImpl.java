@@ -4,7 +4,7 @@ import com.qingfeng.dao.QualityActiveMapper;
 import com.qingfeng.entity.QualityActive;
 import com.qingfeng.service.QualityActiveService;
 import com.qingfeng.utils.SchoolYearUtils;
-import com.qingfeng.vo.ResStatus;
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,8 @@
-package com.qingfeng.entity;
+package com.qingfeng.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qingfeng.entity.Organize;
+import com.qingfeng.entity.TeacherInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

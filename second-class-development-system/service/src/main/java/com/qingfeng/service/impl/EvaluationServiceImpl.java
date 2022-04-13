@@ -3,7 +3,7 @@ package com.qingfeng.service.impl;
 import com.qingfeng.dao.EvaluationMapper;
 import com.qingfeng.entity.Evaluation;
 import com.qingfeng.service.EvaluationService;
-import com.qingfeng.vo.ResStatus;
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

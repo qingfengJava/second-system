@@ -18,7 +18,7 @@
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
     </resultMap>
 
-    <resultMap id="noticeVoMap" type="com.qingfeng.entity.NoticeVo">
+    <resultMap id="noticeVoMap" type="com.qingfeng.vo.NoticeVo">
         <id column="notice_id" jdbcType="INTEGER" property="noticeId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
@@ -56,7 +56,7 @@
         where notice_id = #{noticeId}
     </select>
 
-    <resultMap id="noticeVoMap2" type="com.qingfeng.entity.NoticeVo">
+    <resultMap id="noticeVoMap2" type="com.qingfeng.vo.NoticeVo">
         <id column="notice_id" jdbcType="INTEGER" property="noticeId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>

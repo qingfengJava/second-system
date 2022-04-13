@@ -3,7 +3,7 @@ package com.qingfeng.controller;
 import com.qingfeng.entity.QualityActive;
 import com.qingfeng.service.QualityActiveService;
 import com.qingfeng.utils.FileUtils;
-import com.qingfeng.vo.ResStatus;
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

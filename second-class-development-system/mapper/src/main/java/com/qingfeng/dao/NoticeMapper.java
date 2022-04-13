@@ -1,7 +1,7 @@
 package com.qingfeng.dao;
 
 import com.qingfeng.entity.Notice;
-import com.qingfeng.entity.NoticeVo;
+import com.qingfeng.vo.NoticeVo;
 import com.qingfeng.generaldao.GeneralDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

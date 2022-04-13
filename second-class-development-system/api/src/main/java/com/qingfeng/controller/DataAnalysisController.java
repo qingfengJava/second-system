@@ -1,9 +1,11 @@
 package com.qingfeng.controller;
 
+import com.qingfeng.service.DataAnalysisService;
+import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 数据分析持久层
@@ -18,5 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class DataAnalysisController {
 
+    @Autowired
+    private DataAnalysisService dataAnalysisService;
+
+    @ApiOperation("查询学生参与活动的数量")
+    @GetMapping("/num/{uid}")
+    public ResultVO queryActiveNum(@PathVariable("uid") Integer uid) {
+        //根据用户Id查询学生参与活动的数量
+        return dataAnalysisService.queryActiveNum(uid);
+    }
+
+    @ApiOperation("查询学生参与个活动类型的数量")
+    @GetMapping("/typenum/{uid}")
+    public ResultVO queryTypeActiveNum(@PathVariable("uid") Integer uid){
+        //根据用户Id查询学生参与各活动类型的数量
+        return dataAnalysisService.queryTypeActiveNum(uid);
+    }
 
 }

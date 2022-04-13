@@ -1,7 +1,7 @@
 package com.qingfeng.dao;
 
 import com.qingfeng.entity.Users;
-import com.qingfeng.entity.UsersVo;
+import com.qingfeng.vo.UsersVo;
 import com.qingfeng.generaldao.GeneralDao;
 import org.springframework.stereotype.Repository;
 

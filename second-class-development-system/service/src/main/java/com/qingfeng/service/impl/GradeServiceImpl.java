@@ -4,7 +4,7 @@ import com.qingfeng.dao.GradeMapper;
 import com.qingfeng.entity.Grade;
 import com.qingfeng.service.GradeService;
 import com.qingfeng.utils.SchoolYearUtils;
-import com.qingfeng.vo.ResStatus;
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

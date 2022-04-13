@@ -2,10 +2,10 @@ package com.qingfeng.service.impl;
 
 import com.qingfeng.dao.OrganizeMapper;
 import com.qingfeng.entity.Organize;
-import com.qingfeng.entity.OrganizeVo;
+import com.qingfeng.vo.OrganizeVo;
 import com.qingfeng.service.OrganizeService;
 import com.qingfeng.utils.PageHelper;
-import com.qingfeng.vo.ResStatus;
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

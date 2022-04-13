@@ -109,7 +109,7 @@
           and (r.is_delete != 0 or r.is_delete is null or r.user_id != #{uid})
     </select>
 
-    <resultMap id="applyVoMap" type="com.qingfeng.entity.ApplyVo">
+    <resultMap id="applyVoMap" type="com.qingfeng.vo.ApplyVo">
         <id column="apply_id" jdbcType="INTEGER" property="applyId"/>
         <result column="apply_user_id" jdbcType="INTEGER" property="applyUserId"/>
         <result column="active_name" jdbcType="VARCHAR" property="activeName"/>

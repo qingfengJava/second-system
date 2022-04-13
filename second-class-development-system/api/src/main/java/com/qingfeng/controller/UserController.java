@@ -4,7 +4,7 @@ import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.service.UserService;
 import com.qingfeng.utils.FileUtils;
-import com.qingfeng.vo.ResStatus;
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

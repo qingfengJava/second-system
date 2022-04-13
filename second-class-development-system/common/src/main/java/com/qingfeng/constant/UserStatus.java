@@ -1,4 +1,4 @@
-package com.qingfeng.vo;
+package com.qingfeng.constant;
 
 /**
  * 用户身份标识常量
