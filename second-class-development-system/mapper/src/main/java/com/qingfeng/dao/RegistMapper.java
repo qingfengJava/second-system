@@ -1,8 +1,9 @@
 package com.qingfeng.dao;
 
+import com.qingfeng.dto.RegistrationActive;
 import com.qingfeng.entity.Regist;
-import com.qingfeng.vo.RegistVo;
 import com.qingfeng.generaldao.GeneralDao;
+import com.qingfeng.vo.RegistVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,7 @@ public interface RegistMapper extends GeneralDao<Regist> {
     /**
      * 根据用户id，关联查询用户报名待参与(参与)的活动列表
      * @param uid
+     * @param participate
      * @param start
      * @param limit
      * @return
@@ -43,4 +45,29 @@ public interface RegistMapper extends GeneralDao<Regist> {
      */
     RegistVo queryRegistActiveDetails(Integer uid,Integer applyId);
 
+    /**
+     * 条件分页查询学生已报名活动的信息
+     * @param uid
+     * @param participate
+     * @param start
+     * @param limit
+     * @param registrationActive
+     * @return
+     */
+    List<RegistVo> queryRegistration(@Param("uid") Integer uid,
+                                     @Param("participate") Integer participate,
+                                     @Param("start") int start,
+                                     @Param("limit") int limit,
+                                     @Param("registrationActive") RegistrationActive registrationActive);
+
+    /**
+     * 查询总记录数
+     * @param uid
+     * @param participate
+     * @param registrationActive
+     * @return
+     */
+    Integer queryCountRegistration(@Param("uid") Integer uid,
+                               @Param("participate") Integer participate,
+                               @Param("registrationActive") RegistrationActive registrationActive);
 }

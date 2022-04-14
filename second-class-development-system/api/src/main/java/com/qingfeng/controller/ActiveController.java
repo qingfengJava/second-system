@@ -1,5 +1,6 @@
 package com.qingfeng.controller;
 
+import com.qingfeng.dto.RegistrationActive;
 import com.qingfeng.service.ActiveService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -23,17 +24,20 @@ public class ActiveController {
     @Autowired
     private ActiveService activeService;
 
-
-    @ApiOperation("学生活动报名（参与）列表查询接口")
+    @ApiOperation("分页条件查询学生活动报名（参与）列表查询接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "int",name = "participate",value = "是报名的活动还是参与的活动",required = true),
             @ApiImplicitParam(paramType = "int",name = "pageNum",value = "页码",required = true),
             @ApiImplicitParam(paramType = "int",name = "limit",value = "每页条数",required = true)
     })
     @PostMapping("/checkRegistration/{uid}")
-    public ResultVO checkRegistration(@PathVariable("uid") String uid,int participate, int pageNum,int limit){
+    public ResultVO checkRegistration(@PathVariable("uid") String uid,
+                                      int participate,
+                                      int pageNum,
+                                      int limit,
+                                      @RequestBody RegistrationActive registrationActive){
         //调用业务层接口，查询用户报名待参与的活动列表
-        return activeService.checkRegistration(uid,participate,pageNum,limit);
+        return activeService.checkRegistration(uid,participate,pageNum,limit,registrationActive);
     }
 
 

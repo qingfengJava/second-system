@@ -1,5 +1,6 @@
 package com.qingfeng.service;
 
+import com.qingfeng.dto.RegistrationActive;
 import com.qingfeng.vo.ResultVO;
 
 /**
@@ -14,11 +15,12 @@ public interface ActiveService {
     /**
      * 根据学生的Id分页查询学生报名(参与)待参与的活动
      * @param uid
+     * @param participate
      * @param pageNum
      * @param limit
      * @return
      */
-    ResultVO checkRegistration(String uid,int participate,int pageNum,int limit);
+    ResultVO checkRegistration(String uid, int participate, int pageNum, int limit, RegistrationActive registrationActive);
 
     /**
      * 分页查询所有的新活动

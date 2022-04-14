@@ -1,14 +1,15 @@
 package com.qingfeng.service.impl;
 
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.RegistMapper;
+import com.qingfeng.dto.RegistrationActive;
 import com.qingfeng.entity.Apply;
-import com.qingfeng.vo.ApplyVo;
 import com.qingfeng.entity.Regist;
-import com.qingfeng.vo.RegistVo;
 import com.qingfeng.service.ActiveService;
 import com.qingfeng.utils.PageHelper;
-import com.qingfeng.constant.ResStatus;
+import com.qingfeng.vo.ApplyVo;
+import com.qingfeng.vo.RegistVo;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,27 +33,36 @@ public class ActiveServiceImpl implements ActiveService {
     /**
      * 查询学生已报名的活动列表
      * @param uid
+     * @param participate
      * @param pageNum
      * @param limit
      * @return
      */
     @Override
-    public ResultVO checkRegistration(String uid,int participate,int pageNum,int limit) {
+    public ResultVO checkRegistration(String uid, int participate, int pageNum, int limit, RegistrationActive registrationActive) {
         try {
             //分页查询
             int start = (pageNum - 1) * limit;
             //根据用户id调用持久层分页查询学生报名待参与的活动
-            List<RegistVo> registVoList = registMapper.checkRegistration(Integer.parseInt(uid),participate,start,limit);
-
-            //查询总记录数
-            Example example = new Example(Regist.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andLike("userId","%"+uid+"%");
-            if (participate == 0) {
-                criteria.andEqualTo("isSign", 0);
+            List<RegistVo> registVoList = null;
+            Integer count = 0;
+            if(registrationActive == null){
+                registVoList = registMapper.checkRegistration(Integer.parseInt(uid),participate,start,limit);
+                //查询总记录数
+                Example example = new Example(Regist.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andLike("userId","%"+uid+"%");
+                if (participate == 0) {
+                    criteria.andEqualTo("isSign", 0);
+                }
+                criteria.andEqualTo("isDelete",0);
+                count = registMapper.selectCountByExample(example);
+            }else {
+                //如果有条件就按条件查询
+                registVoList = registMapper.queryRegistration(Integer.parseInt(uid),participate,start,limit,registrationActive);
+                count = registMapper.queryCountRegistration(Integer.parseInt(uid),participate,registrationActive);
             }
-            criteria.andEqualTo("isDelete",0);
-            int count = registMapper.selectCountByExample(example);
+
             //计算总页数
             int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
             //封装数据

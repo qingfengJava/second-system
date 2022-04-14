@@ -43,44 +43,151 @@
         <!-- 关联查询活动报名表 -->
         <association property="apply" select="com.qingfeng.dao.ApplyMapper.queryApplyById" column="apply_id"/>
         <!-- 关联查询评价表 -->
-        <association property="evaluation" select="com.qingfeng.dao.EvaluationMapper.selectEvaluationByUid" column="{uid=user_id,applyId=apply_id}"/>
+        <association property="evaluation" select="com.qingfeng.dao.EvaluationMapper.selectEvaluationByUid"
+                     column="{uid=user_id,applyId=apply_id}"/>
     </resultMap>
 
     <select id="checkRegistration" resultMap="ResultMap">
         select active_reg_id,
-               user_id,
-               apply_id,
-               student_id,
-               student_name,
-               student_college,
-               student_major,
-               type,
-               student_sex,
-               student_tel,
-               student_qq,
-               reg_create_time,
-               is_success,
-               status,
-               check_msg,
-               is_delete,
-               is_sign
+        user_id,
+        apply_id,
+        student_id,
+        student_name,
+        student_college,
+        student_major,
+        type,
+        student_sex,
+        student_tel,
+        student_qq,
+        reg_create_time,
+        is_success,
+        status,
+        check_msg,
+        is_delete,
+        is_sign
         from regist
         where user_id = #{uid}
-          <if test="participate == 0">
-              and is_sign = 0
-          </if>
-          and is_delete = 0 limit #{start} , #{limit}
+        <if test="participate == 0">
+            and is_sign = 0
+        </if>
+        and is_delete = 0 limit #{start} , #{limit}
+    </select>
+
+    <resultMap id="ResultMap2" type="com.qingfeng.vo.RegistVo">
+        <id column="active_reg_id" jdbcType="INTEGER" property="activeRegId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="apply_id" jdbcType="INTEGER" property="applyId"/>
+        <result column="student_id" jdbcType="VARCHAR" property="studentId"/>
+        <result column="student_name" jdbcType="VARCHAR" property="studentName"/>
+        <result column="student_college" jdbcType="VARCHAR" property="studentCollege"/>
+        <result column="student_major" jdbcType="VARCHAR" property="studentMajor"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="student_sex" jdbcType="INTEGER" property="studentSex"/>
+        <result column="student_tel" jdbcType="VARCHAR" property="studentTel"/>
+        <result column="student_qq" jdbcType="VARCHAR" property="studentQq"/>
+        <result column="reg_create_time" jdbcType="TIMESTAMP" property="regCreateTime"/>
+        <result column="is_success" jdbcType="INTEGER" property="isSuccess"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="check_msg" jdbcType="VARCHAR" property="checkMsg"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="is_sign" jdbcType="INTEGER" property="isSign"/>
+
+        <!-- apply-->
+        <result column="apply_id" jdbcType="INTEGER" property="apply.applyId"/>
+        <result column="apply_user_id" jdbcType="INTEGER" property="apply.applyUserId"/>
+        <result column="active_name" jdbcType="VARCHAR" property="apply.activeName"/>
+        <result column="active_num" jdbcType="INTEGER" property="apply.activeNum"/>
+        <result column="active_type" jdbcType="INTEGER" property="apply.activeType"/>
+        <result column="active_level" jdbcType="VARCHAR" property="apply.activeLevel"/>
+        <result column="host_name" jdbcType="VARCHAR" property="apply.hostName"/>
+        <result column="belong_department" jdbcType="VARCHAR" property="apply.belongDepartment"/>
+        <result column="active_principal" jdbcType="VARCHAR" property="apply.activePrincipal"/>
+        <result column="active_principal_tel_num" jdbcType="VARCHAR" property="apply.activePrincipalTelNum"/>
+        <result column="teacher_name" jdbcType="VARCHAR" property="apply.teacherName"/>
+        <result column="teacher_telephone_num" jdbcType="VARCHAR" property="apply.teacherTelephoneNum"/>
+        <result column="active_location" jdbcType="VARCHAR" property="apply.activeLocation"/>
+        <result column="active_time" jdbcType="VARCHAR" property="apply.activeTime"/>
+        <result column="registration_deadline" jdbcType="TIMESTAMP" property="apply.registrationDeadline"/>
+        <result column="is_quota" jdbcType="INTEGER" property="apply.isQuota"/>
+        <result column="school_year" jdbcType="VARCHAR" property="apply.schoolYear"/>
+        <result column="active_score" jdbcType="DOUBLE" property="apply.activeScore"/>
+        <result column="active_introduction" jdbcType="VARCHAR" property="apply.activeIntroduction"/>
+        <result column="active_content" jdbcType="VARCHAR" property="apply.activeContent"/>
+        <result column="apply_create_time" jdbcType="TIMESTAMP" property="apply.applyCreateTime"/>
+        <result column="total_num" jdbcType="INTEGER" property="apply.totalNum"/>
+        <result column="is_agree" jdbcType="INTEGER" property="apply.isAgree"/>
+        <result column="is_end" jdbcType="INTEGER" property="apply.isEnd"/>
+        <result column="is_delete" jdbcType="INTEGER" property="apply.isDelete"/>
+
+        <!-- evaluation -->
+        <result column="id" jdbcType="INTEGER" property="evaluation.id"/>
+        <result column="uid" jdbcType="INTEGER" property="evaluation.uid"/>
+        <result column="apply_active_id" jdbcType="INTEGER" property="evaluation.applyActiveId"/>
+        <result column="feel_star" jdbcType="INTEGER" property="evaluation.feelStar"/>
+        <result column="satisfaction_star" jdbcType="INTEGER" property="evaluation.satisfactionStar"/>
+        <result column="service_star" jdbcType="INTEGER" property="evaluation.serviceStar"/>
+        <result column="gain_star" jdbcType="INTEGER" property="evaluation.gainStar"/>
+        <result column="details" jdbcType="VARCHAR" property="evaluation.details"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="evaluation.createTime"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="evaluation.isDeleted"/>
+    </resultMap>
+
+    <select id="queryRegistration" resultMap="ResultMap2">
+        select *
+        from regist r LEFT JOIN apply a on r.apply_id = a.apply_id
+        LEFT JOIN evaluation e on r.user_id = e.uid and r.apply_id = e.apply_active_id
+        where r.user_id = #{uid}
+        <if test="participate == 0">
+            and r.is_sign = 0
+        </if>
+        and r.is_delete = 0
+        <if test="registrationActive.schoolYear != null and registrationActive.schoolYear != '' ">
+            and a.school_year like concat(concat('%',#{registrationActive.schoolYear}),'%')
+        </if>
+        <if test="registrationActive.activeName != null and registrationActive.activeName != '' ">
+            and a.active_name like concat(concat('%',#{registrationActive.activeName}),'%')
+        </if>
+        <if test="registrationActive.activeType != null and registrationActive.activeType != 0 ">
+            and a.active_type = #{registrationActive.activeType}
+        </if>
+        <if test="registrationActive.hostName != null and registrationActive.hostName != '' ">
+            and a.host_name like concat(concat('%',#{registrationActive.hostName}),'%')
+        </if>
+        limit #{start} , #{limit}
+    </select>
+
+    <select id="queryCountRegistration"  resultType="java.lang.Integer">
+        select count(*)
+        from regist r LEFT JOIN apply a on r.apply_id = a.apply_id
+        LEFT JOIN evaluation e on r.user_id = e.uid and r.apply_id = e.apply_active_id
+        where r.user_id = #{uid}
+        <if test="participate == 0">
+            and r.is_sign = 0
+        </if>
+        and r.is_delete = 0
+        <if test="registrationActive.schoolYear != null and registrationActive.schoolYear != '' ">
+            and a.school_year like concat(concat('%',#{registrationActive.schoolYear}),'%')
+        </if>
+        <if test="registrationActive.activeName != null and registrationActive.activeName != '' ">
+            and a.active_name like concat(concat('%',#{registrationActive.activeName}),'%')
+        </if>
+        <if test="registrationActive.activeType != null and registrationActive.activeType != 0 ">
+            and a.active_type = #{registrationActive.activeType}
+        </if>
+        <if test="registrationActive.hostName != null and registrationActive.hostName != '' ">
+            and a.host_name like concat(concat('%',#{registrationActive.hostName}),'%')
+        </if>
     </select>
 
     <!-- 审核修改报名表数据信息 -->
     <update id="updateRegistById">
         update regist
         set is_success=#{isSuccess},
-            status=#{status},
-            check_msg=#{checkMsg}
-            <if test="type != null">
-                , type=#{type}
-            </if>
+        status=#{status},
+        check_msg=#{checkMsg}
+        <if test="type != null">
+            , type=#{type}
+        </if>
         where active_reg_id = #{activeRegId}
     </update>
 
@@ -103,6 +210,8 @@
                is_delete,
                is_sign
         from regist
-        where user_id = #{uid} and apply_id = #{applyId}
+        where user_id = #{uid}
+          and apply_id = #{applyId}
     </select>
+
 </mapper>
