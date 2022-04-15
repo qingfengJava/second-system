@@ -24,4 +24,11 @@ public interface DataAnalysisService {
      * @return
      */
     ResultVO queryTypeActiveNum(Integer uid);
+
+    /**
+     * 查询学生个年级修的学分
+     * @param uid
+     * @return
+     */
+    ResultVO queryScore(Integer uid);
 }

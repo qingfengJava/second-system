@@ -157,6 +157,12 @@ public class UserInfo {
     private String clazz;
 
     /**
+     * 学制
+     */
+    @Column(name = "educational_system")
+    private Integer educationalSystem;
+
+    /**
      * 个人描述
      */
     @Column(name = "hoby_des")

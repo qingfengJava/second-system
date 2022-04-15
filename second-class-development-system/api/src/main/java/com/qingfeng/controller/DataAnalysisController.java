@@ -37,4 +37,11 @@ public class DataAnalysisController {
         return dataAnalysisService.queryTypeActiveNum(uid);
     }
 
+    @ApiOperation("查询学生大一到大四各个阶段修的学分")
+    @GetMapping("/score/{uid}")
+    public ResultVO queryScore(@PathVariable("uid") Integer uid){
+        //根据用户Id查询学生大一到大四各个阶段修的学分
+        return dataAnalysisService.queryScore(uid);
+    }
+
 }

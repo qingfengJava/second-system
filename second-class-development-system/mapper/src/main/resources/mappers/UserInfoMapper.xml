@@ -26,6 +26,7 @@
         <result column="major" jdbcType="VARCHAR" property="major"/>
         <result column="grade" jdbcType="VARCHAR" property="grade"/>
         <result column="class" jdbcType="VARCHAR" property="clazz"/>
+        <result column="educational_system" jdbcType="INTEGER" property="educationalSystem"/>
         <result column="hoby_des" jdbcType="VARCHAR" property="hobyDes"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
