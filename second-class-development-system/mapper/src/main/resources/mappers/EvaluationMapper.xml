@@ -5,12 +5,14 @@
     <resultMap id="BaseResultMap" type="com.qingfeng.entity.Evaluation">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="uid" jdbcType="INTEGER" property="uid"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
         <result column="apply_active_id" jdbcType="INTEGER" property="applyActiveId"/>
         <result column="feel_star" jdbcType="INTEGER" property="feelStar"/>
         <result column="satisfaction_star" jdbcType="INTEGER" property="satisfactionStar"/>
         <result column="service_star" jdbcType="INTEGER" property="serviceStar"/>
         <result column="gain_star" jdbcType="INTEGER" property="gainStar"/>
         <result column="details" jdbcType="VARCHAR" property="details"/>
+        <result column="star" jdbcType="INTEGER" property="star"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
     </resultMap>
@@ -18,17 +20,20 @@
     <select id="selectEvaluationByUid" resultMap="BaseResultMap">
         select id,
                uid,
+               parent_id,
                apply_active_id,
                feel_star,
                satisfaction_star,
                service_star,
                gain_star,
                details,
+               star,
                create_time,
                is_deleted
         from evaluation
         where uid = #{uid}
           and apply_active_id = #{applyId}
+          and parent_id = 0
           and is_deleted = 0
     </select>
 
@@ -36,7 +41,7 @@
     <select id="queryActiveLevelNum" resultType="java.lang.Integer">
         select count(*)
         from evaluation e
-                 LEFT JOIN apply a on e.apply_active_id = a.apply_id
+                 LEFT JOIN apply a on e.apply_active_id = a.apply_id and e.parent_id = 0
         where e.uid = #{uid}
           and e.is_deleted = 0
           and a.is_end = 1
@@ -48,7 +53,7 @@
     <select id="queryActiveTypeNum" resultType="java.lang.Integer">
         select count(*)
         from evaluation e
-                 LEFT JOIN apply a on e.apply_active_id = a.apply_id
+                 LEFT JOIN apply a on e.apply_active_id = a.apply_id and e.parent_id = 0
         where e.uid = #{uid}
           and e.is_deleted = 0
           and a.is_end = 1

@@ -31,6 +31,12 @@ public class Evaluation {
     private Integer uid;
 
     /**
+     * 评论的父Id
+     */
+    @Column(name = "parent_id")
+    private Integer parentId;
+
+    /**
      * 活动表id，关联活动表
      */
     @Column(name = "apply_active_id")
@@ -64,6 +70,12 @@ public class Evaluation {
      * 评价内容
      */
     private String details;
+
+    /**
+     * 评论的点赞数
+     */
+    @Column(name = "star")
+    private Integer star;
 
     /**
      * 评价日期
