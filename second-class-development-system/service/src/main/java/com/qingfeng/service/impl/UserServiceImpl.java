@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
                     //设置token的过期时间
                     .setExpiration(new Date(System.currentTimeMillis() + 24*60*60*1000))
                     //设置加密方式和加密密码
-                    .signWith(SignatureAlgorithm.HS256, "QIANfengJava")
+                    .signWith(SignatureAlgorithm.HS256, "QINGfengJAVA")
                     .compact();
 
             //返回的时候要把token返回回去
