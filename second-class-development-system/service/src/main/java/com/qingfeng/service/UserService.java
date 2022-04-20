@@ -87,4 +87,15 @@ public interface UserService {
      * @return
      */
     List<Users> selectByUserIdentity(Integer isAdmin);
+
+    /**
+     * 分页条件查询学生用户列表信息
+     * @param pageNum
+     * @param limit
+     * @param realName
+     * @param username
+     * @param isAdmin
+     * @return
+     */
+    ResultVO findByList(int pageNum, int limit, String realName, String username,Integer isAdmin);
 }

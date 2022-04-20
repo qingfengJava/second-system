@@ -112,4 +112,18 @@ public class UserController {
         //添加或保存用户详情
         return userService.updateUserInfo(uid,userInfo);
     }
+
+    @ApiOperation("分页条件查询用户列表信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "int",name = "pageNum",value = "页码",required = true),
+            @ApiImplicitParam(paramType = "int",name = "limit",value = "每页条数",required = true),
+            @ApiImplicitParam(paramType = "String",name = "realName",value = "学生姓名",required = false),
+            @ApiImplicitParam(paramType = "String",name = "username",value = "学生学号",required = false),
+            @ApiImplicitParam(paramType = "Integer",name = "isAdmin",value = "用户身份标识",required = true)
+    })
+    @GetMapping("/userList")
+    public ResultVO findUserList(int pageNum,int limit,String realName,String username,Integer isAdmin){
+        return userService.findByList(pageNum,limit,realName,username,isAdmin);
+    }
+
 }

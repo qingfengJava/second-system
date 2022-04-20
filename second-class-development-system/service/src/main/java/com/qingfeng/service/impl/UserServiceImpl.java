@@ -1,5 +1,7 @@
 package com.qingfeng.service.impl;
 
+import com.qingfeng.constant.ResStatus;
+import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.OrganizeMapper;
 import com.qingfeng.dao.TeacherInfoMapper;
 import com.qingfeng.dao.UserInfoMapper;
@@ -9,13 +11,13 @@ import com.qingfeng.entity.TeacherInfo;
 import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.service.UserService;
+import com.qingfeng.utils.PageHelper;
 import com.qingfeng.utils.SaltUtils;
-import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
-import com.qingfeng.constant.UserStatus;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -284,5 +287,60 @@ public class UserServiceImpl implements UserService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isAdmin",isAdmin);
         return usersMapper.selectByExample(example);
+    }
+
+    /**
+     * 分页条件查询所有学生用户列表信息
+     * @param pageNum
+     * @param limit
+     * @param realName
+     * @param username
+     * @param isAdmin
+     * @return
+     */
+    @Override
+    public ResultVO findByList(int pageNum, int limit, String realName, String username,Integer isAdmin) {
+        try {
+            //首先判断是否有查询条件
+            Example example = new Example(Users.class);
+            Example.Criteria criteria = example.createCriteria();
+            if (realName == null){
+                realName = "";
+                criteria.andLike("realname","%"+realName+"%");
+            }
+            if (username == null){
+                username = "";
+            }
+            criteria.andLike("username","%"+username+"%");
+            if (isAdmin == UserStatus.STUDENT_CONSTANTS){
+                //说明是学生用户
+                criteria.andEqualTo("isAdmin",isAdmin);
+            }else if (isAdmin == UserStatus.CLUB_CONSTANTS || isAdmin == UserStatus.STUDENTS_UNION_CONSTANTS){
+                //说明是社团用户
+                criteria.andIn("isAdmin", Arrays.asList(UserStatus.CLUB_CONSTANTS,UserStatus.STUDENTS_UNION_CONSTANTS));
+            }else if (isAdmin == UserStatus.LEADER_CONSTANTS || isAdmin == UserStatus.ADMIN_CONSTANTS){
+                //说明是校领导用户
+                criteria.andIn("isAdmin", Arrays.asList(UserStatus.LEADER_CONSTANTS,UserStatus.ADMIN_CONSTANTS));
+            }
+
+            criteria.andEqualTo("isDelete",0);
+
+            //分页
+            int start = (pageNum-1)*limit;
+            RowBounds rowBounds = new RowBounds(start,limit);
+            //查询
+            List<Users> usersList = usersMapper.selectByExampleAndRowBounds(example, rowBounds);
+            //查询总记录数（满足条件）
+            int count = usersMapper.selectCountByExample(example);
+            //计算总页数
+            int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+            //封装分页信息
+            PageHelper<Users> pageHelper = new PageHelper<>(count, pageCount, usersList);
+
+            return new ResultVO(ResStatus.OK, "success", pageHelper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResultVO(ResStatus.NO, "网络超时，查询失败！", null);
+        }
     }
 }
