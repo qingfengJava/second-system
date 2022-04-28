@@ -98,4 +98,12 @@ public interface UserService {
      * @return
      */
     ResultVO findByList(int pageNum, int limit, String realName, String username,Integer isAdmin);
+
+    /**
+     * 用户修改头像的方法
+     * @param uid
+     * @param newFileName
+     * @return
+     */
+    ResultVO updateImg(Integer uid, String newFileName);
 }

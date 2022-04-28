@@ -1,10 +1,10 @@
 package com.qingfeng.controller;
 
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.service.UserService;
 import com.qingfeng.utils.FileUtils;
-import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -113,7 +113,7 @@ public class UserController {
         return userService.updateUserInfo(uid,userInfo);
     }
 
-    @ApiOperation("分页条件查询用户列表信息")
+    @ApiOperation("分页条件查询学生用户列表信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "int",name = "pageNum",value = "页码",required = true),
             @ApiImplicitParam(paramType = "int",name = "limit",value = "每页条数",required = true),
@@ -124,6 +124,36 @@ public class UserController {
     @GetMapping("/userList")
     public ResultVO findUserList(int pageNum,int limit,String realName,String username,Integer isAdmin){
         return userService.findByList(pageNum,limit,realName,username,isAdmin);
+    }
+
+    @ApiOperation("用户修改头像的方法")
+    @ApiImplicitParam(paramType = "string",name = "oldPhoto",value = "旧头像的名字",required = true)
+    @PostMapping("/updateImg/{uid}")
+    public ResultVO updateImg(@PathVariable("uid") Integer uid,String oldPhoto,MultipartFile img){
+        try {
+            //判断是否更新头像  空是true，表示没有更新头像
+            boolean notEempty = (img != null);
+            String newFileName = null;
+            //不为空
+            if (notEempty){
+                //检查就照片是否存在，存在就将其删除掉，再保存新照片
+                File file = new File(realPath,oldPhoto);
+                if (file.exists()) {
+                    //如果文件存在，就删除文件
+                    if (!oldPhoto.equals("default.png")){
+                        //如果不是默认头像就删除老照片
+                        file.delete();
+                    }
+                }
+                //处理新的头像上传   1、处理头像的上传 & 修改文件名
+                newFileName = FileUtils.uploadFile(img, realPath);
+            }
+            //调用service层的修改头像的方法
+            return userService.updateImg(uid, newFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResultVO(ResStatus.NO,"修改图片失败！",null);
+        }
     }
 
 }

@@ -53,6 +53,12 @@ public class Organize {
     private String organizeInroduce;
 
     /**
+     * 主图
+     */
+    @Column(name = "main_url")
+    private Integer mainUrl;
+
+    /**
      * 社团成立时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd")

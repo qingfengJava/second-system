@@ -315,12 +315,12 @@ public class UserServiceImpl implements UserService {
             if (isAdmin == UserStatus.STUDENT_CONSTANTS){
                 //说明是学生用户
                 criteria.andEqualTo("isAdmin",isAdmin);
-            }else if (isAdmin == UserStatus.CLUB_CONSTANTS || isAdmin == UserStatus.STUDENTS_UNION_CONSTANTS){
-                //说明是社团用户
-                criteria.andIn("isAdmin", Arrays.asList(UserStatus.CLUB_CONSTANTS,UserStatus.STUDENTS_UNION_CONSTANTS));
             }else if (isAdmin == UserStatus.LEADER_CONSTANTS || isAdmin == UserStatus.ADMIN_CONSTANTS){
                 //说明是校领导用户
                 criteria.andIn("isAdmin", Arrays.asList(UserStatus.LEADER_CONSTANTS,UserStatus.ADMIN_CONSTANTS));
+            }else {
+                //查询学生领导及管理员
+                criteria.andIn("isAdmin", Arrays.asList(UserStatus.STUDENT_CONSTANTS,UserStatus.LEADER_CONSTANTS,UserStatus.ADMIN_CONSTANTS));
             }
 
             criteria.andEqualTo("isDelete",0);
@@ -342,5 +342,23 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return new ResultVO(ResStatus.NO, "网络超时，查询失败！", null);
         }
+    }
+
+    /**
+     * 用户完善头像的方法
+     * @param uid
+     * @param newFileName
+     * @return
+     */
+    @Override
+    public ResultVO updateImg(Integer uid, String newFileName) {
+        Users users = new Users();
+        users.setUid(uid);
+        users.setPhoto(newFileName);
+        int count = usersMapper.updateByPrimaryKeySelective(users);
+        if (count > 0){
+            return new ResultVO(ResStatus.OK,"头像修改成功！",users);
+        }
+        return new ResultVO(ResStatus.NO,"头像修改失败！",null);
     }
 }
