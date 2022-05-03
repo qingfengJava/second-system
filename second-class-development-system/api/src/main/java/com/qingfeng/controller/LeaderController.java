@@ -1,6 +1,7 @@
 package com.qingfeng.controller;
 
 import com.qingfeng.entity.TeacherInfo;
+import com.qingfeng.service.OrganizeService;
 import com.qingfeng.service.UserService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -25,6 +26,8 @@ public class LeaderController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private OrganizeService organizeService;
 
     @ApiOperation("用户添加接口")
     @ApiImplicitParams({
@@ -41,5 +44,17 @@ public class LeaderController {
     @PostMapping("/updateTeacherInfo/{uid}")
     public ResultVO updateTeacherInfo(@PathVariable("uid") Integer uid, @RequestBody TeacherInfo teacherInfo){
         return userService.updateTeacherInfo(uid, teacherInfo);
+    }
+
+    @ApiOperation("根据Id删除社团组织信息")
+    @DeleteMapping("/delete/{organizeId}")
+    public ResultVO deleteById(@PathVariable("organizeId") Integer organizeId){
+        return organizeService.deleteById(organizeId);
+    }
+
+    @ApiOperation("根据主键Id批量删除社团组织信息")
+    @PostMapping("/deleteBatch")
+    public ResultVO deleteBatch(@RequestBody Integer[] organizeIds){
+        return organizeService.deleteBatch(organizeIds);
     }
 }

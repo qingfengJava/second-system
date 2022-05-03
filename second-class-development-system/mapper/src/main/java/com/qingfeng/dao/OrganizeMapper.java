@@ -29,13 +29,4 @@ public interface OrganizeMapper extends GeneralDao<Organize> {
      * @return
      */
     OrganizeVo checkOrganizeInfo(Integer uid);
-
-    /**
-     * 分页查询社团组织列表
-     * @param start
-     * @param limit
-     * @return
-     */
-    List<Organize> queryOrganize(@Param("start") Integer start,
-                                 @Param("limit") Integer limit);
 }

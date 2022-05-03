@@ -6,7 +6,7 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="organize_name" jdbcType="VARCHAR" property="organizeName"/>
         <result column="organize_department" jdbcType="VARCHAR" property="organizeDepartment"/>
-        <result column="organize_inroduce" jdbcType="VARCHAR" property="organizeInroduce"/>
+        <result column="organize_introduce" jdbcType="VARCHAR" property="organizeIntroduce"/>
         <result column="main_url" jdbcType="VARCHAR" property="mainUrl"/>
         <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
@@ -20,7 +20,7 @@
                user_id,
                organize_name,
                organize_department,
-               organize_inroduce,
+               organize_introduce,
                main_url,
                birth_time,
                is_delete,
@@ -35,7 +35,7 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="organize_name" jdbcType="VARCHAR" property="organizeName"/>
         <result column="organize_department" jdbcType="VARCHAR" property="organizeDepartment"/>
-        <result column="organize_inroduce" jdbcType="VARCHAR" property="organizeInroduce"/>
+        <result column="organize_introduce" jdbcType="VARCHAR" property="organizeIntroduce"/>
         <result column="main_url" jdbcType="VARCHAR" property="mainUrl"/>
         <result column="birth_time" jdbcType="TIMESTAMP" property="birthTime"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
@@ -51,7 +51,7 @@
                user_id,
                organize_name,
                organize_department,
-               organize_inroduce,
+               organize_introduce,
                main_url,
                birth_time,
                is_delete,
@@ -60,22 +60,5 @@
         from organize
         where user_id = #{uid}
           and is_delete = 0;
-    </select>
-
-    <!-- 分页查询社团组织列表 -->
-    <select id="queryOrganize" resultMap="BaseResultMap">
-        select organize_id,
-               user_id,
-               organize_name,
-               organize_department,
-               organize_inroduce,
-               main_url,
-               birth_time,
-               is_delete,
-               create_time,
-               update_time
-        from organize
-        where is_delete = 0
-        limit #{start}, #{limit}
     </select>
 </mapper>

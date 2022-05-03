@@ -49,8 +49,8 @@ public class Organize {
     /**
      * 社团介绍
      */
-    @Column(name = "organize_inroduce")
-    private String organizeInroduce;
+    @Column(name = "organize_introduce")
+    private String organizeIntroduce;
 
     /**
      * 主图

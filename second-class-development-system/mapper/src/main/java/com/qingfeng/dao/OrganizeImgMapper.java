@@ -2,6 +2,7 @@ package com.qingfeng.dao;
 
 import com.qingfeng.entity.OrganizeImg;
 import com.qingfeng.generaldao.GeneralDao;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  *
  * @author 清风学Java
  */
+@Repository
 public interface OrganizeImgMapper extends GeneralDao<OrganizeImg> {
 
     /**
