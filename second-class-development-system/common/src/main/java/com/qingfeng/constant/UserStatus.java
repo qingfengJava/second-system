@@ -29,4 +29,7 @@ public class UserStatus {
      * 管理员身份标识
      */
     public static final int ADMIN_CONSTANTS = 5;
+
+    public static final String STUDENT_ADMIN = "学生信息";
+    public static final String ADMIN = "校领导信息";
 }

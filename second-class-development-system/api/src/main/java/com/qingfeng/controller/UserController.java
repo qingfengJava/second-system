@@ -119,10 +119,10 @@ public class UserController {
             @ApiImplicitParam(paramType = "int",name = "limit",value = "每页条数",required = true),
             @ApiImplicitParam(paramType = "String",name = "realName",value = "学生姓名",required = false),
             @ApiImplicitParam(paramType = "String",name = "username",value = "学生学号",required = false),
-            @ApiImplicitParam(paramType = "Integer",name = "isAdmin",value = "用户身份标识",required = true)
+            @ApiImplicitParam(paramType = "String",name = "isAdmin",value = "用户身份标识",required = false)
     })
     @GetMapping("/userList")
-    public ResultVO findUserList(int pageNum,int limit,String realName,String username,Integer isAdmin){
+    public ResultVO findUserList(int pageNum,int limit,String realName,String username,String isAdmin){
         return userService.findByList(pageNum,limit,realName,username,isAdmin);
     }
 
@@ -154,6 +154,18 @@ public class UserController {
             e.printStackTrace();
             return new ResultVO(ResStatus.NO,"修改图片失败！",null);
         }
+    }
+
+    @ApiOperation("根据用户Id删除用户信息")
+    @DeleteMapping("/deleteUser/{uid}")
+    public ResultVO deleteUserByUid(@PathVariable("uid") Integer uid){
+        return userService.deleteUserByUid(uid);
+    }
+
+    @ApiOperation("根据主键Id批量删除用户信息")
+    @PostMapping("/deleteBetch")
+    public ResultVO deleteBatch(@RequestBody Integer[] uIds){
+        return userService.deleteBatch(uIds);
     }
 
 }

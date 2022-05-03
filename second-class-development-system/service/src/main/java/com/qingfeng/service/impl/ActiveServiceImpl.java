@@ -81,7 +81,6 @@ public class ActiveServiceImpl implements ActiveService {
     public ResultVO queryApply(Integer uid, int pageNum, int limit) {
         try {
             //新活动查询的注意事项   在有效时间范围内   学生没有报名的新活动
-
             //分页查询
             int start = (pageNum - 1) * limit;
             List<Apply> applyList = applyMapper.queryApply(uid,start,limit);

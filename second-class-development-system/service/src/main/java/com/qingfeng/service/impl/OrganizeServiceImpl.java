@@ -40,12 +40,14 @@ public class OrganizeServiceImpl implements OrganizeService {
         if (oldOrganize == null){
             //说明没有记录，要进行添加操作
             organize.setCreateTime(new Date());
+            organize.setUpdateTime(new Date());
             organize.setIsDelete(0);
             //封装完信息进行保存操作
             count = organizeMapper.insertUseGeneratedKeys(organize);
         }else{
             //说明是进行信息更新操作
             organize.setOrganizeId(oldOrganize.getOrganizeId());
+            organize.setUpdateTime(new Date());
             //更新
             count = organizeMapper.updateByPrimaryKeySelective(organize);
         }

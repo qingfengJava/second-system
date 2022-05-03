@@ -26,6 +26,7 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
@@ -114,6 +115,7 @@ public class UserServiceImpl implements UserService {
                 Users user = new Users();
                 user.setUsername(username);
                 user.setPassword(newPassWord);
+                user.setRealname("");
                 user.setSalt(salt);
                 user.setIsAdmin(isAdmin);
                 user.setPhoto("default.png");
@@ -299,28 +301,28 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public ResultVO findByList(int pageNum, int limit, String realName, String username,Integer isAdmin) {
+    public ResultVO findByList(int pageNum, int limit, String realName, String username,String isAdmin) {
         try {
             //首先判断是否有查询条件
             Example example = new Example(Users.class);
             Example.Criteria criteria = example.createCriteria();
             if (realName == null){
                 realName = "";
-                criteria.andLike("realname","%"+realName+"%");
             }
+            criteria.andLike("realname","%"+realName+"%");
             if (username == null){
                 username = "";
             }
             criteria.andLike("username","%"+username+"%");
-            if (isAdmin == UserStatus.STUDENT_CONSTANTS){
-                //说明是学生用户
-                criteria.andEqualTo("isAdmin",isAdmin);
-            }else if (isAdmin == UserStatus.LEADER_CONSTANTS || isAdmin == UserStatus.ADMIN_CONSTANTS){
-                //说明是校领导用户
-                criteria.andIn("isAdmin", Arrays.asList(UserStatus.LEADER_CONSTANTS,UserStatus.ADMIN_CONSTANTS));
-            }else {
+            if ("".equals(isAdmin)){
                 //查询学生领导及管理员
                 criteria.andIn("isAdmin", Arrays.asList(UserStatus.STUDENT_CONSTANTS,UserStatus.LEADER_CONSTANTS,UserStatus.ADMIN_CONSTANTS));
+            }else if (UserStatus.STUDENT_ADMIN.equals(isAdmin)){
+                //说明是学生用户
+                criteria.andEqualTo("isAdmin",Arrays.asList(UserStatus.STUDENT_CONSTANTS));
+            }else if (UserStatus.ADMIN.equals(isAdmin)){
+                //说明是校领导用户
+                criteria.andIn("isAdmin", Arrays.asList(UserStatus.LEADER_CONSTANTS,UserStatus.ADMIN_CONSTANTS));
             }
 
             criteria.andEqualTo("isDelete",0);
@@ -360,5 +362,50 @@ public class UserServiceImpl implements UserService {
             return new ResultVO(ResStatus.OK,"头像修改成功！",users);
         }
         return new ResultVO(ResStatus.NO,"头像修改失败！",null);
+    }
+
+    /**
+     * 根据用户信息删除用户信息
+     * @param uid
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResultVO deleteUserByUid(Integer uid) {
+        Users users = new Users();
+        users.setUid(uid);
+        users.setIsDelete(1);
+        //直接将值更新为1
+        int i = usersMapper.updateByPrimaryKeySelective(users);
+        if (i > 0){
+            //将用户详情信息也删除
+            UserInfo userInfo = new UserInfo();
+            userInfo.setIsDelete(1);
+            Example example = new Example(UserInfo.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("uid",uid);
+            usreInfoMapper.updateByExampleSelective(userInfo,example);
+            return new ResultVO(ResStatus.OK,"删除成功！",null);
+        }
+        return new ResultVO(ResStatus.NO,"删除失败！",null);
+    }
+
+    @Override
+    public ResultVO deleteBatch(Integer[] uIds) {
+        Users users = new Users();
+        users.setIsDelete(1);
+        Example example = new Example(Users.class);
+        example.createCriteria().andIn("uid", Arrays.asList(uIds));
+        int i = usersMapper.updateByExampleSelective(users, example);
+        if (i > 0) {
+            //将用户详情表中的记录也要删除
+            UserInfo userInfo = new UserInfo();
+            userInfo.setIsDelete(1);
+            Example example1 = new Example(UserInfo.class);
+            example1.createCriteria().andIn("uid",Arrays.asList(uIds));
+            usreInfoMapper.updateByExampleSelective(userInfo,example1);
+            return new ResultVO(ResStatus.OK,"success",null);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
     }
 }

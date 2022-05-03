@@ -56,7 +56,7 @@ public class Organize {
      * 主图
      */
     @Column(name = "main_url")
-    private Integer mainUrl;
+    private String mainUrl;
 
     /**
      * 社团成立时间

@@ -97,7 +97,7 @@ public interface UserService {
      * @param isAdmin
      * @return
      */
-    ResultVO findByList(int pageNum, int limit, String realName, String username,Integer isAdmin);
+    ResultVO findByList(int pageNum, int limit, String realName, String username,String isAdmin);
 
     /**
      * 用户修改头像的方法
@@ -106,4 +106,13 @@ public interface UserService {
      * @return
      */
     ResultVO updateImg(Integer uid, String newFileName);
+
+    /**
+     * 根据用户Id，删除用户信息
+     * @param uid
+     * @return
+     */
+    ResultVO deleteUserByUid(Integer uid);
+
+    ResultVO deleteBatch(Integer[] uIds);
 }
