@@ -36,4 +36,17 @@ public class EasyExcelController {
     public void userImport(MultipartFile file) {
         easyExcelService.userImport(file);
     }
+
+    @ApiOperation("社团信息列表导出")
+    @GetMapping("/club/export")
+    public void clubExport(HttpServletResponse response) {
+        easyExcelService.clubExport(response);
+    }
+
+    @ApiOperation("社团信息列表导入")
+    @PostMapping("/club/import")
+    public void clubImport(MultipartFile file) {
+        easyExcelService.clubImport(file);
+    }
+
 }

@@ -24,4 +24,16 @@ public interface EasyExcelService {
      * @return
      */
     void userImport(MultipartFile file);
+
+    /**
+     * 社团信息列表导出
+     * @param response
+     */
+    void clubExport(HttpServletResponse response);
+
+    /**
+     * 社团信息列表导入
+     * @param file
+     */
+    void clubImport(MultipartFile file);
 }
