@@ -1,5 +1,7 @@
 package com.qingfeng.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -10,9 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 public interface EasyExcelService {
 
     /**
-     * 导出用户Excel文件
+     * 导出用户信息列表Excel文件
      * @param response
      * @return
      */
     void userExport(HttpServletResponse response);
+
+    /**
+     * 导入用户信息列表Excel文件
+     * @param file
+     * @return
+     */
+    void userImport(MultipartFile file);
 }

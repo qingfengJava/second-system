@@ -4,12 +4,15 @@ import com.alibaba.excel.EasyExcel;
 import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.UsersMapper;
 import com.qingfeng.entity.Users;
+import com.qingfeng.listener.UsersExcelListener;
 import com.qingfeng.service.EasyExcelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +54,20 @@ public class EasyExcelServiceImpl implements EasyExcelService {
                     .doWrite(users);
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 导入用户信息列表
+     * @param file
+     * @return
+     */
+    @Override
+    public void userImport(MultipartFile file) {
+        try {
+            EasyExcel.read(file.getInputStream(), Users.class, new UsersExcelListener(usersMapper)).sheet().doRead();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
