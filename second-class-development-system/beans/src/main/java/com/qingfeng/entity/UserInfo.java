@@ -41,6 +41,8 @@ public class UserInfo {
     @Column(name = "student_num")
     private String studentNum;
 
+    private String type;
+
     /**
      * 姓名
      */
@@ -51,7 +53,7 @@ public class UserInfo {
      * 性别    0-男  1-女
      */
     @Column(name = "stu_sex")
-    private Boolean stuSex;
+    private String stuSex;
 
     /**
      * 出生日期
@@ -96,7 +98,7 @@ public class UserInfo {
     /**
      * 户口类型   0-农村   1-城市
      */
-    private Boolean hukou;
+    private String hukou;
 
     /**
      * 电话号码
