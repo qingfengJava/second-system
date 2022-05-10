@@ -157,21 +157,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultVO updateMessage(String uid, Users users) {
-        //根据用户Id来完善信息  先获取一个完整的用户对象，然后再进行修改
-        Users user = usersMapper.selectByPrimaryKey(uid);
-        //将信息全部封装到user里
-        user.setRealname(users.getRealname());
-        user.setNickname(users.getNickname());
-        user.setTelphone(users.getTelphone());
-        user.setQq(users.getQq());
-        user.setEmail(users.getEmail());
-        user.setPhoto(users.getPhoto());
-        user.setHobydes(users.getHobydes());
+    public ResultVO updateMessage(Integer uid, Users users) {
         //根据主键更新属性不为null的值
-        int i = usersMapper.updateByPrimaryKeySelective(user);
+        users.setUid(uid);
+        int i = usersMapper.updateByPrimaryKeySelective(users);
         if (i > 0){
-            return new ResultVO(ResStatus.OK,"信息保存成功！！！",user);
+            return new ResultVO(ResStatus.OK,"基本信息保存成功！！！",users);
         }else{
             return new ResultVO(ResStatus.NO,"信息保存失败！！！",null);
         }

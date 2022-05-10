@@ -105,7 +105,6 @@ public class QualityActiveController {
     @ApiOperation("分页查询精品活动列表")
     @PostMapping("/queryList")
     public ResultVO queryQualityActiveList(Integer pageNum, Integer limit){
-
         return null;
     }
 }

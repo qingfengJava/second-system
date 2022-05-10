@@ -45,10 +45,9 @@ public interface UserService {
      * 根据用户Id，完善用户信息
      * @param uid
      * @param users
-     * @param img
      * @return
      */
-    ResultVO updateMessage(String uid, Users users);
+    ResultVO updateMessage(Integer uid, Users users);
 
     /**
      * 根据用户Id查询用户信息

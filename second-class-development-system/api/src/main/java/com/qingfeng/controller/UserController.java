@@ -59,37 +59,10 @@ public class UserController {
     }
 
     @ApiOperation("完善用户基本信息接口")
-    @ApiImplicitParam(paramType = "string",name = "oldPhoto",value = "旧头像的名字",required = true)
     @PostMapping("/updateMessage/{uid}")
-    public ResultVO updateMsg(@PathVariable("uid") String uid,Users user,String oldPhoto, MultipartFile img){
-        try {
-            //判断是否更新头像  空是true，表示没有更新头像
-            boolean notEempty = (img != null);
-            //不为空
-            if (notEempty){
-                //检查就照片是否存在，存在就将其删除掉，再保存新照片
-                File file = new File(realPath,oldPhoto);
-                if (file.exists()) {
-                    //如果文件存在，就删除文件
-                    if (!oldPhoto.equals("default.png")){
-                        //如果不是默认头像就删除老照片
-                        file.delete();
-                    }
-                }
-                //处理新的头像上传   1、处理头像的上传 & 修改文件名
-                String newFileName = FileUtils.uploadFile(img, realPath);
-                //修改用户头像的信息
-                user.setPhoto(newFileName);
-            }else {
-                //否则不修改头像
-                user.setPhoto(oldPhoto);
-            }
-            //调用service层完善用户信息的方法
-            return userService.updateMessage(uid,user);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResultVO(ResStatus.NO,"完善信息出现未知的异常！",null);
-        }
+    public ResultVO updateMsg(@PathVariable("uid") Integer uid,@RequestBody Users user){
+        //调用service层完善用户信息的方法
+        return userService.updateMessage(uid,user);
     }
 
     @ApiOperation("查询学生用户基本信息接口")

@@ -134,4 +134,7 @@ public class TeacherInfo {
      */
     @Column(name = "is_delete")
     private Integer isDelete;
+
+    @Column(name = "is_change")
+    private Integer isChange;
 }

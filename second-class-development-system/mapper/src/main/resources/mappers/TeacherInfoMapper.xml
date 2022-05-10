@@ -22,6 +22,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+        <result column="is_change" jdbcType="INTEGER" property="isChange"/>
     </resultMap>
 
     <select id="queryByUserId" resultMap="BaseResultMap">
@@ -43,7 +44,8 @@
                individual_resume,
                create_time,
                update_time,
-               is_delete
+               is_delete,
+               is_change
         from teacher_info
         where uid = #{uid}
     </select>
