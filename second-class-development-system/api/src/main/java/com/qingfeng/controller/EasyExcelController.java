@@ -49,4 +49,27 @@ public class EasyExcelController {
         easyExcelService.clubImport(file);
     }
 
+    @ApiOperation("学生学籍信息批量导出")
+    @GetMapping("/stuInfo/export")
+    public void stuInfoExport(HttpServletResponse response) {
+        easyExcelService.stuInfoExport(response);
+    }
+
+    @ApiOperation("学生学籍信息批量导入")
+    @PostMapping("/stuInfo/import")
+    public void stuInfoImport(MultipartFile file) {
+        easyExcelService.stuInfoImport(file);
+    }
+
+    @ApiOperation("校领导信息批量导出")
+    @GetMapping("/leader/export")
+    public void leaderExport(HttpServletResponse response) {
+        easyExcelService.leaderExport(response);
+    }
+
+    @ApiOperation("校领导信息批量导入")
+    @PostMapping("/leader/import")
+    public void leaderImport(MultipartFile file) {
+        easyExcelService.leaderImport(file);
+    }
 }

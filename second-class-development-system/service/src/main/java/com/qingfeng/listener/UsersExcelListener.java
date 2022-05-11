@@ -10,12 +10,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.Map;
-
 /**
- * @author 清风学Java
- * @version 1.0.0
- * @date 2022/5/5
- *//**
  * @author 清风学Java
  * @version 1.0.0
  * @date 2022/5/5

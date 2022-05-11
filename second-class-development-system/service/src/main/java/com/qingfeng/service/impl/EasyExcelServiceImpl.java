@@ -3,11 +3,16 @@ package com.qingfeng.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.OrganizeMapper;
+import com.qingfeng.dao.TeacherInfoMapper;
+import com.qingfeng.dao.UserInfoMapper;
 import com.qingfeng.dao.UsersMapper;
 import com.qingfeng.dto.OrganizeDto;
 import com.qingfeng.entity.Organize;
+import com.qingfeng.entity.TeacherInfo;
+import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.listener.OrganizeExcelListener;
+import com.qingfeng.listener.UserInfoExcelListener;
 import com.qingfeng.listener.UsersExcelListener;
 import com.qingfeng.service.EasyExcelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +40,10 @@ public class EasyExcelServiceImpl implements EasyExcelService {
     private UsersMapper usersMapper;
     @Autowired
     private OrganizeMapper organizeMapper;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
+    @Autowired
+    private TeacherInfoMapper teacherInfoMapper;
 
     /**
      * 用户列表导出Excel表
@@ -42,11 +52,7 @@ public class EasyExcelServiceImpl implements EasyExcelService {
     @Override
     public void userExport(HttpServletResponse response) {
         try {
-            response.setContentType("application/vnd.ms-excel");
-            response.setCharacterEncoding("utf-8");
-            //设置URLEncoder.encode可以解决中文乱码问题   这个和EasyExcel没有关系
-            String fileName = URLEncoder.encode("用户信息列表", "UTF-8");
-            response.setHeader("Content-Disposition", "attachment;filename="+fileName+".xlsx");
+            setResponse(response,"用户信息列表");
 
             //查询所有用户（学生/校领导）
             Example example = new Example(Users.class);
@@ -86,11 +92,7 @@ public class EasyExcelServiceImpl implements EasyExcelService {
     @Override
     public void clubExport(HttpServletResponse response) {
         try {
-            response.setContentType("application/vnd.ms-excel");
-            response.setCharacterEncoding("utf-8");
-            //设置URLEncoder.encode可以解决中文乱码问题   这个和EasyExcel没有关系
-            String fileName = URLEncoder.encode("社团信息列表", "UTF-8");
-            response.setHeader("Content-Disposition", "attachment;filename="+fileName+".xlsx");
+            setResponse(response,"社团信息列表");
 
             ArrayList<OrganizeDto> organizeList = new ArrayList<>();
 
@@ -138,6 +140,10 @@ public class EasyExcelServiceImpl implements EasyExcelService {
         }
     }
 
+    /**
+     * 社团信息Excel导入
+     * @param file
+     */
     @Override
     public void clubImport(MultipartFile file) {
         try {
@@ -145,5 +151,73 @@ public class EasyExcelServiceImpl implements EasyExcelService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 学生学籍信息Excel导出
+     * @param response
+     */
+    @Override
+    public void stuInfoExport(HttpServletResponse response) {
+        try {
+            setResponse(response, "学生学籍信息列表");
+            //查询所有学生学籍信息列表
+            Example example = new Example(UserInfo.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isDelete", 0);
+            List<UserInfo> userInfoList = userInfoMapper.selectByExample(example);
+
+            // 调用方法实现写操作
+            EasyExcel.write(response.getOutputStream(), UserInfo.class)
+                    .sheet("学生学籍信息列表")
+                    .doWrite(userInfoList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 学生学籍信息Excel导入
+     * @param file
+     */
+    @Override
+    public void stuInfoImport(MultipartFile file) {
+        try {
+            EasyExcel.read(file.getInputStream(), UserInfo.class, new UserInfoExcelListener(userInfoMapper,usersMapper)).sheet().doRead();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void leaderExport(HttpServletResponse response) {
+        try {
+            setResponse(response, "校领导信息列表");
+            //查询所有学生学籍信息列表
+            Example example = new Example(TeacherInfo.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isDelete", 0);
+            List<TeacherInfo> teacherInfos = teacherInfoMapper.selectByExample(example);
+
+            // 调用方法实现写操作
+            EasyExcel.write(response.getOutputStream(), TeacherInfo.class)
+                    .sheet("校领导信息列表")
+                    .doWrite(teacherInfos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void leaderImport(MultipartFile file) {
+
+    }
+
+    private void setResponse(HttpServletResponse response,String name) throws UnsupportedEncodingException {
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        //设置URLEncoder.encode可以解决中文乱码问题   这个和EasyExcel没有关系
+        String fileName = URLEncoder.encode(name, "UTF-8");
+        response.setHeader("Content-Disposition", "attachment;filename="+fileName+".xlsx");
     }
 }

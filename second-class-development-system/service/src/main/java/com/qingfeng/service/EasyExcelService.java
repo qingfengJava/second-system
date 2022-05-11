@@ -36,4 +36,28 @@ public interface EasyExcelService {
      * @param file
      */
     void clubImport(MultipartFile file);
+
+    /**
+     * 学生学籍信息批量导出
+     * @param response
+     */
+    void stuInfoExport(HttpServletResponse response);
+
+    /**
+     * 学生学籍信息批量导入
+     * @param file
+     */
+    void stuInfoImport(MultipartFile file);
+
+    /**
+     * 校领导/老师信息批量导出
+     * @param response
+     */
+    void leaderExport(HttpServletResponse response);
+
+    /**
+     * 校领导/老师信息批量导入
+     * @param file
+     */
+    void leaderImport(MultipartFile file);
 }

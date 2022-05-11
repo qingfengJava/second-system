@@ -18,6 +18,7 @@
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
         <result column="cell_phone" jdbcType="VARCHAR" property="cellPhone"/>
+        <result column="native_place" jdbcType="VARCHAR" property="nativePlace"/>
         <result column="individual_resume" jdbcType="VARCHAR" property="individualResume"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -41,6 +42,7 @@
                email,
                phone,
                cell_phone,
+               native_place,
                individual_resume,
                create_time,
                update_time,

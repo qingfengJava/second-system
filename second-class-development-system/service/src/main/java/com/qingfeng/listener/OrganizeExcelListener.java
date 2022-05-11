@@ -11,6 +11,7 @@ import com.qingfeng.entity.Users;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -18,12 +19,6 @@ import java.util.Map;
  * @version 1.0.0
  * @date 2022/5/5
  */
-
-/**
-* @author 清风学Java
-* @version 1.0.0
-* @date 2022/5/5
-*/
 public class OrganizeExcelListener extends AnalysisEventListener<OrganizeDto> {
 
    private UsersMapper usersMapper;
@@ -56,6 +51,8 @@ public class OrganizeExcelListener extends AnalysisEventListener<OrganizeDto> {
        users.setEmail(organizeDto.getEmail());
        users.setPhoto(organizeDto.getPhoto());
        users.setIsAdmin(organizeDto.getIsAdmin());
+       users.setIsDelete(0);
+       users.setCreateTime(new Date());
 
        Organize organize = new Organize();
        organize.setUserId(organizeDto.getUserId());
