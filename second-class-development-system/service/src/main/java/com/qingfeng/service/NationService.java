@@ -1,6 +1,8 @@
 package com.qingfeng.service;
 
-import com.qingfeng.vo.ResultVO;
+import com.qingfeng.entity.Nation;
+
+import java.util.List;
 
 /**
  * @author 清风学Java
@@ -13,5 +15,5 @@ public interface NationService {
      * 查询所有籍贯
      * @return
      */
-    ResultVO findAll();
+    List<Nation> findAll();
 }

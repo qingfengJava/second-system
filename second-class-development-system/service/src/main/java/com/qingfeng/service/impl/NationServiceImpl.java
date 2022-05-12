@@ -1,11 +1,10 @@
 package com.qingfeng.service.impl;
 
-import com.qingfeng.constant.ResStatus;
 import com.qingfeng.dao.NationMapper;
 import com.qingfeng.entity.Nation;
 import com.qingfeng.service.NationService;
-import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +20,15 @@ public class NationServiceImpl implements NationService {
     @Autowired
     private NationMapper nationMapper;
 
+    /**
+     * 使用缓存存储名族数据
+     * @Cacheable  value:缓存的首名称  keyGenerator：生成名称的规则
+     * @return
+     */
     @Override
-    public ResultVO findAll() {
+    @Cacheable(value = "nation", keyGenerator = "keyGenerator")
+    public List<Nation> findAll() {
         List<Nation> nations = nationMapper.selectAll();
-        return new ResultVO(ResStatus.OK,"success",nations);
+        return nations;
     }
 }
