@@ -1,6 +1,7 @@
 package com.qingfeng.service.impl;
 
 import com.qingfeng.constant.ResStatus;
+import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.RegistMapper;
 import com.qingfeng.dto.RegistrationActive;
@@ -11,6 +12,7 @@ import com.qingfeng.utils.PageHelper;
 import com.qingfeng.vo.ApplyVo;
 import com.qingfeng.vo.RegistVo;
 import com.qingfeng.vo.ResultVO;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -147,6 +149,84 @@ public class ActiveServiceImpl implements ActiveService {
             return new ResultVO(ResStatus.OK,"success",i);
         }
         return new ResultVO(ResStatus.NO,"fail",0);
+    }
+
+    /**
+     * 分页查询所有的活动：
+     * 查询过程中，根据用户身份不同，封装的查询条件不同
+     * @param isAdmin
+     * @param uid
+     * @param pageNum
+     * @param limit
+     * @param schoolYear
+     * @param activeType
+     * @param activeName
+     * @param type
+     * @return
+     */
+    @Override
+    public ResultVO queryActive(Integer isAdmin,Integer uid,  Integer pageNum, Integer limit, String schoolYear, Integer activeType, String activeName,String type) {
+        try {
+            //分页条件查询
+            int start = (pageNum - 1) * limit;
+            RowBounds rowBounds = new RowBounds(start, limit);
+            Example example = new Example(Apply.class);
+            Example.Criteria criteria = example.createCriteria();
+            if (schoolYear != null && !"".equals(schoolYear)){
+                criteria.andLike("schoolYear","%"+schoolYear+"%");
+            }
+            if (activeType != null && activeType > 0){
+                criteria.andEqualTo("activeType",activeType);
+            }
+            if (activeName != null && !"".equals(activeName)){
+                criteria.andLike("activeName","%"+activeName+"%");
+            }
+            if (isAdmin == UserStatus.CLUB_CONSTANTS || isAdmin == UserStatus.STUDENTS_UNION_CONSTANTS){
+                criteria.andEqualTo("applyUserId",uid);
+                switch (type){
+                    case "申请中":
+                        criteria.andEqualTo("isAgree",0);
+                        criteria.andEqualTo("isCheck",0);
+                        criteria.andEqualTo("isEnd",0);
+                        break;
+                    case "申请未通过":
+                        criteria.andEqualTo("isAgree",2);
+                        criteria.andEqualTo("isCheck",0);
+                        criteria.andEqualTo("isEnd",0);
+                        break;
+                    case "待审核":
+                        criteria.andEqualTo("isAgree",1);
+                        criteria.andEqualTo("isCheck",0);
+                        criteria.andEqualTo("isEnd",0);
+                        break;
+                    case "审核未通过":
+                        criteria.andEqualTo("isAgree",1);
+                        criteria.andEqualTo("isCheck",2);
+                        criteria.andEqualTo("isEnd",0);
+                        break;
+                    case "已结束":
+                        criteria.andEqualTo("isAgree",1);
+                        criteria.andEqualTo("isCheck",1);
+                        criteria.andEqualTo("isEnd",1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            criteria.andEqualTo("isDelete",0);
+            List<Apply> applyList = applyMapper.selectByExampleAndRowBounds(example, rowBounds);
+            //查询总数
+            int count = applyMapper.selectCountByExample(example);
+            //计算总页数
+            int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+            //封装数据
+            PageHelper<Apply> pageHelper = new PageHelper<>(count, pageCount, applyList);
+            //不管查没查到直接返回数据
+            return new ResultVO(ResStatus.OK, "success", pageHelper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResultVO(ResStatus.NO, "fail", null);
+        }
     }
 
 }

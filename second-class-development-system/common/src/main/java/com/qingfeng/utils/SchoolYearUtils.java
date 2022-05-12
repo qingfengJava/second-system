@@ -43,6 +43,31 @@ public class SchoolYearUtils {
     }
 
     /**
+     * 根据传入的学年返回一组学年集合
+     * @param year
+     * @return
+     */
+    public static List<String> getSchoolYear(int year) {
+        List<String> list = new ArrayList<>();
+        //获取当前年份
+        year -= 2;
+        for (int i = 0; i < 7 ; i++) {
+            String schoolYear = "";
+            int month = calendar.get(Calendar.MONTH) + 1;
+            if (month > 6){
+                //是下半年  生成一个学年
+                schoolYear = schoolYear+year+"-"+(year + 1);
+            }else{
+                //说明是上半年 生成一个学年字符串
+                schoolYear = schoolYear+(year - 1)+"-"+year;
+            }
+            year++;
+            list.add(schoolYear);
+        }
+        return list;
+    }
+
+    /**
      * 按时间生成一个学年字符串
      * @return
      */
@@ -62,9 +87,9 @@ public class SchoolYearUtils {
     }
 
     public static void main(String[] args) {
-        String str = getSchoolYearByOne();
-        String s = str.substring(0, str.lastIndexOf("-"));
-        System.out.println(s);
+        List<String> schoolYear = getSchoolYear();
+        Calendar.getInstance();
+        System.out.println(calendar.get(Calendar.YEAR));
     }
 
 }

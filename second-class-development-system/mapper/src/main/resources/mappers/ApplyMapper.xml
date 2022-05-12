@@ -25,6 +25,7 @@
         <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
         <result column="total_num" jdbcType="INTEGER" property="totalNum"/>
         <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
+        <result column="is_check" jdbcType="INTEGER" property="isCheck"/>
         <result column="is_end" jdbcType="INTEGER" property="isEnd"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
     </resultMap>
@@ -53,6 +54,7 @@
                apply_create_time,
                total_num,
                is_agree,
+               is_check,
                is_end,
                is_delete
         from apply
@@ -83,6 +85,7 @@
                a.apply_create_time,
                a.total_num,
                a.is_agree,
+               a.is_check,
                a.is_end,
                a.is_delete
         from apply a
@@ -133,6 +136,7 @@
         <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
         <result column="total_num" jdbcType="INTEGER" property="totalNum"/>
         <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
+        <result column="is_check" jdbcType="INTEGER" property="isCheck"/>
         <result column="is_end" jdbcType="INTEGER" property="isEnd"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
 
@@ -164,6 +168,7 @@
                apply_create_time,
                total_num,
                is_agree,
+               is_check,
                is_end,
                is_delete
         from apply

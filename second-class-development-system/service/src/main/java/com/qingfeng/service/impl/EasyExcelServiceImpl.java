@@ -12,6 +12,7 @@ import com.qingfeng.entity.TeacherInfo;
 import com.qingfeng.entity.UserInfo;
 import com.qingfeng.entity.Users;
 import com.qingfeng.listener.OrganizeExcelListener;
+import com.qingfeng.listener.TeacherInfoExcelListener;
 import com.qingfeng.listener.UserInfoExcelListener;
 import com.qingfeng.listener.UsersExcelListener;
 import com.qingfeng.service.EasyExcelService;
@@ -209,8 +210,12 @@ public class EasyExcelServiceImpl implements EasyExcelService {
     }
 
     @Override
-    public void leaderImport(MultipartFile file) {
-
+    public void leaderImport(MultipartFile file){
+        try {
+            EasyExcel.read(file.getInputStream(), TeacherInfo.class, new TeacherInfoExcelListener(usersMapper,teacherInfoMapper)).sheet().doRead();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setResponse(HttpServletResponse response,String name) throws UnsupportedEncodingException {

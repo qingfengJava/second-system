@@ -67,6 +67,12 @@ public class Notice {
     private String leader;
 
     /**
+     * 阅读量
+     */
+    @Column(name = "read_num")
+    private Integer readNum;
+
+    /**
      * 直接领导人职位
      */
     @Column(name = "leader_post")

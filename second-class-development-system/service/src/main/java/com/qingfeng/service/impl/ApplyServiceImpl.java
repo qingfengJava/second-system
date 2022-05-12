@@ -77,12 +77,12 @@ public class ApplyServiceImpl implements ApplyService {
                     apply.setApplyUserId(uid);
                     apply.setApplyCreateTime(new Date());
                     apply.setIsAgree(0);
+                    apply.setIsCheck(0);
                     apply.setIsDelete(0);
                     int i = applyMapper.insertUseGeneratedKeys(apply);
                     if (i > 0){
                         //活动申请成功，发送邮件通知负责人审核
                         emailService.sendNeedToCheckEmail(UserStatus.STUDENTS_UNION_CONSTANTS,apply);
-
                         return new ResultVO(ResStatus.OK,"活动申请成功，尽快通知负责人审核！",apply);
                     }else {
                         return new ResultVO(ResStatus.NO,"服务器异常活动申请失败！！！",null);
@@ -224,6 +224,7 @@ public class ApplyServiceImpl implements ApplyService {
                     apply.setApplyUserId(oldApply.getApplyUserId());
                     //不管之前有没有同意申请，都要修改为不同意申请
                     apply.setIsAgree(0);
+                    apply.setIsCheck(0);
                     apply.setIsEnd(0);
                     apply.setIsDelete(0);
                     int i = applyMapper.updateByPrimaryKeySelective(apply);

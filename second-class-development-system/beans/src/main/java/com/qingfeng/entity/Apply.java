@@ -163,6 +163,12 @@ public class Apply {
     private Integer isAgree;
 
     /**
+     * 是否审核通过，0：未通过  1：审核通过
+     */
+    @Column(name = "is_check")
+    private Integer isCheck;
+
+    /**
      * 活动报名是否结束  0：未结束  1：已结束
      */
     @Column(name = "is_end")

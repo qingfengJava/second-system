@@ -34,6 +34,7 @@ public class NoticeServiceImpl implements NoticeService {
     public ResultVO addNotice(Integer userId, Notice notice) {
         //设置基本信息
         notice.setUserId(userId);
+        notice.setReadNum(0);
         notice.setCreateTime(new Date());
         notice.setUpdateTime(new Date());
         notice.setIsDelete(0);
@@ -53,6 +54,7 @@ public class NoticeServiceImpl implements NoticeService {
         notice.setNoticeId(noticeId);
         //设置公告更新时间
         notice.setUpdateTime(new Date());
+        notice.setReadNum(0);
         int i = noticeMapper.updateByPrimaryKeySelective(notice);
         if (i > 0){
             //说明notice表信息修改成功，相应的要修改用户公告表，将结果查看结果修改为未查看
@@ -65,10 +67,6 @@ public class NoticeServiceImpl implements NoticeService {
                 UserNotice userNotice = new UserNotice();
                 userNotice.setIsCheck(0);
                 int k = userNoticeMapper.updateByExampleSelective(userNotice, example);
-                if (k <= 0){
-                    //否则用户公告表信息修改失败    制造一个异常 让方法回滚
-                    int n = 1/0;
-                }
             }
             //说明修改成功
             return new ResultVO(ResStatus.OK,"公告信息修改成功！",notice);

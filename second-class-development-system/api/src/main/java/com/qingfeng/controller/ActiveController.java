@@ -95,4 +95,21 @@ public class ActiveController {
     public ResultVO queryRegistCount(@PathVariable("applyId") Integer applyId){
         return activeService.queryRegistCount(applyId);
     }
+
+    @ApiOperation("分页条件查询活动列表接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "Integer", name = "pageNum", value = "页码", required = true),
+            @ApiImplicitParam(paramType = "Integer", name = "limit", value = "每页条数", required = true),
+            @ApiImplicitParam(paramType = "String", name = "schoolYear", value = "学年",required = false),
+            @ApiImplicitParam(paramType = "Integer", name = "activeType", value = "活动类型",required = false),
+            @ApiImplicitParam(paramType = "String", name = "activeName", value = "活动名称",required = false),
+            @ApiImplicitParam(paramType = "String", name = "type", value = "查询的活动类型",required = false),
+    })
+    @GetMapping("/selectActive/{isAdmin}/{uid}")
+    public ResultVO queryActive(@PathVariable("isAdmin") Integer isAdmin,
+                                @PathVariable("uid") Integer uid,
+                                Integer pageNum,Integer limit,
+                                String schoolYear,Integer activeType,String activeName,String type){
+        return activeService.queryActive(isAdmin,uid,pageNum,limit,schoolYear,activeType,activeName,type);
+    }
 }

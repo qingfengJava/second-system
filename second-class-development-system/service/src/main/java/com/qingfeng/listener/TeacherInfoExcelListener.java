@@ -22,7 +22,12 @@ public class TeacherInfoExcelListener extends AnalysisEventListener<TeacherInfo>
    private UsersMapper usersMapper;
    private TeacherInfoMapper teacherInfoMapper;
 
-    /**
+   public TeacherInfoExcelListener(UsersMapper usersMapper, TeacherInfoMapper teacherInfoMapper) {
+      this.usersMapper = usersMapper;
+      this.teacherInfoMapper = teacherInfoMapper;
+   }
+
+   /**
     * 一行一行读取Excel内容，从第二行读取，第一行是表头不读取
     *
     * @param userInfo

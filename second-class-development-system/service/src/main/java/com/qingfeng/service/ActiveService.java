@@ -59,4 +59,19 @@ public interface ActiveService {
      * @return
      */
     ResultVO queryRegistCount(Integer applyId);
+
+    /**
+     * 分页查询所有的活动：
+     * 查询过程中，根据用户身份不同，封装的查询条件不同
+     * @param isAdmin
+     * @param uid
+     * @param pageNum
+     * @param limit
+     * @param schoolYear
+     * @param activeType
+     * @param activeName
+     * @param type
+     * @return
+     */
+    ResultVO queryActive(Integer isAdmin,Integer uid, Integer pageNum, Integer limit, String schoolYear, Integer activeType, String activeName,String type);
 }
