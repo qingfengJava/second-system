@@ -61,4 +61,20 @@
         where user_id = #{uid}
           and is_delete = 0;
     </select>
+
+    <select id="queryByIsAdmin" resultMap="BaseResultMap">
+        select organize.organize_id,
+               organize.user_id,
+               organize.organize_name,
+               organize.organize_department,
+               organize.organize_introduce,
+               organize.main_url,
+               organize.birth_time,
+               organize.is_delete,
+               organize.create_time,
+               organize.update_time
+        from organize left join tb_users on organize.user_id = tb_users.uId
+        where tb_users.is_admin = #{isAdmin}
+          and organize.is_delete = 0
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.qingfeng.controller;
 
 import com.qingfeng.constant.ResStatus;
+import com.qingfeng.dto.UserDto;
 import com.qingfeng.entity.Organize;
 import com.qingfeng.service.OrganizeService;
 import com.qingfeng.vo.ResultVO;
@@ -10,6 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 社团组织控制层
@@ -60,4 +63,11 @@ public class OrganizeController {
         return organizeService.queryOrganize(pageNum, limit,organizeName);
     }
 
+    @ApiOperation("根据用户类型查询组织名称")
+    @GetMapping("/queryOrganizeName/{isAdmin}")
+    public ResultVO queryOrganizeName(@PathVariable("isAdmin")Integer isAdmin){
+        //根据用户类型查询组织名称
+        List<UserDto> list = organizeService.queryByIsAdmin(isAdmin);
+        return new ResultVO(ResStatus.OK,"success",list);
+    }
 }

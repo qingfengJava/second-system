@@ -14,6 +14,7 @@ import com.qingfeng.vo.RegistVo;
 import com.qingfeng.vo.ResultVO;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -41,6 +42,7 @@ public class ActiveServiceImpl implements ActiveService {
      * @return
      */
     @Override
+    @Cacheable(value = "registrationActive",keyGenerator = "keyGenerator")
     public ResultVO checkRegistration(String uid, int participate, int pageNum, int limit, RegistrationActive registrationActive) {
         try {
             //分页查询
@@ -80,6 +82,7 @@ public class ActiveServiceImpl implements ActiveService {
     }
 
     @Override
+    @Cacheable(value = "newActive",keyGenerator = "keyGenerator")
     public ResultVO queryApply(Integer uid, int pageNum, int limit) {
         try {
             //新活动查询的注意事项   在有效时间范围内   学生没有报名的新活动
@@ -165,6 +168,7 @@ public class ActiveServiceImpl implements ActiveService {
      * @return
      */
     @Override
+    @Cacheable(value = "active",keyGenerator = "keyGenerator")
     public ResultVO queryActive(Integer isAdmin,Integer uid,  Integer pageNum, Integer limit, String schoolYear, Integer activeType, String activeName,String type) {
         try {
             //分页条件查询

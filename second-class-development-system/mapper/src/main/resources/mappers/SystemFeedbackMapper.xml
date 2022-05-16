@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.dao.SystemFeedbackMapper">
+    <resultMap id="BaseResultMap" type="com.qingfeng.entity.SystemFeedback">
+        <id column="system_id" jdbcType="INTEGER" property="systemId"/>
+        <result column="uid" jdbcType="INTEGER" property="uid"/>
+        <result column="system_evaluation" jdbcType="INTEGER" property="systemEvaluation"/>
+        <result column="anonymous_name" jdbcType="VARCHAR" property="anonymousName"/>
+        <result column="feedback_type" jdbcType="INTEGER" property="feedbackType"/>
+        <result column="feedback_object_id" jdbcType="INTEGER" property="feedbackObjectId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="is_receive" jdbcType="INTEGER" property="isReceive"/>
+        <result column="receive_content" jdbcType="VARCHAR" property="receiveContent"/>
+        <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+    </resultMap>
+</mapper>

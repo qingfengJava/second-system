@@ -1,9 +1,8 @@
 package com.qingfeng.dao;
 
 import com.qingfeng.entity.Organize;
-import com.qingfeng.vo.OrganizeVo;
 import com.qingfeng.generaldao.GeneralDao;
-import org.apache.ibatis.annotations.Param;
+import com.qingfeng.vo.OrganizeVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +28,11 @@ public interface OrganizeMapper extends GeneralDao<Organize> {
      * @return
      */
     OrganizeVo checkOrganizeInfo(Integer uid);
+
+    /**
+     * 根据身份类型查询社团组织信息
+     * @param isAdmin
+     * @return
+     */
+    List<Organize> queryByIsAdmin(Integer isAdmin);
 }

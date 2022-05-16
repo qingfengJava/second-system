@@ -1,6 +1,7 @@
 package com.qingfeng.service;
 
 import com.qingfeng.entity.Notice;
+import com.qingfeng.utils.PageHelper;
 import com.qingfeng.vo.ResultVO;
 
 /**
@@ -55,4 +56,15 @@ public interface NoticeService {
      * @return
      */
     ResultVO queryWaitTask(Integer isAdmin,Integer pageNum, Integer limit);
+
+    /**
+     * 根据用户Id分页条件查询公告列表
+     * @param userId
+     * @param pageNum
+     * @param limit
+     * @param title
+     * @param status
+     * @return
+     */
+    PageHelper<Notice> queryNoticeListByUserId(Integer userId, int pageNum, int limit, String title, Integer status);
 }

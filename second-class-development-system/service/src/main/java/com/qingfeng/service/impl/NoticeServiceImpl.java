@@ -1,15 +1,18 @@
 package com.qingfeng.service.impl;
 
+import com.qingfeng.constant.ResStatus;
 import com.qingfeng.dao.NoticeMapper;
 import com.qingfeng.dao.UserNoticeMapper;
 import com.qingfeng.entity.Notice;
-import com.qingfeng.vo.NoticeVo;
 import com.qingfeng.entity.UserNotice;
 import com.qingfeng.service.NoticeService;
 import com.qingfeng.utils.PageHelper;
-import com.qingfeng.constant.ResStatus;
+import com.qingfeng.vo.NoticeVo;
 import com.qingfeng.vo.ResultVO;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -31,6 +34,7 @@ public class NoticeServiceImpl implements NoticeService {
     private UserNoticeMapper userNoticeMapper;
 
     @Override
+    @CacheEvict(value = "notice", allEntries=true)
     public ResultVO addNotice(Integer userId, Notice notice) {
         //设置基本信息
         notice.setUserId(userId);
@@ -49,6 +53,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "notice", allEntries=true)
     public ResultVO updateNotice(Integer noticeId, Notice notice) {
         //首先对公告表的信息进行修改
         notice.setNoticeId(noticeId);
@@ -92,6 +97,7 @@ public class NoticeServiceImpl implements NoticeService {
      * @return
      */
     @Override
+    @Cacheable(value = "notice",keyGenerator = "keyGenerator")
     public ResultVO queryNotice(Integer isAdmin, int pageNum, int limit) {
         try {
             //分页查询
@@ -138,6 +144,34 @@ public class NoticeServiceImpl implements NoticeService {
             //防止查询出现异常情况
             return new ResultVO(ResStatus.NO,"fail",null);
         }
+    }
+
+    /**
+     * 根据用户Id分页条件查询公告列表
+     * @param userId
+     * @param pageNum
+     * @param limit
+     * @param title
+     * @param status
+     * @return
+     */
+    @Override
+    @Cacheable(value = "notice",keyGenerator = "keyGenerator")
+    public PageHelper<Notice> queryNoticeListByUserId(Integer userId, int pageNum, int limit, String title, Integer status) {
+        int start = (pageNum - 1) * limit;
+        RowBounds rowBounds = new RowBounds(start, limit);
+        Example example = new Example(Notice.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId",userId);
+        criteria.andLike("title","%"+title+"%");
+        if (status != null && status > -1){
+            criteria.andEqualTo("isTask",status);
+        }
+        List<Notice> notices = noticeMapper.selectByExampleAndRowBounds(example, rowBounds);
+        int count = noticeMapper.selectCountByExample(example);
+        int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+        PageHelper<Notice> pageHelper = new PageHelper<>(count, pageCount, notices);
+        return pageHelper;
     }
 
 }

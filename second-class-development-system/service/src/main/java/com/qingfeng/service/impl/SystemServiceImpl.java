@@ -4,6 +4,7 @@ import com.qingfeng.constant.ResStatus;
 import com.qingfeng.service.SystemService;
 import com.qingfeng.utils.SchoolYearUtils;
 import com.qingfeng.vo.ResultVO;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -18,6 +19,7 @@ import java.util.List;
 public class SystemServiceImpl implements SystemService {
 
     @Override
+    @Cacheable(value = "schoolYear", keyGenerator = "keyGenerator")
     public ResultVO getSchoolYear(String schoolYear) {
         List<String> schoolYearList = null;
         if (schoolYear == null || schoolYear.isEmpty()) {

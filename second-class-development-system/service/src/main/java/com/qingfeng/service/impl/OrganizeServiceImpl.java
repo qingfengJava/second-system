@@ -1,20 +1,27 @@
 package com.qingfeng.service.impl;
 
 import com.qingfeng.constant.ResStatus;
+import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.OrganizeImgMapper;
 import com.qingfeng.dao.OrganizeMapper;
+import com.qingfeng.dao.UsersMapper;
+import com.qingfeng.dto.UserDto;
 import com.qingfeng.entity.Organize;
 import com.qingfeng.entity.OrganizeImg;
+import com.qingfeng.entity.Users;
 import com.qingfeng.service.OrganizeService;
 import com.qingfeng.utils.PageHelper;
 import com.qingfeng.vo.OrganizeVo;
 import com.qingfeng.vo.ResultVO;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,8 +38,11 @@ public class OrganizeServiceImpl implements OrganizeService {
     private OrganizeMapper organizeMapper;
     @Autowired
     private OrganizeImgMapper organizeImgMapper;
+    @Autowired
+    private UsersMapper usersMapper;
 
     @Override
+    @CacheEvict(value = "organize", allEntries=true)
     public ResultVO addOrganizeInfo(Integer uid, Organize organize) {
         //首先要根据uid查询社团组织对应的相亲信息是否存在
         Example example = new Example(Organize.class);
@@ -61,6 +71,7 @@ public class OrganizeServiceImpl implements OrganizeService {
     }
 
     @Override
+    @Cacheable(value = "organizeInfo",keyGenerator = "keyGenerator")
     public ResultVO checkOrganizeInfo(Integer uid) {
         OrganizeVo organizeVo = organizeMapper.checkOrganizeInfo(uid);
         if (organizeVo != null) {
@@ -70,8 +81,8 @@ public class OrganizeServiceImpl implements OrganizeService {
         return new ResultVO(ResStatus.NO, "fail", null);
     }
 
-
     @Override
+    @Cacheable(value = "organize",keyGenerator = "keyGenerator")
     public ResultVO queryOrganize(Integer pageNum, Integer limit, String organizeName) {
         try {
             //分页查询
@@ -99,6 +110,7 @@ public class OrganizeServiceImpl implements OrganizeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "organize", allEntries=true)
     public ResultVO deleteById(Integer organizeId) {
         Organize organize = new Organize();
         organize.setOrganizeId(organizeId);
@@ -115,6 +127,7 @@ public class OrganizeServiceImpl implements OrganizeService {
     }
 
     @Override
+    @CacheEvict(value = "organize", allEntries=true)
     public ResultVO deleteBatch(Integer[] organizeIds) {
         Organize organize = new Organize();
         organize.setIsDelete(1);
@@ -129,5 +142,42 @@ public class OrganizeServiceImpl implements OrganizeService {
             return new ResultVO(ResStatus.OK, "删除成功", null);
         }
         return new ResultVO(ResStatus.NO, "删除失败", null);
+    }
+
+    @Override
+    public List<UserDto> queryByIsAdmin(Integer isAdmin) {
+        List<UserDto> userDtoList = new ArrayList<>();
+        if (isAdmin == UserStatus.CLUB_CONSTANTS || isAdmin == UserStatus.STUDENTS_UNION_CONSTANTS){
+            //社团 及 校团委
+            List<Organize> organizeList = organizeMapper.queryByIsAdmin(isAdmin);
+            for (Organize organize : organizeList) {
+                UserDto userDto = new UserDto();
+                userDto.setId(organize.getOrganizeId());
+                userDto.setName(organize.getOrganizeName());
+                userDtoList.add(userDto);
+            }
+        }else {
+            //校领导 及 系统管理员
+            Example example = new Example(Users.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isAdmin", isAdmin);
+            List<Users> usersList = usersMapper.selectByExample(example);
+            if (isAdmin == UserStatus.LEADER_CONSTANTS){
+                for (Users users : usersList) {
+                    UserDto userDto = new UserDto();
+                    userDto.setId(users.getUid());
+                    userDto.setName(users.getRealname()+"(校领导)");
+                    userDtoList.add(userDto);
+                }
+            }else {
+                for (Users users : usersList) {
+                    UserDto userDto = new UserDto();
+                    userDto.setId(users.getUid());
+                    userDto.setName(users.getRealname()+"(系统管理员)");
+                    userDtoList.add(userDto);
+                }
+            }
+        }
+        return userDtoList;
     }
 }

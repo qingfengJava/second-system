@@ -1,7 +1,10 @@
 package com.qingfeng.service;
 
+import com.qingfeng.dto.UserDto;
 import com.qingfeng.entity.Organize;
 import com.qingfeng.vo.ResultVO;
+
+import java.util.List;
 
 /**
  * 社团组织业务层接口
@@ -49,4 +52,11 @@ public interface OrganizeService {
      * @return
      */
     ResultVO deleteBatch(Integer[] organizeIds);
+
+    /**
+     * 根据用户类型查询组织名称
+     * @param isAdmin
+     * @return
+     */
+    List<UserDto> queryByIsAdmin(Integer isAdmin);
 }

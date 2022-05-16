@@ -113,5 +113,10 @@ public interface UserService {
      */
     ResultVO deleteUserByUid(Integer uid);
 
+    /**
+     * 批量删除用户信息
+     * @param uIds
+     * @return
+     */
     ResultVO deleteBatch(Integer[] uIds);
 }
