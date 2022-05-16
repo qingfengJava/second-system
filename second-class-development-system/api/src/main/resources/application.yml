@@ -6,3 +6,7 @@ server:
 photo:
   file:
     dir: D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\前后端分离\前端\攀枝花学院第二课堂素质拓展学分管理系统\static\photo
+
+logging:
+  level:
+    root: DEBUG
