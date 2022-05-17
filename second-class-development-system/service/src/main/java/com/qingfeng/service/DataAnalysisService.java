@@ -13,7 +13,7 @@ public interface DataAnalysisService {
 
     /**
      * 根据用户Id查询学生参与活动信息
-     *
+     * @param uid
      * @return
      */
     ResultVO queryActiveNum(Integer uid);
@@ -31,4 +31,18 @@ public interface DataAnalysisService {
      * @return
      */
     ResultVO queryScore(Integer uid);
+
+    /**
+     * 根据年份查询第二课堂年度各类型活动数量
+     * @param schoolYear
+     * @return
+     */
+    ResultVO queryActiveTypeNum(Integer schoolYear);
+
+    /**
+     * 查询第二课堂年度活动质量分析情况
+     * @param schoolYear
+     * @return
+     */
+    ResultVO queryActiveQuality(Integer schoolYear);
 }

@@ -7,12 +7,14 @@ import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.EvaluationMapper;
 import com.qingfeng.dao.UserInfoMapper;
 import com.qingfeng.dto.ActiveNum;
+import com.qingfeng.dto.ActiveQuality;
 import com.qingfeng.dto.SchoolYearScore;
 import com.qingfeng.dto.TypeActiveNum;
 import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.Evaluation;
 import com.qingfeng.entity.UserInfo;
 import com.qingfeng.service.DataAnalysisService;
+import com.qingfeng.utils.SchoolYearUtils;
 import com.qingfeng.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据分析业务层接口实现
@@ -126,5 +130,105 @@ public class DataAnalysisServiceImpl implements DataAnalysisService {
             list.add(score);
         }
         return new ResultVO(ResStatus.OK,"success",new SchoolYearScore(list,educationalSystem));
+    }
+
+    /**
+     * 年度活动数目
+     * @param year
+     * @return
+     */
+    @Override
+    public ResultVO queryActiveTypeNum(Integer year) {
+        //首先要根据年得到一个学年
+        String schoolYear= SchoolYearUtils.getSchoolYearByOne(year);
+        //查询各种类型活动在该学年的数量
+        TypeActiveNum typeActiveNum = new TypeActiveNum();
+        //思想道德
+        for (int i = 1; i <= 6; i++) {
+            Example example = new Example(Apply.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isAgree",1);
+            criteria.andEqualTo("isCheck",1);
+            criteria.andEqualTo("isEnd",1);
+            criteria.andEqualTo("isDelete",0);
+            criteria.andLike("schoolYear",schoolYear+"%");
+            criteria.andEqualTo("activeType",i);
+            Integer activeNum = applyMapper.selectCountByExample(example);
+            switch (i){
+                case 1:
+                    typeActiveNum.setMoralNum(activeNum);
+                    break;
+                case 2:
+                    typeActiveNum.setAcademicNum(activeNum);
+                    break;
+                case 3:
+                    typeActiveNum.setCultureNum(activeNum);
+                    break;
+                case 4:
+                    typeActiveNum.setClubWork(activeNum);
+                    break;
+                case 5:
+                    typeActiveNum.setVolunteerNum(activeNum);
+                    break;
+                case 6:
+                    typeActiveNum.setOtherSkill(activeNum);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return new ResultVO(ResStatus.OK,schoolYear,typeActiveNum);
+    }
+
+    /**
+     * 第二课堂年度活动质量分析情况（统计的是不用评价质量活动的个数）
+     *      1、首先要查出该年度所有的活动
+     *      2、根据活动查询活动的评价质量
+     *      3、创建一个map集合，key为活动质量类型，value为该评价类型的活动数量
+     * @param year
+     * @return
+     */
+    @Override
+    public ResultVO queryActiveQuality(Integer year) {
+        //首先要根据年得到一个学年
+        String schoolYear= SchoolYearUtils.getSchoolYearByOne(year);
+        //查询所有活动
+        Example applyExample = new Example(Apply.class);
+        Example.Criteria criteria = applyExample.createCriteria();
+        criteria.andEqualTo("isAgree",1);
+        criteria.andEqualTo("isCheck",1);
+        criteria.andEqualTo("isEnd",1);
+        criteria.andEqualTo("isDelete",0);
+        criteria.andLike("schoolYear",schoolYear+"%");
+        //创建一个map集合，key为活动质量类型，value为该评价类型的活动数量   并设置初始值
+        Map<String,Integer> map = new HashMap<>(10);
+        map.put("优",0);
+        map.put("良",0);
+        map.put("差",0);
+        List<Apply> applyList = applyMapper.selectByExample(applyExample);
+        for (Apply apply : applyList) {
+            //根据活动查询活动的评价质量
+            Example evaluationExample = new Example(Evaluation.class);
+            Example.Criteria evaluationCriteria = evaluationExample.createCriteria();
+            evaluationCriteria.andEqualTo("applyActiveId",apply.getApplyId());
+            evaluationCriteria.andEqualTo("isDeleted",0);
+            List<Evaluation> evaluations = evaluationMapper.selectByExample(evaluationExample);
+            int totalScore = 0;
+            int count = 0;
+            for (Evaluation evaluation : evaluations) {
+                totalScore += evaluation.getFeelStar()+evaluation.getSatisfactionStar()+evaluation.getServiceStar()+evaluation.getGainStar();
+                count++;
+            }
+            double score = count == 0 ? 0 : totalScore / count * 5.0;
+            if (score >= 0.9){
+                map.put("优",map.get("优")+1);
+            }else if (score >= 0.6){
+                map.put("良",map.get("良")+1);
+            }else{
+                map.put("差",map.get("差")+1);
+            }
+        }
+        ActiveQuality activeQuality = new ActiveQuality(map.get("优"), map.get("良"), map.get("差"));
+        return new ResultVO(ResStatus.OK,schoolYear,activeQuality);
     }
 }

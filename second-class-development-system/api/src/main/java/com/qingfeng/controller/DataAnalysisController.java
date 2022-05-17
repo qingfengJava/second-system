@@ -44,4 +44,18 @@ public class DataAnalysisController {
         return dataAnalysisService.queryScore(uid);
     }
 
+    @ApiOperation("查询年度各类型活动数目")
+    @GetMapping("/activeTypeNum/{schoolYear}")
+    public ResultVO queryActiveTypeNum(@PathVariable("schoolYear") Integer schoolYear){
+        //根据用户Id查询学生参与各活动类型的数量
+        return dataAnalysisService.queryActiveTypeNum(schoolYear);
+    }
+
+    @ApiOperation("查询年度活动质量分析情况")
+    @GetMapping("/activeQuality/{schoolYear}")
+    public ResultVO queryActiveQuality(@PathVariable("schoolYear") Integer schoolYear){
+        //根据用户Id查询学生参与各活动类型的数量
+        return dataAnalysisService.queryActiveQuality(schoolYear);
+    }
+
 }

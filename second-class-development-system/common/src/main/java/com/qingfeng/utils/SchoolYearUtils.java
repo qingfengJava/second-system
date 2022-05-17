@@ -86,6 +86,23 @@ public class SchoolYearUtils {
         return schoolYear;
     }
 
+    /**
+     * 根据年返回一个学年字符串
+     * @param year
+     * @return
+     */
+    public static String getSchoolYearByOne(int year){
+        //获取当前年份
+        int month = calendar.get(Calendar.MONTH) + 1;
+        if (month > 6){
+            //是下半年  生成一个学年
+            return year+"-"+(year + 1);
+        }else{
+            //说明是上半年 生成一个学年字符串
+            return (year - 1)+"-"+year;
+        }
+    }
+
     public static void main(String[] args) {
         List<String> schoolYear = getSchoolYear();
         Calendar.getInstance();
