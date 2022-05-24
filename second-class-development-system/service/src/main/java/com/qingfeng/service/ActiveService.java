@@ -74,4 +74,11 @@ public interface ActiveService {
      * @return
      */
     ResultVO queryActive(Integer isAdmin,Integer uid, Integer pageNum, Integer limit, String schoolYear, Integer activeType, String activeName,String type);
+
+    /**
+     * 查询学生成功参与活动的列表
+     * @param uid
+     * @return
+     */
+    ResultVO selectActiveByUid(Integer uid,Integer pageNum,Integer limit);
 }

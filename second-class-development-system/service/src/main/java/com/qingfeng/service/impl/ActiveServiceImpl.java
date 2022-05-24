@@ -3,6 +3,7 @@ package com.qingfeng.service.impl;
 import com.qingfeng.constant.ResStatus;
 import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.ApplyMapper;
+import com.qingfeng.dao.EvaluationMapper;
 import com.qingfeng.dao.RegistMapper;
 import com.qingfeng.dto.RegistrationActive;
 import com.qingfeng.entity.Apply;
@@ -32,6 +33,8 @@ public class ActiveServiceImpl implements ActiveService {
     private ApplyMapper applyMapper;
     @Autowired
     private RegistMapper registMapper;
+    @Autowired
+    private EvaluationMapper evaluationMapper;
 
     /**
      * 查询学生已报名的活动列表
@@ -231,6 +234,36 @@ public class ActiveServiceImpl implements ActiveService {
             e.printStackTrace();
             return new ResultVO(ResStatus.NO, "fail", null);
         }
+    }
+
+    /**
+     * 查询学生成功参与的活动列表
+     * @param uid
+     * @return
+     */
+    @Override
+    public ResultVO selectActiveByUid(Integer uid,Integer pageNum,Integer limit) {
+        //直接根据学生评论的活动来查询活动列表信息
+        List<Integer> applyIdList = evaluationMapper.selectApplyIdByUid(uid);
+        //查询活动列表
+        int start = (pageNum - 1) * limit;
+        RowBounds rowBounds = new RowBounds(start, limit);
+
+        Example example = new Example(Apply.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("applyId", applyIdList);
+        criteria.andEqualTo("isDelete",0);
+        criteria.andEqualTo("isAgree",1);
+        criteria.andEqualTo("isCheck",1);
+        criteria.andEqualTo("isEnd",1);
+        List<Apply> applyList = applyMapper.selectByExampleAndRowBounds(example, rowBounds);
+        //查询总数
+        int count = applyMapper.selectCountByExample(example);
+        //计算总页数
+        int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+        //封装数据
+        PageHelper<Apply> pageHelper = new PageHelper<>(count, pageCount, applyList);
+        return new ResultVO(ResStatus.OK,"success",pageHelper);
     }
 
 }

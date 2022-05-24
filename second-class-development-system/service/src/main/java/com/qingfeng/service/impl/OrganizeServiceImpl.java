@@ -65,7 +65,15 @@ public class OrganizeServiceImpl implements OrganizeService {
                 return new ResultVO(ResStatus.OK, "信息保存成功！", organize);
             }
         } else {
-            return new ResultVO(ResStatus.NO, "用户已经存在！", null);
+            //直接进行修改操作
+            organize.setUserId(uid);
+            organize.setUpdateTime(new Date());
+            organize.setOrganizeId(oldOrganize.getOrganizeId());
+            int i = organizeMapper.updateByPrimaryKeySelective(organize);
+            if (i > 0){
+                //说明添加或更新信息成功
+                return new ResultVO(ResStatus.OK, "信息修改成功！", organize);
+            }
         }
         return new ResultVO(ResStatus.NO, "网络超时，信息保存失败！", null);
     }
@@ -180,4 +188,58 @@ public class OrganizeServiceImpl implements OrganizeService {
         }
         return userDtoList;
     }
+
+    /**
+     * 修改社团主图方法
+     * @param uid
+     * @param newFileName
+     */
+    @Override
+    @CacheEvict(value = "organizeInfo", allEntries=true)
+    public void updateImg(Integer uid, String newFileName) {
+        Organize organize = new Organize();
+        organize.setMainUrl(newFileName);
+        Example example = new Example(Organize.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", uid);
+        organizeMapper.updateByExampleSelective(organize,example);
+    }
+
+    @Override
+    @CacheEvict(value = "organizeInfo", allEntries=true)
+    public void addPhoto(Integer organizeId, String newFileName) {
+        OrganizeImg organizeImg = new OrganizeImg();
+        organizeImg.setOrganizeId(organizeId);
+        organizeImg.setImgUrl(newFileName);
+        organizeImg.setStatus(0);
+        organizeImg.setCreateTime(new Date());
+        organizeImg.setUpdateTime(new Date());
+
+        organizeImgMapper.insertUseGeneratedKeys(organizeImg);
+    }
+
+    @Override
+    @CacheEvict(value = "organizeInfo", allEntries=true)
+    public void updateOrganizeImg(Integer imgId, String newFileName) {
+        OrganizeImg organizeImg = new OrganizeImg();
+        organizeImg.setImgId(imgId);
+        organizeImg.setImgUrl(newFileName);
+        organizeImg.setUpdateTime(new Date());
+        organizeImgMapper.updateByPrimaryKeySelective(organizeImg);
+    }
+
+    @Override
+    @CacheEvict(value = "organizeInfo", allEntries=true)
+    public ResultVO deleteOrganizeImg(Integer imgId) {
+        OrganizeImg organizeImg = new OrganizeImg();
+        organizeImg.setImgId(imgId);
+        organizeImg.setStatus(1);
+        organizeImg.setUpdateTime(new Date());
+        int i = organizeImgMapper.updateByPrimaryKeySelective(organizeImg);
+        if (i > 0){
+            return new ResultVO(ResStatus.OK, "success", null);
+        }
+        return new ResultVO(ResStatus.NO, "fail", null);
+    }
+
 }

@@ -5,6 +5,8 @@ import com.qingfeng.generaldao.GeneralDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 活动评价的持久层接口
  *
@@ -40,4 +42,10 @@ public interface EvaluationMapper extends GeneralDao<Evaluation> {
     Integer queryActiveTypeNum(@Param("uid") Integer uid,
                                @Param("type") Integer type);
 
+    /**
+     * 根据活动评论查询活动列表Id
+     * @param uid
+     * @return
+     */
+    List<Integer> selectApplyIdByUid(Integer uid);
 }

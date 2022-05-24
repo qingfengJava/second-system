@@ -20,6 +20,7 @@
                update_time
         from organize_img
         where organize_id = #{organizeId}
+        and status = 0
 
     </select>
 </mapper>

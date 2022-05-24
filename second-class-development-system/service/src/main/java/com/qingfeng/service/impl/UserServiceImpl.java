@@ -158,6 +158,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultVO updateMessage(Integer uid, Users users) {
+        //先判断用户名是否存在
+        if(users.getUsername() != null && users.getUsername() != ""){
+            //根据用户名查询是否有用户名已经存在
+            Example example = new Example(Users.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("username",users.getUsername());
+            List<Users> usersList = usersMapper.selectByExample(example);
+            if (usersList.size() > 0){
+                //说明用户名已经存在
+                return new ResultVO(ResStatus.NO,"用户名已经存在，请重新输入！",null);
+            }
+        }
+
         //根据主键更新属性不为null的值
         users.setUid(uid);
         int i = usersMapper.updateByPrimaryKeySelective(users);

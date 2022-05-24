@@ -112,4 +112,14 @@ public class ActiveController {
                                 String schoolYear,Integer activeType,String activeName,String type){
         return activeService.queryActive(isAdmin,uid,pageNum,limit,schoolYear,activeType,activeName,type);
     }
+
+    @ApiOperation("查询学生成功参与活动列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "Integer", name = "pageNum", value = "页码", required = true),
+            @ApiImplicitParam(paramType = "Integer", name = "limit", value = "每页条数", required = true),
+    })
+    @GetMapping("/selectActiveByUid/{uid}")
+    public ResultVO selectActiveByUid(@PathVariable("uid") Integer uid,Integer pageNum,Integer limit){
+        return activeService.selectActiveByUid(uid,pageNum,limit);
+    }
 }

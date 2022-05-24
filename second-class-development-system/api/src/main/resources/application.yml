@@ -10,3 +10,11 @@ photo:
 logging:
   level:
     root: DEBUG
+
+spring:
+  servlet:
+    multipart:
+      # 单个文件上传大小
+      max-request-size: 50MB
+      # 一次请求的多个文件大小
+      max-file-size: 50MB

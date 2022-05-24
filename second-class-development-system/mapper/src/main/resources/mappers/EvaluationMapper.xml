@@ -61,4 +61,11 @@
           and a.is_delete = 0
     </select>
 
+    <select id="selectApplyIdByUid" resultType="java.lang.Integer">
+        select apply_active_id
+        from evaluation
+        where uid = #{uid}
+          and is_deleted = 0
+    </select>
+
 </mapper>

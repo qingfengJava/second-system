@@ -59,4 +59,32 @@ public interface OrganizeService {
      * @return
      */
     List<UserDto> queryByIsAdmin(Integer isAdmin);
+
+    /**
+     * 修改社团主图
+     * @param uid
+     * @param newFileName
+     */
+    void updateImg(Integer uid, String newFileName);
+
+    /**
+     * 添加社团轮播图信息
+     * @param organizeId
+     * @param newFileName
+     */
+    void addPhoto(Integer organizeId, String newFileName);
+
+    /**
+     * 修改社团轮播图信息
+     * @param imgId
+     * @param newFileName
+     */
+    void updateOrganizeImg(Integer imgId, String newFileName);
+
+    /**
+     * 根据id删除社团轮播图信息
+     * @param imgId
+     * @return
+     */
+    ResultVO deleteOrganizeImg(Integer imgId);
 }
