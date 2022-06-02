@@ -109,6 +109,7 @@ public class ActiveServiceImpl implements ActiveService {
     }
 
     @Override
+    @Cacheable(value = "applyActiveInfo",keyGenerator = "keyGenerator")
     public ResultVO queryApplyById(String applyId) {
         Example example = new Example(Apply.class);
         Example.Criteria criteria = example.createCriteria();

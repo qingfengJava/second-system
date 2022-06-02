@@ -18,4 +18,11 @@ public interface AuditFormMapper extends GeneralDao<AuditForm> {
      * @return
      */
     int deleteByApplyId(Integer applyId);
+
+    /**
+     * 根据活动申请表的id查询活动初级审核表中的信息
+     * @param applyId
+     * @return
+     */
+    AuditForm selectByApplyId(Integer applyId);
 }

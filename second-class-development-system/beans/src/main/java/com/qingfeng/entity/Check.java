@@ -67,6 +67,12 @@ public class Check {
     private Date checkTime;
 
     /**
+     * 审查评价（主要用户不合格的时候）
+     */
+    @Column(name = "check_content")
+    private String checkContent;
+
+    /**
      * 是否通过(0: 审核不通过  1：通过)
      */
     @Column(name = "is_pass")

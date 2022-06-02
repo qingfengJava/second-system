@@ -3,7 +3,7 @@
 <mapper namespace="com.qingfeng.dao.AuditFormMapper">
 
     <resultMap id="BaseResultMap" type="com.qingfeng.entity.AuditForm">
-        <id column="aduit_form_id" jdbcType="INTEGER" property="auditFormId"/>
+        <id column="audit_form_id" jdbcType="INTEGER" property="auditFormId"/>
         <result column="check_uid" jdbcType="INTEGER" property="checkUid"/>
         <result column="apply_id" jdbcType="INTEGER" property="applyId"/>
         <result column="check_username" jdbcType="VARCHAR" property="checkUsername"/>
@@ -16,6 +16,23 @@
 
     <!-- 表面上是删除，其实是做逻辑删除 -->
     <delete id="deleteByApplyId">
-        update audit_form set is_delete = 1 where apply_id = #{applyId}
+        update audit_form
+        set is_delete = 1
+        where apply_id = #{applyId}
     </delete>
+
+    <select id="selectByApplyId" resultMap="BaseResultMap">
+        select audit_form_id,
+               check_uid,
+               apply_id,
+               check_username,
+               check_user_duty,
+               is_agree,
+               content,
+               create_time,
+               is_delete
+        from audit_form
+        where apply_id = #{applyId}
+          and is_delete = 0
+    </select>
 </mapper>

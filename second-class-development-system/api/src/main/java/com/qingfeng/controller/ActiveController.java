@@ -68,7 +68,7 @@ public class ActiveController {
      * @return
      */
     @ApiOperation("活动申请详情信息查询接口")
-    @PostMapping("/queryActiveDetails/{applyId}")
+    @GetMapping("/queryActiveDetails/{applyId}")
     public ResultVO queryApplyDetails(@PathVariable("applyId") Integer applyId){
         return activeService.queryApplyDetails(applyId);
     }

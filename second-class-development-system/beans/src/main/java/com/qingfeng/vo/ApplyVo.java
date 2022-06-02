@@ -1,6 +1,8 @@
 package com.qingfeng.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qingfeng.entity.AuditForm;
+import com.qingfeng.entity.Check;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -186,4 +188,14 @@ public class ApplyVo {
      * 活动申请维护申请用户信息
      */
     private UsersVo usersVo;
+
+    /**
+     * 活动申请维护初级审核表信息
+     */
+    private AuditForm auditForm;
+
+    /**
+     * 活动申请维护终审表信息
+     */
+    private Check check;
 }

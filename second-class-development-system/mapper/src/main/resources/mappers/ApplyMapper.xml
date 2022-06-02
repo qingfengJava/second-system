@@ -142,6 +142,10 @@
 
         <!-- 一对一管关联映射查询 -->
         <association property="usersVo" select="com.qingfeng.dao.UsersMapper.selectByUserId" column="apply_user_id"/>
+        <!-- 初级审查信息 -->
+        <association property="auditForm" select="com.qingfeng.dao.AuditFormMapper.selectByApplyId" column="apply_id"/>
+        <!-- 终审表信息 -->
+        <association property="check" select="com.qingfeng.dao.CheckMapper.selectByApplyId" column="apply_id"/>
     </resultMap>
 
     <select id="selectApplyById" resultMap="applyVoMap">

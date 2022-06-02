@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2022/2/26
  */
 @RestController
-@RequestMapping("/active-apply")
+@RequestMapping("/activeApply")
 @Api(value = "提供活动申请相关的接口功能",tags = "活动申请")
 @CrossOrigin
 public class ApplyController {

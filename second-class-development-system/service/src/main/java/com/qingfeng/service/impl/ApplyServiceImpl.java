@@ -1,5 +1,7 @@
 package com.qingfeng.service.impl;
 
+import com.qingfeng.constant.ResStatus;
+import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.AuditFormMapper;
 import com.qingfeng.dao.RegistMapper;
@@ -11,10 +13,9 @@ import com.qingfeng.service.EmailService;
 import com.qingfeng.utils.CompareDateUtils;
 import com.qingfeng.utils.DateFormatUtils;
 import com.qingfeng.utils.SchoolYearUtils;
-import com.qingfeng.constant.ResStatus;
 import com.qingfeng.vo.ResultVO;
-import com.qingfeng.constant.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -43,7 +44,7 @@ public class ApplyServiceImpl implements ApplyService {
     @Override
     public ResultVO applyActive(Integer uid, Apply apply) {
         //首先判断活动申请是否重复   同一个活动一学年只能办一个
-        String schoolYear = apply.getSchoolYear().substring(0, apply.getSchoolYear().indexOf("-"));
+        String schoolYear = SchoolYearUtils.getSchoolYearByOne();
         Example example = new Example(Apply.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("activeName",apply.getActiveName());
@@ -79,6 +80,9 @@ public class ApplyServiceImpl implements ApplyService {
                     apply.setIsAgree(0);
                     apply.setIsCheck(0);
                     apply.setIsDelete(0);
+                    apply.setTotalNum(0);
+                    apply.setIsEnd(0);
+                    apply.setSchoolYear(schoolYear);
                     int i = applyMapper.insertUseGeneratedKeys(apply);
                     if (i > 0){
                         //活动申请成功，发送邮件通知负责人审核
@@ -88,7 +92,7 @@ public class ApplyServiceImpl implements ApplyService {
                         return new ResultVO(ResStatus.NO,"服务器异常活动申请失败！！！",null);
                     }
                 }else{
-                    return new ResultVO(ResStatus.NO,"活动报名截止日期不能长于活动开始时间！",null);
+                    return new ResultVO(ResStatus.NO,"活动报名截止日期不能长于或等于活动开始时间！",null);
                 }
             }else{
                 return new ResultVO(ResStatus.NO,"活动申请时间必须比活动开始时间提前一周以上才行！",null);
@@ -155,25 +159,24 @@ public class ApplyServiceImpl implements ApplyService {
      * @return
      */
     @Override
+    @CacheEvict(value = "active", allEntries=true)
     public ResultVO deleteApplyActive(Integer applyId) {
         //先修改申请表的值
         int i = applyMapper.deleteByApplyId(applyId);
         if (i > 0){
             //说明申请表信息删除成功  再删除初级审核表中关联的信息
-            int k = auditFormMapper.deleteByApplyId(applyId);
-            if (k > 0){
-                //还要查询将学生已经报名的活动删除
-                Regist regist = new Regist();
-                regist.setIsDelete(1);
-                Example example = new Example(Regist.class);
-                Example.Criteria criteria = example.createCriteria();
-                criteria.andEqualTo("applyId",applyId);
-                //封装条件将数据信息删除
-                registMapper.updateByExampleSelective(regist, example);
+            auditFormMapper.deleteByApplyId(applyId);
+            //还要查询将学生已经报名的活动删除
+            Regist regist = new Regist();
+            regist.setIsDelete(1);
+            Example example = new Example(Regist.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("applyId",applyId);
+            //封装条件将数据信息删除
+            registMapper.updateByExampleSelective(regist, example);
 
-                //说明删除活动申请成功
-                return new ResultVO(ResStatus.OK,"删除活动申请成功！",null);
-            }
+            //说明删除活动申请成功
+            return new ResultVO(ResStatus.OK,"删除活动申请成功！",null);
         }
         return new ResultVO(ResStatus.NO,"网络异常，删除活动申请失败！",null);
     }
@@ -187,8 +190,9 @@ public class ApplyServiceImpl implements ApplyService {
      * @param apply
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(value = "applyActiveInfo", allEntries=true)
     public ResultVO updateApplyActive(Integer applyId, Apply apply) {
         //做逻辑判断，虽然前端一般会控制，但是后台依然控制一下   先查询原来的实体对象
         Apply oldApply = applyMapper.selectByPrimaryKey(applyId);
