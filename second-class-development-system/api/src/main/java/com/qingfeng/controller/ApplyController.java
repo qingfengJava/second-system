@@ -2,6 +2,7 @@ package com.qingfeng.controller;
 
 import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.AuditForm;
+import com.qingfeng.entity.Check;
 import com.qingfeng.service.ApplyService;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -32,7 +33,7 @@ public class ApplyController {
         return applyService.applyActive(uid, apply);
     }
 
-    @ApiOperation("活动申请审核")
+    @ApiOperation("活动申请审查")
     @PostMapping("/check/{applyId}")
     public ResultVO checkApplyActive(@PathVariable("applyId") Integer applyId,@RequestBody AuditForm auditForm){
         //根据活动申请Id进行活动名审核
@@ -59,4 +60,9 @@ public class ApplyController {
         return applyService.queryActiveYearCount(userId);
     }
 
+    @ApiOperation("社团联进行活动最终审核")
+    @PostMapping("/finalCheck")
+    public ResultVO finalCheck(@RequestBody Check check){
+        return applyService.finalCheck(check);
+    }
 }

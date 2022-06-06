@@ -4,9 +4,11 @@ import com.qingfeng.constant.ResStatus;
 import com.qingfeng.constant.UserStatus;
 import com.qingfeng.dao.ApplyMapper;
 import com.qingfeng.dao.AuditFormMapper;
+import com.qingfeng.dao.CheckMapper;
 import com.qingfeng.dao.RegistMapper;
 import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.AuditForm;
+import com.qingfeng.entity.Check;
 import com.qingfeng.entity.Regist;
 import com.qingfeng.service.ApplyService;
 import com.qingfeng.service.EmailService;
@@ -40,6 +42,8 @@ public class ApplyServiceImpl implements ApplyService {
     private EmailService emailService;
     @Autowired
     private RegistMapper registMapper;
+    @Autowired
+    private CheckMapper checkMapper;
 
     @Override
     public ResultVO applyActive(Integer uid, Apply apply) {
@@ -111,6 +115,7 @@ public class ApplyServiceImpl implements ApplyService {
      */
     @Transactional
     @Override
+    @CacheEvict(value = "active",allEntries = true)
     public ResultVO checkApplyActive(Integer applyId, AuditForm auditForm) {
         //先修改Apply表
         int i = applyMapper.updateByApplyId(applyId, auditForm.getIsAgree());
@@ -279,6 +284,35 @@ public class ApplyServiceImpl implements ApplyService {
         if (count >= 0){
             //说明查到了数据
             return new ResultVO(ResStatus.OK,"success",count);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
+    }
+
+    /**
+     * 社团联进行活动最终审核
+     * @param check
+     * @return
+     */
+    @Override
+    public ResultVO finalCheck(Check check) {
+        check.setCheckTime(new Date());
+        check.setIsDelete(0);
+        int i = checkMapper.updateByPrimaryKeySelective(check);
+        if (i > 0){
+            //修改申请表的信息
+            Example example = new Example(Apply.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("applyId",check.getActiveid());
+            Apply apply = new Apply();
+            if (check.getIsPass() == 1){
+                apply.setIsCheck(1);
+                apply.setIsEnd(1);
+            }else if (check.getIsPass() == 0){
+                //TODO 审核没有通过，要发送邮件通知负责人重新提交信息
+                apply.setIsCheck(2);
+            }
+            applyMapper.updateByExampleSelective(apply, example);
+            return new ResultVO(ResStatus.OK,"success",null);
         }
         return new ResultVO(ResStatus.NO,"fail",null);
     }

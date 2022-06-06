@@ -64,4 +64,17 @@ public class SystemController {
     public ResultVO deleteFeedback(@RequestBody Integer[] feedbacks){
         return systemFeedbackService.deleteFeedback(feedbacks);
     }
+
+    @ApiOperation("根据Id查询反馈信息")
+    @GetMapping("/getFeedback/{id}")
+    public ResultVO getFeedback(@PathVariable("id") Integer id){
+        return systemFeedbackService.getFeedback(id);
+    }
+
+    @ApiOperation("添加反馈信息回复")
+    @ApiImplicitParam(paramType = "String",name = "receiveContent", value = "回复内容", required = true)
+    @PostMapping("/addFeedbackReply/{systemId}")
+    public ResultVO addFeedbackReply(@PathVariable("systemId") Integer systemId,String receiveContent){
+        return systemFeedbackService.addFeedbackReply(systemId,receiveContent);
+    }
 }

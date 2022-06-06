@@ -8,6 +8,8 @@
         <result column="userId" jdbcType="INTEGER" property="userid"/>
         <result column="active_img" jdbcType="VARCHAR" property="activeImg"/>
         <result column="active_summary" jdbcType="VARCHAR" property="activeSummary"/>
+        <result column="check_username" jdbcType="VARCHAR" property="checkUsername"/>
+        <result column="check_duty" jdbcType="VARCHAR" property="checkDuty"/>
         <result column="check_time" jdbcType="TIMESTAMP" property="checkTime"/>
         <result column="check_content" jdbcType="VARCHAR" property="checkContent"/>
         <result column="is_pass" jdbcType="INTEGER" property="isPass"/>
@@ -21,11 +23,13 @@
                userId,
                active_img,
                active_summary,
+               check_username,
+               check_duty,
                check_time,
                check_content,
                is_pass,
                is_delete
-        FROM `check`
+        FROM `active_check`
         WHERE activeId = #{applyId}
           and is_delete = 0
     </select>

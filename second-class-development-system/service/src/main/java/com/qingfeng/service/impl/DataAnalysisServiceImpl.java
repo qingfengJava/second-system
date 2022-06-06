@@ -3,16 +3,12 @@ package com.qingfeng.service.impl;
 import com.qingfeng.constant.ActiveLevelConstant;
 import com.qingfeng.constant.ActiveTypeConstant;
 import com.qingfeng.constant.ResStatus;
-import com.qingfeng.dao.ApplyMapper;
-import com.qingfeng.dao.EvaluationMapper;
-import com.qingfeng.dao.UserInfoMapper;
+import com.qingfeng.dao.*;
 import com.qingfeng.dto.ActiveNum;
 import com.qingfeng.dto.ActiveQuality;
 import com.qingfeng.dto.SchoolYearScore;
 import com.qingfeng.dto.TypeActiveNum;
-import com.qingfeng.entity.Apply;
-import com.qingfeng.entity.Evaluation;
-import com.qingfeng.entity.UserInfo;
+import com.qingfeng.entity.*;
 import com.qingfeng.service.DataAnalysisService;
 import com.qingfeng.utils.SchoolYearUtils;
 import com.qingfeng.vo.ResultVO;
@@ -42,6 +38,10 @@ public class DataAnalysisServiceImpl implements DataAnalysisService {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private ApplyMapper applyMapper;
+    @Autowired
+    private OrganizeMapper organizeMapper;
+    @Autowired
+    private GradeMapper gradeMapper;
 
     /**
      * 查询的是成功参与活动的人数
@@ -230,5 +230,90 @@ public class DataAnalysisServiceImpl implements DataAnalysisService {
         }
         ActiveQuality activeQuality = new ActiveQuality(map.get("优"), map.get("良"), map.get("差"));
         return new ResultVO(ResStatus.OK,schoolYear,activeQuality);
+    }
+
+    /**
+     * 查询社团年度活动举办的情况
+     * @param uid
+     * @param year
+     * @return
+     */
+    @Override
+    public ResultVO queryActiveType(Integer uid,Integer year) {
+        //首先要根据年得到一个学年
+        String schoolYear= SchoolYearUtils.getSchoolYearByOne(year);
+        //查询各种类型活动在该学年的数量
+        TypeActiveNum typeActiveNum = new TypeActiveNum();
+        //思想道德
+        for (int i = 1; i <= 6; i++) {
+            Example example = new Example(Apply.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isAgree",1);
+            criteria.andEqualTo("isCheck",1);
+            criteria.andEqualTo("isEnd",1);
+            criteria.andEqualTo("isDelete",0);
+            criteria.andEqualTo("applyUserId",uid);
+            criteria.andLike("schoolYear",schoolYear+"%");
+            criteria.andEqualTo("activeType",i);
+            Integer activeNum = applyMapper.selectCountByExample(example);
+            switch (i){
+                case 1:
+                    typeActiveNum.setMoralNum(activeNum);
+                    break;
+                case 2:
+                    typeActiveNum.setAcademicNum(activeNum);
+                    break;
+                case 3:
+                    typeActiveNum.setCultureNum(activeNum);
+                    break;
+                case 4:
+                    typeActiveNum.setClubWork(activeNum);
+                    break;
+                case 5:
+                    typeActiveNum.setVolunteerNum(activeNum);
+                    break;
+                case 6:
+                    typeActiveNum.setOtherSkill(activeNum);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return new ResultVO(ResStatus.OK,schoolYear,typeActiveNum);
+    }
+
+    /**
+     * 查询社团历年评级情况（6年为一组）
+     * @param uid
+     * @param year
+     * @return
+     */
+    @Override
+    public ResultVO queryActiveGrade(Integer uid, Integer year) {
+        //根据用户id查询社团
+        Example example = new Example(Organize.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isDelete",0);
+        criteria.andEqualTo("userId",uid);
+        Organize organize = organizeMapper.selectOneByExample(example);
+        //声明一个集合，用来存放每一年的评级情况
+        ArrayList<Integer> activeGradeList = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            //首先要根据年得到一个学年
+            String schoolYear= SchoolYearUtils.getSchoolYearByOne(year-i);
+            //查询每个学年社团的评级情况
+            Example gradeExample = new Example(Grade.class);
+            Example.Criteria gradeCriteria = gradeExample.createCriteria();
+            gradeCriteria.andEqualTo("organizeId",organize.getOrganizeId());
+            gradeCriteria.andLike("schoolYear","%"+schoolYear+"%");
+            Grade grade = gradeMapper.selectOneByExample(gradeExample);
+            if (grade != null) {
+                activeGradeList.add(grade.getGradeLevel());
+            }else{
+                activeGradeList.add(0);
+            }
+        }
+
+        return new ResultVO(ResStatus.OK,"success",activeGradeList);
     }
 }

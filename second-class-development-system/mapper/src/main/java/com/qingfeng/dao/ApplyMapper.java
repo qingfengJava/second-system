@@ -1,6 +1,7 @@
 package com.qingfeng.dao;
 
 import com.qingfeng.entity.Apply;
+import com.qingfeng.vo.ApplyCheckVo;
 import com.qingfeng.vo.ApplyVo;
 import com.qingfeng.generaldao.GeneralDao;
 import org.apache.ibatis.annotations.Param;
@@ -67,4 +68,22 @@ public interface ApplyMapper extends GeneralDao<Apply> {
      * @return
      */
     int deleteByApplyId(Integer applyId);
+
+    /**
+     * 查询待审核的活动信息
+     * @param start
+     * @param limit
+     * @param activeName
+     * @return
+     */
+    List<ApplyCheckVo> selectCheckActive(@Param("start") Integer start,
+                                         @Param("limit") Integer limit,
+                                         @Param("activeName") String activeName);
+
+    /**
+     * 查询待审核的活动信息的总记录数
+     * @param activeName
+     * @return
+     */
+    int selectCheckActiveCount(String activeName);
 }

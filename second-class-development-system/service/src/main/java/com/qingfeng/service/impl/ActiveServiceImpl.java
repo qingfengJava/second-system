@@ -10,6 +10,7 @@ import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.Regist;
 import com.qingfeng.service.ActiveService;
 import com.qingfeng.utils.PageHelper;
+import com.qingfeng.vo.ApplyCheckVo;
 import com.qingfeng.vo.ApplyVo;
 import com.qingfeng.vo.RegistVo;
 import com.qingfeng.vo.ResultVO;
@@ -189,37 +190,37 @@ public class ActiveServiceImpl implements ActiveService {
             if (activeName != null && !"".equals(activeName)){
                 criteria.andLike("activeName","%"+activeName+"%");
             }
-            if (isAdmin == UserStatus.CLUB_CONSTANTS || isAdmin == UserStatus.STUDENTS_UNION_CONSTANTS){
+            if (isAdmin == UserStatus.CLUB_CONSTANTS){
                 criteria.andEqualTo("applyUserId",uid);
-                switch (type){
-                    case "申请中":
-                        criteria.andEqualTo("isAgree",0);
-                        criteria.andEqualTo("isCheck",0);
-                        criteria.andEqualTo("isEnd",0);
-                        break;
-                    case "申请未通过":
-                        criteria.andEqualTo("isAgree",2);
-                        criteria.andEqualTo("isCheck",0);
-                        criteria.andEqualTo("isEnd",0);
-                        break;
-                    case "待审核":
-                        criteria.andEqualTo("isAgree",1);
-                        criteria.andEqualTo("isCheck",0);
-                        criteria.andEqualTo("isEnd",0);
-                        break;
-                    case "审核未通过":
-                        criteria.andEqualTo("isAgree",1);
-                        criteria.andEqualTo("isCheck",2);
-                        criteria.andEqualTo("isEnd",0);
-                        break;
-                    case "已结束":
-                        criteria.andEqualTo("isAgree",1);
-                        criteria.andEqualTo("isCheck",1);
-                        criteria.andEqualTo("isEnd",1);
-                        break;
-                    default:
-                        break;
-                }
+            }
+            switch (type){
+                case "申请中":
+                    criteria.andEqualTo("isAgree",0);
+                    criteria.andEqualTo("isCheck",0);
+                    criteria.andEqualTo("isEnd",0);
+                    break;
+                case "申请未通过":
+                    criteria.andEqualTo("isAgree",2);
+                    criteria.andEqualTo("isCheck",0);
+                    criteria.andEqualTo("isEnd",0);
+                    break;
+                case "待审核":
+                    criteria.andEqualTo("isAgree",1);
+                    criteria.andEqualTo("isCheck",0);
+                    criteria.andEqualTo("isEnd",0);
+                    break;
+                case "审核未通过":
+                    criteria.andEqualTo("isAgree",1);
+                    criteria.andEqualTo("isCheck",2);
+                    criteria.andEqualTo("isEnd",0);
+                    break;
+                case "已结束":
+                    criteria.andEqualTo("isAgree",1);
+                    criteria.andEqualTo("isCheck",1);
+                    criteria.andEqualTo("isEnd",1);
+                    break;
+                default:
+                    break;
             }
             criteria.andEqualTo("isDelete",0);
             List<Apply> applyList = applyMapper.selectByExampleAndRowBounds(example, rowBounds);
@@ -264,6 +265,55 @@ public class ActiveServiceImpl implements ActiveService {
         int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
         //封装数据
         PageHelper<Apply> pageHelper = new PageHelper<>(count, pageCount, applyList);
+        return new ResultVO(ResStatus.OK,"success",pageHelper);
+    }
+
+    /**
+     * 查询待审核的活动列表
+     * @param pageNum
+     * @param limit
+     * @param activeName
+     * @return
+     */
+    @Override
+    public ResultVO selectActiveByIsAgree(Integer pageNum, Integer limit, String activeName) {
+        int start = (pageNum - 1) * limit;
+        RowBounds rowBounds = new RowBounds(start, limit);
+        //封装查询条件
+        Example example = new Example(Apply.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isAgree",0);
+        criteria.andEqualTo("isDelete",0);
+        criteria.andEqualTo("isEnd",0);
+        criteria.andLike("activeName","%"+activeName+"%");
+        List<Apply> applyList = applyMapper.selectByExampleAndRowBounds(example, rowBounds);
+        //查询总数
+        int count = applyMapper.selectCountByExample(example);
+        //计算总页数
+        int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+        //封装数据
+        PageHelper<Apply> pageHelper = new PageHelper<>(count, pageCount, applyList);
+        return new ResultVO(ResStatus.OK,"success",pageHelper);
+    }
+
+    /**
+     * 查询待审核的活动列表
+     * @param pageNum
+     * @param limit
+     * @param activeName
+     * @return
+     */
+    @Override
+    public ResultVO selectActiveByIsCheck(Integer pageNum, Integer limit, String activeName) {
+        int start = (pageNum - 1) * limit;
+        //查询结果
+        List<ApplyCheckVo> applyCheckVoList = applyMapper.selectCheckActive(start,limit,"%"+activeName+"%");
+        //查询总数
+        int count = applyMapper.selectCheckActiveCount("%"+activeName+"%");
+        //计算总页数
+        int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+        //封装数据
+        PageHelper<ApplyCheckVo> pageHelper = new PageHelper<>(count, pageCount, applyCheckVoList);
         return new ResultVO(ResStatus.OK,"success",pageHelper);
     }
 

@@ -96,7 +96,8 @@
           and a.is_end = 0
           and DATEDIFF(a.registration_deadline, sysdate()) >= 0
           and (r.is_delete != 0 or r.is_delete is null or r.user_id != #{uid})
-            limit #{start}, #{limit}
+            limit #{start}
+            , #{limit}
     </select>
 
     <!-- 查询新活动总记录数 -->
@@ -190,4 +191,108 @@
         set is_delete = 1
         where apply_id = #{applyId}
     </delete>
+
+    <resultMap id="applyCheckVoMap" type="com.qingfeng.vo.ApplyCheckVo">
+        <id column="apply_id" jdbcType="INTEGER" property="applyId"/>
+        <result column="apply_user_id" jdbcType="INTEGER" property="applyUserId"/>
+        <result column="active_name" jdbcType="VARCHAR" property="activeName"/>
+        <result column="active_num" jdbcType="INTEGER" property="activeNum"/>
+        <result column="active_type" jdbcType="INTEGER" property="activeType"/>
+        <result column="active_level" jdbcType="VARCHAR" property="activeLevel"/>
+        <result column="host_name" jdbcType="VARCHAR" property="hostName"/>
+        <result column="belong_department" jdbcType="VARCHAR" property="belongDepartment"/>
+        <result column="active_principal" jdbcType="VARCHAR" property="activePrincipal"/>
+        <result column="active_principal_tel_num" jdbcType="VARCHAR" property="activePrincipalTelNum"/>
+        <result column="teacher_name" jdbcType="VARCHAR" property="teacherName"/>
+        <result column="teacher_telephone_num" jdbcType="VARCHAR" property="teacherTelephoneNum"/>
+        <result column="active_location" jdbcType="VARCHAR" property="activeLocation"/>
+        <result column="active_time" jdbcType="VARCHAR" property="activeTime"/>
+        <result column="registration_deadline" jdbcType="TIMESTAMP" property="registrationDeadline"/>
+        <result column="is_quota" jdbcType="INTEGER" property="isQuota"/>
+        <result column="school_year" jdbcType="VARCHAR" property="schoolYear"/>
+        <result column="active_score" jdbcType="DOUBLE" property="activeScore"/>
+        <result column="active_introduction" jdbcType="VARCHAR" property="activeIntroduction"/>
+        <result column="active_content" jdbcType="VARCHAR" property="activeContent"/>
+        <result column="apply_create_time" jdbcType="TIMESTAMP" property="applyCreateTime"/>
+        <result column="total_num" jdbcType="INTEGER" property="totalNum"/>
+        <result column="is_agree" jdbcType="INTEGER" property="isAgree"/>
+        <result column="is_check" jdbcType="INTEGER" property="isCheck"/>
+        <result column="is_end" jdbcType="INTEGER" property="isEnd"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+
+        <!-- 终审表信息 -->
+        <result column="checkId" jdbcType="INTEGER" property="check.checkid"/>
+        <result column="check_user_id" jdbcType="INTEGER" property="check.checkUserId"/>
+        <result column="activeId" jdbcType="INTEGER" property="check.activeid"/>
+        <result column="userId" jdbcType="INTEGER" property="check.userid"/>
+        <result column="active_img" jdbcType="VARCHAR" property="check.activeImg"/>
+        <result column="active_summary" jdbcType="VARCHAR" property="check.activeSummary"/>
+        <result column="check_username" jdbcType="VARCHAR" property="check.checkUsername"/>
+        <result column="check_duty" jdbcType="VARCHAR" property="check.checkDuty"/>
+        <result column="check_time" jdbcType="TIMESTAMP" property="check.checkTime"/>
+        <result column="check_content" jdbcType="VARCHAR" property="check.checkContent"/>
+        <result column="is_pass" jdbcType="INTEGER" property="check.isPass"/>
+        <result column="is_delete" jdbcType="INTEGER" property="check.isDelete"/>
+    </resultMap>
+
+    <select id="selectCheckActive" resultMap="applyCheckVoMap">
+        select a.apply_id,
+               a.apply_user_id,
+               a.active_name,
+               a.active_num,
+               a.active_type,
+               a.active_level,
+               a.host_name,
+               a.belong_department,
+               a.active_principal,
+               a.active_principal_tel_num,
+               a.teacher_name,
+               a.teacher_telephone_num,
+               a.active_location,
+               a.active_time,
+               a.registration_deadline,
+               a.is_quota,
+               a.school_year,
+               a.active_score,
+               a.active_introduction,
+               a.active_content,
+               a.apply_create_time,
+               a.total_num,
+               a.is_agree,
+               a.is_check,
+               a.is_end,
+               a.is_delete,
+               c.checkId,
+               c.check_user_id,
+               c.activeId,
+               c.userId,
+               c.active_img,
+               c.active_summary,
+               c.check_username,
+               c.check_duty,
+               c.check_content,
+               c.check_time,
+               c.is_pass,
+               c.is_delete
+        from `apply` a
+                 left join `active_check` c on a.apply_id = c.activeId
+        where a.active_name like #{activeName}
+          and a.is_agree = 1
+          and a.is_check = 0
+          and a.is_end = 0
+          and a.is_delete = 0
+          and c.is_delete = 0
+        limit #{start}, #{limit}
+    </select>
+    <select id="selectCheckActiveCount" resultType="java.lang.Integer">
+        select count(*)
+        from `apply` a
+                 left join `active_check` c on a.apply_id = c.activeId
+        where a.active_name like #{activeName}
+          and a.is_agree = 1
+          and a.is_check = 0
+          and a.is_end = 0
+          and a.is_delete = 0
+          and c.is_delete = 0
+    </select>
 </mapper>

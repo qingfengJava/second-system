@@ -45,4 +45,20 @@ public interface DataAnalysisService {
      * @return
      */
     ResultVO queryActiveQuality(Integer schoolYear);
+
+    /**
+     * 根据年份查询社团年度活动举办的情况
+     * @param uid
+     * @param schoolYear
+     * @return
+     */
+    ResultVO queryActiveType(Integer uid,Integer schoolYear);
+
+    /**
+     * 查询社团历年评级情况（6年为一组）
+     * @param uid
+     * @param schoolYear
+     * @return
+     */
+    ResultVO queryActiveGrade(Integer uid, Integer schoolYear);
 }

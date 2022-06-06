@@ -58,4 +58,16 @@ public class DataAnalysisController {
         return dataAnalysisService.queryActiveQuality(schoolYear);
     }
 
+    @ApiOperation("查询社团年度举办的各类型活动的情况")
+    @GetMapping("/activeType/{uid}/{schoolYear}")
+    public ResultVO queryActiveType(@PathVariable("uid") Integer uid, @PathVariable("schoolYear") Integer schoolYear){
+        //根据用户Id查询学生参与各活动类型的数量
+        return dataAnalysisService.queryActiveType(uid, schoolYear);
+    }
+
+    @ApiOperation("查询社团历年评级情况（6年为一组）")
+    @GetMapping("/activeGrade/{uid}/{schoolYear}")
+    public ResultVO queryActiveGrade(@PathVariable("uid") Integer uid, @PathVariable("schoolYear") Integer schoolYear){
+        return dataAnalysisService.queryActiveGrade(uid,schoolYear);
+    }
 }

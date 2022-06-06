@@ -94,4 +94,32 @@ public class SystemFeedbackServiceImpl implements SystemFeedbackService {
         }
         return new ResultVO(ResStatus.NO,"网络异常，删除失败！",null);
     }
+
+    @Cacheable(value = "systemFeedbackDetail",keyGenerator = "keyGenerator")
+    @Override
+    public ResultVO getFeedback(Integer id) {
+        SystemFeedback systemFeedback = systemFeedbackMapper.selectByPrimaryKey(id);
+        return new ResultVO(ResStatus.OK,"success",systemFeedback);
+    }
+
+    /**
+     * 添加课堂反馈回复信息
+     * @param systemId
+     * @param receiveContent
+     * @return
+     */
+    @Override
+    @CacheEvict(value = "systemFeedbackDetail", allEntries=true)
+    public ResultVO addFeedbackReply(Integer systemId, String receiveContent) {
+        SystemFeedback systemFeedback = new SystemFeedback();
+        systemFeedback.setSystemId(systemId);
+        systemFeedback.setReceiveContent(receiveContent);
+        systemFeedback.setIsReceive(1);
+        systemFeedback.setReceiveTime(new Date());
+        int i = systemFeedbackMapper.updateByPrimaryKeySelective(systemFeedback);
+        if (i > 0){
+            return new ResultVO(ResStatus.OK,"success",null);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
+    }
 }

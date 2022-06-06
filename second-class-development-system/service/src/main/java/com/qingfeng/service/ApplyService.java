@@ -2,6 +2,7 @@ package com.qingfeng.service;
 
 import com.qingfeng.entity.Apply;
 import com.qingfeng.entity.AuditForm;
+import com.qingfeng.entity.Check;
 import com.qingfeng.vo.ResultVO;
 
 /**
@@ -50,4 +51,11 @@ public interface ApplyService {
      * @return
      */
     ResultVO queryActiveYearCount(Integer userId);
+
+    /**
+     * 社团联进行活动最终审核
+     * @param check
+     * @return
+     */
+    ResultVO finalCheck(Check check);
 }

@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -20,6 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Table(name = "active_check")
 public class Check {
     /**
      * 审核表主键Id
@@ -51,6 +53,18 @@ public class Check {
      */
     @Column(name = "active_img")
     private String activeImg;
+
+    /**
+     * 审核人姓名
+     */
+    @Column(name = "check_username")
+    private String checkUsername;
+
+    /**
+     * 审核人职务
+     */
+    @Column(name = "check_duty")
+    private String checkDuty;
 
     /**
      * 活动总结

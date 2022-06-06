@@ -37,4 +37,19 @@ public interface SystemFeedbackService {
      * @return
      */
     ResultVO deleteFeedback(Integer[] feedbacks);
+
+    /**
+     * 根据Id查询课堂反馈信息
+     * @param id
+     * @return
+     */
+    ResultVO getFeedback(Integer id);
+
+    /**
+     * 添加课堂反馈回复信息
+     * @param systemId
+     * @param receiveContent
+     * @return
+     */
+    ResultVO addFeedbackReply(Integer systemId, String receiveContent);
 }

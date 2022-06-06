@@ -122,4 +122,24 @@ public class ActiveController {
     public ResultVO selectActiveByUid(@PathVariable("uid") Integer uid,Integer pageNum,Integer limit){
         return activeService.selectActiveByUid(uid,pageNum,limit);
     }
+
+    @ApiOperation("查询申请待审查的活动列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "Integer", name = "pageNum", value = "页码", required = true),
+            @ApiImplicitParam(paramType = "Integer", name = "limit", value = "每页条数", required = true),
+    })
+    @GetMapping("/selectActiveByIsAgree")
+    public ResultVO selectActiveByIsAgree(Integer pageNum,Integer limit,String activeName){
+        return activeService.selectActiveByIsAgree(pageNum,limit,activeName);
+    }
+
+    @ApiOperation("查询待审核的活动列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "Integer", name = "pageNum", value = "页码", required = true),
+            @ApiImplicitParam(paramType = "Integer", name = "limit", value = "每页条数", required = true),
+    })
+    @GetMapping("/selectActiveByIsCheck")
+    public ResultVO selectActiveByIsCheck(Integer pageNum,Integer limit,String activeName){
+        return activeService.selectActiveByIsCheck(pageNum,limit,activeName);
+    }
 }

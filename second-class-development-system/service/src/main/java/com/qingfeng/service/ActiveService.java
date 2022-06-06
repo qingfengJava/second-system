@@ -78,7 +78,27 @@ public interface ActiveService {
     /**
      * 查询学生成功参与活动的列表
      * @param uid
+     * @param pageNum
+     * @param limit
      * @return
      */
     ResultVO selectActiveByUid(Integer uid,Integer pageNum,Integer limit);
+
+    /**
+     * 查询待审核的活动列表
+     * @param pageNum
+     * @param limit
+     * @param activeName
+     * @return
+     */
+    ResultVO selectActiveByIsAgree(Integer pageNum, Integer limit, String activeName);
+
+    /**
+     * 查询待审核的活动列表
+     * @param pageNum
+     * @param limit
+     * @param activeName
+     * @return
+     */
+    ResultVO selectActiveByIsCheck(Integer pageNum, Integer limit, String activeName);
 }
