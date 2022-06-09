@@ -73,12 +73,17 @@ public class Grade {
     private Date createTime;
 
     /**
-     * 评价人姓名
+     * 评级人姓名
      */
     private String appraiser;
 
     /**
-     * 评价人职位
+     * 评级人职位
      */
     private String job;
+
+    /**
+     * 评级内容总结
+     */
+    private String content;
 }

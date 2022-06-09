@@ -80,7 +80,6 @@ public class OrganizeController {
     @PostMapping("/addOrganizePhoto/import/{uid}")
     public void addOrganizePhoto(@PathVariable("uid") Integer uid, String photoName,MultipartFile file) {
         try {
-            //判断是否更新头像  空是true，表示没有更新头像
             boolean notEmpty = (file != null);
             String newFileName = null;
             //不为空
@@ -94,10 +93,8 @@ public class OrganizeController {
                         newFile.delete();
                     }
                 }
-                //处理新的头像上传   1、处理头像的上传 & 修改文件名
                 newFileName = FileUtils.uploadFile(file, realPath);
             }
-            //调用service层的修改头像的方法
             organizeService.updateImg(uid, newFileName);
         } catch (IOException e) {
             e.printStackTrace();

@@ -278,7 +278,7 @@
                  left join `active_check` c on a.apply_id = c.activeId
         where a.active_name like #{activeName}
           and a.is_agree = 1
-          and a.is_check = 0
+          and a.is_check in (0,2)
           and a.is_end = 0
           and a.is_delete = 0
           and c.is_delete = 0
@@ -290,7 +290,7 @@
                  left join `active_check` c on a.apply_id = c.activeId
         where a.active_name like #{activeName}
           and a.is_agree = 1
-          and a.is_check = 0
+          and a.is_check in (0,2)
           and a.is_end = 0
           and a.is_delete = 0
           and c.is_delete = 0

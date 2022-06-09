@@ -197,12 +197,12 @@ public class ApplyServiceImpl implements ApplyService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    @CacheEvict(value = "applyActiveInfo", allEntries=true)
+    @CacheEvict(value = "active", allEntries=true)
     public ResultVO updateApplyActive(Integer applyId, Apply apply) {
         //做逻辑判断，虽然前端一般会控制，但是后台依然控制一下   先查询原来的实体对象
         Apply oldApply = applyMapper.selectByPrimaryKey(applyId);
         //判断活动是否已经开始
-        String subTime = oldApply.getActiveTime().substring(0, oldApply.getActiveTime().indexOf("~") - 1);
+        String subTime = oldApply.getActiveTime().substring(0, oldApply.getActiveTime().indexOf("~"));
         //活动开始的日期
         Date startDate = DateFormatUtils.strToDate(subTime, "yyyy-MM-dd");
         //修改活动申请的时间至少应该在活动开始前两天进行修改
@@ -217,7 +217,7 @@ public class ApplyServiceImpl implements ApplyService {
             //要判断当前活动是否结束
             if (oldApply.getIsEnd() == 0){
                 //说明没有结束，接下来验证修改的信息，主要验证活动举办的日期是否正确
-                String strTime = apply.getActiveTime().substring(0, apply.getActiveTime().indexOf("~") - 1);
+                String strTime = apply.getActiveTime().substring(0, apply.getActiveTime().indexOf("~"));
                 //新活动开始的日期
                 Date dateStart = DateFormatUtils.strToDate(strTime, "yyyy-MM-dd");
                 Calendar calendar = Calendar.getInstance();

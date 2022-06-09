@@ -101,4 +101,5 @@ public interface ActiveService {
      * @return
      */
     ResultVO selectActiveByIsCheck(Integer pageNum, Integer limit, String activeName);
+
 }

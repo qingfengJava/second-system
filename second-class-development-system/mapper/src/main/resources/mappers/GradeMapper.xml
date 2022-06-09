@@ -13,5 +13,6 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="appraiser" jdbcType="VARCHAR" property="appraiser"/>
         <result column="job" jdbcType="VARCHAR" property="job"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
     </resultMap>
 </mapper>
