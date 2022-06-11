@@ -73,8 +73,42 @@
                organize.is_delete,
                organize.create_time,
                organize.update_time
-        from organize left join tb_users on organize.user_id = tb_users.uId
+        from organize
+                 left join tb_users on organize.user_id = tb_users.uId
         where tb_users.is_admin = #{isAdmin}
           and organize.is_delete = 0
+    </select>
+
+    <select id="queryOrganizeByGrade" resultMap="BaseResultMap">
+        select organize.*
+        from organize
+                 left join tb_users on organize.user_id = tb_users.uId
+        where organize.organize_name not in (
+            select o.organize_name
+            from organize o
+                     LEFT JOIN grade g on o.organize_id = g.organize_id
+            where g.school_year like #{schoolYear}
+        )
+          and tb_users.is_admin = 2
+          <if test="organizeName != null and organizeName != ''">
+              and organize.organize_name like #{organizeName}
+          </if>
+            limit #{start}, #{limit}
+    </select>
+
+    <select id="queryOrganizeByGradeCount" resultType="java.lang.Integer">
+        select count(*)
+        from organize
+        left join tb_users on organize.user_id = tb_users.uId
+        where organize.organize_name not in (
+            select o.organize_name
+            from organize o
+            LEFT JOIN grade g on o.organize_id = g.organize_id
+            where g.school_year like #{schoolYear}
+        )
+        and tb_users.is_admin = 2
+        <if test="organizeName != null and organizeName != ''">
+            and organize.organize_name like #{organizeName}
+        </if>
     </select>
 </mapper>

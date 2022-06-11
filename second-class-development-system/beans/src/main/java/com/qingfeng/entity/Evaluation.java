@@ -78,6 +78,12 @@ public class Evaluation {
     private Integer star;
 
     /**
+     * 主评论需要一个学年
+     */
+    @Column(name = "school_year")
+    private String schoolYear;
+
+    /**
      * 评价日期
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -87,4 +87,13 @@ public interface OrganizeService {
      * @return
      */
     ResultVO deleteOrganizeImg(Integer imgId);
+
+    /**
+     * 查询年度待评级的社团列表
+     * @param pageNum
+     * @param limit
+     * @param organizeName
+     * @return
+     */
+    ResultVO queryOrganizeByGrade(Integer pageNum, Integer limit, String organizeName);
 }

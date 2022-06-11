@@ -10,6 +10,7 @@ import com.qingfeng.entity.Evaluation;
 import com.qingfeng.entity.Score;
 import com.qingfeng.service.EvaluationService;
 import com.qingfeng.utils.PageHelper;
+import com.qingfeng.utils.SchoolYearUtils;
 import com.qingfeng.vo.ResultVO;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,5 +150,29 @@ public class EvaluationServiceImpl implements EvaluationService {
         //封装数据
         PageHelper<Evaluation> pageHelper = new PageHelper<>(count, pageCount, evaluations);
         return new ResultVO(ResStatus.OK, "success", pageHelper);
+    }
+
+    @Override
+    public ResultVO selectGradeByApplyId(Integer applyId) {
+        //获取当前学年
+        String str = SchoolYearUtils.getSchoolYearByOne();
+        String schoolYear = str.substring(0, str.lastIndexOf("-"));
+        //先查询该活动的评价星级集合
+        Example example = new Example(Evaluation.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applyActiveId", applyId);
+        criteria.andEqualTo("parentId", 0);
+        criteria.andEqualTo("isDeleted", 0);
+        criteria.andLike("schoolYear", "%"+schoolYear+"%");
+        List<Evaluation> evaluations = evaluationMapper.selectByExample(example);
+        double count = 0;
+        double countScore = 0;
+        if (evaluations.size() > 0){
+            for (Evaluation evaluation : evaluations) {
+                count += (evaluation.getFeelStar()+evaluation.getStar()+ evaluation.getServiceStar()+evaluation.getSatisfactionStar()) / 4.0;
+            }
+            countScore = count / evaluations.size();
+        }
+        return new ResultVO(ResStatus.OK, "success", countScore);
     }
 }

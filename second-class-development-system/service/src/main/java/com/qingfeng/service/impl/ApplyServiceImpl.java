@@ -280,6 +280,8 @@ public class ApplyServiceImpl implements ApplyService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applyUserId",userId);
         criteria.andLike("schoolYear","%"+schoolYear+"%");
+        criteria.andNotEqualTo("isEnd",1);
+        criteria.andEqualTo("isDelete",0);
         int count = applyMapper.selectCountByExample(example);
         if (count >= 0){
             //说明查到了数据
@@ -313,6 +315,25 @@ public class ApplyServiceImpl implements ApplyService {
             }
             applyMapper.updateByExampleSelective(apply, example);
             return new ResultVO(ResStatus.OK,"success",null);
+        }
+        return new ResultVO(ResStatus.NO,"fail",null);
+    }
+
+    @Override
+    public ResultVO queryActiveFailCount(Integer userId) {
+        //获取学年
+        String str = SchoolYearUtils.getSchoolYearByOne();
+        String schoolYear = str.substring(0, str.lastIndexOf("-"));
+        Example example = new Example(Apply.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applyUserId",userId);
+        criteria.andLike("schoolYear","%"+schoolYear+"%");
+        criteria.andNotEqualTo("isEnd",1);
+        criteria.andEqualTo("isCheck",2);
+        int count = applyMapper.selectCountByExample(example);
+        if (count >= 0){
+            //说明查到了数据
+            return new ResultVO(ResStatus.OK,"success",count);
         }
         return new ResultVO(ResStatus.NO,"fail",null);
     }

@@ -13,6 +13,7 @@
         <result column="gain_star" jdbcType="INTEGER" property="gainStar"/>
         <result column="details" jdbcType="VARCHAR" property="details"/>
         <result column="star" jdbcType="INTEGER" property="star"/>
+        <result column="school_year" jdbcType="TIMESTAMP" property="schoolYear"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
     </resultMap>
@@ -28,6 +29,7 @@
                gain_star,
                details,
                star,
+               school_year,
                create_time,
                is_deleted
         from evaluation

@@ -8,6 +8,7 @@ import com.qingfeng.utils.FileUtils;
 import com.qingfeng.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -153,5 +154,16 @@ public class OrganizeController {
     @DeleteMapping("/deleteOrganizeImg/{imgId}")
     public ResultVO deleteOrganizeImg(@PathVariable("imgId") Integer imgId){
         return organizeService.deleteOrganizeImg(imgId);
+    }
+
+    @ApiOperation("查询年度待评级的社团列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "Integer", name = "pageNum", value = "页码", required = true),
+            @ApiImplicitParam(paramType = "Integer", name = "limit", value = "每页条数", required = true),
+            @ApiImplicitParam(paramType = "string", name = "organizeName", value = "社团名称", required = false)
+    })
+    @GetMapping("/queryOrganizeByGrade")
+    public ResultVO queryOrganizeByGrade(Integer pageNum, Integer limit,String organizeName){
+        return organizeService.queryOrganizeByGrade(pageNum, limit,organizeName);
     }
 }

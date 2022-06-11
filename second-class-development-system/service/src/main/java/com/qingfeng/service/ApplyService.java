@@ -58,4 +58,11 @@ public interface ApplyService {
      * @return
      */
     ResultVO finalCheck(Check check);
+
+    /**
+     * 根据社团用户Id查询该社团一个学年内失败的活动的个数
+     * @param userId
+     * @return
+     */
+    ResultVO queryActiveFailCount(Integer userId);
 }

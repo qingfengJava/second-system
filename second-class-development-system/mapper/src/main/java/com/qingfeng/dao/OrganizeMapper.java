@@ -3,6 +3,7 @@ package com.qingfeng.dao;
 import com.qingfeng.entity.Organize;
 import com.qingfeng.generaldao.GeneralDao;
 import com.qingfeng.vo.OrganizeVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,4 +36,20 @@ public interface OrganizeMapper extends GeneralDao<Organize> {
      * @return
      */
     List<Organize> queryByIsAdmin(Integer isAdmin);
+
+    /**
+     * 查询年度待评级的社团组织信息
+     * @param start
+     * @param limit
+     * @param schoolYear
+     * @param organizeName
+     * @return
+     */
+    List<Organize> queryOrganizeByGrade(@Param("start") int start,
+                                        @Param("limit") Integer limit,
+                                        @Param("schoolYear") String schoolYear,
+                                        @Param("organizeName") String organizeName);
+
+    int queryOrganizeByGradeCount(@Param("schoolYear") String schoolYear,
+                                  @Param("organizeName") String organizeName);
 }

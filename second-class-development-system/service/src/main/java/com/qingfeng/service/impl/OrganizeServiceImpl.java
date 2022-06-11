@@ -11,6 +11,7 @@ import com.qingfeng.entity.OrganizeImg;
 import com.qingfeng.entity.Users;
 import com.qingfeng.service.OrganizeService;
 import com.qingfeng.utils.PageHelper;
+import com.qingfeng.utils.SchoolYearUtils;
 import com.qingfeng.vo.OrganizeVo;
 import com.qingfeng.vo.ResultVO;
 import org.apache.ibatis.session.RowBounds;
@@ -240,6 +241,27 @@ public class OrganizeServiceImpl implements OrganizeService {
             return new ResultVO(ResStatus.OK, "success", null);
         }
         return new ResultVO(ResStatus.NO, "fail", null);
+    }
+
+    /**
+     * 查询年度待评级的社团信息
+     * @param pageNum
+     * @param limit
+     * @param organizeName
+     * @return
+     */
+    @Override
+    public ResultVO queryOrganizeByGrade(Integer pageNum, Integer limit, String organizeName) {
+        String str = SchoolYearUtils.getSchoolYearByOne();
+        String schoolYear = str.substring(0, str.lastIndexOf("-"));
+        int start = (pageNum - 1) * limit;
+        List<Organize> organizeList = organizeMapper.queryOrganizeByGrade(start, limit, "%"+schoolYear+"%", "%"+organizeName+"%");
+        int count = organizeMapper.queryOrganizeByGradeCount("%"+schoolYear+"%", "%"+organizeName+"%");
+        //计算总页数
+        int pageCount = count % limit == 0 ? count / limit : count / limit + 1;
+        //封装分页信息
+        PageHelper<Organize> pageHelper = new PageHelper<>(count, pageCount, organizeList);
+        return new ResultVO(ResStatus.OK, "success", pageHelper);
     }
 
 }

@@ -48,4 +48,11 @@ public interface EvaluationService {
      * @return
      */
     ResultVO selectEvaluationByApplyId(Integer applyId, int pageNum, int limit);
+
+    /**
+     * 查询活动综合评价的等级（星级）
+     * @param applyId
+     * @return
+     */
+    ResultVO selectGradeByApplyId(Integer applyId);
 }

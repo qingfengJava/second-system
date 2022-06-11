@@ -57,4 +57,9 @@ public class EvaluationController {
         return evaluationService.selectEvaluationByApplyId(applyId, pageNum, limit);
     }
 
+    @ApiOperation("查询活动综合评价的等级（星级）")
+    @GetMapping("/findGrade/{applyId}")
+    public ResultVO selectGradeByApplyId(@PathVariable("applyId") Integer applyId) {
+        return evaluationService.selectGradeByApplyId(applyId);
+    }
 }

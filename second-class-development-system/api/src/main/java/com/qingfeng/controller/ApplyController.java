@@ -65,4 +65,10 @@ public class ApplyController {
     public ResultVO finalCheck(@RequestBody Check check){
         return applyService.finalCheck(check);
     }
+
+    @ApiOperation("查询社团年度失败的活动个数")
+    @PostMapping("/queryActiveFail/{userId}")
+    public ResultVO queryActiveFailCount(@PathVariable("userId") Integer userId){
+        return applyService.queryActiveFailCount(userId);
+    }
 }
