@@ -1,5 +1,6 @@
 package com.qingfeng.currency.authority.controller.core;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qingfeng.currency.authority.biz.service.core.OrgService;
 import com.qingfeng.currency.authority.dto.core.OrgSaveDTO;
@@ -72,9 +73,18 @@ public class OrgController extends BaseController {
         return this.success(page);
     }
 
-    @ApiOperation(value = "查询组织", notes = "查询组织")
+    @ApiOperation(value = "查询所有组织", notes = "查询所有组织")
+    @GetMapping("")
+    @SysLog("查询所有组织")
+    public R<List<Org>> findAll() {
+        List<Org> orgList = this.orgService.list(new QueryWrapper<Org>().eq("status", true));
+        return this.success(orgList);
+    }
+
+
+    @ApiOperation(value = "根据Id查询组织", notes = "根据Id查询组织")
     @GetMapping("/{id}")
-    @SysLog("查询组织")
+    @SysLog("根据Id查询组织")
     public R<Org> get(@PathVariable Long id) {
         return this.success(this.orgService.getById(id));
     }

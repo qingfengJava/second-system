@@ -1,5 +1,6 @@
 package com.qingfeng.currency.authority.controller.core;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qingfeng.currency.authority.biz.service.core.StationService;
@@ -68,6 +69,20 @@ public class StationController extends BaseController {
     @SysLog("查询岗位")
     public R<Station> get(@PathVariable Long id) {
         return success(stationService.getById(id));
+    }
+
+    @ApiOperation(value = "根据组织id查询岗位", notes = "根据组织id查询岗位")
+    @GetMapping("/orgId/{orgId}")
+    @SysLog("根据组织id查询岗位")
+    public R<List<Station>> findByOrgId(@PathVariable Long orgId) {
+        return success(stationService.list(new QueryWrapper<Station>().eq("org_id", orgId).eq("status",true)));
+    }
+
+    @ApiOperation(value = "查询所有岗位", notes = "查询所有岗位")
+    @GetMapping
+    @SysLog("查询岗位")
+    public R<List<Station>> findAll() {
+        return success(stationService.list(new QueryWrapper<Station>().eq("status", true)));
     }
 
     @ApiOperation(value = "新增岗位", notes = "新增岗位不为空的字段")
