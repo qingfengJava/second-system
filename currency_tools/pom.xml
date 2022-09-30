@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.qingfeng</groupId>
+        <artifactId>currency_parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../currency_parent</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>currency_tools</artifactId>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+    <description>公共模块</description>
+
+    <modules>
+        <module>currency_tools_common</module>
+        <module>currency_tools_core</module>
+        <module>currency_tools_databases</module>
+        <module>currency_tools_dozer</module>
+        <module>currency_tools_j2cache</module>
+        <module>currency_tools_jwt</module>
+        <module>currency_tools_log</module>
+        <module>currency_tools_swagger2</module>
+        <module>currency_tools_user</module>
+        <module>currency_tools_validator</module>
+        <module>currency_tools_xss</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.qingfeng</groupId>
+                <artifactId>currency_tools_core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qingfeng</groupId>
+                <artifactId>currency_tools_common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qingfeng</groupId>
+                <artifactId>currency_tools_databases</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

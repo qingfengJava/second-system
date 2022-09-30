@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>currency_auth</artifactId>
+        <groupId>com.qingfeng</groupId>
+        <version>1.0.0</version>
+        <relativePath>../</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>currency_auth_entity</artifactId>
+    <name>${project.artifactId}</name>
+    <description>权限服务实体模块</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+        </dependency>
+
+        <!-- Role 中字段的类型需要使用 DataScopeType -->
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_databases</artifactId>
+            <optional>true</optional>
+            <scope>compile</scope>
+        </dependency>
+
+
+    </dependencies>
+</project>

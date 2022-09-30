@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    com.qingfeng.currency.log.LogAutoConfiguration
+org.springframework.context.ApplicationContextInitializer=\
+    com.qingfeng.currency.log.init.ApplicationLoggerInitializer

@@ -1,0 +1,20 @@
+# 配置网关路由
+spring:
+  cloud:
+    gateway:
+      routes:
+        # 权限服务相关的网关路由
+        - id: currency_auth_server # 网关Id
+          uri: lb://currency-auth-server
+          predicates:
+            - Path=/api/authority/**
+          filters: # 指定路径重写
+            - RewritePath=/api/authority/(?<segment>.*),/$\{segment}
+
+        # 文件服务相关的网关路由
+        - id: currency_file_server # 网关Id
+          uri: lb://currency-file-server
+          predicates:
+            - Path=/api/file/**
+          filters: # 指定路径重写
+            - RewritePath=/api/file/(?<segment>.*),/$\{segment}
