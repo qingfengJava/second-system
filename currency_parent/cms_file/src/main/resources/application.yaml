@@ -1,0 +1,9 @@
+server:
+  port: 9201
+currency:
+  swagger:
+    enabled: true
+    base-package: com.qingfeng.cms
+    description: 第二课堂——文件服务
+
+

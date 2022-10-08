@@ -40,8 +40,6 @@ public abstract class BaseFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String uri = request.getURI().getPath();
         //截取出指定的uri    /api/file/ 之后的内容
-//        uri = StrUtil.subSuf(uri, gatewayPrefix.length());
-//        uri = StrUtil.subSuf(uri, uri.indexOf("/", 1));
         //判断是不是我们定义的需要放行的请求路径
         boolean ignoreToken = IgnoreTokenConfig.isIgnoreToken(uri);
         return ignoreToken;

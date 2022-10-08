@@ -39,7 +39,7 @@ public class HttpRequestGlobalFilter implements GlobalFilter {
                 byte[] bytes = new byte[dataBuffer.readableByteCount()];
                 dataBuffer.read(bytes);
                 String postRequestBodyStr = new String(bytes, StandardCharsets.UTF_8);
-                if (requestUrl.contains("/web/api/file")) {
+                if (requestUrl.contains("/file")) {
                     log.debug("\n 请求url:`{}` \n 请求类型：{} \n 文件上传", requestUrl, requestMethod);
                 } else {
                     log.debug("\n 请求url:`{}` \n 请求类型：{} \n 请求参数：{}", requestUrl, requestMethod, postRequestBodyStr);

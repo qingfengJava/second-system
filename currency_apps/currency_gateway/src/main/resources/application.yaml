@@ -12,9 +12,9 @@ spring:
             - RewritePath=/api/authority/(?<segment>.*),/$\{segment}
 
         # 文件服务相关的网关路由
-        - id: currency_file_server # 网关Id
-          uri: lb://currency-file-server
+        - id: cms_file # 网关Id
+          uri: lb://cms-file
           predicates:
             - Path=/api/file/**
           filters: # 指定路径重写
-            - RewritePath=/api/file/(?<segment>.*),/$\{segment}
+            - RewritePath=/api/file/(?<segment>.*),/file/$\{segment}

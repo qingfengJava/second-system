@@ -13,6 +13,7 @@ public class IgnoreTokenConfig {
 
     public static final List<String> LIST = Arrays.asList(
             "/error",
+            "/file/**",
             "/actuator/**",
             "/gate/**",
             "/static/**",

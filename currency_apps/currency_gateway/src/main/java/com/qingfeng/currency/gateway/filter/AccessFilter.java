@@ -53,8 +53,6 @@ public class AccessFilter extends BaseFilter {
         ServerHttpRequest request = exchange.getRequest();
         String requestURI = request.getURI().getPath();
         //截取出指定的uri    /api/file/ 之后的内容
-//        requestURI = StrUtil.subSuf(requestURI, gatewayPrefix.length());
-//        requestURI = StrUtil.subSuf(requestURI, requestURI.indexOf("/", 1));
         String method = request.getMethod().name();
         String permission = method + requestURI;
 

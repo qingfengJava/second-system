@@ -109,7 +109,6 @@
         <spring.boot.version>2.3.11.RELEASE</spring.boot.version>
         <spring.cloud.version>Hoxton.SR11</spring.cloud.version>
         <spring-cloud-alibaba-dependencies.version>2.1.0.RELEASE</spring-cloud-alibaba-dependencies.version>
-        <!--<spring.version>5.2.2.RELEASE</spring.version>-->
         <spring-boot-admin.version>2.2.0</spring-boot-admin.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <mybatis.version>3.5.2</mybatis.version>
@@ -166,13 +165,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--<dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>-->
 
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
@@ -291,11 +283,6 @@
                 <artifactId>springfox-core</artifactId>
                 <version>${springfox.swagger2.version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>swagger-bootstrap-ui</artifactId>
-                <version>${sbu.version}</version>
-            </dependency>-->
 
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
@@ -439,18 +426,6 @@
         </resources>
         <pluginManagement>
             <plugins>
-                <!--                <plugin>-->
-                <!--                    <groupId>org.springframework.boot</groupId>-->
-                <!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
-                <!--                    <executions>-->
-                <!--                        <execution>-->
-                <!--                            <goals>-->
-                <!--                                <goal>repackage</goal>-->
-                <!--                                <goal>build-info</goal>-->
-                <!--                            </goals>-->
-                <!--                        </execution>-->
-                <!--                    </executions>-->
-                <!--                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -461,7 +436,6 @@
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
                 </plugin>
-
             </plugins>
         </pluginManagement>
         <plugins>
