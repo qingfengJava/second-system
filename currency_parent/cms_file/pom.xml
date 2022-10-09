@@ -29,13 +29,14 @@
         <dependency>
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_swagger2</artifactId>
-            <version>1.0.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_log</artifactId>
-            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_core</artifactId>
         </dependency>
 
         <!-- nacos作为服务的注册和发现中心 -->
@@ -48,6 +49,7 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
+
 
     </dependencies>
 </project>

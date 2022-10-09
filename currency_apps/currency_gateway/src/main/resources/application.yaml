@@ -18,3 +18,11 @@ spring:
             - Path=/api/file/**
           filters: # 指定路径重写
             - RewritePath=/api/file/(?<segment>.*),/file/$\{segment}
+
+        # 学分修读方案服务的网关路由
+        - id: cms_plan_standard # 网关Id
+          uri: lb://cms-plan-standard
+          predicates:
+            - Path=/api/plan/**
+          filters: # 指定路径重写
+            - RewritePath=/api/plan/(?<segment>.*),/$\{segment}

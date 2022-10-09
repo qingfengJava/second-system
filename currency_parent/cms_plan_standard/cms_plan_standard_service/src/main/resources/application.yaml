@@ -1,0 +1,8 @@
+server:
+  port: 9301
+
+currency:
+  swagger:
+    enabled: true
+    base-package: com.qingfeng.cms
+    description: 第二课堂——分修读方案模块

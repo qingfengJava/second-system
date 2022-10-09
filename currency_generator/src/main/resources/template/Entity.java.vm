@@ -13,19 +13,19 @@ import lombok.Data;
 /**
  * ${comments}
  * 
- * @author ${author}
- * @email ${email}
+ * @author 清风学Java
+ * @version 3.0.0
  * @date ${datetime}
  */
 @Data
+@ApiModel(description = "${comments}")
 @TableName("${tableName}")
 public class ${className}Entity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 #foreach ($column in $columns)
-	/**
-	 * $column.comments
-	 */
+
+	@ApiModelProperty(value = "$column.comments")
 	#if($column.columnName == $pk.columnName)
 @TableId
 	#end
