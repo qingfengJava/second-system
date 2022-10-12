@@ -12,5 +12,16 @@ import com.qingfeng.cms.domain.plan.entity.PlanEntity;
  */
 public interface PlanService extends IService<PlanEntity> {
 
+    /**
+     * 保存方案
+     * @param plan
+     */
+    void savePlan(PlanEntity plan);
+
+    /**
+     * 修改方案信息
+     * @param plan
+     */
+    void updatePlan(PlanEntity plan);
 }
 

@@ -1,10 +1,22 @@
 package com.qingfeng.cms.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qingfeng.cms.biz.plan.service.PlanService;
+import com.qingfeng.cms.domain.plan.dto.PlanSaveDTO;
+import com.qingfeng.cms.domain.plan.dto.PlanUpdateDTO;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
+import com.qingfeng.currency.dozer.DozerUtils;
+import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -15,11 +27,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * 方案设定表（是否是修读标准，本科标准，专科标准）
@@ -30,63 +41,67 @@ import java.util.Map;
  */
 @RestController
 @Slf4j
-@Validated
 @Api(value = "提供方案设定相关的接口功能", tags = "方案设定模块")
 @RequestMapping("/plans")
 public class PlanController extends BaseController {
 
     @Autowired
+    private DozerUtils dozer;
+    @Autowired
     private PlanService planService;
 
-    /**
-     * 列表
-     */
-    @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        //PageUtils page = planService.queryPage(params);
-
-        return success();
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "current", value = "当前页", dataType = "long", paramType = "query", defaultValue = "1"),
+            @ApiImplicitParam(name = "size", value = "每页显示几条", dataType = "long", paramType = "query", defaultValue = "10"),
+    })
+    @ApiOperation(value = "分页查询学分修读方案", notes = "分页查询学分修读方案")
+    @GetMapping("/page")
+    @SysLog("分页查询学分修读方案")
+    public R<IPage<PlanEntity>> page(PlanEntity data) {
+        IPage<PlanEntity> page = getPage();
+        // 构建值不为null的查询条件
+        LbqWrapper<PlanEntity> query = Wraps.lbQ(data)
+                .orderByDesc(PlanEntity::getId);
+        planService.page(page, query);
+        return success(page);
     }
 
-
-    /**
-     * 信息
-     */
-    @GetMapping("/info/{planId}")
-    public R info(@PathVariable("planId") Long planId){
-		PlanEntity plan = planService.getById(planId);
+    @ApiOperation(value = "保存方案信息", notes = "保存方案信息")
+    @PostMapping("/save")
+    @SysLog("新增保存方案")
+    public R<PlanEntity> save(@ApiParam(value = "方案实体", required = true)
+                      @RequestBody @Validated PlanSaveDTO planDto){
+        PlanEntity plan = dozer.map(planDto, PlanEntity.class);
+        planService.savePlan(plan);
 
         return success(plan);
     }
 
-    /**
-     * 保存
-     */
-    @PostMapping("/save")
-    public R save(@RequestBody PlanEntity plan){
-		planService.save(plan);
+    @ApiOperation(value = "根据Id查询方案信息", notes = "根据Id查询方案信息")
+    @GetMapping("/info/{planId}")
+    @SysLog("根据Id查询方案信息")
+    public R<PlanEntity> info(@PathVariable("planId") @NotNull Long planId){
+        PlanEntity plan = planService.getById(planId);
 
-        return success();
+        return success(plan);
     }
 
-    /**
-     * 修改
-     */
+    @ApiOperation(value = "修改学分修读方案", notes = "修改学分修读方案字段不能为空")
     @PutMapping("/update")
-    public R update(@RequestBody PlanEntity plan){
-		planService.updateById(plan);
-
-        return success();
+    @SysLog("修改学分修读方案")
+    public R<PlanEntity> update(@RequestBody @Validated(SuperEntity.Update.class) PlanUpdateDTO planDto){
+        PlanEntity plan = dozer.map(planDto, PlanEntity.class);
+        planService.updatePlan(plan);
+        return success(plan);
     }
 
-    /**
-     * 删除
-     */
+    @ApiOperation(value = "删除学分修读方案", notes = "删除学分修读方案id不能为空")
     @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] planIds){
+    @SysLog("删除学分修读方案")
+    public R<Boolean> delete(@RequestBody Long[] planIds){
 		planService.removeByIds(Arrays.asList(planIds));
 
-        return success();
+        return success(true);
     }
 
 }

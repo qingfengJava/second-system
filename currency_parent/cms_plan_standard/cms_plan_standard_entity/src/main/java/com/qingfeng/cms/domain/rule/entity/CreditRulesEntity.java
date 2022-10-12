@@ -1,12 +1,10 @@
 package com.qingfeng.cms.domain.rule.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -15,10 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 加分（学分）细则表
@@ -35,15 +31,9 @@ import java.util.Date;
 @Accessors(chain = true)
 @ApiModel(value = "加分（学分）细则实体")
 @TableName("crrm_credit_rules")
-public class CreditRulesEntity implements Serializable {
+public class CreditRulesEntity extends Entity<Long> {
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 学分细则id，主键
-	 */
-	@TableId(value = "credit_rules_id", type = IdType.AUTO)
-	private Long creditRulesId;
 
 	@ApiModelProperty(value = "项目等级表id，外键")
 	private Long gradeId;
@@ -63,21 +53,24 @@ public class CreditRulesEntity implements Serializable {
 	@ApiModelProperty(value = "审核的详情，没有就是无")
 	private String checkDetail;
 
-	@ApiModelProperty(value = "创建的时间")
-	@TableField(fill = FieldFill.INSERT)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date createTime;
-
-	@ApiModelProperty(value = "更新的时间")
-	@TableField(fill = FieldFill.INSERT_UPDATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date updateTime;
-
 	@ApiModelProperty(value = "是否删除（0：未删除   1：已删除）")
 	@TableLogic
 	@TableField(fill = FieldFill.INSERT)
 	private Integer isDelete;
 
+	@Builder
+	public CreditRulesEntity(Long id, LocalDateTime createTime, Long createUser,
+							 LocalDateTime updateTime, Long updateUser,
+							 Long gradeId, Double score, Integer scoreGrade,
+							 String condition, Integer isCheck, String checkDetail,
+							 Integer isDelete) {
+		super(id, createTime, createUser, updateTime, updateUser);
+		this.gradeId = gradeId;
+		this.score = score;
+		this.scoreGrade = scoreGrade;
+		this.condition = condition;
+		this.isCheck = isCheck;
+		this.checkDetail = checkDetail;
+		this.isDelete = isDelete;
+	}
 }

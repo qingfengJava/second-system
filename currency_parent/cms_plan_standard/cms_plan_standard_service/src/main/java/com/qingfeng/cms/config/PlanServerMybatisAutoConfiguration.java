@@ -11,9 +11,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @Slf4j
-public class GoodsServerMybatisAutoConfiguration extends BaseMybatisConfiguration {
+public class PlanServerMybatisAutoConfiguration extends BaseMybatisConfiguration {
 
-    public GoodsServerMybatisAutoConfiguration(DatabaseProperties databaseProperties) {
+    public PlanServerMybatisAutoConfiguration(DatabaseProperties databaseProperties) {
         super(databaseProperties);
     }
+
+
 }

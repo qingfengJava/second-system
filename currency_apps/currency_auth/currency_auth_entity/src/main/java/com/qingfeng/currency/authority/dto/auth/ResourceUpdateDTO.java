@@ -52,6 +52,14 @@ public class ResourceUpdateDTO implements Serializable {
      */
     @ApiModelProperty(value = "菜单ID")
     private Long menuId;
+
+    @ApiModelProperty(value = "请求方式")
+    @Length(max = 255, message = "接口描述长度不能超过255")
+    private String method;
+
+    @ApiModelProperty(value = "请求url地址")
+    @Length(max = 255, message = "接口描述长度不能超过255")
+    private String url;
     /**
      * 接口描述
      */

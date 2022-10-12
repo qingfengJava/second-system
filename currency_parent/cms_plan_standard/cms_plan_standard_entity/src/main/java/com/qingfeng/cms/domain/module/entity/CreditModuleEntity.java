@@ -1,11 +1,7 @@
 package com.qingfeng.cms.domain.module.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -14,10 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * 学分认定模块表
@@ -34,13 +29,11 @@ import java.util.Date;
 @Accessors(chain = true)
 @ApiModel(description = "学分认定模块实体")
 @TableName("crrm_credit_module")
-public class CreditModuleEntity implements Serializable {
+public class CreditModuleEntity extends Entity<Long> {
+
 	private static final long serialVersionUID = 1L;
 
-	@TableId(value = "module_id", type = IdType.AUTO)
-	@ApiModelProperty(value = "模块id")
-	private Long moduleId;
-
+	@NotNull(message = "方案Id 不能为空")
 	@ApiModelProperty(value = "外键  方案id")
 	private Long planId;
 
@@ -59,16 +52,17 @@ public class CreditModuleEntity implements Serializable {
 	@ApiModelProperty(value = "年级（冗余字段，方便后面进行查询）")
 	private String grade;
 
-	@ApiModelProperty(value = "创建的时间")
-	@TableField(fill = FieldFill.INSERT)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date createTime;
-
-	@ApiModelProperty(value = "修改的时间")
-	@TableField(fill = FieldFill.INSERT_UPDATE)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date updateTime;
-
+	@Builder
+	public CreditModuleEntity(Long id, LocalDateTime createTime, Long createUser,
+							  LocalDateTime updateTime, Long updateUser, Long planId,
+							  String moduleName, String moduleContent, Integer minScore,
+							  Integer year, String grade) {
+		super(id, createTime, createUser, updateTime, updateUser);
+		this.planId = planId;
+		this.moduleName = moduleName;
+		this.moduleContent = moduleContent;
+		this.minScore = minScore;
+		this.year = year;
+		this.grade = grade;
+	}
 }

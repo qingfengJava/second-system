@@ -7,5 +7,5 @@ import org.springframework.context.annotation.Configuration;
  * @author 清风学Java
  */
 @Configuration
-public class GoodsServerWebConfiguration extends BaseConfig {
+public class PlanServerWebConfiguration extends BaseConfig {
 }

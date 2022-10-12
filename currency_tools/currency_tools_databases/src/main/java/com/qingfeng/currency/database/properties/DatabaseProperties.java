@@ -42,5 +42,5 @@ public class DatabaseProperties {
     /**
      * 事务扫描基础包
      */
-    private String transactionScanPackage = "com.qingfeng.currency";
+    private String transactionScanPackage = "com.qingfeng";
 }

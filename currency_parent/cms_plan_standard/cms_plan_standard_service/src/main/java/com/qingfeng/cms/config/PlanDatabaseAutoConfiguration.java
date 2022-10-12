@@ -56,24 +56,24 @@ import java.util.List;
 @MapperScan(
         basePackages = {"com.qingfeng.cms",},
         annotationClass = Repository.class,
-        sqlSessionFactoryRef = GoodsDatabaseAutoConfiguration.DATABASE_PREFIX + "SqlSessionFactory")
+        sqlSessionFactoryRef = PlanDatabaseAutoConfiguration.DATABASE_PREFIX + "SqlSessionFactory")
 @EnableConfigurationProperties({MybatisPlusProperties.class, DatabaseProperties.class})
-public class GoodsDatabaseAutoConfiguration extends BaseDatabaseConfiguration {
+public class PlanDatabaseAutoConfiguration extends BaseDatabaseConfiguration {
     /**
      * 每个数据源配置不同即可
      */
     final static String DATABASE_PREFIX = "master";
 
-    public GoodsDatabaseAutoConfiguration(MybatisPlusProperties properties,
-                                          DatabaseProperties databaseProperties,
-                                          ObjectProvider<Interceptor[]> interceptorsProvider,
-                                          ObjectProvider<TypeHandler[]> typeHandlersProvider,
-                                          ObjectProvider<LanguageDriver[]> languageDriversProvider,
-                                          ResourceLoader resourceLoader,
-                                          ObjectProvider<DatabaseIdProvider> databaseIdProvider,
-                                          ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider,
-                                          ObjectProvider<List<MybatisPlusPropertiesCustomizer>> mybatisPlusPropertiesCustomizerProvider,
-                                          ApplicationContext applicationContext) {
+    public PlanDatabaseAutoConfiguration(MybatisPlusProperties properties,
+                                         DatabaseProperties databaseProperties,
+                                         ObjectProvider<Interceptor[]> interceptorsProvider,
+                                         ObjectProvider<TypeHandler[]> typeHandlersProvider,
+                                         ObjectProvider<LanguageDriver[]> languageDriversProvider,
+                                         ResourceLoader resourceLoader,
+                                         ObjectProvider<DatabaseIdProvider> databaseIdProvider,
+                                         ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider,
+                                         ObjectProvider<List<MybatisPlusPropertiesCustomizer>> mybatisPlusPropertiesCustomizerProvider,
+                                         ApplicationContext applicationContext) {
         super(properties, databaseProperties, interceptorsProvider, typeHandlersProvider,
                 languageDriversProvider, resourceLoader, databaseIdProvider,
                 configurationCustomizersProvider, mybatisPlusPropertiesCustomizerProvider, applicationContext);

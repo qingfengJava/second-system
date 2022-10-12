@@ -77,12 +77,12 @@ public class Resource extends Entity<Long> {
     private String describe;
 
     @ApiModelProperty(value = "请求方式")
-    //@Length(max = 255, message = "接口描述长度不能超过255")
+    @Length(max = 255, message = "接口描述长度不能超过255")
     @TableField(value = "method")
     private String method;
 
     @ApiModelProperty(value = "请求url地址")
-    //@Length(max = 255, message = "接口描述长度不能超过255")
+    @Length(max = 255, message = "接口描述长度不能超过255")
     @TableField(value = "url")
     private String url;
 
