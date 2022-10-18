@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.plan.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
@@ -13,6 +14,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+
+import static com.baomidou.mybatisplus.annotation.SqlCondition.LIKE;
 
 /**
  * 方案设定表（是否是修读标准，本科标准，专科标准）
@@ -36,15 +39,18 @@ public class PlanEntity extends Entity<Long> {
 
 
 	@ApiModelProperty(value = "方案名")
+	@TableField(value = "plan_name", condition = LIKE)
 	private String planName;
 
 	@ApiModelProperty(value = "总共需要修读的学分")
 	private Integer totalScore;
 
 	@ApiModelProperty(value = "年份（按年设计，每一年的标准不一样）")
+	@TableField(value = "year", condition = LIKE)
 	private Integer year;
 
 	@ApiModelProperty(value = "年级")
+	@TableField(value = "grade", condition = LIKE)
 	private String grade;
 
 	@ApiModelProperty(value = "应用对象 （1：本科   2：专科）")

@@ -1,11 +1,14 @@
 package com.qingfeng.cms;
 
+import com.qingfeng.currency.auth.server.EnableAuthServer;
+import com.qingfeng.currency.user.annotation.EnableLoginArgResolver;
 import com.qingfeng.currency.validator.config.EnableFormValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -23,6 +26,9 @@ import java.net.UnknownHostException;
 @EnableTransactionManagement
 @Slf4j
 @EnableFormValidator
+@EnableAuthServer
+@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
+@EnableLoginArgResolver
 public class PlanStandardApplication {
 
     public static void main(String[] args) throws UnknownHostException {
