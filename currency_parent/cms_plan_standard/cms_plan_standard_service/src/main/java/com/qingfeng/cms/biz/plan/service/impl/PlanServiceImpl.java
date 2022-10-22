@@ -41,10 +41,10 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
      * @param plan
      */
     @Override
+    @Transactional(rollbackFor = BizException.class)
     public void savePlan(PlanEntity plan) {
-        //先判断当前要保存的放啊是否启用
-        if (plan.getIsEnable() == 1) {
-
+        //先判断当前要保存的方案是否启用
+        if (plan.getIsEnable().equals(PlanIsEnable.ENABLE_TURE.getEnable())) {
             //查询数据库里面是否已经有启用的方案
             PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
                     .eq(PlanEntity::getYear, plan.getYear())
@@ -54,10 +54,31 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
             if (!ObjectUtils.isEmpty(planEntity)) {
                 throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), PlanExceptionMsg.IS_EXISTENCE.getMsg());
             }
+            //否则可以保存，就作为唯一的父类
+            plan.setParentId(0L);
+
+            //直接将其子类的父级Id进行修改
+            baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
+                    .eq(PlanEntity::getYear, plan.getYear())
+                    .eq(PlanEntity::getGrade, plan.getGrade())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
+                    .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
+                    .set(PlanEntity::getParentId,plan.getId()));
+        }else{
+            //如果是不启用的，那么先查询是否有父类
+            PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
+                    .eq(PlanEntity::getYear, plan.getYear())
+                    .eq(PlanEntity::getGrade, plan.getGrade())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable())
+                    .eq(PlanEntity::getApplicationObject, plan.getApplicationObject()));
+            //如果没有父类，就0，有父类就是父类id
+            plan.setParentId(ObjectUtils.isEmpty(planEntity) ? 0L : planEntity.getId());
+
         }
 
-        //不启用，可以直接使用
+        //最终直接添加即可
         baseMapper.insert(plan);
+
     }
 
     /**
@@ -74,7 +95,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
     @Transactional(rollbackFor = BizException.class)
     public void updatePlan(PlanEntity plan) {
         //首先判断是修改成什么类型
-        if (plan.getIsEnable() == 0) {
+        if (plan.getIsEnable().equals(PlanIsEnable.ENABLE_NOT.getEnable())) {
             //取消启用，查看是否有关联的
             List<CreditModuleEntity> moduleList = creditModuleDao.selectList(new LambdaQueryWrapper<CreditModuleEntity>()
                     .eq(CreditModuleEntity::getPlanId, plan.getId()));
@@ -82,7 +103,17 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
                 //说明有关联，不能关闭
                 throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), PlanExceptionMsg.IS_RELATED.getMsg());
             }
+            // 没有关联，要取消启用，就需要修改其子类的父级Id
+            baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
+                    .eq(PlanEntity::getYear, plan.getYear())
+                    .eq(PlanEntity::getGrade, plan.getGrade())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
+                    .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
+                    .set(PlanEntity::getParentId,0L));
+
         }else{
+            plan.setParentId(0L);
+
             //要修改成启用的 is_Enable == 1 的情况，先查看以前是否有启用的情况
             PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
                     .eq(PlanEntity::getYear, plan.getYear())
@@ -103,6 +134,14 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
                             creditModuleDao.updateById(m);
                         });
             }
+
+            // 在启用改方案之后，需要设置子类的父级Id
+            baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
+                    .eq(PlanEntity::getYear, plan.getYear())
+                    .eq(PlanEntity::getGrade, plan.getGrade())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
+                    .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
+                    .set(PlanEntity::getParentId,plan.getId()));
         }
 
         //进行当前的修改

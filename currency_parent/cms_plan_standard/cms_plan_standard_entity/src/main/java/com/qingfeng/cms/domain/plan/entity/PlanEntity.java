@@ -14,6 +14,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.baomidou.mybatisplus.annotation.SqlCondition.LIKE;
 
@@ -37,6 +38,8 @@ public class PlanEntity extends Entity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "父级Id，没有默认为0")
+	private Long parentId;
 
 	@ApiModelProperty(value = "方案名")
 	@TableField(value = "plan_name", condition = LIKE)
@@ -61,6 +64,10 @@ public class PlanEntity extends Entity<Long> {
 
 	@ApiModelProperty(value = "方案说明")
 	private String planContent;
+
+	@ApiModelProperty(value = "方案子集对象")
+	@TableField(exist = false)
+	private List<PlanEntity> children;
 
 	@Builder
 	public PlanEntity(Long id, LocalDateTime createTime, Long createUser,

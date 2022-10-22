@@ -1,5 +1,6 @@
 package com.qingfeng.cms.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qingfeng.cms.biz.plan.service.PlanService;
 import com.qingfeng.cms.domain.plan.dto.PlanPageDTO;
@@ -61,16 +62,24 @@ public class PlanController extends BaseController {
     @GetMapping("/page")
     @SysLog("分页查询学分修读方案")
     public R<IPage<PlanEntity>> page(PlanPageDTO data) {
-        //TODO 考虑查询的时候是否增加父子类关系
         IPage<PlanEntity> page = getPage();
 
         PlanEntity planEntity = dozer.map(data, PlanEntity.class);
+        planEntity.setParentId(0L);
 
         // 构建值不为null的查询条件
         LbqWrapper<PlanEntity> query = Wraps.lbQ(planEntity)
                 .orderByDesc(PlanEntity::getYear)
                 .orderByDesc(PlanEntity::getGrade);
         planService.page(page, query);
+
+        // 查询的时候是否增加父子类关系
+        page.getRecords().forEach(p -> {
+            QueryWrapper<PlanEntity> wrapper = new QueryWrapper<PlanEntity>()
+                    .eq("parent_id", p.getId());
+            p.setChildren(planService.list(wrapper));
+        });
+
         return success(page);
     }
 
