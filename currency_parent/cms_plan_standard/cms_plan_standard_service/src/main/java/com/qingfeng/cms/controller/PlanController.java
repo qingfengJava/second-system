@@ -97,16 +97,17 @@ public class PlanController extends BaseController {
     @ApiOperation(value = "根据Id查询方案信息", notes = "根据Id查询方案信息")
     @GetMapping("/info/{planId}")
     @SysLog("根据Id查询方案信息")
-    public R<PlanEntity> info(@PathVariable("planId") @NotNull Long planId) {
+    public R<PlanEntity> info(@ApiParam(value = "方案Id", required = true)
+                              @PathVariable("planId") @NotNull Long planId) {
         PlanEntity plan = planService.getById(planId);
-
         return success(plan);
     }
 
     @ApiOperation(value = "修改学分修读方案", notes = "修改学分修读方案字段不能为空")
     @PutMapping("/update")
     @SysLog("修改学分修读方案")
-    public R<PlanEntity> update(@RequestBody @Validated(SuperEntity.Update.class) PlanUpdateDTO planDto) {
+    public R<PlanEntity> update(@ApiParam("学分修读方案实体")
+                                @RequestBody @Validated(SuperEntity.Update.class) PlanUpdateDTO planDto) {
         PlanEntity plan = dozer.map(planDto, PlanEntity.class);
         planService.updatePlan(plan);
         return success(plan);
@@ -115,7 +116,8 @@ public class PlanController extends BaseController {
     @ApiOperation(value = "删除学分修读方案", notes = "删除学分修读方案id不能为空")
     @DeleteMapping
     @SysLog("删除学分修读方案")
-    public R<Boolean> delete(@RequestParam("ids[]") List<Long> ids) {
+    public R<Boolean> delete(@ApiParam(value = "方案Id集合", required = true)
+                             @RequestParam("ids[]") List<Long> ids) {
         planService.removeByIds(ids);
 
         return success(true);

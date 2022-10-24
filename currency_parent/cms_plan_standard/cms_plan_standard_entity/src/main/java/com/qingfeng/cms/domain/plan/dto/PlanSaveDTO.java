@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -37,6 +38,7 @@ public class PlanSaveDTO implements Serializable {
     private String planName;
 
     @NotNull(message = "修读学分不能为空")
+    @Max(value = 15)
     @ApiModelProperty(value = "总共需要修读的学分")
     private Integer totalScore;
 

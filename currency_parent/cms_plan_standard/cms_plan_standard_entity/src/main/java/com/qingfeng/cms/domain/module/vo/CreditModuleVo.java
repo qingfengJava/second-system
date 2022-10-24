@@ -1,17 +1,16 @@
-package com.qingfeng.cms.domain.module.entity;
+package com.qingfeng.cms.domain.module.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 
 /**
  * 学分认定模块表
@@ -26,11 +25,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@ApiModel(description = "学分认定模块实体")
-@TableName("crrm_credit_module")
-public class CreditModuleEntity extends Entity<Long> {
+@EqualsAndHashCode(callSuper = false)
+@ApiModel(value = "CCreditModuleVo",description = "学分认定模块实体")
+public class CreditModuleVo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@ApiModelProperty(value = "主键")
+	private Long id;
 
 	@ApiModelProperty(value = "外键  方案id")
 	private Long planId;
@@ -50,17 +52,4 @@ public class CreditModuleEntity extends Entity<Long> {
 	@ApiModelProperty(value = "年级（冗余字段，方便后面进行查询）")
 	private String grade;
 
-	@Builder
-	public CreditModuleEntity(Long id, LocalDateTime createTime, Long createUser,
-							  LocalDateTime updateTime, Long updateUser, Long planId,
-							  String moduleName, String moduleContent, Integer minScore,
-							  Integer year, String grade) {
-		super(id, createTime, createUser, updateTime, updateUser);
-		this.planId = planId;
-		this.moduleName = moduleName;
-		this.moduleContent = moduleContent;
-		this.minScore = minScore;
-		this.year = year;
-		this.grade = grade;
-	}
 }

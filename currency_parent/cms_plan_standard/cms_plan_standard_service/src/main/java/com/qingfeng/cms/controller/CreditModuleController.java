@@ -1,10 +1,22 @@
 package com.qingfeng.cms.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qingfeng.cms.biz.module.service.CreditModuleService;
+import com.qingfeng.cms.domain.module.dto.CreditModuleQueryDTO;
+import com.qingfeng.cms.domain.module.dto.CreditModuleSaveDTO;
+import com.qingfeng.cms.domain.module.dto.CreditModuleUpdateDTO;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.plan.entity.PlanEntity;
+import com.qingfeng.cms.domain.plan.vo.PlanVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -18,8 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.Map;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 学分认定模块表
@@ -38,53 +50,55 @@ public class CreditModuleController extends BaseController {
     @Autowired
     private CreditModuleService creditModuleService;
 
-    /**
-     * 列表
-     */
-    @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        //PageUtils page = creditModuleService.queryPage(params);
 
-        return success();
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "current", value = "当前页", dataType = "long", paramType = "query", defaultValue = "1"),
+            @ApiImplicitParam(name = "size", value = "每页显示几条", dataType = "long", paramType = "query", defaultValue = "10"),
+    })
+    @ApiOperation(value="分页查询学分认定模块列表", notes = "分页查询学分认定模块列表")
+    @GetMapping("/list")
+    public R<IPage<PlanVo>> list(CreditModuleQueryDTO creditModuleQueryDTO){
+        //分页查询，首先还是要分页查询启用的修读方案
+        IPage<PlanEntity> page = getPage();
+
+        IPage<PlanVo> iPage = creditModuleService.findList(page, creditModuleQueryDTO);
+
+        return success(iPage);
     }
 
-
-    /**
-     * 信息
-     */
+    @ApiOperation(value = "根据Id查询学分认定模块信息", notes = "根据Id查询学分认定模块信息")
     @GetMapping("/info/{moduleId}")
-    public R info(@PathVariable("moduleId") Long moduleId){
-		CreditModuleEntity creditModule = creditModuleService.getById(moduleId);
-
+    @SysLog("根据Id查询学分认定模块信息")
+    public R info(@ApiParam(value = "学分认定模块Id", required = true)
+                  @PathVariable("moduleId") @NotNull Long moduleId) {
+        CreditModuleEntity creditModule = creditModuleService.getById(moduleId);
         return success(creditModule);
     }
 
-    /**
-     * 保存
-     */
+    @ApiOperation(value = "保存学分认定模块信息", notes = "保存学分认定模块信息")
     @PostMapping("/save")
-    public R save(@RequestBody CreditModuleEntity creditModule){
-		creditModuleService.save(creditModule);
-
+    @SysLog("保存学分认定模块信息")
+    public R save(@ApiParam(value = "学分认定模块实体", required = true)
+                  @RequestBody @Validated CreditModuleSaveDTO creditModuleSaveDTO) {
+        creditModuleService.saveCreditModule(creditModuleSaveDTO);
         return success();
     }
 
-    /**
-     * 修改
-     */
+    @ApiOperation(value = "修改学分认定模块的信息", notes = "修改学分认定模块的信息")
     @PutMapping("/update")
-    public R update(@RequestBody CreditModuleEntity creditModule){
-		creditModuleService.updateById(creditModule);
-
+    @SysLog("修改学分认定模块的信息")
+    public R update(@ApiParam(value = "学分认定模块实体")
+                    @RequestBody @Validated(SuperEntity.Update.class) CreditModuleUpdateDTO creditModuleUpdateDTO) {
+        creditModuleService.updateCreditModuleById(creditModuleUpdateDTO);
         return success();
     }
 
-    /**
-     * 删除
-     */
-    @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] moduleIds){
-		creditModuleService.removeByIds(Arrays.asList(moduleIds));
+    @ApiOperation(value = "根据Id删除学分认定模块", notes = "根据Id删除学分认定模块")
+    @DeleteMapping
+    @SysLog("删除学分认定模块")
+    public R delete(@ApiParam(value = "学分认定模块Id", required = true)
+                    @RequestParam("ids[]") List<Long> ids) {
+        creditModuleService.removeByIds(ids);
 
         return success();
     }
