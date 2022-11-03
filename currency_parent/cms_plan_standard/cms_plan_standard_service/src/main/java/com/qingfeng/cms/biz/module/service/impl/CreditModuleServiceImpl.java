@@ -86,15 +86,15 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
                 .orderByDesc(PlanEntity::getYear)
                 .orderByDesc(PlanEntity::getGrade);
 
-        // TODO 还可能有其他的条件构造
-
         //分页条件查询出启用的方案
         planService.page(page, query);
         //为每个方案构造子集，模块
         List<PlanVo> planVoList= page.getRecords().stream().map(p -> {
             PlanVo planVo = dozer.map2(p, PlanVo.class);
+            // TODO 还可能有其他的条件构造
+            CreditModuleEntity creditModuleEntity = dozer.map2(creditModuleQueryDTO, CreditModuleEntity.class);
             // 封装方案下对应的模块
-            List<CreditModuleVo> moduleVoList = baseMapper.selectList(Wraps.lbQ(new CreditModuleEntity())
+            List<CreditModuleVo> moduleVoList = baseMapper.selectList(Wraps.lbQ(creditModuleEntity)
                             .eq(CreditModuleEntity::getPlanId, p.getId()))
                     .stream()
                     .map(c -> dozer.map2(c, CreditModuleVo.class))

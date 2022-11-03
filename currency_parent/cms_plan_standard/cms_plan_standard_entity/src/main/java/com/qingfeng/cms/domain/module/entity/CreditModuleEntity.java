@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.module.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
@@ -12,6 +13,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+
+import static com.baomidou.mybatisplus.annotation.SqlCondition.LIKE;
 
 /**
  * 学分认定模块表
@@ -36,6 +39,7 @@ public class CreditModuleEntity extends Entity<Long> {
 	private Long planId;
 
 	@ApiModelProperty(value = "模块名")
+	@TableField(value = "module_name", condition = LIKE)
 	private String moduleName;
 
 	@ApiModelProperty(value = "模块的内容")

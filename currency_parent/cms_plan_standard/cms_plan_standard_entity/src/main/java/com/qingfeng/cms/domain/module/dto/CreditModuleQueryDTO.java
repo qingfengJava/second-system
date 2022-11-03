@@ -24,16 +24,13 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "CCreditModuleQueryDTO",description = "学分认定模块实体")
+@ApiModel(value = "CreditModuleQueryDTO",description = "学分认定模块实体")
 public class CreditModuleQueryDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "模块名")
 	private String moduleName;
-
-	@ApiModelProperty(value = "该模块最少修读的学分（各模块最低分相加不能超过总学分）")
-	private Integer minScore;
 
 	@ApiModelProperty(value = "年份（冗余字段，方便后面查询）")
 	private Integer year;
