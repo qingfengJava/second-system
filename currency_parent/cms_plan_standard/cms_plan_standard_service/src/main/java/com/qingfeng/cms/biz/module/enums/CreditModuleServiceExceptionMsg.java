@@ -7,7 +7,8 @@ package com.qingfeng.cms.biz.module.enums;
  */
 public enum CreditModuleServiceExceptionMsg {
 
-    IS_EXISTENCE("学分认定模块已存在，请修改在保存！！!");
+    IS_EXISTENCE("学分认定模块已存在，请修改在保存！"),
+    OUTOF_MIN("模块最低所修学分之和不能超过方案总学分！");
 
     private String msg;
 

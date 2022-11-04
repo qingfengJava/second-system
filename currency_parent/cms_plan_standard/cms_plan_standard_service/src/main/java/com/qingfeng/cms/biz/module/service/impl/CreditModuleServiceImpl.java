@@ -117,11 +117,35 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
     }
 
     private void checkCreditModule(CreditModuleEntity creditModuleEntity) {
-        CreditModuleEntity creditModule = baseMapper.selectOne(Wraps.lbQ(new CreditModuleEntity())
+        //检查是否有重名的模块名出现
+        LbqWrapper<CreditModuleEntity> wrapper = Wraps.lbQ(new CreditModuleEntity())
                 .like(CreditModuleEntity::getModuleName, creditModuleEntity.getModuleName())
-                .eq(CreditModuleEntity::getPlanId, creditModuleEntity.getPlanId()));
+                .eq(CreditModuleEntity::getPlanId, creditModuleEntity.getPlanId());
+
+        LbqWrapper<CreditModuleEntity> lbqWrapper = Wraps.lbQ(new CreditModuleEntity())
+                .eq(CreditModuleEntity::getPlanId, creditModuleEntity.getPlanId());
+
+        if(!ObjectUtils.isEmpty(creditModuleEntity.getId())){
+            wrapper.ne(CreditModuleEntity::getId, creditModuleEntity.getId());
+            lbqWrapper.ne(CreditModuleEntity::getId, creditModuleEntity.getId());
+        }
+
+        CreditModuleEntity creditModule  = baseMapper.selectOne(wrapper);
         if (!ObjectUtils.isEmpty(creditModule)){
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), CreditModuleServiceExceptionMsg.IS_EXISTENCE.getMsg());
+        }
+
+        // 检查方案下的模块的总学分是否超过方案的总学分 方案Id是一定存在的
+        PlanEntity planEntity = planService.getOne(Wraps.lbQ(new PlanEntity())
+                .eq(PlanEntity::getId, creditModuleEntity.getPlanId()));
+
+        int minSum = baseMapper.selectList(lbqWrapper)
+                .stream()
+                .mapToInt(CreditModuleEntity::getMinScore)
+                .sum();
+
+        if (planEntity.getTotalScore() < (minSum + creditModuleEntity.getMinScore())){
+            throw new BizException(ExceptionCode.OPERATION_EX.getCode(), CreditModuleServiceExceptionMsg.OUTOF_MIN.getMsg());
         }
     }
 }
