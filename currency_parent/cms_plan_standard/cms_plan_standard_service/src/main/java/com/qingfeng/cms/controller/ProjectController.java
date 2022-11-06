@@ -1,10 +1,13 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.project.service.ProjectService;
+import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -42,8 +45,7 @@ public class ProjectController extends BaseController {
      * 列表
      */
     @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        //PageUtils page = projectService.queryPage(params);
+    public R list(@RequestParam Map<String, Object> params) {
 
         return success();
     }
@@ -53,19 +55,17 @@ public class ProjectController extends BaseController {
      * 信息
      */
     @GetMapping("/info/{projectId}")
-    public R info(@PathVariable("projectId") Long projectId){
-		ProjectEntity project = projectService.getById(projectId);
+    public R info(@PathVariable("projectId") Long projectId) {
+        ProjectEntity project = projectService.getById(projectId);
 
         return success(project);
     }
 
-    /**
-     * 保存
-     */
+    @ApiOperation(value = "添加模块项目", notes = "添加模块项目")
     @PostMapping("/save")
-    public R save(@RequestBody ProjectEntity project){
-		projectService.save(project);
-
+    public R save(@ApiParam(value = "方案实体", required = true)
+                  @RequestBody @Validated ProjectSaveDTO projectSaveDTO) {
+        projectService.saveProject(projectSaveDTO, getUserId());
         return success();
     }
 
@@ -73,8 +73,8 @@ public class ProjectController extends BaseController {
      * 修改
      */
     @PutMapping("/update")
-    public R update(@RequestBody ProjectEntity project){
-		projectService.updateById(project);
+    public R update(@RequestBody ProjectEntity project) {
+        projectService.updateById(project);
 
         return success();
     }
@@ -83,8 +83,8 @@ public class ProjectController extends BaseController {
      * 删除
      */
     @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] projectIds){
-		projectService.removeByIds(Arrays.asList(projectIds));
+    public R delete(@RequestBody Long[] projectIds) {
+        projectService.removeByIds(Arrays.asList(projectIds));
 
         return success();
     }

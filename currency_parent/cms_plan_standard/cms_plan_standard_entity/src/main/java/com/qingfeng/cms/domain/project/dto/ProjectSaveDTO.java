@@ -1,8 +1,5 @@
-package com.qingfeng.cms.domain.project.entity;
+package com.qingfeng.cms.domain.project.dto;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
 import com.qingfeng.currency.base.entity.Entity;
@@ -11,14 +8,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * 项目表
@@ -33,17 +30,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectEntity", description = "项目实体")
+@ApiModel(value = "ProjectSaveDTO", description = "项目实体")
 @TableName("crrm_project")
-public class ProjectEntity extends Entity<Long> {
+public class ProjectSaveDTO extends Entity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "绑定的模块id（外键）")
+	@NotNull(message = "模块Id不能为空")
 	private Long moduleId;
 
 	@ApiModelProperty(value = "项目的名字")
+	@NotEmpty(message = "项目的名字不能为空")
 	private String projectName;
 
 	@ApiModelProperty(value = "项目的备注内容")
@@ -53,6 +51,7 @@ public class ProjectEntity extends Entity<Long> {
 	private String department;
 
 	@ApiModelProperty(value = "项目类型  （校级、院级、一般项目   采用固定字符串表示）")
+	@NotEmpty(message = "项目类型不能为空")
 	@Enumerated(EnumType.STRING)
 	private ProjectTypeEnum projectType;
 
@@ -62,26 +61,4 @@ public class ProjectEntity extends Entity<Long> {
 	@ApiModelProperty(value = "审核结果，不审核的就是null")
 	private String checkDetail;
 
-	@TableLogic
-	@ApiModelProperty(value = "是否删除（0：未删除  1：已删除） 逻辑删除")
-	@TableField(fill = FieldFill.INSERT)
-	private Integer isDelete;
-
-	@Builder
-
-	public ProjectEntity(Long id, LocalDateTime createTime, Long createUser,
-						 LocalDateTime updateTime, Long updateUser, Long moduleId,
-						 String projectName, String remarks, String department,
-						 ProjectTypeEnum projectType, Integer isCheck, String checkDetail,
-						 Integer isDelete) {
-		super(id, createTime, createUser, updateTime, updateUser);
-		this.moduleId = moduleId;
-		this.projectName = projectName;
-		this.remarks = remarks;
-		this.department = department;
-		this.projectType = projectType;
-		this.isCheck = isCheck;
-		this.checkDetail = checkDetail;
-		this.isDelete = isDelete;
-	}
 }

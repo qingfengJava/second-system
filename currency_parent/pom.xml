@@ -142,7 +142,7 @@
         <qcloudsms.version>1.0.6</qcloudsms.version>
         <bce-java-sdk.version>0.10.21</bce-java-sdk.version>
         <jackson.version>2.13.3</jackson.version>
-
+        <version.hibernate-jpa-2.1-api>1.0.0.Final</version.hibernate-jpa-2.1-api>
 
         <hutool.version>5.1.0</hutool.version>
         <antisamy.version>1.5.7</antisamy.version>
@@ -434,6 +434,11 @@
                 <version>${easy-captcha.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>${version.hibernate-jpa-2.1-api}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

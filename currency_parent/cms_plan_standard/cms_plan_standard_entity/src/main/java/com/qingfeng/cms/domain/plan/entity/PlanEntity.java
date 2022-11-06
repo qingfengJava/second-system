@@ -32,7 +32,7 @@ import static com.baomidou.mybatisplus.annotation.SqlCondition.LIKE;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "PlanUpdateDTO", description = "方案设定实体")
+@ApiModel(value = "PlanEntity", description = "方案设定实体")
 @TableName("crrm_plan")
 public class PlanEntity extends Entity<Long> {
 

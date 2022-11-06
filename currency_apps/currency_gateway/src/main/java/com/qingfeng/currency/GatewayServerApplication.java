@@ -1,6 +1,5 @@
 package com.qingfeng.currency;
 
-//import com.qingfeng.currency.auth.client.EnableAuthClient;
 
 import com.qingfeng.currency.auth.client.EnableAuthClient;
 import org.springframework.boot.SpringApplication;
