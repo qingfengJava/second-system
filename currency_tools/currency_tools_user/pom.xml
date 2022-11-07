@@ -38,6 +38,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_jwt</artifactId>
+        </dependency>
 
     </dependencies>
 </project>

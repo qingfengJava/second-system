@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -51,11 +49,10 @@ public class ProjectSaveDTO extends Entity<Long> {
 	private String department;
 
 	@ApiModelProperty(value = "项目类型  （校级、院级、一般项目   采用固定字符串表示）")
-	@NotEmpty(message = "项目类型不能为空")
-	@Enumerated(EnumType.STRING)
+	//@Enumerated(EnumType.STRING)
 	private ProjectTypeEnum projectType;
 
-	@ApiModelProperty(value = "是否审核通过（用于二级学院提交的数据审核）")
+	@ApiModelProperty(value = "是否审核通过（用于二级学院提交的数据审核）0：未审核  1：已审核")
 	private Integer isCheck;
 
 	@ApiModelProperty(value = "审核结果，不审核的就是null")

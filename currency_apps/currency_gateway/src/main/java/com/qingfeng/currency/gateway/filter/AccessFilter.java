@@ -89,7 +89,7 @@ public class AccessFilter extends BaseFilter {
         // 第5步：如果包含当前的权限标识符，则从header中取出用户id，根据用户id取出
         // 缓存中的用户拥有的权限，如果没有取到则通过Feign调用权限服务获取并放入缓存，判
         // 断用户拥有的权限是否包含当前请求的权限标识符
-        String userId = exchange.getResponse().getHeaders().get(BaseContextConstants.JWT_KEY_USER_ID).get(0);
+        String userId = exchange.getRequest().getHeaders().get(BaseContextConstants.JWT_KEY_USER_ID).get(0);
         CacheObject cacheObject = cacheChannel.get(CacheKey.USER_RESOURCE, userId);
         List<String> userResource = (List<String>) cacheObject.getValue();
         // 如果从缓存获取不到当前用户的资源权限，需要查询数据库获取，然后再放入缓存

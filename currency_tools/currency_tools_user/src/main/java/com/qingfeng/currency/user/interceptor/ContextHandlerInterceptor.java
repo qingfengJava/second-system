@@ -19,10 +19,12 @@ import javax.servlet.http.HttpServletResponse;
  * 解析请求头数据， 将用户信息、应用信息封装到BaseContextHandler
  * 考虑请求来源是否网关（ip等）
  * <p>
+ *
  * @author 清风学Java
  */
 @Slf4j
 public class ContextHandlerInterceptor extends HandlerInterceptorAdapter {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {

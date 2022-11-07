@@ -47,6 +47,12 @@
             <artifactId>currency_tools_core</artifactId>
         </dependency>
 
+        <!-- openFeign SDK -->
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_sdk</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -104,10 +110,6 @@
         <dependency>
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_user</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.qingfeng</groupId>
-            <artifactId>currency_tools_jwt</artifactId>
         </dependency>
     </dependencies>
 

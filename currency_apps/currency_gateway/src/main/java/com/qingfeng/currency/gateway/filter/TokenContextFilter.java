@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -58,7 +57,7 @@ public class TokenContextFilter extends BaseFilter{
             return out(exchange.getResponse(), "解析token出错", R.FAIL_CODE, 200);
         }
 
-        //3, 将解析出的用户信息放入zuul的header中
+        //3, 将解析出的用户信息放入header中
         if (userInfo != null) {
             addHeader(exchange, BaseContextConstants.JWT_KEY_ACCOUNT,
                     userInfo.getAccount());
@@ -91,7 +90,6 @@ public class TokenContextFilter extends BaseFilter{
         if (StringUtils.isEmpty(value)) {
             return;
         }
-        ServerHttpResponse response = exchange.getResponse();
-        response.getHeaders().add(name, StrHelper.encode(value.toString()));
+        exchange.getRequest().mutate().header(name,StrHelper.encode(value.toString()));
     }
 }

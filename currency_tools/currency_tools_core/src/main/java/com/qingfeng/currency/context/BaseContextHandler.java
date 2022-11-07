@@ -13,6 +13,7 @@ import java.util.Map;
  * @author 清风学Java
  */
 public class BaseContextHandler {
+
     private static final ThreadLocal<Map<String, String>> THREAD_LOCAL = new ThreadLocal<>();
 
     public static void set(String key, Long value) {
