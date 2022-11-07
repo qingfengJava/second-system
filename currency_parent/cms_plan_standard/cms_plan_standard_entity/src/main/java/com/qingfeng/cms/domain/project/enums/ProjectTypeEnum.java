@@ -1,7 +1,11 @@
 package com.qingfeng.cms.domain.project.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qingfeng.currency.base.BaseEnum;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author 清风学Java
@@ -10,11 +14,19 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ProjectTypeEnum {
+@NoArgsConstructor
+@ApiModel(value = "projectTypeEnum", description = "项目级别-枚举")
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum ProjectTypeEnum implements BaseEnum {
 
     SCHOOL_ITEMS("校级项目"),
     INSTITUTE_ITEMS("院级项目"),
     GENERAL_ITEMS("一般项目");
 
     private String projectType;
+
+    @Override
+    public String getDesc() {
+        return this.name();
+    }
 }

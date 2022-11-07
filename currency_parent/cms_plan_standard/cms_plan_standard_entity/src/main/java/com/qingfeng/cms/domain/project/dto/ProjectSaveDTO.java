@@ -1,19 +1,19 @@
 package com.qingfeng.cms.domain.project.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
-import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 项目表
@@ -28,9 +28,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ProjectSaveDTO", description = "项目实体")
-@TableName("crrm_project")
-public class ProjectSaveDTO extends Entity<Long> {
+public class ProjectSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public class ProjectSaveDTO extends Entity<Long> {
 	private String department;
 
 	@ApiModelProperty(value = "项目类型  （校级、院级、一般项目   采用固定字符串表示）")
-	//@Enumerated(EnumType.STRING)
+//	@Enumerated(EnumType.STRING)
 	private ProjectTypeEnum projectType;
 
 	@ApiModelProperty(value = "是否审核通过（用于二级学院提交的数据审核）0：未审核  1：已审核")
