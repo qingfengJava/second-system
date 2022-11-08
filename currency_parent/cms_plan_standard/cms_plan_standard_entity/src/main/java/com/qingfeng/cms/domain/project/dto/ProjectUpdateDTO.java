@@ -2,6 +2,7 @@ package com.qingfeng.cms.domain.project.dto;
 
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
+import com.qingfeng.currency.base.entity.SuperEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -32,17 +33,21 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectSaveDTO", description = "项目实体")
-public class ProjectSaveDTO implements Serializable {
+@ApiModel(value = "ProjectUpdateDTO", description = "项目实体")
+public class ProjectUpdateDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@ApiModelProperty(value = "主键")
+	@NotNull(message = "id不能为空", groups = SuperEntity.Update.class)
+	private Long id;
 
 	@ApiModelProperty(value = "绑定的模块id（外键）")
 	@NotNull(message = "模块Id不能为空")
 	private Long moduleId;
 
 	@ApiModelProperty(value = "项目的名字")
-	@NotEmpty(message = "项目的名字不能为空")
+	@NotEmpty(message = "项目名字不能为空")
 	private String projectName;
 
 	@ApiModelProperty(value = "项目的备注内容")

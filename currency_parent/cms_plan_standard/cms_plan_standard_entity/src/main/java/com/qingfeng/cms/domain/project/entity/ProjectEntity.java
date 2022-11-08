@@ -1,8 +1,5 @@
 package com.qingfeng.cms.domain.project.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
@@ -60,17 +57,15 @@ public class ProjectEntity extends Entity<Long> {
 	@ApiModelProperty(value = "审核结果，不审核的就是null")
 	private String checkDetail;
 
-	@TableLogic
-	@ApiModelProperty(value = "是否删除（0：未删除  1：已删除） 逻辑删除")
-	@TableField(fill = FieldFill.INSERT)
-	private Integer isDelete;
+	@ApiModelProperty(value = "是否启用（0：未启用 1：启用）")
+	private Integer isEnable;
 
 	@Builder
 	public ProjectEntity(Long id, LocalDateTime createTime, Long createUser,
 						 LocalDateTime updateTime, Long updateUser, Long moduleId,
 						 String projectName, String remarks, String department,
 						 ProjectTypeEnum projectType, ProjectCheckEnum isCheck, String checkDetail,
-						 Integer isDelete) {
+						 Integer isEnable) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.moduleId = moduleId;
 		this.projectName = projectName;
@@ -79,6 +74,6 @@ public class ProjectEntity extends Entity<Long> {
 		this.projectType = projectType;
 		this.isCheck = isCheck;
 		this.checkDetail = checkDetail;
-		this.isDelete = isDelete;
+		this.isEnable = isEnable;
 	}
 }

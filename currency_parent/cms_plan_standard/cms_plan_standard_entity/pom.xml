@@ -13,24 +13,6 @@
     <description>方案认定服务实体模块</description>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.qingfeng</groupId>-->
-<!--            <artifactId>currency_tools_common</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.springfox</groupId>-->
-<!--            <artifactId>springfox-core</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus</artifactId>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.javax.persistence</groupId>-->
-<!--            <artifactId>hibernate-jpa-2.1-api</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_common</artifactId>

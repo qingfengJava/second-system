@@ -11,6 +11,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -55,6 +56,8 @@ public class PlanSaveDTO implements Serializable {
     private Integer applicationObject;
 
     @NotNull(message = "是否启用不能为空")
+    @Min(0)
+    @Max(1)
     @ApiModelProperty(value = "是否启用改方案（0：未启用   1：启用）")
     private Integer isEnable;
 

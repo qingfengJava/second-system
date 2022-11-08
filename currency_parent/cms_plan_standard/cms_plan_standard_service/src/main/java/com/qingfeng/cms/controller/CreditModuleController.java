@@ -98,6 +98,7 @@ public class CreditModuleController extends BaseController {
     @SysLog("删除学分认定模块")
     public R delete(@ApiParam(value = "学分认定模块Id", required = true)
                     @RequestParam("ids[]") List<Long> ids) {
+        // TODO 删除的时候要将关联的项目等都删除
         creditModuleService.removeByIds(ids);
 
         return success();

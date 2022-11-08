@@ -44,6 +44,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
+        this.setFieldValByName("is_deleted", 0, metaObject);
         boolean flag = true;
         if (metaObject.getOriginalObject() instanceof SuperEntity) {
             Object oldId = ((SuperEntity) metaObject.getOriginalObject()).getId();

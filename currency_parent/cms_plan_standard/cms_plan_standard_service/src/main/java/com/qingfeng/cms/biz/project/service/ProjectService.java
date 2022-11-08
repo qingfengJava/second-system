@@ -2,6 +2,7 @@ package com.qingfeng.cms.biz.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
+import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 
 /**
@@ -19,5 +20,12 @@ public interface ProjectService extends IService<ProjectEntity> {
      * @param userId
      */
     void saveProject(ProjectSaveDTO projectSaveDTO, Long userId);
+
+    /**
+     * 修改模块项目内容
+     * @param projectUpdateDTO
+     * @param userId
+     */
+    void updateProjectById(ProjectUpdateDTO projectUpdateDTO, Long userId);
 }
 
