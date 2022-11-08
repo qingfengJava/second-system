@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
@@ -16,8 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 /**
@@ -53,11 +52,10 @@ public class ProjectEntity extends Entity<Long> {
 	private String department;
 
 	@ApiModelProperty(value = "项目类型  （校级、院级、一般项目   采用固定字符串表示）")
-	@Enumerated(EnumType.STRING)
 	private ProjectTypeEnum projectType;
 
-	@ApiModelProperty(value = "是否审核通过（用于二级学院提交的数据审核）")
-	private Integer isCheck;
+	@ApiModelProperty(value = "是否审核通过（用于二级学院提交的数据审核）枚举类型")
+	private ProjectCheckEnum isCheck;
 
 	@ApiModelProperty(value = "审核结果，不审核的就是null")
 	private String checkDetail;
@@ -68,11 +66,10 @@ public class ProjectEntity extends Entity<Long> {
 	private Integer isDelete;
 
 	@Builder
-
 	public ProjectEntity(Long id, LocalDateTime createTime, Long createUser,
 						 LocalDateTime updateTime, Long updateUser, Long moduleId,
 						 String projectName, String remarks, String department,
-						 ProjectTypeEnum projectType, Integer isCheck, String checkDetail,
+						 ProjectTypeEnum projectType, ProjectCheckEnum isCheck, String checkDetail,
 						 Integer isDelete) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.moduleId = moduleId;

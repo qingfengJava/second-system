@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.project.dto;
 
+import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -49,11 +50,10 @@ public class ProjectSaveDTO implements Serializable {
 	private String department;
 
 	@ApiModelProperty(value = "项目类型  （校级、院级、一般项目   采用固定字符串表示）")
-//	@Enumerated(EnumType.STRING)
 	private ProjectTypeEnum projectType;
 
-	@ApiModelProperty(value = "是否审核通过（用于二级学院提交的数据审核）0：未审核  1：已审核")
-	private Integer isCheck;
+	@ApiModelProperty(value = "是否审核通过（用于二级学院提交的数据审核）枚举类型")
+	private ProjectCheckEnum isCheck;
 
 	@ApiModelProperty(value = "审核结果，不审核的就是null")
 	private String checkDetail;

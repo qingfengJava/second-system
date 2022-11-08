@@ -31,6 +31,10 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_log</artifactId>
+        </dependency>
 
     </dependencies>
 

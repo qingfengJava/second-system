@@ -116,7 +116,6 @@ public class OptLog extends SuperEntity<Long> {
      * 返回值
      */
     @ApiModelProperty(value = "返回值")
-
     @TableField("result")
     private String result;
 
@@ -124,7 +123,6 @@ public class OptLog extends SuperEntity<Long> {
      * 异常详情信息
      */
     @ApiModelProperty(value = "异常详情信息")
-
     @TableField("ex_desc")
     private String exDesc;
 
@@ -132,7 +130,6 @@ public class OptLog extends SuperEntity<Long> {
      * 异常描述
      */
     @ApiModelProperty(value = "异常描述")
-
     @TableField("ex_detail")
     private String exDetail;
 

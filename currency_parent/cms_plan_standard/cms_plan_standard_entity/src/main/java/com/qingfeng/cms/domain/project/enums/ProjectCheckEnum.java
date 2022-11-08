@@ -16,19 +16,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "projectTypeEnum", description = "项目级别-枚举")
+@ApiModel(value = "ProjectCheckEnum", description = "项目审核-枚举")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum ProjectTypeEnum implements BaseEnum {
+public enum ProjectCheckEnum implements BaseEnum {
 
-    SCHOOL_ITEMS("校级项目"),
-    INSTITUTE_ITEMS("院级项目"),
-    GENERAL_ITEMS("一般项目");
+    INIT("待审核"),
+    IS_FINISHED("已审核"),
+    FAILED("未通过");
 
     @ApiModelProperty(value = "描述")
     private String desc;
 
-    public static ProjectTypeEnum match(String val, ProjectTypeEnum def) {
-        for (ProjectTypeEnum enm : ProjectTypeEnum.values()) {
+    public static ProjectCheckEnum match(String val, ProjectCheckEnum def) {
+        for (ProjectCheckEnum enm : ProjectCheckEnum.values()) {
             if (enm.name().equalsIgnoreCase(val)) {
                 return enm;
             }
@@ -36,7 +36,7 @@ public enum ProjectTypeEnum implements BaseEnum {
         return def;
     }
 
-    public static ProjectTypeEnum get(String val) {
+    public static ProjectCheckEnum get(String val) {
         return match(val, null);
     }
 
@@ -44,7 +44,7 @@ public enum ProjectTypeEnum implements BaseEnum {
         return this.name().equalsIgnoreCase(val);
     }
 
-    public boolean eq(ProjectTypeEnum val) {
+    public boolean eq(ProjectCheckEnum val) {
         if (val == null) {
             return false;
         }
@@ -52,7 +52,7 @@ public enum ProjectTypeEnum implements BaseEnum {
     }
 
     @Override
-    @ApiModelProperty(value = "编码", allowableValues = "SCHOOL_ITEMS,INSTITUTE_ITEMS,GENERAL_ITEMS", example = "SCHOOL_ITEMS")
+    @ApiModelProperty(value = "编码", allowableValues = "INIT,IS_FINISHED,FAILED", example = "INIT")
     public String getDesc() {
         return this.name();
     }

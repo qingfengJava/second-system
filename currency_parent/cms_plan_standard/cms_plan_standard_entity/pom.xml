@@ -13,22 +13,48 @@
     <description>方案认定服务实体模块</description>
 
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>com.qingfeng</groupId>-->
+<!--            <artifactId>currency_tools_common</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.springfox</groupId>-->
+<!--            <artifactId>springfox-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.baomidou</groupId>-->
+<!--            <artifactId>mybatis-plus</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate.javax.persistence</groupId>-->
+<!--            <artifactId>hibernate-jpa-2.1-api</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_common</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-core</artifactId>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_jwt</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
         </dependency>
 
+        <!-- Role 中字段的类型需要使用 DataScopeType -->
         <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_databases</artifactId>
+            <optional>true</optional>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

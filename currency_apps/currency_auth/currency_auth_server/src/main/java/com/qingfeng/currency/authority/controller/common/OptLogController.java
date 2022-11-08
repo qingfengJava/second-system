@@ -8,6 +8,7 @@ import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.log.annotation.SysLog;
+import com.qingfeng.currency.log.entity.OptLogDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -18,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,5 +74,12 @@ public class OptLogController extends BaseController {
     public R<Boolean> delete(@RequestParam("ids[]") List<Long> ids) {
         optLogService.removeByIds(ids);
         return success(true);
+    }
+
+    @ApiOperation(value = "保存操作日志",notes = "保存操作日志")
+    @PostMapping
+    @SysLog("保存操作日志")
+    public void save(@RequestBody OptLogDTO optLogDTO){
+        optLogService.save(optLogDTO);
     }
 }

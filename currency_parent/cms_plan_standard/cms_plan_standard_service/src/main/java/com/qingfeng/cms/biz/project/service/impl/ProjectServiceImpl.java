@@ -5,6 +5,7 @@ import com.qingfeng.cms.biz.project.dao.ProjectDao;
 import com.qingfeng.cms.biz.project.service.ProjectService;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
+import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.dozer.DozerUtils;
@@ -44,7 +45,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     @Override
     @Transactional(rollbackFor = BizException.class)
     public void saveProject(ProjectSaveDTO projectSaveDTO, Long userId) {
-        System.out.println(projectSaveDTO);
         ProjectEntity projectEntity = dozer.map2(projectSaveDTO, ProjectEntity.class);
         // TODO 需要判断用户角色，如果是二级学院领导（YUAN_LEVEL_LEADER），那么申报的项目就需要审核
         R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.STU_OFFICE_ADMIN.name()});
@@ -54,9 +54,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
             //封装信息
             projectEntity.setDepartment("sj");
-            projectEntity.setIsCheck(0);
+            projectEntity.setIsCheck(ProjectCheckEnum.INIT);
         } else {
-            projectEntity.setIsCheck(1);
+            projectEntity.setIsCheck(ProjectCheckEnum.IS_FINISHED);
         }
     }
 }
