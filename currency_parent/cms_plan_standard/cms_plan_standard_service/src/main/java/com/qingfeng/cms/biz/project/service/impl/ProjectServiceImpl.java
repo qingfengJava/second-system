@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.project.dao.ProjectDao;
 import com.qingfeng.cms.biz.project.enums.ProjectExceptionMsg;
 import com.qingfeng.cms.biz.project.service.ProjectService;
+import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
+import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -101,6 +103,21 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         }
 
         baseMapper.updateById(projectEntity);
+    }
+
+    /**
+     * 查询项目学分列表
+     *  1、按条件进行筛选，
+     *  2、排序
+     * @param projectQueryDTO
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public List<ProjectListVo> findList(ProjectQueryDTO projectQueryDTO) {
+        List<ProjectListVo> projectListVo = baseMapper.selectAllList(projectQueryDTO);
+        // TODO 封装等级学分
+
+        return projectListVo;
     }
 
     /**

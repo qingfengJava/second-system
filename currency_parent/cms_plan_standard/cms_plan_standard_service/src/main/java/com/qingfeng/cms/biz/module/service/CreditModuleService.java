@@ -7,7 +7,10 @@ import com.qingfeng.cms.domain.module.dto.CreditModuleSaveDTO;
 import com.qingfeng.cms.domain.module.dto.CreditModuleUpdateDTO;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
+import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.cms.domain.plan.vo.PlanVo;
+
+import java.util.List;
 
 /**
  * 学分认定模块表
@@ -37,5 +40,11 @@ public interface CreditModuleService extends IService<CreditModuleEntity> {
      * @return
      */
     IPage<PlanVo> findList(IPage<PlanEntity> page, CreditModuleQueryDTO creditModuleQueryDTO);
+
+    /**
+     * 查询全部方案及关联的模块信息，并按年级进行排序
+     * @return
+     */
+    List<PlanTreeRo> findPlanAndModule();
 }
 

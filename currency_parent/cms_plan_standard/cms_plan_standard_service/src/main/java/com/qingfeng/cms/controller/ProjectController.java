@@ -1,9 +1,11 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.project.service.ProjectService;
+import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
+import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
@@ -21,11 +23,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 /**
  * 项目表
@@ -44,13 +45,12 @@ public class ProjectController extends BaseController {
     @Autowired
     private ProjectService projectService;
 
-    /**
-     * 列表
-     */
+    @ApiOperation(value="查询项目学分列表", notes = "查询项目学分列表")
     @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params) {
-
-        return success();
+    @SysLog("查询项目学分列表")
+    public R<List<ProjectListVo>> list(@Validated ProjectQueryDTO projectQueryDTO) {
+        List<ProjectListVo> list = projectService.findList(projectQueryDTO);
+        return success(list);
     }
 
 

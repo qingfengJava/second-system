@@ -7,6 +7,7 @@ import com.qingfeng.cms.domain.module.dto.CreditModuleSaveDTO;
 import com.qingfeng.cms.domain.module.dto.CreditModuleUpdateDTO;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
+import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.cms.domain.plan.vo.PlanVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
@@ -50,13 +51,13 @@ public class CreditModuleController extends BaseController {
     @Autowired
     private CreditModuleService creditModuleService;
 
-
     @ApiImplicitParams({
             @ApiImplicitParam(name = "current", value = "当前页", dataType = "long", paramType = "query", defaultValue = "1"),
             @ApiImplicitParam(name = "size", value = "每页显示几条", dataType = "long", paramType = "query", defaultValue = "10"),
     })
     @ApiOperation(value="分页查询学分认定模块列表", notes = "分页查询学分认定模块列表")
     @GetMapping("/list")
+    @SysLog("分页查询学分认定模块列表")
     public R<IPage<PlanVo>> list(CreditModuleQueryDTO creditModuleQueryDTO){
         //分页查询，首先还是要分页查询启用的修读方案
         IPage<PlanEntity> page = getPage();
@@ -65,6 +66,15 @@ public class CreditModuleController extends BaseController {
 
         return success(iPage);
     }
+
+    @ApiOperation(value="查询所有方案和模块内容，并分组排序", notes = "查询所有方案和模块内容，并分组排序")
+    @GetMapping("/findPlanAndModule")
+    @SysLog("分页查询学分认定模块列表")
+    public R<List<PlanTreeRo>> findPlanAndModule(){
+        List<PlanTreeRo> planTreeRoList = creditModuleService.findPlanAndModule();
+        return success(planTreeRoList);
+    }
+
 
     @ApiOperation(value = "根据Id查询学分认定模块信息", notes = "根据Id查询学分认定模块信息")
     @GetMapping("/info/{moduleId}")

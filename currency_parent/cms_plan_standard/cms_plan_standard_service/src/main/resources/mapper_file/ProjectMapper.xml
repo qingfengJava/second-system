@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingfeng.cms.biz.project.dao.ProjectDao">
+
+    <!-- 查询所有项目学分集合 -->
+    <select id="selectAllList"
+            resultType="com.qingfeng.cms.domain.project.vo.ProjectListVo">
+        SELECT id,
+               module_id,
+               project_name,
+               remarks,
+               department,
+               project_type,
+               is_check,
+               check_detail,
+               is_enable,
+               create_time,
+               create_user,
+               update_time,
+               update_user
+        FROM crrm_project
+        WHERE
+        module_id = #{projectQueryDTO.moduleId}
+        <if test="projectQueryDTO.projectName != null">
+            and project_name like concat('%',#{projectQueryDTO.projectName},'%')
+        </if>
+        <if test="projectQueryDTO.department != null">
+            and department = #{projectQueryDTO.department}
+        </if>
+        <if test="projectQueryDTO.projectType != null">
+            and project_type = #{projectQueryDTO.projectType}
+        </if>
+        <if test="projectQueryDTO.isCheck != null">
+            and is_check = #{projectQueryDTO.isCheck}
+        </if>
+        <if test="projectQueryDTO.isEnable != null">
+            and is_enable = #{projectQueryDTO.isEnable}
+        </if>
+        AND
+        ORDER BY CASE
+        is_check
+        WHEN 'IS_FINISHED' THEN
+        1
+        WHEN 'INIT' THEN
+        2
+        ELSE 3
+        END,
+        CASE
+        is_enable
+        WHEN 1 THEN
+        1
+        ELSE 2
+        END
+    </select>
+</mapper>

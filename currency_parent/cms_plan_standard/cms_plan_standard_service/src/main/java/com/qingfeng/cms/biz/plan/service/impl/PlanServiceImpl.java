@@ -47,7 +47,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
         if (plan.getIsEnable().equals(PlanIsEnable.ENABLE_TURE.getEnable())) {
             //查询数据库里面是否已经有启用的方案
             PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
-                    .eq(PlanEntity::getYear, plan.getYear())
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, plan.getIsEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject()));
@@ -67,7 +66,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
         }else{
             //如果是不启用的，那么先查询是否有父类
             PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
-                    .eq(PlanEntity::getYear, plan.getYear())
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject()));
@@ -105,7 +103,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
             }
             // 没有关联，要取消启用，就需要修改其子类的父级Id
             baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
-                    .eq(PlanEntity::getYear, plan.getYear())
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
@@ -116,7 +113,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
 
             //要修改成启用的 is_Enable == 1 的情况，先查看以前是否有启用的情况
             PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
-                    .eq(PlanEntity::getYear, plan.getYear())
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, plan.getIsEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject()));
@@ -137,7 +133,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
 
             // 在启用改方案之后，需要设置子类的父级Id
             baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
-                    .eq(PlanEntity::getYear, plan.getYear())
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())

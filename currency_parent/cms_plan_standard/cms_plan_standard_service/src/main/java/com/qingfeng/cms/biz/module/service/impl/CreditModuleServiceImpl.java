@@ -12,8 +12,10 @@ import com.qingfeng.cms.domain.module.dto.CreditModuleQueryDTO;
 import com.qingfeng.cms.domain.module.dto.CreditModuleSaveDTO;
 import com.qingfeng.cms.domain.module.dto.CreditModuleUpdateDTO;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.module.ro.ModuleTreeRo;
 import com.qingfeng.cms.domain.module.vo.CreditModuleVo;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
+import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.cms.domain.plan.vo.PlanVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
@@ -49,6 +51,7 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
 
     /**
      * 保存学分认定模块：要判断模块名是否重复
+     *
      * @param creditModuleSaveDTO
      */
     @Override
@@ -61,6 +64,7 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
 
     /**
      * 修改学分认定模块信息：要判断是否修改成重复的信息
+     *
      * @param creditModuleUpdateDTO
      */
     @Override
@@ -73,6 +77,7 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
 
     /**
      * 查询方案下的学分认定模块集合
+     *
      * @param page
      * @param creditModuleQueryDTO
      * @return
@@ -89,7 +94,7 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         //分页条件查询出启用的方案
         planService.page(page, query);
         //为每个方案构造子集，模块
-        List<PlanVo> planVoList= page.getRecords().stream().map(p -> {
+        List<PlanVo> planVoList = page.getRecords().stream().map(p -> {
             PlanVo planVo = dozer.map2(p, PlanVo.class);
             // TODO 还可能有其他的条件构造
             CreditModuleEntity creditModuleEntity = dozer.map2(creditModuleQueryDTO, CreditModuleEntity.class);
@@ -116,6 +121,47 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         return iPage;
     }
 
+    /**
+     * 查询全部方案及关联的模块信息，并按年级进行分组排序
+     *
+     * @return
+     */
+    @Override
+    public List<PlanTreeRo> findPlanAndModule() {
+        // 构建值不为null的查询条件
+        LbqWrapper<PlanEntity> query = Wraps.lbQ(new PlanEntity())
+                .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable())
+                .orderByDesc(PlanEntity::getGrade)
+                .orderByAsc(PlanEntity::getApplicationObject);
+
+        //分页条件查询出启用的方案
+        List<PlanEntity> planEntityList = planService.list(query);
+        List<PlanTreeRo> planTreeRoList = planEntityList.stream().map(p -> PlanTreeRo.builder()
+                        .id(p.getId())
+                        .planModuleLabel(p.getGrade() + "（"+
+                                (p.getApplicationObject() == 1 ? "本科":"专科")
+                                +"）—" + p.getPlanName())
+                        .build())
+                .collect(Collectors.toList());
+
+        //为每个方案构造子集，模块
+        planTreeRoList.forEach(p -> {
+            // 封装方案下对应的模块
+            List<ModuleTreeRo> moduleTreeRoList = baseMapper.selectList(Wraps.lbQ(new CreditModuleEntity())
+                            .eq(CreditModuleEntity::getPlanId, p.getId()))
+                    .stream()
+                    .map(c -> ModuleTreeRo.builder()
+                            .id(c.getId())
+                            .planModuleLabel(c.getModuleName())
+                            .build())
+                    .collect(Collectors.toList());
+
+            p.setChildren(moduleTreeRoList);
+        });
+
+        return planTreeRoList;
+    }
+
     private void checkCreditModule(CreditModuleEntity creditModuleEntity) {
         //检查是否有重名的模块名出现
         LbqWrapper<CreditModuleEntity> wrapper = Wraps.lbQ(new CreditModuleEntity())
@@ -125,13 +171,13 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         LbqWrapper<CreditModuleEntity> lbqWrapper = Wraps.lbQ(new CreditModuleEntity())
                 .eq(CreditModuleEntity::getPlanId, creditModuleEntity.getPlanId());
 
-        if(!ObjectUtils.isEmpty(creditModuleEntity.getId())){
+        if (!ObjectUtils.isEmpty(creditModuleEntity.getId())) {
             wrapper.ne(CreditModuleEntity::getId, creditModuleEntity.getId());
             lbqWrapper.ne(CreditModuleEntity::getId, creditModuleEntity.getId());
         }
 
-        CreditModuleEntity creditModule  = baseMapper.selectOne(wrapper);
-        if (!ObjectUtils.isEmpty(creditModule)){
+        CreditModuleEntity creditModule = baseMapper.selectOne(wrapper);
+        if (!ObjectUtils.isEmpty(creditModule)) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), CreditModuleServiceExceptionMsg.IS_EXISTENCE.getMsg());
         }
 
@@ -144,7 +190,7 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
                 .mapToInt(CreditModuleEntity::getMinScore)
                 .sum();
 
-        if (planEntity.getTotalScore() < (minSum + creditModuleEntity.getMinScore())){
+        if (planEntity.getTotalScore() < (minSum + creditModuleEntity.getMinScore())) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), CreditModuleServiceExceptionMsg.OUTOF_MIN.getMsg());
         }
     }

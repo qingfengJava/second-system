@@ -21,6 +21,7 @@
         <module>cms_file</module>
         <module>cms_plan_standard</module>
         <module>currency_sdk</module>
+        <module>cms_sms</module>
     </modules>
 
     <licenses>

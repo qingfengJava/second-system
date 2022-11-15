@@ -1,9 +1,13 @@
 package com.qingfeng.cms.biz.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
+import com.qingfeng.cms.domain.project.vo.ProjectListVo;
+
+import java.util.List;
 
 /**
  * 项目表
@@ -27,5 +31,12 @@ public interface ProjectService extends IService<ProjectEntity> {
      * @param userId
      */
     void updateProjectById(ProjectUpdateDTO projectUpdateDTO, Long userId);
+
+    /**
+     * 查询项目学分列表
+     * @param projectQueryDTO
+     * @return List<ProjectListVo>
+     */
+    List<ProjectListVo> findList(ProjectQueryDTO projectQueryDTO);
 }
 

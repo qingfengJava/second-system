@@ -23,6 +23,7 @@
         <module>currency_parent</module>
         <module>currency_apps</module>
         <module>currency_tools</module>
+        <module>cms_oss</module>
     </modules>
 
     <packaging>pom</packaging>
