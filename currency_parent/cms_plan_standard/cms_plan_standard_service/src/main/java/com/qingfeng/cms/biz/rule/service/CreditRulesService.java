@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.rule.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.rule.dto.CreditRulesSaveDTO;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 
 /**
@@ -12,5 +13,11 @@ import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
  */
 public interface CreditRulesService extends IService<CreditRulesEntity> {
 
+    /**
+     * 保存学分细则信息
+     * @param creditRulesSaveDTO
+     * @param userId
+     */
+    void saveCreditRules(CreditRulesSaveDTO creditRulesSaveDTO, Long userId);
 }
 

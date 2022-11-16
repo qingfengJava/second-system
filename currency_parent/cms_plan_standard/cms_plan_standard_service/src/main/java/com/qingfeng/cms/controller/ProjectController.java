@@ -46,9 +46,9 @@ public class ProjectController extends BaseController {
     private ProjectService projectService;
 
     @ApiOperation(value="查询项目学分列表", notes = "查询项目学分列表")
-    @GetMapping("/list")
+    @PostMapping("/list")
     @SysLog("查询项目学分列表")
-    public R<List<ProjectListVo>> list(@Validated ProjectQueryDTO projectQueryDTO) {
+    public R<List<ProjectListVo>> list(@RequestBody @Validated ProjectQueryDTO projectQueryDTO) {
         List<ProjectListVo> list = projectService.findList(projectQueryDTO);
         return success(list);
     }

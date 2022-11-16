@@ -38,7 +38,6 @@
         <if test="projectQueryDTO.isEnable != null">
             and is_enable = #{projectQueryDTO.isEnable}
         </if>
-        AND
         ORDER BY CASE
         is_check
         WHEN 'IS_FINISHED' THEN

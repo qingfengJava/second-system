@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.project.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
@@ -15,6 +16,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+
+import static com.baomidou.mybatisplus.annotation.SqlCondition.LIKE;
 
 /**
  * 项目表
@@ -40,6 +43,7 @@ public class ProjectEntity extends Entity<Long> {
 	private Long moduleId;
 
 	@ApiModelProperty(value = "项目的名字")
+	@TableField(value = "project_name", condition = LIKE)
 	private String projectName;
 
 	@ApiModelProperty(value = "项目的备注内容")

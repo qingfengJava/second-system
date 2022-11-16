@@ -140,7 +140,7 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
                         .id(p.getId())
                         .planModuleLabel(p.getGrade() + "（"+
                                 (p.getApplicationObject() == 1 ? "本科":"专科")
-                                +"）—" + p.getPlanName())
+                                +"）" + p.getPlanName())
                         .build())
                 .collect(Collectors.toList());
 

@@ -128,7 +128,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     private void checkProject(ProjectEntity projectEntity) {
         ProjectEntity project = baseMapper.selectOne(Wraps.lbQ(new ProjectEntity())
                 .eq(ProjectEntity::getModuleId, projectEntity.getModuleId())
-                .eq(ProjectEntity::getProjectName, projectEntity.getProjectName()));
+                .like(ProjectEntity::getProjectName, projectEntity.getProjectName()));
         if (!ObjectUtils.isEmpty(project)) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.IS_EXISTS.getMsg());
         }

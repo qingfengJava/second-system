@@ -1,10 +1,13 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.level.service.LevelService;
+import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -43,7 +46,6 @@ public class LevelController extends BaseController {
      */
     @GetMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        //PageUtils page = levelService.queryPage(params);
 
         return success();
     }
@@ -59,13 +61,11 @@ public class LevelController extends BaseController {
         return success(level);
     }
 
-    /**
-     * 保存
-     */
+    @ApiOperation(value = "保存项目等级信息", notes = "保存项目等级信息")
     @PostMapping("/save")
-    public R save(@RequestBody LevelEntity level){
-		levelService.save(level);
-
+    @SysLog("保存项目等级信息")
+    public R save(@RequestBody @Validated LevelSaveDTO levelSaveDTO){
+		levelService.saveLevel(levelSaveDTO, getUserId());
         return success();
     }
 
