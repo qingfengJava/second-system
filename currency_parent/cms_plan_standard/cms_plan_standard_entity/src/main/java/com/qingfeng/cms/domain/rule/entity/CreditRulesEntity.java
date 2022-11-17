@@ -44,7 +44,7 @@ public class CreditRulesEntity extends Entity<Long> {
 	private CreditRulesScoreGradeEnum scoreGrade;
 
 	@ApiModelProperty(value = "分数条件字段，没有就是无")
-	private String condition;
+	private String conditions;
 
 	@ApiModelProperty(value = "是否通过审核，只有院级一下才需要审核，默认通过")
 	private RuleCheckEnum isCheck;
@@ -56,12 +56,12 @@ public class CreditRulesEntity extends Entity<Long> {
 	public CreditRulesEntity(Long id, LocalDateTime createTime, Long createUser,
 							 LocalDateTime updateTime, Long updateUser,
 							 Long levelId, Double score, CreditRulesScoreGradeEnum scoreGrade,
-							 String condition, RuleCheckEnum isCheck, String checkDetail) {
+							 String conditions, RuleCheckEnum isCheck, String checkDetail) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.levelId = levelId;
 		this.score = score;
 		this.scoreGrade = scoreGrade;
-		this.condition = condition;
+		this.conditions = conditions;
 		this.isCheck = isCheck;
 		this.checkDetail = checkDetail;
 	}

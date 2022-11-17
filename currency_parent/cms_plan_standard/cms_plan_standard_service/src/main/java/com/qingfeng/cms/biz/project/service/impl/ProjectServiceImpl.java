@@ -1,15 +1,21 @@
 package com.qingfeng.cms.biz.project.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.biz.project.dao.ProjectDao;
 import com.qingfeng.cms.biz.project.enums.ProjectExceptionMsg;
 import com.qingfeng.cms.biz.project.service.ProjectService;
+import com.qingfeng.cms.biz.rule.service.CreditRulesService;
+import com.qingfeng.cms.domain.level.entity.LevelEntity;
+import com.qingfeng.cms.domain.level.vo.LevelListVo;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
+import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
+import com.qingfeng.cms.domain.rule.vo.CreditRulesVo;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -24,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -41,6 +49,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     private DozerUtils dozer;
     @Autowired
     private RoleApi roleApi;
+    @Autowired
+    private LevelService levelService;
+    @Autowired
+    private CreditRulesService creditRulesService;
 
     /**
      * 保存模块项目内容
@@ -107,15 +119,47 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
     /**
      * 查询项目学分列表
-     *  1、按条件进行筛选，
-     *  2、排序
+     * 1、按条件进行筛选，
+     * 2、排序
+     *
      * @param projectQueryDTO
      */
     @Override
     @Transactional(rollbackFor = BizException.class)
     public List<ProjectListVo> findList(ProjectQueryDTO projectQueryDTO) {
         List<ProjectListVo> projectListVo = baseMapper.selectAllList(projectQueryDTO);
-        // TODO 封装等级学分
+
+        //查询项目下的等级
+        List<LevelEntity> levelEntityList = levelService.list(Wraps.lbQ(new LevelEntity())
+                .in(LevelEntity::getProjectId, projectListVo.stream()
+                        .map(ProjectListVo::getId)
+                        .collect(Collectors.toList())));
+        Map<Long, List<LevelListVo>> LevelMap = dozer.mapList(levelEntityList, LevelListVo.class)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        LevelListVo::getProjectId
+                ));
+
+        //查询等级下的学分
+        List<CreditRulesEntity> creditRulesEntityList = creditRulesService.list(Wraps.lbQ(new CreditRulesEntity())
+                .in(CreditRulesEntity::getLevelId, levelEntityList.stream()
+                        .map(LevelEntity::getId)
+                        .collect(Collectors.toSet())));
+        Map<Long, List<CreditRulesVo>> creditRulesMap = dozer.mapList(creditRulesEntityList, CreditRulesVo.class)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        CreditRulesVo::getLevelId
+                ));
+
+        projectListVo.forEach(p -> {
+            //先封装学分
+            if (!ObjectUtils.isEmpty(LevelMap.get(p.getId()))){
+                LevelMap.get(p.getId())
+                        .forEach(l -> l.setCreditRulesVoList(creditRulesMap.get(l.getId())));
+            }
+            //封装等级
+            p.setLevelListVo(LevelMap.get(p.getId()));
+        });
 
         return projectListVo;
     }

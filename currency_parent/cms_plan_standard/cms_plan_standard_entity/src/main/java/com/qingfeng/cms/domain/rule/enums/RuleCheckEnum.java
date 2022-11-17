@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "RuleCheckEnum", description = "项目等级审核-枚举")
+@ApiModel(value = "RuleCheckEnum", description = "学分审核-枚举")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum RuleCheckEnum implements BaseEnum {
 

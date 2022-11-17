@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.project.vo;
 
+import com.qingfeng.cms.domain.level.vo.LevelListVo;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
 import io.swagger.annotations.ApiModel;
@@ -12,6 +13,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author 清风学Java
@@ -55,4 +57,6 @@ public class ProjectListVo implements Serializable {
 
     @ApiModelProperty(value = "是否启用（0：未启用 1：启用）")
     private Integer isEnable;
+
+    private List<LevelListVo> levelListVo;
 }

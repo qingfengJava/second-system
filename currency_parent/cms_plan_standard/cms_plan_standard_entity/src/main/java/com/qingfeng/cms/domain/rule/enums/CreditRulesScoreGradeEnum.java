@@ -17,10 +17,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "RuleCheckEnum", description = "项目等级审核-枚举")
+@ApiModel(value = "CreditRulesScoreGradeEnum", description = "学分等级-枚举")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum CreditRulesScoreGradeEnum implements BaseEnum {
-    ;
+
+    DEPARTMENT_LEVEL("院级"),
+    SCHOOL_LEVEL("校级"),
+    MUNICIPAL_LEVEL("市级"),
+    PROVINCIAL_LEVEL("省级"),
+    NATIONAL_LEVEL("国家级");
 
     @ApiModelProperty(value = "描述")
     private String desc;
@@ -50,7 +55,7 @@ public enum CreditRulesScoreGradeEnum implements BaseEnum {
     }
 
     @Override
-    @ApiModelProperty(value = "编码", allowableValues = "INIT,IS_FINISHED,FAILED", example = "INIT")
+    @ApiModelProperty(value = "编码")
     public String getDesc() {
         return this.name();
     }
