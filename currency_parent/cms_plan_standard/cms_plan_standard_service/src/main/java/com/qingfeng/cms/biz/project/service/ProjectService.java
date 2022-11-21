@@ -5,6 +5,7 @@ import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
+import com.qingfeng.cms.domain.project.vo.ProjectEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 
 import java.util.List;
@@ -38,5 +39,11 @@ public interface ProjectService extends IService<ProjectEntity> {
      * @return List<ProjectListVo>
      */
     List<ProjectListVo> findList(ProjectQueryDTO projectQueryDTO);
+
+    /**
+     * 返回项目类型枚举
+     * @return
+     */
+    List<ProjectEnumsVo> getProjectType();
 }
 

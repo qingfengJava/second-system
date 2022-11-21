@@ -54,6 +54,6 @@ public enum ProjectTypeEnum implements BaseEnum {
     @Override
     @ApiModelProperty(value = "编码", allowableValues = "SCHOOL_ITEMS,INSTITUTE_ITEMS,GENERAL_ITEMS", example = "SCHOOL_ITEMS")
     public String getDesc() {
-        return this.name();
+        return this.desc;
     }
 }

@@ -5,6 +5,7 @@ import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
+import com.qingfeng.cms.domain.project.vo.ProjectEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
@@ -90,6 +91,14 @@ public class ProjectController extends BaseController {
         projectService.removeByIds(Arrays.asList(projectIds));
 
         return success();
+    }
+
+    @ApiOperation(value = "返回项目类型枚举", notes = "返回项目类型枚举")
+    @GetMapping("/projectType")
+    @SysLog("返回项目类型枚举")
+    public R<List<ProjectEnumsVo>> getProjectType(){
+        List<ProjectEnumsVo> projectTypeList = projectService.getProjectType();
+        return success(projectTypeList);
     }
 
 }
