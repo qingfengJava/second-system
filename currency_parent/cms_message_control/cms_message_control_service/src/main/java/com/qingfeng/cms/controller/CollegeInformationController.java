@@ -1,8 +1,7 @@
-package ${package}.${moduleName}.controller;
+package com.qingfeng.cms.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.qingfeng.cms.biz.college.service.CollegeInformationService;
+import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import io.swagger.annotations.Api;
@@ -19,24 +18,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.Map;
 
 
 /**
- * ${comments}
+ * 院级信息（包含班级），数据字典
  *
  * @author 清风学Java
  * @version 3.0.0
- * @date ${datetime}
+ * @date 2022-11-22 22:53:26
  */
 @Slf4j
 @Validated
 @RestController
-@Api(value = "提供的相关功能", tags = "")
-@RequestMapping("${moduleName}/${pathName}")
-public class ${className}Controller extends BaseController  {
+@Api(value = "提供院级信息的相关功能", tags = "院级信息（包含班级），数据字典")
+@RequestMapping("message/collegeinformation")
+public class CollegeInformationController extends BaseController {
 
     @Autowired
-    private ${className}Service ${classname}Service;
+    private CollegeInformationService collegeInformationService;
 
     /**
      * 列表
@@ -51,9 +52,9 @@ public class ${className}Controller extends BaseController  {
     /**
      * 信息
      */
-    @GetMapping("/info/{${pk.attrname}}")
-    public R info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
-		${className}Entity ${classname} = ${classname}Service.getById(${pk.attrname});
+    @GetMapping("/info/{id}")
+    public R info(@PathVariable("id") Long id){
+		CollegeInformationEntity collegeInformation = collegeInformationService.getById(id);
 
         return success();
     }
@@ -62,8 +63,8 @@ public class ${className}Controller extends BaseController  {
      * 保存
      */
     @PostMapping("/save")
-    public R save(@RequestBody ${className}Entity ${classname}){
-		${classname}Service.save(${classname});
+    public R save(@RequestBody CollegeInformationEntity collegeInformation){
+		collegeInformationService.save(collegeInformation);
 
         return success();
     }
@@ -72,8 +73,8 @@ public class ${className}Controller extends BaseController  {
      * 修改
      */
     @PutMapping("/update")
-    public R update(@RequestBody ${className}Entity ${classname}){
-		${classname}Service.updateById(${classname});
+    public R update(@RequestBody CollegeInformationEntity collegeInformation){
+		collegeInformationService.updateById(collegeInformation);
 
         return success();
     }
@@ -82,8 +83,8 @@ public class ${className}Controller extends BaseController  {
      * 删除
      */
     @DeleteMapping("/delete")
-    public R delete(@RequestBody ${pk.attrType}[] ${pk.attrname}s){
-		${classname}Service.removeByIds(Arrays.asList(${pk.attrname}s));
+    public R delete(@RequestBody Long[] ids){
+		collegeInformationService.removeByIds(Arrays.asList(ids));
 
         return success();
     }

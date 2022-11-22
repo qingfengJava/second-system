@@ -18,9 +18,15 @@ import lombok.Data;
  * @date ${datetime}
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(callSuper = true)
+@Accessors(chain = true)
 @ApiModel(description = "${comments}")
 @TableName("${tableName}")
-public class ${className}Entity implements Serializable {
+public class ${className}Entity extends Entity<Long>  {
+
 	private static final long serialVersionUID = 1L;
 
 #foreach ($column in $columns)
