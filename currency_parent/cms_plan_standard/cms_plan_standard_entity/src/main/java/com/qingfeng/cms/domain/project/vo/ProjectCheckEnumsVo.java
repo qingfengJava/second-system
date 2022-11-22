@@ -23,8 +23,8 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectEnumsVo",description = "项目枚举实体")
-public class ProjectEnumsVo implements Serializable {
+@ApiModel(value = "ProjectCheckEnumsVo",description = "项目审核枚举实体")
+public class ProjectCheckEnumsVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

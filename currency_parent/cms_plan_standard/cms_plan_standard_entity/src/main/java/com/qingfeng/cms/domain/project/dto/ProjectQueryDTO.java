@@ -31,7 +31,7 @@ public class ProjectQueryDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "绑定的模块id（外键）")
-    @NotNull(message = "模块Id不能为空")
+    @NotNull(message = "未选择对应的模块")
     private Long moduleId;
 
     @ApiModelProperty(value = "项目的名字")

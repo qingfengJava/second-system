@@ -14,7 +14,8 @@ import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
-import com.qingfeng.cms.domain.project.vo.ProjectEnumsVo;
+import com.qingfeng.cms.domain.project.vo.ProjectCheckEnumsVo;
+import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.rule.vo.CreditRulesVo;
@@ -156,7 +157,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
         projectListVo.forEach(p -> {
             //先封装学分
-            if (!ObjectUtils.isEmpty(LevelMap.get(p.getId()))){
+            if (!ObjectUtils.isEmpty(LevelMap.get(p.getId()))) {
                 LevelMap.get(p.getId())
                         .forEach(l -> l.setCreditRulesVoList(creditRulesMap.get(l.getId())));
             }
@@ -169,18 +170,35 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
     /**
      * 返回项目枚举类型
+     *
      * @return
      */
     @Override
-    public List<ProjectEnumsVo> getProjectType() {
-        List<ProjectEnumsVo> projectTypeList = Arrays.stream(ProjectTypeEnum.values())
-                .map(p -> ProjectEnumsVo.builder()
+    public List<ProjectTypeEnumsVo> getProjectType() {
+        List<ProjectTypeEnumsVo> projectTypeList = Arrays.stream(ProjectTypeEnum.values())
+                .map(p -> ProjectTypeEnumsVo.builder()
                         .label(p.getDesc())
                         .value(p.name())
                         .build())
                 .collect(Collectors.toList());
 
         return projectTypeList;
+    }
+
+    /**
+     * 返回项目审核枚举
+     *
+     * @return
+     */
+    @Override
+    public List<ProjectCheckEnumsVo> getProjectCheck() {
+        List<ProjectCheckEnumsVo> projectCheckEnumsVos = Arrays.stream(ProjectCheckEnum.values())
+                .map(p -> ProjectCheckEnumsVo.builder()
+                        .label(p.getDesc())
+                        .value(p.name())
+                        .build())
+                .collect(Collectors.toList());
+        return projectCheckEnumsVos;
     }
 
     /**

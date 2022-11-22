@@ -5,7 +5,8 @@ import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
-import com.qingfeng.cms.domain.project.vo.ProjectEnumsVo;
+import com.qingfeng.cms.domain.project.vo.ProjectCheckEnumsVo;
+import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
@@ -54,7 +55,6 @@ public class ProjectController extends BaseController {
         return success(list);
     }
 
-
     /**
      * 信息
      */
@@ -96,9 +96,16 @@ public class ProjectController extends BaseController {
     @ApiOperation(value = "返回项目类型枚举", notes = "返回项目类型枚举")
     @GetMapping("/projectType")
     @SysLog("返回项目类型枚举")
-    public R<List<ProjectEnumsVo>> getProjectType(){
-        List<ProjectEnumsVo> projectTypeList = projectService.getProjectType();
+    public R<List<ProjectTypeEnumsVo>> getProjectType(){
+        List<ProjectTypeEnumsVo> projectTypeList = projectService.getProjectType();
         return success(projectTypeList);
     }
 
+    @ApiOperation(value = "返回项目审核类型枚举", notes = "返回项目审核类型枚举")
+    @GetMapping("/projectCheck")
+    @SysLog("返回项目审核类型枚举")
+    public R<List<ProjectCheckEnumsVo>> getProjectCheck(){
+        List<ProjectCheckEnumsVo> projectCheckList = projectService.getProjectCheck();
+        return success(projectCheckList);
+    }
 }

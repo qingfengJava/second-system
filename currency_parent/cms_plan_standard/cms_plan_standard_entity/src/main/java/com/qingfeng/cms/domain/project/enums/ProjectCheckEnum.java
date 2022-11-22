@@ -54,6 +54,6 @@ public enum ProjectCheckEnum implements BaseEnum {
     @Override
     @ApiModelProperty(value = "编码", allowableValues = "INIT,IS_FINISHED,FAILED", example = "INIT")
     public String getDesc() {
-        return this.name();
+        return this.desc;
     }
 }
