@@ -3,19 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>cms_plan_standard</artifactId>
+        <artifactId>cms_message_control</artifactId>
         <groupId>com.qingfeng</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cms_plan_standard_service</artifactId>
-    <description>方案认定服务启动模块</description>
+    <artifactId>cms_message_control_service</artifactId>
+    <description>信息管理业务层</description>
 
     <dependencies>
         <dependency>
             <groupId>com.qingfeng</groupId>
-            <artifactId>cms_plan_standard_entity</artifactId>
+            <artifactId>cms_message_control_entity</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -96,6 +96,7 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
