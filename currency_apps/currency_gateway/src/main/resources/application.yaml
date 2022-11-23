@@ -26,3 +26,11 @@ spring:
             - Path=/api/plan/**
           filters: # 指定路径重写
             - RewritePath=/api/plan/(?<segment>.*),/$\{segment}
+
+        # 学分修读方案服务的网关路由
+        - id: cms-message-control # 网关Id
+          uri: lb://cms-message-control
+          predicates:
+            - Path=/api/message/**
+          filters: # 指定路径重写
+            - RewritePath=/api/message/(?<segment>.*),/$\{segment}

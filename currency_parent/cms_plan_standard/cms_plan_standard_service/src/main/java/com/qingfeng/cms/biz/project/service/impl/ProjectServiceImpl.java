@@ -1,5 +1,6 @@
 package com.qingfeng.cms.biz.project.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.biz.project.dao.ProjectDao;
@@ -15,8 +16,8 @@ import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.enums.ProjectTypeEnum;
 import com.qingfeng.cms.domain.project.vo.ProjectCheckEnumsVo;
-import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
+import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.rule.vo.CreditRulesVo;
 import com.qingfeng.currency.base.R;
@@ -210,7 +211,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         ProjectEntity project = baseMapper.selectOne(Wraps.lbQ(new ProjectEntity())
                 .eq(ProjectEntity::getModuleId, projectEntity.getModuleId())
                 .like(ProjectEntity::getProjectName, projectEntity.getProjectName()));
-        if (!ObjectUtils.isEmpty(project)) {
+        if (ObjectUtil.isNotEmpty(project)) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.IS_EXISTS.getMsg());
         }
     }

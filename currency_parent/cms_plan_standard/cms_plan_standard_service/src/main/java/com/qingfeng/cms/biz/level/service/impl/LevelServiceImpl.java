@@ -1,5 +1,6 @@
 package com.qingfeng.cms.biz.level.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.level.dao.LevelDao;
 import com.qingfeng.cms.biz.level.enums.LevelExceptionMsg;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
                 .eq(LevelEntity::getProjectId, levelSaveDTO.getProjectId())
                 .like(LevelEntity::getLevelContent, levelSaveDTO.getLevelContent()));
 
-        if (!ObjectUtils.isEmpty(levelEntity)) {
+        if (ObjectUtil.isNotEmpty(levelEntity)) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), LevelExceptionMsg.IS_EXISTS.getMsg());
         }
     }

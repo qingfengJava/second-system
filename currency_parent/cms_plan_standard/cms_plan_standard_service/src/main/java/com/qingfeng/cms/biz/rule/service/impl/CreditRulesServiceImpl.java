@@ -1,5 +1,6 @@
 package com.qingfeng.cms.biz.rule.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.rule.dao.CreditRulesDao;
 import com.qingfeng.cms.biz.rule.enums.CreditRulesExceptionMsg;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -67,12 +67,12 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
         // 检查条件，当前项目下是否已经学分了，若分等级，同一等级下是否已经有学分了
         LbqWrapper<CreditRulesEntity> wrapper = Wraps.lbQ(new CreditRulesEntity())
                 .eq(CreditRulesEntity::getLevelId, creditRulesSaveDTO.getLevelId());
-        if (!ObjectUtils.isEmpty(creditRulesSaveDTO.getScoreGrade())) {
+        if (ObjectUtil.isNotEmpty(creditRulesSaveDTO.getScoreGrade())) {
             //有等级划分
             wrapper.eq(CreditRulesEntity::getScoreGrade, creditRulesSaveDTO.getScoreGrade());
         }
         CreditRulesEntity creditRulesEntity = baseMapper.selectOne(wrapper);
-        if (!ObjectUtils.isEmpty(creditRulesEntity)){
+        if (ObjectUtil.isNotEmpty(creditRulesEntity)){
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.IS_EXISTS.getMsg());
         }
     }

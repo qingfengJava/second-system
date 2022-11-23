@@ -1,5 +1,6 @@
 package com.qingfeng.cms.biz.module.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -26,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -171,13 +171,13 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         LbqWrapper<CreditModuleEntity> lbqWrapper = Wraps.lbQ(new CreditModuleEntity())
                 .eq(CreditModuleEntity::getPlanId, creditModuleEntity.getPlanId());
 
-        if (!ObjectUtils.isEmpty(creditModuleEntity.getId())) {
+        if (ObjectUtil.isNotEmpty(creditModuleEntity.getId())) {
             wrapper.ne(CreditModuleEntity::getId, creditModuleEntity.getId());
             lbqWrapper.ne(CreditModuleEntity::getId, creditModuleEntity.getId());
         }
 
         CreditModuleEntity creditModule = baseMapper.selectOne(wrapper);
-        if (!ObjectUtils.isEmpty(creditModule)) {
+        if (ObjectUtil.isNotEmpty(creditModule)) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), CreditModuleServiceExceptionMsg.IS_EXISTENCE.getMsg());
         }
 
