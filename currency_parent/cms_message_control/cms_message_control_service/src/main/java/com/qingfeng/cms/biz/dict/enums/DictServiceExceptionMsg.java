@@ -13,7 +13,10 @@ import lombok.Getter;
 public enum DictServiceExceptionMsg {
 
     IS_EXISTENCE("同级数据字典名字不能相同！"),
-    IS_EXISTCODE("编码必须是唯一标识且大写");
+    IS_EXISTCODE("编码必须是唯一标识且大写"),
+    EXPORT_TEMPLATE_FAILD("数据字典模板导出异常，请重试！"),
+    EXPORT_FAILD("数据字典导出异常，请重试！"),
+    IMPORT_FAILD("数据字典导入异常，请重试！");
 
     private String msg;
 }

@@ -148,6 +148,7 @@
         <bce-java-sdk.version>0.10.21</bce-java-sdk.version>
         <jackson.version>2.13.3</jackson.version>
         <version.hibernate-jpa-2.1-api>1.0.0.Final</version.hibernate-jpa-2.1-api>
+        <version.easyexcel>2.1.1</version.easyexcel>
 
         <hutool.version>5.1.0</hutool.version>
         <antisamy.version>1.5.7</antisamy.version>
@@ -448,6 +449,12 @@
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.1-api</artifactId>
                 <version>${version.hibernate-jpa-2.1-api}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${version.easyexcel}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
