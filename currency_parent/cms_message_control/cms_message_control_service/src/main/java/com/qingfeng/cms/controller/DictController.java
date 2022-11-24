@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -90,8 +89,8 @@ public class DictController extends BaseController {
     @PostMapping("/delete")
     @SysLog("根据Id删除数据字典内容")
     public R delete(@ApiParam(value = "学分认定模块Id", required = true)
-                    @RequestBody Long[] ids) {
-        dictService.removeByIds(Arrays.asList(ids));
+                    @RequestBody List<Long> ids) {
+        dictService.removeByIds(ids);
         return success();
     }
 
@@ -112,7 +111,8 @@ public class DictController extends BaseController {
     @ApiOperation("数据字典Excel导入")
     @PostMapping("/excel/import")
     @SysLog("数据字典Excel导入")
-    public void userImport(MultipartFile file) {
+    public R userImport(MultipartFile file) {
         dictEasyExcelService.importDict(file);
+        return success();
     }
 }
