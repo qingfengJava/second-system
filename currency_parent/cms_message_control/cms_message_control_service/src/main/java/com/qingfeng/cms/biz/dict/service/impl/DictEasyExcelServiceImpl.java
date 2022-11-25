@@ -1,10 +1,10 @@
 package com.qingfeng.cms.biz.dict.service.impl;
 
 import com.alibaba.excel.EasyExcel;
-import com.qingfeng.cms.biz.dict.dao.DictDao;
 import com.qingfeng.cms.biz.dict.enums.DictServiceExceptionMsg;
 import com.qingfeng.cms.biz.dict.listener.DictExcelListener;
 import com.qingfeng.cms.biz.dict.service.DictEasyExcelService;
+import com.qingfeng.cms.biz.dict.service.DictService;
 import com.qingfeng.cms.domain.dict.vo.DictExcelVo;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
@@ -30,7 +30,7 @@ public class DictEasyExcelServiceImpl implements DictEasyExcelService {
     @Autowired
     private DozerUtils dozerUtils;
     @Autowired
-    private DictDao dictDao;
+    private DictService dictService;
 
     /**
      * 导出数据字典Excel模板
@@ -73,7 +73,7 @@ public class DictEasyExcelServiceImpl implements DictEasyExcelService {
                             ".xlsx");
 
             //查询dict列表
-            List<DictExcelVo> dictExcelVos = dozerUtils.mapList(dictDao.selectList(null), DictExcelVo.class);
+            List<DictExcelVo> dictExcelVos = dozerUtils.mapList(dictService.list(), DictExcelVo.class);
 
             // 调用方法实现写操作
             EasyExcel.write(response.getOutputStream(), DictExcelVo.class)
@@ -91,7 +91,7 @@ public class DictEasyExcelServiceImpl implements DictEasyExcelService {
     @Override
     public void importDict(MultipartFile file) {
         try {
-            EasyExcel.read(file.getInputStream(), DictExcelVo.class, new DictExcelListener(dictDao,dozerUtils)).sheet().doRead();
+            EasyExcel.read(file.getInputStream(), DictExcelVo.class, new DictExcelListener(dictService,dozerUtils)).sheet().doRead();
         } catch (IOException e) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), DictServiceExceptionMsg.IMPORT_FAILD.getMsg());
         }

@@ -1,15 +1,17 @@
 package com.qingfeng.cms.biz.dict.listener;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.CellData;
-import com.qingfeng.cms.biz.dict.dao.DictDao;
+import com.qingfeng.cms.biz.dict.service.DictService;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
 import com.qingfeng.cms.domain.dict.vo.DictExcelVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,8 +21,18 @@ import java.util.Map;
  */
 public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
 
-    private DictDao dictDao;
+    private DictService dictService;
     private DozerUtils dozerUtils;
+
+    /**
+     * 每隔100条存储数据库，然后清理list ，方便内存回收
+     */
+    private static final int BATCH_COUNT = 100;
+    /**
+     * 缓存的数据
+     */
+    private List<DictEntity> cachedDataList = CollUtil.list(false);
+
 
     /**
      * 使用有参的构造方法，传入需要的参数对象
@@ -28,8 +40,8 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
      * @param dictDao
      * @param dozerUtils
      */
-    public DictExcelListener(DictDao dictDao, DozerUtils dozerUtils) {
-        this.dictDao = dictDao;
+    public DictExcelListener(DictService dictService, DozerUtils dozerUtils) {
+        this.dictService = dictService;
         this.dozerUtils = dozerUtils;
     }
 
@@ -42,13 +54,14 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
     @Override
     public void invoke(DictExcelVo dictExcelVo, AnalysisContext analysisContext) {
         //同一父级下不能有重复的内容
-        DictEntity dictEntity = dictDao.selectOne(Wraps.lbQ(new DictEntity())
+        DictEntity dictEntity = dictService.getOne(Wraps.lbQ(new DictEntity())
                 .eq(DictEntity::getParentId, dictExcelVo.getParentId())
                 .eq(DictEntity::getDictName, dictExcelVo.getDictName()));
         // TODO 逻辑问题是否可以再优化一下
         if (ObjectUtil.isEmpty(dictEntity)) {
             //不存在，就可以直接进行存储
-            dictDao.insert(dozerUtils.map2(dictExcelVo, DictEntity.class));
+            cachedDataList.add(dozerUtils.map2(dictExcelVo, DictEntity.class));
+//            dictDao.insert(dozerUtils.map2(dictExcelVo, DictEntity.class));
         } else {
             //存在则更新
             dictEntity.setDictName(dictExcelVo.getDictName())
@@ -56,8 +69,14 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
                     .setDictValue(dictExcelVo.getDictValue())
                     .setDictCode(dictExcelVo.getDictCode())
                     .setId(dictExcelVo.getId());
-            dictDao.insert(dictEntity);
+            cachedDataList.add(dictEntity);
+//            dictDao.insert(dictEntity);
 
+        }
+
+        if (cachedDataList.size() >= BATCH_COUNT){
+            dictService.saveBatch(cachedDataList);
+            cachedDataList = CollUtil.list(false);
         }
     }
 
@@ -79,6 +98,9 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-
+        if (CollUtil.isNotEmpty(cachedDataList)){
+            //确保最后的数据能够存储
+            dictService.saveBatch(cachedDataList);
+        }
     }
 }
