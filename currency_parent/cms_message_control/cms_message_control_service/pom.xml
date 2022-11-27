@@ -46,6 +46,10 @@
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_tools_j2cache</artifactId>
+        </dependency>
 
         <!-- openFeign SDK -->
         <dependency>

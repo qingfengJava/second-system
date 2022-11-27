@@ -2,6 +2,7 @@ package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.dict.service.DictEasyExcelService;
 import com.qingfeng.cms.biz.dict.service.DictService;
+import com.qingfeng.cms.constant.CacheKey;
 import com.qingfeng.cms.domain.dict.dto.DictSaveDTO;
 import com.qingfeng.cms.domain.dict.dto.DictUpdateDTO;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
@@ -14,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import net.oschina.j2cache.CacheChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +50,8 @@ public class DictController extends BaseController {
     private DictService dictService;
     @Autowired
     private DictEasyExcelService dictEasyExcelService;
+    @Autowired
+    private CacheChannel cacheChannel;
 
     @ApiOperation(value = "查询数据字典树", notes = "查询数据字典树")
     @GetMapping("/list")
@@ -61,7 +65,7 @@ public class DictController extends BaseController {
     @GetMapping("/info/{dictId}")
     @SysLog("根据Id查询数据字典信息")
     public R<DictEntity> info(@ApiParam(value = "学分认定模块Id", required = true)
-                  @PathVariable("dictId") @NotNull Long dictId) {
+                              @PathVariable("dictId") @NotNull Long dictId) {
         DictEntity dictEntity = dictService.getById(dictId);
         return success(dictEntity);
     }
@@ -72,7 +76,9 @@ public class DictController extends BaseController {
     public R save(@ApiParam(value = "数据字典保存实体", required = true)
                   @RequestBody @Validated DictSaveDTO dictSaveDTO) {
         dictService.saveDict(dictSaveDTO);
-
+        //清除缓存
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_TREE);
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_EXCEL_LIST);
         return success();
     }
 
@@ -80,8 +86,11 @@ public class DictController extends BaseController {
     @PutMapping("/update")
     @SysLog("修改数据字典内容")
     public R update(@ApiParam(value = "数据字典实体")
-                        @RequestBody @Validated(SuperEntity.Update.class) DictUpdateDTO dictUpdateDTO) {
+                    @RequestBody @Validated(SuperEntity.Update.class) DictUpdateDTO dictUpdateDTO) {
         dictService.updateDictById(dictUpdateDTO);
+        //清除缓存
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_TREE);
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_EXCEL_LIST);
         return success();
     }
 
@@ -91,20 +100,23 @@ public class DictController extends BaseController {
     public R delete(@ApiParam(value = "学分认定模块Id", required = true)
                     @RequestBody List<Long> ids) {
         dictService.removeByIds(ids);
+        //清除缓存
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_TREE);
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_EXCEL_LIST);
         return success();
     }
 
     @ApiOperation(value = "导出数据字典模板", notes = "导出数据字典模板")
     @GetMapping("/excel/export_template")
     @SysLog("导出数据字典Excel模板")
-    public void exportTemplate(HttpServletResponse response){
+    public void exportTemplate(HttpServletResponse response) {
         dictEasyExcelService.exportTemplate(response);
     }
 
     @ApiOperation(value = "导出数据字典", notes = "导出数据字典")
     @GetMapping("/excel/export_dict")
     @SysLog("导出数据字典Excel")
-    public void exportDict(HttpServletResponse response){
+    public void exportDict(HttpServletResponse response) {
         dictEasyExcelService.exportDict(response);
     }
 
@@ -113,6 +125,9 @@ public class DictController extends BaseController {
     @SysLog("数据字典Excel导入")
     public R userImport(MultipartFile file) {
         dictEasyExcelService.importDict(file);
+        //清除缓存
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_TREE);
+        cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_EXCEL_LIST);
         return success();
     }
 }

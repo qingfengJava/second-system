@@ -11,6 +11,7 @@ import com.qingfeng.cms.domain.dict.vo.DictExcelVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,17 +28,18 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
     /**
      * 每隔100条存储数据库，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 100;
+    private static final int BATCH_COUNT = 500;
     /**
      * 缓存的数据
      */
-    private List<DictEntity> cachedDataList = CollUtil.list(false);
+    private List<DictEntity> cachedAddList = new ArrayList<>(BATCH_COUNT);
+    private List<DictEntity> cachedUpdateList = new ArrayList<>(BATCH_COUNT);
 
 
     /**
      * 使用有参的构造方法，传入需要的参数对象
      *
-     * @param dictDao
+     * @param dictService
      * @param dozerUtils
      */
     public DictExcelListener(DictService dictService, DozerUtils dozerUtils) {
@@ -60,8 +62,7 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
         // TODO 逻辑问题是否可以再优化一下
         if (ObjectUtil.isEmpty(dictEntity)) {
             //不存在，就可以直接进行存储
-            cachedDataList.add(dozerUtils.map2(dictExcelVo, DictEntity.class));
-//            dictDao.insert(dozerUtils.map2(dictExcelVo, DictEntity.class));
+            cachedAddList.add(dozerUtils.map2(dictExcelVo, DictEntity.class));
         } else {
             //存在则更新
             dictEntity.setDictName(dictExcelVo.getDictName())
@@ -69,14 +70,18 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
                     .setDictValue(dictExcelVo.getDictValue())
                     .setDictCode(dictExcelVo.getDictCode())
                     .setId(dictExcelVo.getId());
-            cachedDataList.add(dictEntity);
-//            dictDao.insert(dictEntity);
+            cachedUpdateList.add(dictEntity);
 
         }
 
-        if (cachedDataList.size() >= BATCH_COUNT){
-            dictService.saveBatch(cachedDataList);
-            cachedDataList = CollUtil.list(false);
+        if (cachedAddList.size() >= BATCH_COUNT){
+            dictService.saveBatch(cachedAddList);
+            cachedAddList.clear();
+        }
+
+        if (cachedUpdateList.size() >= BATCH_COUNT){
+            dictService.updateBatchById(cachedUpdateList);
+            cachedUpdateList.clear();
         }
     }
 
@@ -98,9 +103,13 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        if (CollUtil.isNotEmpty(cachedDataList)){
+        if (CollUtil.isNotEmpty(cachedAddList)){
             //确保最后的数据能够存储
-            dictService.saveBatch(cachedDataList);
+            dictService.saveBatch(cachedAddList);
+        }
+
+        if (CollUtil.isNotEmpty(cachedUpdateList)){
+            dictService.updateBatchById(cachedUpdateList);
         }
     }
 }

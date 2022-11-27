@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.dict.dao.DictDao;
 import com.qingfeng.cms.biz.dict.enums.DictServiceExceptionMsg;
 import com.qingfeng.cms.biz.dict.service.DictService;
+import com.qingfeng.cms.constant.CacheKey;
 import com.qingfeng.cms.domain.dict.dto.DictSaveDTO;
 import com.qingfeng.cms.domain.dict.dto.DictUpdateDTO;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
@@ -13,6 +14,8 @@ import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
+import net.oschina.j2cache.CacheChannel;
+import net.oschina.j2cache.CacheObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,8 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
 
     @Autowired
     private DozerUtils dozerUtils;
+    @Autowired
+    private CacheChannel cacheChannel;
 
     /**
      * 查询数据字典架构树
@@ -39,18 +44,25 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
      */
     @Override
     public List<DictVo> findListTree() {
-        List<DictEntity> dictList = baseMapper.selectList(null);
+        CacheObject cacheObject = cacheChannel.get(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_TREE);
+        if (ObjectUtil.isEmpty(cacheObject.getValue())) {
+            List<DictEntity> dictList = baseMapper.selectList(null);
 
-        //2、组装成父子的树形结构
-        //2.1 找到所有的一级分类
-        return dictList.stream().filter(d ->
-                d.getParentId() == 0
-        ).map(dict -> {
-            //将上一步的结果通过map映射再一次进行数据操作
-            //map操作，把当前分类转换成一个新的对象  dict 就是过滤出的一个个dict对象
-            return dozerUtils.map2(dict, DictVo.class)
-                    .setChildren(getChildrens(dict, dictList));
-        }).collect(Collectors.toList());
+            //2、组装成父子的树形结构
+            //2.1 找到所有的一级分类
+            List<DictVo> dictVoList = dictList.stream().filter(d ->
+                    d.getParentId() == 0
+            ).map(dict -> {
+                //将上一步的结果通过map映射再一次进行数据操作
+                //map操作，把当前分类转换成一个新的对象  dict 就是过滤出的一个个dict对象
+                return dozerUtils.map2(dict, DictVo.class)
+                        .setChildren(getChildrens(dict, dictList));
+            }).collect(Collectors.toList());
+            cacheChannel.set(CacheKey.MESSAGE_RESOURCE,CacheKey.DICT_TREE, dictVoList);
+            return dictVoList;
+        } else {
+            return (List<DictVo>) cacheObject.getValue();
+        }
     }
 
     /**
@@ -60,7 +72,6 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
     @Override
     public void saveDict(DictSaveDTO dictSaveDTO) {
         // 排查同级下面是否有相同名字和相同编码的内容
-
         DictEntity dictEntity = dozerUtils.map2(dictSaveDTO, DictEntity.class);
         checkDict(dictEntity);
         baseMapper.insert(dictEntity);
