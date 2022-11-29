@@ -74,7 +74,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         checkProject(projectEntity);
 
         // 需要判断用户角色，如果是二级学院领导（YUAN_LEVEL_LEADER），那么申报的项目就需要审核
-        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.STU_OFFICE_ADMIN.name()});
+        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(userId)) {
             //是学院申请的项目
             // TODO 查询用户对应的学院信息

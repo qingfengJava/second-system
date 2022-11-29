@@ -34,22 +34,26 @@ public class CollegeInformationEntity extends Entity<Long> {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "用户Id")
+	private Long userId;
+
+	@ApiModelProperty(value = "数据字典主键Id")
+	private Long dictId;
+
 	@ApiModelProperty(value = "组织名字   比如：攀枝花学院，数学与计算机学院， 计算机科学与技术班")
 	private String organizationName;
-
-	@ApiModelProperty(value = "父级Id")
-	private Long parentId;
 
 	@ApiModelProperty(value = "组织编号， 比如攀枝花学院（pzhu）")
 	private String organizationCode;
 
-	public CollegeInformationEntity(Long id, LocalDateTime createTime, Long createUser,
-									LocalDateTime updateTime, Long updateUser,
-									String organizationName, Long parentId,
+	@Builder
+	public CollegeInformationEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime,
+									Long updateUser, Long userId, Long dictId, String organizationName,
 									String organizationCode) {
 		super(id, createTime, createUser, updateTime, updateUser);
+		this.userId = userId;
+		this.dictId = dictId;
 		this.organizationName = organizationName;
-		this.parentId = parentId;
 		this.organizationCode = organizationCode;
 	}
 }
