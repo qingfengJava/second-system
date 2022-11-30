@@ -35,6 +35,12 @@
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>cms_message_control_entity</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

@@ -9,6 +9,7 @@ import com.qingfeng.cms.constant.CacheKey;
 import com.qingfeng.cms.domain.dict.dto.DictSaveDTO;
 import com.qingfeng.cms.domain.dict.dto.DictUpdateDTO;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
+import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.dict.vo.DictVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
@@ -91,6 +92,20 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
         DictEntity dictEntity = dozerUtils.map2(dictUpdateDTO, DictEntity.class);
         checkDict(dictEntity);
         baseMapper.updateById(dictEntity);
+    }
+
+    /**
+     * 查询所有的院系信息
+     * @return
+     */
+    @Override
+    public List<DictEntity> findDepartment() {
+        //先查询出学校所属ID
+        DictEntity dictEntity = baseMapper.selectOne(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getDictCode, DictDepartmentEnum.PZHU));
+        List<DictEntity> dictEntityList = baseMapper.selectList(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getParentId, dictEntity.getId()));
+        return dictEntityList;
     }
 
     private void checkDict(DictEntity dict) {

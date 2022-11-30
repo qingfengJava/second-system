@@ -38,6 +38,11 @@
 
         <dependency>
             <groupId>com.qingfeng</groupId>
+            <artifactId>currency_sdk</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.qingfeng</groupId>
             <artifactId>currency_tools_core</artifactId>
         </dependency>
         <dependency>

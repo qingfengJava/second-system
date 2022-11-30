@@ -24,7 +24,7 @@ import java.net.UnknownHostException;
 @EnableDiscoveryClient
 @EnableAuthServer
 @EnableFeignClients(value = {
-        "com.qingfeng.currency",
+        "com.qingfeng.currency","com.qingfeng.sdk"
 })
 @Slf4j
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)

@@ -120,7 +120,7 @@ public class DictController extends BaseController {
         dictEasyExcelService.exportDict(response);
     }
 
-    @ApiOperation("数据字典Excel导入")
+    @ApiOperation(value = "数据字典Excel导入", notes = "数据字典Excel导入")
     @PostMapping("/excel/import")
     @SysLog("数据字典Excel导入")
     public R userImport(MultipartFile file) {
@@ -129,5 +129,13 @@ public class DictController extends BaseController {
         cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_TREE);
         cacheChannel.evict(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_EXCEL_LIST);
         return success();
+    }
+
+    @ApiOperation(value = "查询所有的学院", notes = "查询所有的学院")
+    @GetMapping("/find/department")
+    @SysLog("查询所有的学院")
+    public R<List<DictEntity>> findDepartment(){
+        List<DictEntity> dictEntityList = dictService.findDepartment();
+        return success(dictEntityList);
     }
 }

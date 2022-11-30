@@ -1,6 +1,9 @@
 package com.qingfeng.currency.authority.controller.auth;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.qingfeng.cms.domain.college.dto.CollegeInformationSaveDTO;
+import com.qingfeng.cms.domain.college.dto.CollegeInformationUpdateDTO;
+import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
 import com.qingfeng.currency.authority.biz.service.auth.RoleService;
 import com.qingfeng.currency.authority.biz.service.auth.UserService;
 import com.qingfeng.currency.authority.biz.service.core.OrgService;
@@ -26,6 +29,7 @@ import com.qingfeng.currency.user.model.SysOrg;
 import com.qingfeng.currency.user.model.SysRole;
 import com.qingfeng.currency.user.model.SysStation;
 import com.qingfeng.currency.user.model.SysUser;
+import com.qingfeng.sdk.messagecontrol.collegeinformation.CollegeInformationApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -44,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,6 +78,9 @@ public class UserController extends BaseController {
     private StationService stationService;
     @Autowired
     private DozerUtils dozer;
+
+    @Autowired
+    private CollegeInformationApi collegeInformationApi;
 
     @ApiOperation(value = "分页查询用户", notes = "分页查询用户")
     @ApiImplicitParams({
@@ -208,5 +216,29 @@ public class UserController extends BaseController {
         List<User> list = userService.findUserByRoleId(roleId, keyword);
         List<Long> idList = list.stream().mapToLong(User::getId).boxed().collect(Collectors.toList());
         return success(UserRoleDTO.builder().idList(idList).userList(list).build());
+    }
+
+    @ApiOperation(value = "根据用户Id查询用户关联的二级学院的信息", notes = "根据用户Id查询用户关联的二级学院的信息")
+    @GetMapping("/info/{userId}")
+    @SysLog("根据用户Id查询用户关联的二级学院的信息")
+    public R<CollegeInformationEntity> getCollegeInfo(@ApiParam(value = "用户Id", required = true)
+                                            @PathVariable("userId") @NotNull Long userId) {
+        return collegeInformationApi.info(userId);
+    }
+
+    @ApiOperation(value = "保存用户关联的二级学院的信息", notes = "保存用户关联的二级学院的信息")
+    @PostMapping("/save")
+    @SysLog("保存用户关联的二级学院的信息")
+    public R saveCollegeInformation(@ApiParam(value = "院系信息保存实体", required = true)
+                  @RequestBody @Validated CollegeInformationSaveDTO collegeInformationSaveDTO) {
+        return collegeInformationApi.save(collegeInformationSaveDTO);
+    }
+
+    @ApiOperation(value = "修改用户关联的二级学院的信息", notes = "修改用户关联的二级学院的信息")
+    @PutMapping("/update")
+    @SysLog("修改用户关联的二级学院的信息")
+    public R updateCollegeInformation(@ApiParam(value = "数据字典实体")
+                    @RequestBody @Validated(SuperEntity.Update.class) CollegeInformationUpdateDTO collegeInformationUpdateDTO) {
+        return collegeInformationApi.update(collegeInformationUpdateDTO);
     }
 }

@@ -34,5 +34,11 @@ public interface DictService extends IService<DictEntity> {
      * @param dictUpdateDTO
      */
     void updateDictById(DictUpdateDTO dictUpdateDTO);
+
+    /**
+     * 查询所有院系信息
+     * @return
+     */
+    List<DictEntity> findDepartment();
 }
 
