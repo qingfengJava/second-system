@@ -38,13 +38,14 @@ public class CollegeInformationServiceImpl extends ServiceImpl<CollegeInformatio
      * 保存二级学院用户关联的院系信息
      *
      * @param collegeInformationSaveDTO
+     * @param userId
      */
     @Override
     public void saveCollegeInformation(CollegeInformationSaveDTO collegeInformationSaveDTO, Long userId) {
         //校验用户信息是不是属于二级学院
         R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(collegeInformationSaveDTO.getUserId()) &&
-                collegeInformationSaveDTO.getUserId().equals(userId)) {
+        collegeInformationSaveDTO.getUserId().equals(userId)) {
             //说明用户身份符合要求，可以进行存储
             baseMapper.insert(dozerUtils.map2(collegeInformationSaveDTO, CollegeInformationEntity.class));
         } else {
@@ -72,7 +73,7 @@ public class CollegeInformationServiceImpl extends ServiceImpl<CollegeInformatio
     public void updateCollegeInformationById(CollegeInformationUpdateDTO collegeInformationUpdateDTO, Long userId) {
         R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(collegeInformationUpdateDTO.getUserId()) &&
-                collegeInformationUpdateDTO.getUserId().equals(userId)) {
+        collegeInformationUpdateDTO.getUserId().equals(userId)) {
             //说明用户身份符合要求，可以进行存储
             baseMapper.updateById(dozerUtils.map2(collegeInformationUpdateDTO, CollegeInformationEntity.class));
         } else {

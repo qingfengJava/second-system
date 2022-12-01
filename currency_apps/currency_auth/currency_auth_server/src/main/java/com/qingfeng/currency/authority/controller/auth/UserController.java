@@ -223,6 +223,7 @@ public class UserController extends BaseController {
     @SysLog("根据用户Id查询用户关联的二级学院的信息")
     public R<CollegeInformationEntity> getCollegeInfo(@ApiParam(value = "用户Id", required = true)
                                             @PathVariable("userId") @NotNull Long userId) {
+        System.out.println(getUserId());
         return collegeInformationApi.info(userId);
     }
 

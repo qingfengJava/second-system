@@ -59,6 +59,7 @@ public class CreditModuleController extends BaseController {
     @GetMapping("/list")
     @SysLog("分页查询学分认定模块列表")
     public R<IPage<PlanVo>> list(CreditModuleQueryDTO creditModuleQueryDTO){
+        System.out.println(getUserId());
         //分页查询，首先还是要分页查询启用的修读方案
         IPage<PlanEntity> page = getPage();
 
