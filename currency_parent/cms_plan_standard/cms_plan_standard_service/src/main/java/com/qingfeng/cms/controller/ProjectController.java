@@ -4,10 +4,9 @@ import com.qingfeng.cms.biz.project.service.ProjectService;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
-import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.vo.ProjectCheckEnumsVo;
-import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
+import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,16 +51,6 @@ public class ProjectController extends BaseController {
     public R<List<ProjectListVo>> list(@RequestBody @Validated ProjectQueryDTO projectQueryDTO) {
         List<ProjectListVo> list = projectService.findList(projectQueryDTO);
         return success(list);
-    }
-
-    /**
-     * 信息
-     */
-    @GetMapping("/info/{projectId}")
-    public R info(@PathVariable("projectId") Long projectId) {
-        ProjectEntity project = projectService.getById(projectId);
-
-        return success(project);
     }
 
     @ApiOperation(value = "添加模块项目", notes = "添加模块项目")

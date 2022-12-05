@@ -1,6 +1,5 @@
 package com.qingfeng.cms.domain.rule.dto;
 
-import com.qingfeng.cms.domain.rule.enums.CreditRulesScoreGradeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -42,7 +41,7 @@ public class CreditRulesSaveDTO implements Serializable {
 	private Double score;
 
 	@ApiModelProperty(value = "分数等级划分，默认无等级（院级、校级、市级、省级、省（市）级、国家级）")
-	private CreditRulesScoreGradeEnum scoreGrade;
+	private String scoreGrade;
 
 	@ApiModelProperty(value = "分数条件字段，没有就是无")
 	private String conditions;

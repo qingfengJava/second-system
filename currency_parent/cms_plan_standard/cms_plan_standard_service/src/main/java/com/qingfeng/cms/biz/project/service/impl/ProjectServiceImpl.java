@@ -23,6 +23,7 @@ import com.qingfeng.cms.domain.rule.vo.CreditRulesVo;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
@@ -106,7 +107,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         ProjectEntity projectEntity = dozer.map2(projectUpdateDTO, ProjectEntity.class);
         checkProject(projectEntity);
         // TODO 需要判断用户角色
-        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.STU_OFFICE_ADMIN.name()});
+        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(userId)) {
             //是学院申请的项目 要重新进行审核
             // TODO 查询用户对应的学院信息
@@ -208,9 +209,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
      * @param projectEntity
      */
     private void checkProject(ProjectEntity projectEntity) {
-        ProjectEntity project = baseMapper.selectOne(Wraps.lbQ(new ProjectEntity())
+        LbqWrapper<ProjectEntity> wrapper = Wraps.lbQ(new ProjectEntity())
                 .eq(ProjectEntity::getModuleId, projectEntity.getModuleId())
-                .like(ProjectEntity::getProjectName, projectEntity.getProjectName()));
+                .like(ProjectEntity::getProjectName, projectEntity.getProjectName());
+        if(ObjectUtil.isNotEmpty(projectEntity.getId())){
+            wrapper.ne(ProjectEntity::getId, projectEntity.getId());
+        }
+        ProjectEntity project = baseMapper.selectOne(wrapper);
         if (ObjectUtil.isNotEmpty(project)) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.IS_EXISTS.getMsg());
         }

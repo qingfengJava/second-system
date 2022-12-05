@@ -1,7 +1,6 @@
 package com.qingfeng.cms.domain.rule.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.qingfeng.cms.domain.rule.enums.CreditRulesScoreGradeEnum;
 import com.qingfeng.cms.domain.rule.enums.RuleCheckEnum;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
@@ -41,7 +40,7 @@ public class CreditRulesEntity extends Entity<Long> {
 	private Double score;
 
 	@ApiModelProperty(value = "分数等级划分，默认无等级（院级、校级、市级、省级、省（市）级、国家级）")
-	private CreditRulesScoreGradeEnum scoreGrade;
+	private String scoreGrade;
 
 	@ApiModelProperty(value = "分数条件字段，没有就是无")
 	private String conditions;
@@ -55,7 +54,7 @@ public class CreditRulesEntity extends Entity<Long> {
 	@Builder
 	public CreditRulesEntity(Long id, LocalDateTime createTime, Long createUser,
 							 LocalDateTime updateTime, Long updateUser,
-							 Long levelId, Double score, CreditRulesScoreGradeEnum scoreGrade,
+							 Long levelId, Double score, String scoreGrade,
 							 String conditions, RuleCheckEnum isCheck, String checkDetail) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.levelId = levelId;

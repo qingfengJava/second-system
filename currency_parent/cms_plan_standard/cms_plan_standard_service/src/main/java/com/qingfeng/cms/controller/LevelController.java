@@ -2,27 +2,22 @@ package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
-import com.qingfeng.cms.domain.level.entity.LevelEntity;
+import com.qingfeng.cms.domain.level.dto.LevelUpdateDTO;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.base.entity.SuperEntity;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
-import java.util.Map;
 
 /**
  * 项目等级表
@@ -41,26 +36,6 @@ public class LevelController extends BaseController {
     @Autowired
     private LevelService levelService;
 
-    /**
-     * 列表
-     */
-    @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-
-        return success();
-    }
-
-
-    /**
-     * 信息
-     */
-    @GetMapping("/info/{levelId}")
-    public R info(@PathVariable("levelId") Long levelId){
-		LevelEntity level = levelService.getById(levelId);
-
-        return success(level);
-    }
-
     @ApiOperation(value = "保存项目等级信息", notes = "保存项目等级信息")
     @PostMapping("/save")
     @SysLog("保存项目等级信息")
@@ -69,23 +44,12 @@ public class LevelController extends BaseController {
         return success();
     }
 
-    /**
-     * 修改
-     */
+    @ApiOperation(value = "根据Id修改等级信息", notes = "根据Id修改等级信息")
     @PutMapping("/update")
-    public R update(@RequestBody LevelEntity level){
-		levelService.updateById(level);
-
-        return success();
-    }
-
-    /**
-     * 删除
-     */
-    @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] levelIds){
-		levelService.removeByIds(Arrays.asList(levelIds));
-
+    @SysLog("根据id修改等级信息")
+    public R update(@ApiParam(value = "项目等级修改模块实体")
+                        @RequestBody @Validated(SuperEntity.Update.class) LevelUpdateDTO levelUpdateDTO){
+		levelService.updateLevelById(levelUpdateDTO, getUserId());
         return success();
     }
 

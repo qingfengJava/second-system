@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesSaveDTO;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 
+import java.util.List;
+
 /**
  * 加分（学分）细则表
  *
@@ -15,9 +17,15 @@ public interface CreditRulesService extends IService<CreditRulesEntity> {
 
     /**
      * 保存学分细则信息
-     * @param creditRulesSaveDTO
+     * @param creditRulesSaveDTOList
      * @param userId
      */
-    void saveCreditRules(CreditRulesSaveDTO creditRulesSaveDTO, Long userId);
+    void saveCreditRules(List<CreditRulesSaveDTO> creditRulesSaveDTOList, Long userId);
+
+    /**
+     * 根据学分Id，删除学分和对应的等级信息
+     * @param id
+     */
+    void removeLevelById(Long id);
 }
 

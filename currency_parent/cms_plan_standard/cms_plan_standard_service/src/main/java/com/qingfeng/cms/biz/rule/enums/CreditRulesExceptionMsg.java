@@ -12,7 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CreditRulesExceptionMsg {
 
-    IS_EXISTS("学分细则已存在");
+    IS_EXISTS("学分细则已存在"),
+    GRADE_IS_SAME("学分不能存在相同的等级");
 
     private String msg;
 }

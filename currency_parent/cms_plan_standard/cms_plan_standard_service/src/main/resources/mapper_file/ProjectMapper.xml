@@ -38,19 +38,16 @@
         <if test="projectQueryDTO.isEnable != null">
             and is_enable = #{projectQueryDTO.isEnable}
         </if>
-        ORDER BY CASE
+        ORDER BY
+        CASE
         is_check
         WHEN 'IS_FINISHED' THEN
         1
         WHEN 'INIT' THEN
         2
         ELSE 3
-        END,
-        CASE
-        is_enable
-        WHEN 1 THEN
-        1
-        ELSE 2
-        END
+        END asc,
+        is_enable desc,
+        id asc
     </select>
 </mapper>

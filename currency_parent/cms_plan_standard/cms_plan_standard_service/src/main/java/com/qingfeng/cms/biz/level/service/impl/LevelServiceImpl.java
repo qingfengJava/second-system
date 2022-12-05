@@ -6,11 +6,13 @@ import com.qingfeng.cms.biz.level.dao.LevelDao;
 import com.qingfeng.cms.biz.level.enums.LevelExceptionMsg;
 import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
+import com.qingfeng.cms.domain.level.dto.LevelUpdateDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.level.enums.LevelCheckEnum;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
@@ -48,11 +50,11 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
     @Transactional(rollbackFor = BizException.class)
     public void saveLevel(LevelSaveDTO levelSaveDTO, Long userId) {
         //保存前，先查询是否已经存在
-        checkLevel(levelSaveDTO);
         LevelEntity levelEntity = dozerUtils.map2(levelSaveDTO, LevelEntity.class);
+        checkLevel(levelEntity);
 
         // 并查询当前用户身份，规定学院添加的需要审核
-        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.STU_OFFICE_ADMIN.name()});
+        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(userId)) {
             //是院级用户
             levelEntity.setIsCheck(LevelCheckEnum.INIT);
@@ -65,16 +67,40 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
     }
 
     /**
+     * 根据id修改项目等级信息
+     * @param levelUpdateDTO
+     * @param userId
+     */
+    @Override
+    public void updateLevelById(LevelUpdateDTO levelUpdateDTO, Long userId) {
+        LevelEntity levelEntity = dozerUtils.map2(levelUpdateDTO, LevelEntity.class);
+        checkLevel(levelEntity);
+        // 并查询当前用户身份，规定学院添加的需要审核
+        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
+        if (userIdByCode.getData().contains(userId)) {
+            //是院级用户
+            levelEntity.setIsCheck(LevelCheckEnum.INIT);
+        }
+
+        baseMapper.updateById(levelEntity);
+    }
+
+    /**
      * 检查是否重复
      *
-     * @param levelSaveDTO
+     * @param levelEntity
      */
-    private void checkLevel(LevelSaveDTO levelSaveDTO) {
-        LevelEntity levelEntity = baseMapper.selectOne(Wraps.lbQ(new LevelEntity())
-                .eq(LevelEntity::getProjectId, levelSaveDTO.getProjectId())
-                .like(LevelEntity::getLevelContent, levelSaveDTO.getLevelContent()));
+    private void checkLevel(LevelEntity levelEntity) {
+        LbqWrapper<LevelEntity> wrapper = Wraps.lbQ(new LevelEntity())
+                .eq(LevelEntity::getProjectId, levelEntity.getProjectId())
+                .like(LevelEntity::getLevelContent, levelEntity.getLevelContent());
+        if (ObjectUtil.isNotEmpty(levelEntity.getId())){
+            wrapper.ne(LevelEntity::getId, levelEntity.getId());
+        }
 
-        if (ObjectUtil.isNotEmpty(levelEntity)) {
+        LevelEntity level = baseMapper.selectOne(wrapper);
+
+        if (ObjectUtil.isNotEmpty(level)) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), LevelExceptionMsg.IS_EXISTS.getMsg());
         }
     }
