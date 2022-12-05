@@ -3,6 +3,7 @@ package com.qingfeng.cms.controller;
 import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
 import com.qingfeng.cms.domain.level.dto.LevelUpdateDTO;
+import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
@@ -40,8 +41,8 @@ public class LevelController extends BaseController {
     @PostMapping("/save")
     @SysLog("保存项目等级信息")
     public R save(@RequestBody @Validated LevelSaveDTO levelSaveDTO){
-		levelService.saveLevel(levelSaveDTO, getUserId());
-        return success();
+        LevelEntity levelEntity = levelService.saveLevel(levelSaveDTO, getUserId());
+        return success(levelEntity);
     }
 
     @ApiOperation(value = "根据Id修改等级信息", notes = "根据Id修改等级信息")
@@ -49,8 +50,8 @@ public class LevelController extends BaseController {
     @SysLog("根据id修改等级信息")
     public R update(@ApiParam(value = "项目等级修改模块实体")
                         @RequestBody @Validated(SuperEntity.Update.class) LevelUpdateDTO levelUpdateDTO){
-		levelService.updateLevelById(levelUpdateDTO, getUserId());
-        return success();
+        LevelEntity levelEntity = levelService.updateLevelById(levelUpdateDTO, getUserId());
+        return success(levelEntity);
     }
 
 }

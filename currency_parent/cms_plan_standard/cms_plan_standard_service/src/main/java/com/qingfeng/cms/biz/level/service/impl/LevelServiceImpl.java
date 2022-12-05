@@ -48,7 +48,7 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
      */
     @Override
     @Transactional(rollbackFor = BizException.class)
-    public void saveLevel(LevelSaveDTO levelSaveDTO, Long userId) {
+    public LevelEntity saveLevel(LevelSaveDTO levelSaveDTO, Long userId) {
         //保存前，先查询是否已经存在
         LevelEntity levelEntity = dozerUtils.map2(levelSaveDTO, LevelEntity.class);
         checkLevel(levelEntity);
@@ -64,6 +64,8 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
 
         // 进行保存
         baseMapper.insert(levelEntity);
+
+        return levelEntity;
     }
 
     /**
@@ -72,7 +74,7 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
      * @param userId
      */
     @Override
-    public void updateLevelById(LevelUpdateDTO levelUpdateDTO, Long userId) {
+    public LevelEntity updateLevelById(LevelUpdateDTO levelUpdateDTO, Long userId) {
         LevelEntity levelEntity = dozerUtils.map2(levelUpdateDTO, LevelEntity.class);
         checkLevel(levelEntity);
         // 并查询当前用户身份，规定学院添加的需要审核
@@ -83,6 +85,8 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
         }
 
         baseMapper.updateById(levelEntity);
+
+        return levelEntity;
     }
 
     /**

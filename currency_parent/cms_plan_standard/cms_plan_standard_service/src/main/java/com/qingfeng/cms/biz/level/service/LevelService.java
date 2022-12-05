@@ -19,13 +19,13 @@ public interface LevelService extends IService<LevelEntity> {
      * @param levelSaveDTO
      * @param userId
      */
-    void saveLevel(LevelSaveDTO levelSaveDTO, Long userId);
+    LevelEntity saveLevel(LevelSaveDTO levelSaveDTO, Long userId);
 
     /**
      * 根据Id修改项目等级信息
      * @param levelUpdateDTO
      * @param userId
      */
-    void updateLevelById(LevelUpdateDTO levelUpdateDTO, Long userId);
+    LevelEntity updateLevelById(LevelUpdateDTO levelUpdateDTO, Long userId);
 }
 
