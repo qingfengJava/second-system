@@ -36,7 +36,6 @@ public class CreditRulesSaveDTO implements Serializable {
 	@ApiModelProperty(value = "项目等级表id，外键")
 	private Long levelId;
 
-	@NotNull(message = "学分不能为空")
 	@ApiModelProperty(value = "分数")
 	private Double score;
 

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -57,10 +58,10 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
         if (creditRulesEntityList.size() > 1){
             creditRulesEntityList.stream()
                     .collect(Collectors.groupingBy(
-                            CreditRulesEntity::getScoreGrade,
+                            (c -> Optional.ofNullable(c.getScoreGrade()).orElse("null")),
                             Collectors.counting()
                     )).forEach((k,v) -> {
-                        if (v > 1){
+                        if (!"null".equals(k) && v > 1){
                             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.GRADE_IS_SAME.getMsg());
                         }
                     });

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 项目等级表
  *
@@ -40,9 +42,9 @@ public class LevelController extends BaseController {
     @ApiOperation(value = "保存项目等级信息", notes = "保存项目等级信息")
     @PostMapping("/save")
     @SysLog("保存项目等级信息")
-    public R save(@RequestBody @Validated LevelSaveDTO levelSaveDTO){
-        LevelEntity levelEntity = levelService.saveLevel(levelSaveDTO, getUserId());
-        return success(levelEntity);
+    public R<List<LevelEntity>> save(@RequestBody @Validated List<LevelSaveDTO> levelSaveDTO){
+        List<LevelEntity> levelEntityList = levelService.saveLevel(levelSaveDTO, getUserId());
+        return success(levelEntityList);
     }
 
     @ApiOperation(value = "根据Id修改等级信息", notes = "根据Id修改等级信息")

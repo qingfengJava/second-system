@@ -5,6 +5,8 @@ import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
 import com.qingfeng.cms.domain.level.dto.LevelUpdateDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 
+import java.util.List;
+
 /**
  * 项目等级表
  *
@@ -18,8 +20,9 @@ public interface LevelService extends IService<LevelEntity> {
      * 保存项目等级信息
      * @param levelSaveDTO
      * @param userId
+     * @return List<LevelEntity>
      */
-    LevelEntity saveLevel(LevelSaveDTO levelSaveDTO, Long userId);
+    List<LevelEntity> saveLevel(List<LevelSaveDTO> levelSaveDTO, Long userId);
 
     /**
      * 根据Id修改项目等级信息

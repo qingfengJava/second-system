@@ -33,6 +33,9 @@ public class LevelSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "主键")
+	private Long id;
+
 	@NotNull(message = "项目Id不能为空")
 	@ApiModelProperty(value = "关联的项目id")
 	private Long projectId;
