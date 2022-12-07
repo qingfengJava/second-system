@@ -30,5 +30,11 @@ public interface LevelService extends IService<LevelEntity> {
      * @param userId
      */
     LevelEntity updateLevelById(LevelUpdateDTO levelUpdateDTO, Long userId);
+
+    /**
+     * 根据id删除等级和对应的学分
+     * @param id
+     */
+    void removeLevelById(Long id);
 }
 

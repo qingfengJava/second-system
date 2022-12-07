@@ -125,6 +125,20 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
     }
 
     /**
+     * 根据Id删除等级及其对应的学分
+     * @param id
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public void removeLevelById(Long id) {
+        //先删除学分
+        creditRulesService.remove(Wraps.lbQ(new CreditRulesEntity())
+                .eq(CreditRulesEntity::getLevelId,id));
+        //删除等级
+        baseMapper.deleteById(id);
+    }
+
+    /**
      * 检查是否重复
      *
      * @param levelEntity

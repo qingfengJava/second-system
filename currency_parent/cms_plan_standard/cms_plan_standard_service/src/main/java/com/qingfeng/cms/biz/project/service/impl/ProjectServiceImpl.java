@@ -204,6 +204,29 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     }
 
     /**
+     * 根据项目id删除项目及其关联的等级和学分
+     *
+     * @param id
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public void removeProjectById(Long id) {
+        //删除等级下关联的学分
+        creditRulesService.remove(Wraps.lbQ(new CreditRulesEntity())
+                .in(CreditRulesEntity::getLevelId, levelService.list(Wraps.lbQ(new LevelEntity())
+                                .eq(LevelEntity::getProjectId, id))
+                        .stream()
+                        .map(LevelEntity::getId)
+                        .collect(Collectors.toList())));
+
+        //删除关联的等级
+        levelService.remove(Wraps.lbQ(new LevelEntity())
+                        .eq(LevelEntity::getProjectId, id));
+
+        baseMapper.deleteById(id);
+    }
+
+    /**
      * 检查模块项目是否重复
      *
      * @param projectEntity
@@ -212,7 +235,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         LbqWrapper<ProjectEntity> wrapper = Wraps.lbQ(new ProjectEntity())
                 .eq(ProjectEntity::getModuleId, projectEntity.getModuleId())
                 .like(ProjectEntity::getProjectName, projectEntity.getProjectName());
-        if(ObjectUtil.isNotEmpty(projectEntity.getId())){
+        if (ObjectUtil.isNotEmpty(projectEntity.getId())) {
             wrapper.ne(ProjectEntity::getId, projectEntity.getId());
         }
         ProjectEntity project = baseMapper.selectOne(wrapper);

@@ -47,6 +47,7 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
 
     /**
      * 保存学分细则信息
+     *
      * @param creditRulesSaveDTOList
      * @param userId
      */
@@ -55,15 +56,22 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
     public void saveCreditRules(List<CreditRulesSaveDTO> creditRulesSaveDTOList, Long userId) {
         List<CreditRulesEntity> creditRulesEntityList = dozerUtils.mapList(creditRulesSaveDTOList, CreditRulesEntity.class);
         //如果有等级不能存在相同的等级
-        if (creditRulesEntityList.size() > 1){
+        if (creditRulesEntityList.size() > 1) {
+            //先按等级进行分组
             creditRulesEntityList.stream()
                     .collect(Collectors.groupingBy(
-                            (c -> Optional.ofNullable(c.getScoreGrade()).orElse("null")),
-                            Collectors.counting()
-                    )).forEach((k,v) -> {
-                        if (!"null".equals(k) && v > 1){
-                            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.GRADE_IS_SAME.getMsg());
-                        }
+                            CreditRulesEntity::getLevelId
+                    )).forEach((index, ruleList) -> {
+                        //对每个value进行分组
+                        ruleList.stream()
+                                .collect(Collectors.groupingBy(
+                                        (c -> Optional.ofNullable(c.getScoreGrade()).orElse("null")),
+                                        Collectors.counting()
+                                )).forEach((k, v) -> {
+                                    if (!"null".equals(k) && v > 1) {
+                                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.GRADE_IS_SAME.getMsg());
+                                    }
+                                });
                     });
         }
 
@@ -86,6 +94,7 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
 
     /**
      * 根据学分Id删除学分和其对应的等级信息
+     *
      * @param id
      */
     @Override
@@ -96,7 +105,7 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
         //查询对应的等级下面是否对应多个学分，一般是只有一个的
         List<CreditRulesEntity> creditRulesEntityList = baseMapper.selectList(Wraps.lbQ(new CreditRulesEntity())
                 .eq(CreditRulesEntity::getLevelId, creditRulesEntity.getLevelId()));
-        if (creditRulesEntityList.size() == 1){
+        if (creditRulesEntityList.size() == 1) {
             //说明只有一条记录，连同等级直接删除
             levelService.removeById(creditRulesEntity.getLevelId());
         }
@@ -112,8 +121,8 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
             //有等级划分
             wrapper.eq(CreditRulesEntity::getScoreGrade, creditRulesEntity.getScoreGrade());
         }
-        CreditRulesEntity creditRules= baseMapper.selectOne(wrapper);
-        if (ObjectUtil.isNotEmpty(creditRules)){
+        CreditRulesEntity creditRules = baseMapper.selectOne(wrapper);
+        if (ObjectUtil.isNotEmpty(creditRules)) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.IS_EXISTS.getMsg());
         }
     }

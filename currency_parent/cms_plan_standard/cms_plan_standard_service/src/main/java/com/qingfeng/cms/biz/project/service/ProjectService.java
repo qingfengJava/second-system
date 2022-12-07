@@ -52,5 +52,11 @@ public interface ProjectService extends IService<ProjectEntity> {
      * @return
      */
     List<ProjectCheckEnumsVo> getProjectCheck();
+
+    /**
+     * 根据项目Id删除项目关联的等级及其学分
+     * @param id
+     */
+    void removeProjectById(Long id);
 }
 

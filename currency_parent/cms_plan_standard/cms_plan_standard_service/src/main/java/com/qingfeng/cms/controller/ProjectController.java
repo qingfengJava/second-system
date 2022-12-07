@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -71,13 +71,11 @@ public class ProjectController extends BaseController {
         return success();
     }
 
-    /**
-     * 删除
-     */
+    @ApiOperation(value = "删除项目及其对应的等级和学分", notes = "删除项目及其对应的等级和学分")
     @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] projectIds) {
-        projectService.removeByIds(Arrays.asList(projectIds));
-
+    @SysLog("删除项目及其对应的等级和学分")
+    public R delete(@RequestParam("id") Long id) {
+        projectService.removeProjectById(id);
         return success();
     }
 

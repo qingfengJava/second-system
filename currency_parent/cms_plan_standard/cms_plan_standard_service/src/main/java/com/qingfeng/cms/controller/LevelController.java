@@ -14,10 +14,12 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -54,6 +56,14 @@ public class LevelController extends BaseController {
                         @RequestBody @Validated(SuperEntity.Update.class) LevelUpdateDTO levelUpdateDTO){
         LevelEntity levelEntity = levelService.updateLevelById(levelUpdateDTO, getUserId());
         return success(levelEntity);
+    }
+
+    @ApiOperation(value = "根据Id删除等级及其对应的学分", notes = "根据Id删除等级及其对应的学分")
+    @DeleteMapping("/delete")
+    @SysLog("根据Id删除等级及其对应的学分")
+    public R delete(@RequestParam("id") Long id) {
+        levelService.removeLevelById(id);
+        return success();
     }
 
 }
