@@ -1,6 +1,8 @@
 package com.qingfeng.cms.domain.news.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,18 +39,22 @@ public class NewsNotifyEntity extends Entity<Long> {
 	@ApiModelProperty(value = "消息针对的用户Id")
 	private Long userId;
 
+	@ApiModelProperty(value = "消息的类型")
+	private NewsTypeEnum newsType;
+
 	@ApiModelProperty(value = "消息内容  如：XXX同学，你的某某活动即将截止，请及时评价加分，避免活动失效！！！")
 	private String newsContent;
 
 	@ApiModelProperty(value = "是否已查看 （未查看   已查看）  查看了就不再做显示（枚举处理）")
-	private String isSee;
+	private IsSeeEnum isSee;
 
 	@Builder
-	public NewsNotifyEntity(Long id, LocalDateTime createTime, Long createUser,
-							LocalDateTime updateTime, Long updateUser, Long userId,
-							String newsContent, String isSee) {
+	public NewsNotifyEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime,
+							Long updateUser, Long userId, NewsTypeEnum newsType,
+							String newsContent, IsSeeEnum isSee) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.userId = userId;
+		this.newsType = newsType;
 		this.newsContent = newsContent;
 		this.isSee = isSee;
 	}

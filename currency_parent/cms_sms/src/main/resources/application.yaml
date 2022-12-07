@@ -1,0 +1,21 @@
+server:
+  port: 9501
+currency:
+  swagger:
+    enabled: true
+    base-package: com.qingfeng.sms
+    description: 第二课堂——短信/邮箱服务
+
+#邮箱的配置
+spring:
+  mail:
+    host: smtp.qq.com
+    prot: 587
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryCalss: javax.net.ssl.SSLSocketFactory
+        debug: true
+
+

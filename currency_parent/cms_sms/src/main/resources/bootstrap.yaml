@@ -1,0 +1,37 @@
+currency:
+  # docker部署时，需要指定， 表示运行该服务的宿主机IP
+  local-ip: ${LOCAL_IP:${spring.cloud.client.ip-address}}
+  nacos:
+    ip: ${NACOS_IP:@pom.nacos.ip@}
+    port: ${NACOS_PORT:@pom.nacos.port@}
+    namespace: ${NACOS_ID:@pom.nacos.namespace@}
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: cms-sms #cms-sms
+  profiles:
+    active: '@pom.profile.name@' #dev
+  cloud:
+    nacos:
+      config:
+        server-addr: ${currency.nacos.ip}:${currency.nacos.port}
+        file-extension: yml
+        namespace: ${currency.nacos.namespace}
+        shared-dataids: common.yml
+        refreshable-dataids: common.yml
+        enabled: true
+      discovery:
+        server-addr: ${currency.nacos.ip}:${currency.nacos.port}
+        namespace: ${currency.nacos.namespace}
+        metadata:
+          management.context-path: ${server.servlet.context-path:}${spring.mvc.servlet.path:}${management.endpoints.web.base-path:}
+          #http://localhost:8760/api/gate/actuator
+
+# 只能配置在bootstrap.yml ，否则会生成 log.path_IS_UNDEFINED 文件夹
+# window会自动在 代码所在盘 根目录下自动创建文件夹，  如： D:/data/projects/logs
+logging:
+  file:
+    path: data/file/logs
+    name: ${logging.file.path}/${spring.application.name}/root.log
