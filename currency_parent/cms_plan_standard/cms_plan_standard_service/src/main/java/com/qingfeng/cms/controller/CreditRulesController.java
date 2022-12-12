@@ -1,9 +1,11 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
+import com.qingfeng.cms.domain.rule.dto.CreditRulesCheckDTO;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesSaveDTO;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.base.entity.SuperEntity;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,8 +43,8 @@ public class CreditRulesController extends BaseController {
     @ApiOperation(value = "保存学分细则信息", notes = "保存学分细则信息")
     @PostMapping("/save")
     @SysLog("保存学分细则信息")
-    public R save(@RequestBody @Validated List<CreditRulesSaveDTO> creditRulesSaveDTOList){
-		creditRulesService.saveCreditRules(creditRulesSaveDTOList, getUserId());
+    public R save(@RequestBody @Validated List<CreditRulesSaveDTO> creditRulesSaveDTOList) {
+        creditRulesService.saveCreditRules(creditRulesSaveDTOList, getUserId());
         return success();
     }
 
@@ -50,8 +52,17 @@ public class CreditRulesController extends BaseController {
     @DeleteMapping("/delete")
     @SysLog("根据学分id，删除学分和对应的等级信息")
     public R delete(@ApiParam(value = "学分id", required = true)
-                    @RequestParam("id") Long id){
+                    @RequestParam("id") Long id) {
         creditRulesService.removeLevelById(id);
+        return success();
+    }
+
+    @ApiOperation(value = "学分细则审核", notes = "学分细则审核")
+    @PostMapping("/check")
+    @SysLog("学分细则审核")
+    public R checkRules(@ApiParam(value = "学分细则审核实体", required = true)
+                        @RequestBody @Validated(SuperEntity.Update.class) CreditRulesCheckDTO creditRulesCheckDTO) {
+        creditRulesService.checkRule(creditRulesCheckDTO);
         return success();
     }
 }

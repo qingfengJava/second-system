@@ -9,6 +9,10 @@ import com.qingfeng.cms.biz.project.service.ProjectService;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.level.vo.LevelListVo;
+import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
+import com.qingfeng.cms.domain.project.dto.ProjectCheckDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
@@ -20,6 +24,7 @@ import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.rule.vo.CreditRulesVo;
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -28,6 +33,10 @@ import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.auth.role.RoleApi;
+import com.qingfeng.sdk.auth.user.UserApi;
+import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
+import com.qingfeng.sdk.sms.email.EmailApi;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,12 +62,20 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
     @Autowired
     private DozerUtils dozer;
-    @Autowired
-    private RoleApi roleApi;
+
     @Autowired
     private LevelService levelService;
     @Autowired
     private CreditRulesService creditRulesService;
+
+    @Autowired
+    private RoleApi roleApi;
+    @Autowired
+    private UserApi userApi;
+    @Autowired
+    private EmailApi emailApi;
+    @Autowired
+    private NewsNotifyApi newsNotifyApi;
 
     /**
      * 保存模块项目内容
@@ -221,9 +238,65 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
 
         //删除关联的等级
         levelService.remove(Wraps.lbQ(new LevelEntity())
-                        .eq(LevelEntity::getProjectId, id));
+                .eq(LevelEntity::getProjectId, id));
 
         baseMapper.deleteById(id);
+    }
+
+    /**
+     * 项目信息审核
+     *
+     * @param projectCheckDTO
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public void checkProject(ProjectCheckDTO projectCheckDTO) {
+        ProjectEntity projectEntity = dozer.map2(projectCheckDTO, ProjectEntity.class);
+        baseMapper.updateById(projectEntity);
+
+        //查询项目详情
+        ProjectEntity project = baseMapper.selectById(projectCheckDTO.getId());
+        //查询用户详细信息
+        User user = userApi.get(project.getCreateUser()).getData();
+
+        if (ObjectUtil.isNotEmpty(user)){
+            // TODO 审核结果发送消息通知  目前先发送邮件通知
+            if (ObjectUtil.isNotEmpty(user.getEmail())) {
+                String title = projectCheckDTO.getIsCheck().equals(ProjectCheckEnum.IS_FINISHED) ?
+                        "项目<" + project.getProjectName() + ">申请审核通过通知" : "项目<" + project.getProjectName() + ">审核不通过通知";
+
+                //有邮箱就先向邮箱中发送消息
+                Integer code = emailApi.sendEmail(EmailEntity.builder()
+                        .email(user.getEmail())
+                        .title(title)
+                        .body(projectCheckDTO.getCheckDetail())
+                        .build());
+                if (code != 1) {
+                    // TODO 目前先不做处理，后面使用消息队列做失败重试三次处理
+                } else {
+                    //先将消息通知写入数据库
+                    R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                            .userId(project.getCreateUser())
+                            .newsType(NewsTypeEnum.MAILBOX)
+                            .newsTitle(title)
+                            .newsContent(projectCheckDTO.getCheckDetail())
+                            .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                            .build());
+
+                    if (r.getIsError()){
+                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.NEWS_SAVE_FAILED.getMsg());
+                    }
+                }
+
+            } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
+                // TODO 向短信发送信息 待完善
+
+            }
+        }else {
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.USER_NOT_EXITS.getMsg());
+
+        }
+
     }
 
     /**

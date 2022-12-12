@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.level.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.level.dto.LevelCheckDTO;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
 import com.qingfeng.cms.domain.level.dto.LevelUpdateDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
@@ -36,5 +37,11 @@ public interface LevelService extends IService<LevelEntity> {
      * @param id
      */
     void removeLevelById(Long id);
+
+    /**
+     * 审核项目等级
+     * @param levelCheckDTO
+     */
+    void checkLevel(LevelCheckDTO levelCheckDTO);
 }
 

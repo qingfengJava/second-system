@@ -12,8 +12,8 @@ import lombok.Getter;
 @Getter
 public enum IsSeeEnum {
 
-    is_viewed("已查看"),
-    is_not_viewed("未查看");
+    IS_VIEWED("已查看"),
+    IS_NOT_VIEWED("未查看");
 
     private String code;
 }

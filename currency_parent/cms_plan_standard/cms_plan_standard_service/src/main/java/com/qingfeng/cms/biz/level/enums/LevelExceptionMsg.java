@@ -12,7 +12,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum LevelExceptionMsg {
 
-    IS_EXISTS("项目等级已存在");
+    IS_EXISTS("项目等级已存在"),
+    USER_NOT_EXITS("用户信息查询失败"),
+    NEWS_SAVE_FAILED("消息通知保存失败");
 
     private String msg;
 }

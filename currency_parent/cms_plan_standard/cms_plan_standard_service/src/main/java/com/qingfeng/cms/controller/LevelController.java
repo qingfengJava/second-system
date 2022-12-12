@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.level.service.LevelService;
+import com.qingfeng.cms.domain.level.dto.LevelCheckDTO;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
 import com.qingfeng.cms.domain.level.dto.LevelUpdateDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
@@ -44,7 +45,7 @@ public class LevelController extends BaseController {
     @ApiOperation(value = "保存项目等级信息", notes = "保存项目等级信息")
     @PostMapping("/save")
     @SysLog("保存项目等级信息")
-    public R<List<LevelEntity>> save(@RequestBody @Validated List<LevelSaveDTO> levelSaveDTO){
+    public R<List<LevelEntity>> save(@RequestBody @Validated List<LevelSaveDTO> levelSaveDTO) {
         List<LevelEntity> levelEntityList = levelService.saveLevel(levelSaveDTO, getUserId());
         return success(levelEntityList);
     }
@@ -53,7 +54,7 @@ public class LevelController extends BaseController {
     @PutMapping("/update")
     @SysLog("根据id修改等级信息")
     public R update(@ApiParam(value = "项目等级修改模块实体")
-                        @RequestBody @Validated(SuperEntity.Update.class) LevelUpdateDTO levelUpdateDTO){
+                    @RequestBody @Validated(SuperEntity.Update.class) LevelUpdateDTO levelUpdateDTO) {
         LevelEntity levelEntity = levelService.updateLevelById(levelUpdateDTO, getUserId());
         return success(levelEntity);
     }
@@ -63,6 +64,15 @@ public class LevelController extends BaseController {
     @SysLog("根据Id删除等级及其对应的学分")
     public R delete(@RequestParam("id") Long id) {
         levelService.removeLevelById(id);
+        return success();
+    }
+
+    @ApiOperation(value = "项目等级审核", notes = "项目等级审核")
+    @PostMapping("/check")
+    @SysLog("项目等级审核")
+    public R checkLevel(@ApiParam(value = "项目等级审核实体", required = true)
+                        @RequestBody @Validated(SuperEntity.Update.class) LevelCheckDTO levelCheckDTO) {
+        levelService.checkLevel(levelCheckDTO);
         return success();
     }
 

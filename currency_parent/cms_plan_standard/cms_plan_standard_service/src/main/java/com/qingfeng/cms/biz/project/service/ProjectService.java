@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.project.dto.ProjectCheckDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
@@ -58,5 +59,11 @@ public interface ProjectService extends IService<ProjectEntity> {
      * @param id
      */
     void removeProjectById(Long id);
+
+    /**
+     * 项目审核
+     * @param projectCheckDTO
+     */
+    void checkProject(ProjectCheckDTO projectCheckDTO);
 }
 

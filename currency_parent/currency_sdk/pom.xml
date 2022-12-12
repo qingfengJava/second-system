@@ -41,6 +41,11 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>currency_auth_entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
     </dependencies>
 

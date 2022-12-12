@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.project.service.ProjectService;
+import com.qingfeng.cms.domain.project.dto.ProjectCheckDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
@@ -45,7 +46,7 @@ public class ProjectController extends BaseController {
     @Autowired
     private ProjectService projectService;
 
-    @ApiOperation(value="查询项目学分列表", notes = "查询项目学分列表")
+    @ApiOperation(value = "查询项目学分列表", notes = "查询项目学分列表")
     @PostMapping("/list")
     @SysLog("查询项目学分列表")
     public R<List<ProjectListVo>> list(@RequestBody @Validated ProjectQueryDTO projectQueryDTO) {
@@ -66,7 +67,7 @@ public class ProjectController extends BaseController {
     @PutMapping("/update")
     @SysLog("修改模块项目内容")
     public R update(@ApiParam(value = "学分认定模块实体")
-                        @RequestBody @Validated(SuperEntity.Update.class) ProjectUpdateDTO projectUpdateDTO) {
+                    @RequestBody @Validated(SuperEntity.Update.class) ProjectUpdateDTO projectUpdateDTO) {
         projectService.updateProjectById(projectUpdateDTO, getUserId());
         return success();
     }
@@ -82,7 +83,7 @@ public class ProjectController extends BaseController {
     @ApiOperation(value = "返回项目类型枚举", notes = "返回项目类型枚举")
     @GetMapping("/projectType")
     @SysLog("返回项目类型枚举")
-    public R<List<ProjectTypeEnumsVo>> getProjectType(){
+    public R<List<ProjectTypeEnumsVo>> getProjectType() {
         List<ProjectTypeEnumsVo> projectTypeList = projectService.getProjectType();
         return success(projectTypeList);
     }
@@ -90,8 +91,17 @@ public class ProjectController extends BaseController {
     @ApiOperation(value = "返回项目审核类型枚举", notes = "返回项目审核类型枚举")
     @GetMapping("/projectCheck")
     @SysLog("返回项目审核类型枚举")
-    public R<List<ProjectCheckEnumsVo>> getProjectCheck(){
+    public R<List<ProjectCheckEnumsVo>> getProjectCheck() {
         List<ProjectCheckEnumsVo> projectCheckList = projectService.getProjectCheck();
         return success(projectCheckList);
+    }
+
+    @ApiOperation(value = "审核项目信息", notes = "审核项目信息")
+    @PostMapping("/check")
+    @SysLog("审核项目信息")
+    public R checkProject(@ApiParam(value = "项目审核模块实体")
+                          @RequestBody @Validated(SuperEntity.Update.class) ProjectCheckDTO projectCheckDTO) {
+        projectService.checkProject(projectCheckDTO);
+        return success();
     }
 }

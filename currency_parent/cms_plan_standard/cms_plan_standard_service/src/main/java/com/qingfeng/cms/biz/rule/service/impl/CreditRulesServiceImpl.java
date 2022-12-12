@@ -6,9 +6,15 @@ import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.biz.rule.dao.CreditRulesDao;
 import com.qingfeng.cms.biz.rule.enums.CreditRulesExceptionMsg;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
+import com.qingfeng.cms.domain.level.entity.LevelEntity;
+import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
+import com.qingfeng.cms.domain.rule.dto.CreditRulesCheckDTO;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesSaveDTO;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.rule.enums.RuleCheckEnum;
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -17,6 +23,10 @@ import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.auth.role.RoleApi;
+import com.qingfeng.sdk.auth.user.UserApi;
+import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
+import com.qingfeng.sdk.sms.email.EmailApi;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,10 +50,18 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
 
     @Autowired
     private DozerUtils dozerUtils;
+
+    @Autowired
+    private LevelService levelService;
+
     @Autowired
     private RoleApi roleApi;
     @Autowired
-    private LevelService levelService;
+    private UserApi userApi;
+    @Autowired
+    private EmailApi emailApi;
+    @Autowired
+    private NewsNotifyApi newsNotifyApi;
 
     /**
      * 保存学分细则信息
@@ -110,6 +128,63 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
             levelService.removeById(creditRulesEntity.getLevelId());
         }
         baseMapper.deleteById(id);
+    }
+
+    /**
+     * 学分细则审核
+     * @param creditRulesCheckDTO
+     */
+    @Override
+    public void checkRule(CreditRulesCheckDTO creditRulesCheckDTO) {
+        CreditRulesEntity creditRulesEntity = dozerUtils.map2(creditRulesCheckDTO, CreditRulesEntity.class);
+        baseMapper.updateById(creditRulesEntity);
+        //查询详情
+        CreditRulesEntity rules = baseMapper.selectById(creditRulesCheckDTO.getId());
+        //查询关联的等级
+        LevelEntity level = levelService.getById(rules.getLevelId());
+        //查询关联的用户信息
+        User user = null;
+        if (rules.getCreateUser() != 0){
+            user = userApi.get(rules.getCreateUser()).getData();
+        }
+
+        if (ObjectUtil.isNotEmpty(user)){
+            // TODO 审核结果发送消息通知  目前先发送邮件通知
+            if (ObjectUtil.isNotEmpty(user.getEmail())) {
+                String title = creditRulesCheckDTO.getIsCheck().equals(RuleCheckEnum.IS_FINISHED) ?
+                        "项目等级<" + level.getLevelContent() + ">关联的学分申请审核通过通知" :
+                        "项目等级<" + level.getLevelContent() + ">关联的学分审核不通过通知";
+
+                //有邮箱就先向邮箱中发送消息
+                Integer code = emailApi.sendEmail(EmailEntity.builder()
+                        .email(user.getEmail())
+                        .title(title)
+                        .body(creditRulesCheckDTO.getCheckDetail())
+                        .build());
+                if (code != 1) {
+                    // TODO 目前先不做处理，后面使用消息队列做失败重试三次处理
+                } else {
+                    //先将消息通知写入数据库
+                    R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                            .userId(rules.getCreateUser())
+                            .newsType(NewsTypeEnum.MAILBOX)
+                            .newsTitle(title)
+                            .newsContent(creditRulesCheckDTO.getCheckDetail())
+                            .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                            .build());
+
+                    if (r.getIsError()){
+                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.NEWS_SAVE_FAILED.getMsg());
+                    }
+                }
+
+            } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
+                // TODO 向短信发送信息 待完善
+
+            }
+        }else {
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.USER_NOT_EXITS.getMsg());
+        }
     }
 
     @Deprecated

@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.news.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.cms.domain.news.entity.NewsNotifyEntity;
 
 /**
@@ -12,5 +13,10 @@ import com.qingfeng.cms.domain.news.entity.NewsNotifyEntity;
  */
 public interface NewsNotifyService extends IService<NewsNotifyEntity> {
 
+    /**
+     * 保存消息实体
+     * @param newsNotifySaveDTO
+     */
+    void saveNews(NewsNotifySaveDTO newsNotifySaveDTO);
 }
 
