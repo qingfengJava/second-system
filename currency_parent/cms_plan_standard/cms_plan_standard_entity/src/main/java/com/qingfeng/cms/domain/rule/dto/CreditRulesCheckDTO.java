@@ -39,12 +39,12 @@ public class CreditRulesCheckDTO implements Serializable {
 	@NotNull(message = "id不能为空", groups = SuperEntity.Update.class)
 	private Long id;
 
-	@NotNull(message = "审核结果不能为空")
 	@ApiModelProperty(value = "是否通过审核，只有院级一下才需要审核，默认通过")
+	@NotNull(message = "审核结果不能为空")
 	private RuleCheckEnum isCheck;
 
-	@NotEmpty(message = "审核详情不能为空")
 	@ApiModelProperty(value = "审核的详情，没有就是无")
+	@NotEmpty(message = "审核详情不能为空")
 	private String checkDetail;
 }
 

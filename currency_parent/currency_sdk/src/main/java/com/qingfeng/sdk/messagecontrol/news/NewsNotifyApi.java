@@ -4,6 +4,7 @@ import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -22,5 +23,5 @@ public interface NewsNotifyApi {
      * @return
      */
     @PostMapping("/newsnotify/save")
-    public R save(@RequestBody NewsNotifySaveDTO newsNotifySaveDTO);
+    public R save(@RequestBody @Validated NewsNotifySaveDTO newsNotifySaveDTO);
 }

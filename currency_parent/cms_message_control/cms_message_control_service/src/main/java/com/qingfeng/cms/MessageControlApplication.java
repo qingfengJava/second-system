@@ -23,7 +23,7 @@ import java.net.UnknownHostException;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.qingfeng.sdk"})
+@EnableFeignClients(value = {"com.qingfeng.sdk"})
 @EnableTransactionManagement
 @Slf4j
 @EnableFormValidator

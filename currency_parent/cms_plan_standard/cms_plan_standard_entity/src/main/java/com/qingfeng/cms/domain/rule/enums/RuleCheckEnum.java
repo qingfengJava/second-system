@@ -1,7 +1,6 @@
 package com.qingfeng.cms.domain.rule.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qingfeng.cms.domain.level.enums.LevelCheckEnum;
 import com.qingfeng.currency.base.BaseEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,8 +27,8 @@ public enum RuleCheckEnum implements BaseEnum {
     @ApiModelProperty(value = "描述")
     private String desc;
 
-    public static LevelCheckEnum match(String val, LevelCheckEnum def) {
-        for (LevelCheckEnum enm : LevelCheckEnum.values()) {
+    public static RuleCheckEnum match(String val, RuleCheckEnum def) {
+        for (RuleCheckEnum enm : RuleCheckEnum.values()) {
             if (enm.name().equalsIgnoreCase(val)) {
                 return enm;
             }
@@ -37,7 +36,7 @@ public enum RuleCheckEnum implements BaseEnum {
         return def;
     }
 
-    public static LevelCheckEnum get(String val) {
+    public static RuleCheckEnum get(String val) {
         return match(val, null);
     }
 
@@ -45,7 +44,7 @@ public enum RuleCheckEnum implements BaseEnum {
         return this.name().equalsIgnoreCase(val);
     }
 
-    public boolean eq(LevelCheckEnum val) {
+    public boolean eq(RuleCheckEnum val) {
         if (val == null) {
             return false;
         }
