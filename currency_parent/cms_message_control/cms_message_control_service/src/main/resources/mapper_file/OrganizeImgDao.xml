@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.organize.dao.OrganizeImgDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity" id="organizeImgMap">
+        <result property="id" column="id"/>
+        <result property="organizeId" column="organize_id"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="createUser" column="create_user"/>
+    </resultMap>
+
+
+</mapper>

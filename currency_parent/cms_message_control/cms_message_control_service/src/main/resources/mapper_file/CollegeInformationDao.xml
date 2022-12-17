@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.college.dao.CollegeInformationDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.college.entity.CollegeInformationEntity" id="collegeInformationMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="dictId" column="dict_id"/>
+        <result property="organizationName" column="organization_name"/>
+        <result property="organizationCode" column="organization_code"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+    </resultMap>
+
+
+</mapper>

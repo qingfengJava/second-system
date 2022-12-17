@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.student.dao.StuInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.student.entity.StuInfoEntity" id="stuInfoMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="studentNum" column="student_num"/>
+        <result property="studentName" column="student_name"/>
+        <result property="birth" column="birth"/>
+        <result property="nation" column="nation"/>
+        <result property="politicsStatus" column="politics_status"/>
+        <result property="enterTime" column="enter_time"/>
+        <result property="graduateTime" column="graduate_time"/>
+        <result property="idCard" column="id_card"/>
+        <result property="hukou" column="hukou"/>
+        <result property="qq" column="qq"/>
+        <result property="weChat" column="we_chat"/>
+        <result property="nativePlace" column="native_place"/>
+        <result property="address" column="address"/>
+        <result property="stateSchool" column="state_school"/>
+        <result property="type" column="type"/>
+        <result property="department" column="department"/>
+        <result property="major" column="major"/>
+        <result property="grade" column="grade"/>
+        <result property="clazz" column="clazz"/>
+        <result property="educationalSystem" column="educational_system"/>
+        <result property="hobyDes" column="hoby_des"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="createUser" column="create_user"/>
+        <result property="isChange" column="is_change"/>
+    </resultMap>
+
+
+</mapper>

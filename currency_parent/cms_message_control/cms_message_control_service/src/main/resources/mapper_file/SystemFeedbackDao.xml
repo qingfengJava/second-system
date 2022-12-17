@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.feedback.dao.SystemFeedbackDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.feedback.entity.SystemFeedbackEntity" id="systemFeedbackMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="systemEvaluation" column="system_evaluation"/>
+        <result property="anonymousName" column="anonymous_name"/>
+        <result property="feedbackType" column="feedback_type"/>
+        <result property="feedbackObjectId" column="feedback_object_id"/>
+        <result property="content" column="content"/>
+        <result property="isReceive" column="is_receive"/>
+        <result property="receiveContent" column="receive_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+
+</mapper>

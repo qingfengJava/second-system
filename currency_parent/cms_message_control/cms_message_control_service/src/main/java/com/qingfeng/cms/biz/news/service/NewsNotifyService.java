@@ -3,6 +3,7 @@ package com.qingfeng.cms.biz.news.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.cms.domain.news.entity.NewsNotifyEntity;
+import com.qingfeng.cms.domain.news.vo.NewsNotifyListVo;
 
 /**
  * 消息通知表
@@ -18,5 +19,14 @@ public interface NewsNotifyService extends IService<NewsNotifyEntity> {
      * @param newsNotifySaveDTO
      */
     void saveNews(NewsNotifySaveDTO newsNotifySaveDTO);
+
+    /**
+     * 分页查询用户的系统消息通知
+     * @param pageNo
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    NewsNotifyListVo findList(Integer pageNo, Integer pageSize, Long userId);
 }
 

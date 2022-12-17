@@ -3,10 +3,15 @@ package com.qingfeng.cms.controller;
 import com.qingfeng.cms.biz.news.service.NewsNotifyService;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.cms.domain.news.entity.NewsNotifyEntity;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.vo.NewsNotifyListVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +21,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
-import java.util.Map;
 
 
 /**
@@ -42,24 +44,17 @@ public class NewsNotifyController extends BaseController {
     @Autowired
     private NewsNotifyService newsNotifyService;
 
-    /**
-     * 列表
-     */
-    @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params) {
-
-        return success();
-    }
-
-
-    /**
-     * 信息
-     */
-    @GetMapping("/info/{id}")
-    public R info(@PathVariable("id") Long id) {
-        NewsNotifyEntity newsNotify = newsNotifyService.getById(id);
-
-        return success();
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "current", value = "当前页", dataType = "long", paramType = "query", defaultValue = "1"),
+            @ApiImplicitParam(name = "size", value = "每页显示几条", dataType = "long", paramType = "query", defaultValue = "15"),
+    })
+    @ApiOperation(value = "分页查询系统消息通知信息", notes = "分页查询系统消息通知信息")
+    @GetMapping("/page")
+    @SysLog("分页查询系统消息通知信息")
+    public R<NewsNotifyListVo> list() {
+        System.out.println(getUserId());
+        NewsNotifyListVo newsNotifyListVoList = newsNotifyService.findList(getPageNo(), getPageSize(), getUserId());
+        return success(newsNotifyListVoList);
     }
 
     @ApiOperation(value = "保存消息通知信息", notes = "保存消息通知信息")
@@ -71,14 +66,45 @@ public class NewsNotifyController extends BaseController {
         return success();
     }
 
-    /**
-     * 删除
-     */
-    @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] ids) {
-        newsNotifyService.removeByIds(Arrays.asList(ids));
-
+    @ApiOperation(value = "修改消息的状态", notes = "修改消息的状态")
+    @PutMapping("/anno/update/{id}")
+    @SysLog("修改消息的状态")
+    public R update(@ApiParam(value = "消息对应的Id", required = true)
+                    @PathVariable("id") Long id) {
+        //直接将消息状态修改为已查看
+        newsNotifyService.update(NewsNotifyEntity.builder()
+                .isSee(IsSeeEnum.IS_VIEWED)
+                .build(), Wraps.lbQ(new NewsNotifyEntity())
+                .eq(NewsNotifyEntity::getId, id));
         return success();
     }
 
+    @ApiOperation(value = "一键全部标记为已读状态", notes = "一键全部标记为已读状态")
+    @PutMapping("/update")
+    @SysLog("一键全部标记为已读状态")
+    public R update() {
+        newsNotifyService.update(NewsNotifyEntity.builder()
+                .isSee(IsSeeEnum.IS_VIEWED)
+                .build(), Wraps.lbQ(new NewsNotifyEntity())
+                .eq(NewsNotifyEntity::getUserId, getUserId()));
+        return success();
+    }
+
+    @ApiOperation(value = "根据Id删除对应的消息", notes = "根据Id删除对应的消息")
+    @DeleteMapping("/anno/delete/{id}")
+    @SysLog("根据Id删除对应的消息")
+    public R delete(@ApiParam(value = "消息对应的Id", required = true)
+                    @PathVariable("id") Long id) {
+        newsNotifyService.removeById(id);
+        return success();
+    }
+
+    @ApiOperation(value = "删除全部自己的消息", notes = "删除全部自己的消息")
+    @DeleteMapping("/delete")
+    @SysLog("删除全部自己的消息")
+    public R deleteAll() {
+        newsNotifyService.remove(Wraps.lbQ(new NewsNotifyEntity())
+                .eq(NewsNotifyEntity::getUserId, getUserId()));
+        return success();
+    }
 }

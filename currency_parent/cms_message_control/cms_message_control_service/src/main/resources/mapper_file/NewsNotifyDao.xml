@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.news.dao.NewsNotifyDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.news.entity.NewsNotifyEntity" id="newsNotifyMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="newsTitle" column="news_title"/>
+        <result property="newsType" column="news_type"/>
+        <result property="newsContent" column="news_content"/>
+        <result property="isSee" column="is_see"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+    </resultMap>
+
+    <!-- 查询条件，根据用户id查询所有的，未处理的按时间倒序排在前面，已处理的按时间倒序排列 -->
+    <select id="findList" resultMap="newsNotifyMap">
+        SELECT id,
+               user_id,
+               news_title,
+               news_type,
+               news_content,
+               is_see,
+               create_time,
+               create_user,
+               update_time,
+               update_user,
+               CASE is_see
+                   WHEN 'IS_VIEWED' THEN 1
+                   WHEN 'IS_NOT_VIEWED' THEN 2
+                   ELSE 0
+                   END AS sortIndex
+        FROM mc_news_notify
+        WHERE user_id = #{userId}
+        ORDER BY sortIndex DESC, create_time DESC
+        LIMIT #{pageNo}, #{pageSize}
+    </select>
+
+
+</mapper>
