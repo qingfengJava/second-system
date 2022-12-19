@@ -26,5 +26,7 @@ public interface NewsNotifyDao extends BaseMapper<NewsNotifyEntity> {
      */
     List<NewsNotifyEntity> findList(@Param("pageNo") Integer pageNo,
                                     @Param("pageSize") Integer pageSize,
-                                    @Param("userId") Long userId);
+                                    @Param("userId") Long userId,
+                                    @Param("isSee") String isSee,
+                                    @Param("type") String type);
 }

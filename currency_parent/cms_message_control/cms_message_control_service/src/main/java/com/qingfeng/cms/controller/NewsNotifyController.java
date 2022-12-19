@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.news.service.NewsNotifyService;
+import com.qingfeng.cms.domain.news.dto.NewsNotifyQueryDTO;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.cms.domain.news.entity.NewsNotifyEntity;
 import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
@@ -51,9 +52,9 @@ public class NewsNotifyController extends BaseController {
     @ApiOperation(value = "分页查询系统消息通知信息", notes = "分页查询系统消息通知信息")
     @GetMapping("/page")
     @SysLog("分页查询系统消息通知信息")
-    public R<NewsNotifyListVo> list() {
-        System.out.println(getUserId());
-        NewsNotifyListVo newsNotifyListVoList = newsNotifyService.findList(getPageNo(), getPageSize(), getUserId());
+    public R<NewsNotifyListVo> list(NewsNotifyQueryDTO newsNotifyQueryDTO) {
+        NewsNotifyListVo newsNotifyListVoList = newsNotifyService.findList(getPageNo(), getPageSize(), getUserId(), newsNotifyQueryDTO);
+        System.out.println(newsNotifyListVoList);
         return success(newsNotifyListVoList);
     }
 

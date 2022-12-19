@@ -36,6 +36,12 @@
                    END AS sortIndex
         FROM mc_news_notify
         WHERE user_id = #{userId}
+        <if test="isSee != ''">
+            and is_see = #{isSee}
+        </if>
+        <if test="type != ''">
+            and news_type = #{type}
+        </if>
         ORDER BY sortIndex DESC, create_time DESC
         LIMIT #{pageNo}, #{pageSize}
     </select>
