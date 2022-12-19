@@ -7,6 +7,7 @@ currency:
     base-package: com.qingfeng.cms
     description: 第二课堂——信息管理模块
 
+
 # 配置全局的逻辑删除值
 #mybatis-plus:
 #  global-config:

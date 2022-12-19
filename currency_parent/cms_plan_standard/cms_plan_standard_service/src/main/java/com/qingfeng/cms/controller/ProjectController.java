@@ -1,5 +1,6 @@
 package com.qingfeng.cms.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qingfeng.cms.biz.project.service.ProjectService;
 import com.qingfeng.cms.domain.project.dto.ProjectCheckDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
@@ -100,8 +101,8 @@ public class ProjectController extends BaseController {
     @PostMapping("/check")
     @SysLog("审核项目信息")
     public R checkProject(@ApiParam(value = "项目审核模块实体")
-                          @RequestBody @Validated(SuperEntity.Update.class) ProjectCheckDTO projectCheckDTO) {
-        projectService.checkProject(projectCheckDTO);
+                          @RequestBody @Validated(SuperEntity.Update.class) ProjectCheckDTO projectCheckDTO) throws JsonProcessingException {
+        projectService.checkProject(projectCheckDTO, getUserId());
         return success();
     }
 }

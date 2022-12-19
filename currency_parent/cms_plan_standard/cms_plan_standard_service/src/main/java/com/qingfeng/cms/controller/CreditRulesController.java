@@ -1,5 +1,6 @@
 package com.qingfeng.cms.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesCheckDTO;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesSaveDTO;
@@ -61,8 +62,8 @@ public class CreditRulesController extends BaseController {
     @PostMapping("/check")
     @SysLog("学分细则审核")
     public R checkRules(@ApiParam(value = "学分细则审核实体", required = true)
-                        @RequestBody @Validated(SuperEntity.Update.class) CreditRulesCheckDTO creditRulesCheckDTO) {
-        creditRulesService.checkRule(creditRulesCheckDTO);
+                        @RequestBody @Validated(SuperEntity.Update.class) CreditRulesCheckDTO creditRulesCheckDTO) throws JsonProcessingException {
+        creditRulesService.checkRule(creditRulesCheckDTO, getUserId());
         return success();
     }
 }

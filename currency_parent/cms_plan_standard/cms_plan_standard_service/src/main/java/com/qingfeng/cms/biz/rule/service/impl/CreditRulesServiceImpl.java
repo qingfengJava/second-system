@@ -2,7 +2,10 @@ package com.qingfeng.cms.biz.rule.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.biz.level.service.LevelService;
+import com.qingfeng.cms.biz.mq.service.producer.RabbitSendMsg;
 import com.qingfeng.cms.biz.rule.dao.CreditRulesDao;
 import com.qingfeng.cms.biz.rule.enums.CreditRulesExceptionMsg;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
@@ -48,6 +51,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRulesEntity> implements CreditRulesService {
 
+    private static Long USER_ID = 0L;
+    private static final String RULES_KEY = "rules.inform.email";
+
     @Autowired
     private DozerUtils dozerUtils;
 
@@ -62,6 +68,11 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
     private EmailApi emailApi;
     @Autowired
     private NewsNotifyApi newsNotifyApi;
+
+    @Autowired
+    private RabbitSendMsg rabbitSendMsg;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * 保存学分细则信息
@@ -132,10 +143,12 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
 
     /**
      * 学分细则审核
+     *
      * @param creditRulesCheckDTO
      */
     @Override
-    public void checkRule(CreditRulesCheckDTO creditRulesCheckDTO) {
+    public void checkRule(CreditRulesCheckDTO creditRulesCheckDTO, Long userId) throws JsonProcessingException {
+        USER_ID = userId;
         CreditRulesEntity creditRulesEntity = dozerUtils.map2(creditRulesCheckDTO, CreditRulesEntity.class);
         baseMapper.updateById(creditRulesEntity);
         //查询详情
@@ -144,46 +157,66 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
         LevelEntity level = levelService.getById(rules.getLevelId());
         //查询关联的用户信息
         User user = null;
-        if (rules.getCreateUser() != 0){
+        if (rules.getCreateUser() != 0) {
             user = userApi.get(rules.getCreateUser()).getData();
         }
 
-        if (ObjectUtil.isNotEmpty(user)){
+        if (ObjectUtil.isNotEmpty(user)) {
             // TODO 审核结果发送消息通知  目前先发送邮件通知
             if (ObjectUtil.isNotEmpty(user.getEmail())) {
                 String title = creditRulesCheckDTO.getIsCheck().equals(RuleCheckEnum.IS_FINISHED) ?
                         "项目等级<" + level.getLevelContent() + ">关联的学分申请审核通过通知" :
                         "项目等级<" + level.getLevelContent() + ">关联的学分审核不通过通知";
 
-                //有邮箱就先向邮箱中发送消息
-                Integer code = emailApi.sendEmail(EmailEntity.builder()
+                //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+                rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
                         .email(user.getEmail())
                         .title(title)
                         .body(creditRulesCheckDTO.getCheckDetail())
-                        .build());
-                if (code != 1) {
-                    // TODO 目前先不做处理，后面使用消息队列做失败重试三次处理
-                } else {
-                    //先将消息通知写入数据库
-                    R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
-                            .userId(rules.getCreateUser())
-                            .newsType(NewsTypeEnum.MAILBOX)
-                            .newsTitle(title)
-                            .newsContent(creditRulesCheckDTO.getCheckDetail())
-                            .isSee(IsSeeEnum.IS_NOT_VIEWED)
-                            .build());
+                        .key(RULES_KEY)
+                        .build()), RULES_KEY);
 
-                    if (r.getIsError()){
-                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.NEWS_SAVE_FAILED.getMsg());
-                    }
+                //先将消息通知写入数据库
+                R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                        .userId(rules.getCreateUser())
+                        .newsType(NewsTypeEnum.MAILBOX)
+                        .newsTitle(title)
+                        .newsContent(creditRulesCheckDTO.getCheckDetail())
+                        .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                        .build());
+
+                if (r.getIsError()) {
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.NEWS_SAVE_FAILED.getMsg());
                 }
+
 
             } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
                 // TODO 向短信发送信息 待完善
 
             }
-        }else {
+        } else {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), CreditRulesExceptionMsg.USER_NOT_EXITS.getMsg());
+        }
+    }
+
+    /**
+     * 进入死信队列的消息，向自己发送一下通知
+     * @param emailEntity
+     */
+    @Override
+    public void sendMessageToSlfe(EmailEntity emailEntity) {
+        //先根据Id查询自己的信息
+        User user = userApi.get(USER_ID).getData();
+        if (ObjectUtil.isNotEmpty(user)) {
+            if (ObjectUtil.isNotEmpty(user.getEmail())) {
+                //邮箱不为空 就给邮箱发送信息  这里操作不用失败重试需要重新封装信息
+                emailEntity.setEmail(user.getEmail())
+                        .setBody("关于" + emailEntity.getTitle() + "邮件通知失败！，如有必要，请线下通知对方。")
+                        .setTitle("消息通知失败");
+                emailApi.sendEmail(emailEntity);
+            } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
+                // TODO 否则，使用短信通知
+            }
         }
     }
 

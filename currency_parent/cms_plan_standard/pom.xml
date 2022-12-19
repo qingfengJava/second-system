@@ -18,4 +18,13 @@
         <module>cms_plan_standard_service</module>
     </modules>
 
+    <dependencies>
+
+        <!-- rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

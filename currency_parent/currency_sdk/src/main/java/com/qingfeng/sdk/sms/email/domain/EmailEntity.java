@@ -43,4 +43,7 @@ public class EmailEntity implements Serializable {
     @NotEmpty(message = "邮件的内容不能为空")
     @ApiModelProperty(value = "邮件的内容")
     private String body;
+
+    @ApiModelProperty(value = "唯一标识Key")
+    private String key;
 }

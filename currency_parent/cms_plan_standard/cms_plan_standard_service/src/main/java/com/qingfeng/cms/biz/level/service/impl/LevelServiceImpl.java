@@ -2,9 +2,12 @@ package com.qingfeng.cms.biz.level.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.biz.level.dao.LevelDao;
 import com.qingfeng.cms.biz.level.enums.LevelExceptionMsg;
 import com.qingfeng.cms.biz.level.service.LevelService;
+import com.qingfeng.cms.biz.mq.service.producer.RabbitSendMsg;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
 import com.qingfeng.cms.domain.level.dto.LevelCheckDTO;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
@@ -47,6 +50,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> implements LevelService {
 
+    private static Long USER_ID = 0L;
+    private static final String LEVEL_KEY = "level.inform.email";
+
     @Autowired
     private DozerUtils dozerUtils;
 
@@ -61,6 +67,11 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
     private EmailApi emailApi;
     @Autowired
     private NewsNotifyApi newsNotifyApi;
+
+    @Autowired
+    private RabbitSendMsg rabbitSendMsg;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * 保存项目等级信息
@@ -143,6 +154,7 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
 
     /**
      * 根据Id删除等级及其对应的学分
+     *
      * @param id
      */
     @Override
@@ -150,18 +162,20 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
     public void removeLevelById(Long id) {
         //先删除学分
         creditRulesService.remove(Wraps.lbQ(new CreditRulesEntity())
-                .eq(CreditRulesEntity::getLevelId,id));
+                .eq(CreditRulesEntity::getLevelId, id));
         //删除等级
         baseMapper.deleteById(id);
     }
 
     /**
      * 审核项目等级
+     *
      * @param levelCheckDTO
      */
     @Override
     @Transactional(rollbackFor = BizException.class)
-    public void checkLevel(LevelCheckDTO levelCheckDTO) {
+    public void checkLevel(LevelCheckDTO levelCheckDTO, Long userId) throws JsonProcessingException {
+        USER_ID = userId;
         LevelEntity levelEntity = dozerUtils.map2(levelCheckDTO, LevelEntity.class);
         //先进行信息保存
         baseMapper.updateById(levelEntity);
@@ -169,45 +183,64 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
         LevelEntity level = baseMapper.selectById(levelCheckDTO.getId());
         //查询关联的用户信息的详情
         User user = null;
-        if (level.getCreateUser() != 0){
+        if (level.getCreateUser() != 0) {
             user = userApi.get(level.getCreateUser()).getData();
         }
-        if (ObjectUtil.isNotEmpty(user)){
+        if (ObjectUtil.isNotEmpty(user)) {
             // TODO 审核结果发送消息通知  目前先发送邮件通知
             if (ObjectUtil.isNotEmpty(user.getEmail())) {
                 String title = levelCheckDTO.getIsCheck().equals(LevelCheckEnum.IS_FINISHED) ?
                         "项目等级<" + level.getLevelContent() + ">申请审核通过通知" :
                         "项目等级<" + level.getLevelContent() + ">审核不通过通知";
 
-                //有邮箱就先向邮箱中发送消息
-                Integer code = emailApi.sendEmail(EmailEntity.builder()
+                //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+                rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
                         .email(user.getEmail())
                         .title(title)
                         .body(levelCheckDTO.getCheckDetail())
-                        .build());
-                if (code != 1) {
-                    // TODO 目前先不做处理，后面使用消息队列做失败重试三次处理
-                } else {
-                    //先将消息通知写入数据库
-                    R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
-                            .userId(level.getCreateUser())
-                            .newsType(NewsTypeEnum.MAILBOX)
-                            .newsTitle(title)
-                            .newsContent(levelCheckDTO.getCheckDetail())
-                            .isSee(IsSeeEnum.IS_NOT_VIEWED)
-                            .build());
+                        .key(LEVEL_KEY)
+                        .build()), LEVEL_KEY);
 
-                    if (r.getIsError()){
-                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), LevelExceptionMsg.NEWS_SAVE_FAILED.getMsg());
-                    }
+                //先将消息通知写入数据库
+                R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                        .userId(level.getCreateUser())
+                        .newsType(NewsTypeEnum.MAILBOX)
+                        .newsTitle(title)
+                        .newsContent(levelCheckDTO.getCheckDetail())
+                        .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                        .build());
+
+                if (r.getIsError()) {
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), LevelExceptionMsg.NEWS_SAVE_FAILED.getMsg());
                 }
 
             } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
                 // TODO 向短信发送信息 待完善
 
             }
-        }else {
+        } else {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), LevelExceptionMsg.USER_NOT_EXITS.getMsg());
+        }
+    }
+
+    /**
+     * 消息发送失败，给自己发送提醒
+     * @param emailEntity
+     */
+    @Override
+    public void sendMessageToSlfe(EmailEntity emailEntity) {
+        //先根据Id查询自己的信息
+        User user = userApi.get(USER_ID).getData();
+        if (ObjectUtil.isNotEmpty(user)) {
+            if (ObjectUtil.isNotEmpty(user.getEmail())) {
+                //邮箱不为空 就给邮箱发送信息  这里操作不用失败重试需要重新封装信息
+                emailEntity.setEmail(user.getEmail())
+                        .setBody("关于" + emailEntity.getTitle() + "邮件通知失败！，如有必要，请线下通知对方。")
+                        .setTitle("消息通知失败");
+                emailApi.sendEmail(emailEntity);
+            } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
+                // TODO 否则，使用短信通知
+            }
         }
     }
 

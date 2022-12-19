@@ -1,5 +1,6 @@
 package com.qingfeng.cms.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.domain.level.dto.LevelCheckDTO;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
@@ -71,8 +72,8 @@ public class LevelController extends BaseController {
     @PostMapping("/check")
     @SysLog("项目等级审核")
     public R checkLevel(@ApiParam(value = "项目等级审核实体", required = true)
-                        @RequestBody @Validated(SuperEntity.Update.class) LevelCheckDTO levelCheckDTO) {
-        levelService.checkLevel(levelCheckDTO);
+                        @RequestBody @Validated(SuperEntity.Update.class) LevelCheckDTO levelCheckDTO) throws JsonProcessingException {
+        levelService.checkLevel(levelCheckDTO, getUserId());
         return success();
     }
 

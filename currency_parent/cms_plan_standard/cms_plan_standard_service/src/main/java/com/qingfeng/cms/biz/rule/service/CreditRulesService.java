@@ -1,9 +1,11 @@
 package com.qingfeng.cms.biz.rule.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesCheckDTO;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesSaveDTO;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 
 import java.util.List;
 
@@ -32,7 +34,14 @@ public interface CreditRulesService extends IService<CreditRulesEntity> {
     /**
      * 学分细则审核
      * @param creditRulesCheckDTO
+     * @param userId
      */
-    void checkRule(CreditRulesCheckDTO creditRulesCheckDTO);
+    void checkRule(CreditRulesCheckDTO creditRulesCheckDTO, Long userId) throws JsonProcessingException;
+
+    /**
+     * 进入死信队列的消息，向自己发送一个通知
+     * @param emailEntity
+     */
+    void sendMessageToSlfe(EmailEntity emailEntity);
 }
 

@@ -2,7 +2,10 @@ package com.qingfeng.cms.biz.project.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.biz.level.service.LevelService;
+import com.qingfeng.cms.biz.mq.service.producer.RabbitSendMsg;
 import com.qingfeng.cms.biz.project.dao.ProjectDao;
 import com.qingfeng.cms.biz.project.enums.ProjectExceptionMsg;
 import com.qingfeng.cms.biz.project.service.ProjectService;
@@ -60,6 +63,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> implements ProjectService {
 
+    private static Long USER_ID = 0L;
+    private static final String PROJECT_KEY = "project.inform.email";
+
     @Autowired
     private DozerUtils dozer;
 
@@ -76,6 +82,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     private EmailApi emailApi;
     @Autowired
     private NewsNotifyApi newsNotifyApi;
+
+    @Autowired
+    private RabbitSendMsg rabbitSendMsg;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * 保存模块项目内容
@@ -247,10 +258,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
      * 项目信息审核
      *
      * @param projectCheckDTO
+     * @param userId
      */
     @Override
     @Transactional(rollbackFor = BizException.class)
-    public void checkProject(ProjectCheckDTO projectCheckDTO) {
+    public void checkProject(ProjectCheckDTO projectCheckDTO, Long userId) throws JsonProcessingException {
+        USER_ID = userId;
         ProjectEntity projectEntity = dozer.map2(projectCheckDTO, ProjectEntity.class);
         baseMapper.updateById(projectEntity);
 
@@ -259,44 +272,64 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         //查询用户详细信息
         User user = userApi.get(project.getCreateUser()).getData();
 
-        if (ObjectUtil.isNotEmpty(user)){
+        if (ObjectUtil.isNotEmpty(user)) {
             // TODO 审核结果发送消息通知  目前先发送邮件通知
             if (ObjectUtil.isNotEmpty(user.getEmail())) {
                 String title = projectCheckDTO.getIsCheck().equals(ProjectCheckEnum.IS_FINISHED) ?
                         "项目<" + project.getProjectName() + ">申请审核通过通知" : "项目<" + project.getProjectName() + ">审核不通过通知";
 
-                //有邮箱就先向邮箱中发送消息
-                Integer code = emailApi.sendEmail(EmailEntity.builder()
+                //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+                rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
                         .email(user.getEmail())
                         .title(title)
                         .body(projectCheckDTO.getCheckDetail())
-                        .build());
-                if (code != 1) {
-                    // TODO 目前先不做处理，后面使用消息队列做失败重试三次处理
-                } else {
-                    //先将消息通知写入数据库
-                    R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
-                            .userId(project.getCreateUser())
-                            .newsType(NewsTypeEnum.MAILBOX)
-                            .newsTitle(title)
-                            .newsContent(projectCheckDTO.getCheckDetail())
-                            .isSee(IsSeeEnum.IS_NOT_VIEWED)
-                            .build());
+                        .key(PROJECT_KEY)
+                        .build()), PROJECT_KEY);
 
-                    if (r.getIsError()){
-                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.NEWS_SAVE_FAILED.getMsg());
-                    }
+                //将消息通知写入数据库
+                R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                        .userId(project.getCreateUser())
+                        .newsType(NewsTypeEnum.MAILBOX)
+                        .newsTitle(title)
+                        .newsContent(projectCheckDTO.getCheckDetail())
+                        .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                        .build());
+
+                if (r.getIsError()) {
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.NEWS_SAVE_FAILED.getMsg());
                 }
 
             } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
-                // TODO 向短信发送信息 待完善
+                // TODO 向短信发送信息 待完善  失败重试三次
 
             }
-        }else {
+        } else {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.USER_NOT_EXITS.getMsg());
 
         }
 
+    }
+
+    /**
+     * 审核信息发送失败，给负责人自己发送一条；信息通知
+     *
+     * @param emailEntity
+     */
+    @Override
+    public void sendMessageToSlfe(EmailEntity emailEntity) {
+        //先根据Id查询自己的信息
+        User user = userApi.get(USER_ID).getData();
+        if (ObjectUtil.isNotEmpty(user)) {
+            if (ObjectUtil.isNotEmpty(user.getEmail())) {
+                //邮箱不为空 就给邮箱发送信息  这里操作不用失败重试需要重新封装信息
+                emailEntity.setEmail(user.getEmail())
+                        .setBody("关于" + emailEntity.getTitle() + "邮件通知失败！，如有必要，请线下通知对方。")
+                        .setTitle("消息通知失败");
+                emailApi.sendEmail(emailEntity);
+            } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
+                // TODO 否则，使用短信通知
+            }
+        }
     }
 
     /**

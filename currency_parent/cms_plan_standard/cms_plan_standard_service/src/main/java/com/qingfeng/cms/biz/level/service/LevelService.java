@@ -1,10 +1,12 @@
 package com.qingfeng.cms.biz.level.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qingfeng.cms.domain.level.dto.LevelCheckDTO;
 import com.qingfeng.cms.domain.level.dto.LevelSaveDTO;
 import com.qingfeng.cms.domain.level.dto.LevelUpdateDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 
 import java.util.List;
 
@@ -41,7 +43,15 @@ public interface LevelService extends IService<LevelEntity> {
     /**
      * 审核项目等级
      * @param levelCheckDTO
+     * @param userId
+     * @throws JsonProcessingException
      */
-    void checkLevel(LevelCheckDTO levelCheckDTO);
+    void checkLevel(LevelCheckDTO levelCheckDTO, Long userId) throws JsonProcessingException;
+
+    /**
+     * 消息发送失败，给自己发送提醒
+     * @param emailEntity
+     */
+    void sendMessageToSlfe(EmailEntity emailEntity);
 }
 

@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qingfeng.cms.domain.project.dto.ProjectCheckDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
@@ -9,6 +10,7 @@ import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.vo.ProjectCheckEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 
 import java.util.List;
 
@@ -63,7 +65,14 @@ public interface ProjectService extends IService<ProjectEntity> {
     /**
      * 项目审核
      * @param projectCheckDTO
+     * @param userId
      */
-    void checkProject(ProjectCheckDTO projectCheckDTO);
+    void checkProject(ProjectCheckDTO projectCheckDTO, Long userId) throws JsonProcessingException;
+
+    /**
+     * 给负责人自己发送一条通知
+     * @param emailEntity
+     */
+    void sendMessageToSlfe(EmailEntity emailEntity);
 }
 
