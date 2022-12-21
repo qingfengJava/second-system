@@ -1,5 +1,6 @@
 package com.qingfeng.cms.biz.plan.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.module.dao.CreditModuleDao;
@@ -57,13 +58,13 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
             plan.setParentId(0L);
 
             //直接将其子类的父级Id进行修改
-            baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
+            baseMapper.update(new PlanEntity(), Wraps.lbU(new PlanEntity())
                     .eq(PlanEntity::getYear, plan.getYear())
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
-                    .set(PlanEntity::getParentId,plan.getId()));
-        }else{
+                    .set(PlanEntity::getParentId, plan.getId()));
+        } else {
             //如果是不启用的，那么先查询是否有父类
             PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
                     .eq(PlanEntity::getGrade, plan.getGrade())
@@ -94,21 +95,23 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
     public void updatePlan(PlanEntity plan) {
         //首先判断是修改成什么类型
         if (plan.getIsEnable().equals(PlanIsEnable.ENABLE_NOT.getEnable())) {
-            //取消启用，查看是否有关联的
-            List<CreditModuleEntity> moduleList = creditModuleDao.selectList(new LambdaQueryWrapper<CreditModuleEntity>()
-                    .eq(CreditModuleEntity::getPlanId, plan.getId()));
-            if (!ObjectUtils.isEmpty(moduleList) && moduleList.size() > 0) {
-                //说明有关联，不能关闭
-                throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), PlanExceptionMsg.IS_RELATED.getMsg());
+            //如果本身自己就是为启用的状态，则不进行下面的操作
+            if (baseMapper.selectById(plan.getId()).getIsEnable().equals(PlanIsEnable.ENABLE_TURE.getEnable())){
+                //取消启用，查看是否有关联的
+                List<CreditModuleEntity> moduleList = creditModuleDao.selectList(new LambdaQueryWrapper<CreditModuleEntity>()
+                        .eq(CreditModuleEntity::getPlanId, plan.getId()));
+                if (ObjectUtil.isNotEmpty(moduleList) && moduleList.size() > 0) {
+                    //说明有关联，不能关闭
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), PlanExceptionMsg.IS_RELATED.getMsg());
+                }
+                // 没有关联，要取消启用，就需要修改其子类的父级Id
+                baseMapper.update(new PlanEntity(), Wraps.lbU(new PlanEntity())
+                        .eq(PlanEntity::getGrade, plan.getGrade())
+                        .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
+                        .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
+                        .set(PlanEntity::getParentId, 0L));
             }
-            // 没有关联，要取消启用，就需要修改其子类的父级Id
-            baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
-                    .eq(PlanEntity::getGrade, plan.getGrade())
-                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
-                    .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
-                    .set(PlanEntity::getParentId,0L));
-
-        }else{
+        } else {
             plan.setParentId(0L);
 
             //要修改成启用的 is_Enable == 1 的情况，先查看以前是否有启用的情况
@@ -116,7 +119,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, plan.getIsEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject()));
-            if (!ObjectUtils.isEmpty(planEntity)) {
+            if (ObjectUtil.isNotEmpty(planEntity)) {
                 //说明以前有关联，把以前关联的状态进行改变
                 planEntity.setIsEnable(PlanIsEnable.ENABLE_NOT.getEnable());
                 baseMapper.updateById(planEntity);
@@ -132,11 +135,11 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
             }
 
             // 在启用改方案之后，需要设置子类的父级Id
-            baseMapper.update(new PlanEntity(),Wraps.lbU(new PlanEntity())
+            baseMapper.update(new PlanEntity(), Wraps.lbU(new PlanEntity())
                     .eq(PlanEntity::getGrade, plan.getGrade())
                     .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_NOT.getEnable())
                     .eq(PlanEntity::getApplicationObject, plan.getApplicationObject())
-                    .set(PlanEntity::getParentId,plan.getId()));
+                    .set(PlanEntity::getParentId, plan.getId()));
         }
 
         //进行当前的修改

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,15 +33,39 @@ public class FileOssController extends BaseController {
 
     @ApiOperation(value = "头像文件上传", notes = "头像文件上传")
     @PostMapping("/upload")
-    public R fileUpload(@ApiParam(value = "文件", required = true)
-                            @RequestParam("file") MultipartFile file){
+    public R upload(@ApiParam(value = "文件", required = true)
+                    @RequestParam("file") MultipartFile file) {
         try {
             String uploadUrl = fileService.upload(file);
 
             //返回r对象
             return success(uploadUrl);
         } catch (Exception e) {
-            throw new BizException(ExceptionCode.OPERATION_EX.getCode(),ExceptionCode.OPERATION_EX.getMsg());
+            throw new BizException(ExceptionCode.OPERATION_EX.getCode(), ExceptionCode.OPERATION_EX.getMsg());
         }
+    }
+
+    @ApiOperation(value = "上传文件的接口", notes = "上传文件的接口")
+    @PostMapping("/file_upload")
+    public R fileUpload(@ApiParam(value = "文件", required = true)
+                        @RequestParam("file") MultipartFile file) {
+        try {
+            String uploadUrl = fileService.fileUpload(file);
+
+            //返回r对象
+            return success(uploadUrl);
+        } catch (Exception e) {
+            throw new BizException(ExceptionCode.OPERATION_EX.getCode(), ExceptionCode.OPERATION_EX.getMsg());
+        }
+    }
+
+    @ApiOperation(value = "删除上传的文件", notes = "删除上传的文件")
+    @DeleteMapping("/file_delete")
+    public R fileDelete(@ApiParam(value = "文件名", required = true)
+                        @RequestParam("fileUrl") String fileUrl) {
+        fileService.removeFile(fileUrl);
+
+        //返回r对象
+        return success();
     }
 }

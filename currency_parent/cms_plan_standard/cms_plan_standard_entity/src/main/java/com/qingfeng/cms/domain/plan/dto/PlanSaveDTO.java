@@ -33,7 +33,6 @@ public class PlanSaveDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
     @NotEmpty(message = "方案名不能为空")
     @ApiModelProperty(value = "方案名")
     private String planName;
@@ -63,5 +62,11 @@ public class PlanSaveDTO implements Serializable {
 
     @ApiModelProperty(value = "方案说明")
     private String planContent;
+
+    @ApiModelProperty(value = "课堂方针（第二课堂文件的连接）")
+    private String classPolicy;
+
+    @ApiModelProperty(value = "课堂方针详情")
+    private String classDetails;
 
 }

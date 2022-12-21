@@ -66,4 +66,13 @@ public class PlanUpdateDTO implements Serializable {
     @ApiModelProperty(value = "是否启用改方案（0：未启用   1：启用）")
     private Integer isEnable;
 
+    @ApiModelProperty(value = "方案说明")
+    private String planContent;
+
+    @ApiModelProperty(value = "课堂方针（第二课堂文件的连接）")
+    private String classPolicy;
+
+    @ApiModelProperty(value = "课堂方针详情")
+    private String classDetails;
+
 }

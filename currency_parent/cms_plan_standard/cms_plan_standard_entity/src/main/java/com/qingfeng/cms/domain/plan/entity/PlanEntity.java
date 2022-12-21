@@ -65,21 +65,32 @@ public class PlanEntity extends Entity<Long> {
 	@ApiModelProperty(value = "方案说明")
 	private String planContent;
 
+	@ApiModelProperty(value = "课堂方针（第二课堂文件的连接）")
+	private String classPolicy;
+
+	@ApiModelProperty(value = "课堂方针详情")
+	private String classDetails;
+
 	@ApiModelProperty(value = "方案子集对象")
 	@TableField(exist = false)
 	private List<PlanEntity> children;
 
 	@Builder
-	public PlanEntity(Long id, LocalDateTime createTime, Long createUser,
-					  LocalDateTime updateTime, Long updateUser, String planName,
-					  Integer totalScore, Integer year, String grade, Integer applicationObject,
-					  Integer isEnable) {
+
+	public PlanEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime,
+					  Long updateUser, Long parentId, String planName, Integer totalScore,
+					  Integer year, String grade, Integer applicationObject, Integer isEnable,
+					  String planContent, String classPolicy, String classDetails) {
 		super(id, createTime, createUser, updateTime, updateUser);
+		this.parentId = parentId;
 		this.planName = planName;
 		this.totalScore = totalScore;
 		this.year = year;
 		this.grade = grade;
 		this.applicationObject = applicationObject;
 		this.isEnable = isEnable;
+		this.planContent = planContent;
+		this.classPolicy = classPolicy;
+		this.classDetails = classDetails;
 	}
 }

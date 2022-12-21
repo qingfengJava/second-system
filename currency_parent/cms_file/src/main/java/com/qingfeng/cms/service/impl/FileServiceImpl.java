@@ -60,4 +60,59 @@ public class FileServiceImpl implements FileService {
         //返回url地址
         return "https://" + fileOssProperties.getBucket() + "." + fileOssProperties.getEndpoint() + "/" + key;
     }
+
+    /**
+     * 上传文件
+     * @param file
+     * @return
+     */
+    @Override
+    public String fileUpload(MultipartFile file) throws IOException {
+        //判断oss实例是否存在：如果不存在则创建，如果存在则获取
+        OSS ossClient = new OSSClientBuilder().build(
+                fileOssProperties.getEndpoint(),
+                fileOssProperties.getAccesskey(),
+                fileOssProperties.getSecretKey());
+        if (!ossClient.doesBucketExist(fileOssProperties.getBucket())) {
+            //创建bucket
+            ossClient.createBucket(fileOssProperties.getBucket());
+            //设置oss实例的访问权限：公共读
+            ossClient.setBucketAcl(fileOssProperties.getBucket(), CannedAccessControlList.PublicRead);
+        }
+
+
+        //文件名：uuid.扩展名
+        String fileName = UUID.randomUUID().toString().replaceAll("-", "");
+        String key = "file/"+ fileName +"-"+ file.getOriginalFilename();
+
+        //文件上传至阿里云
+        ossClient.putObject(fileOssProperties.getBucket(), key, file.getInputStream());
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+
+        //返回url地址
+        return "https://" + fileOssProperties.getBucket() + "." + fileOssProperties.getEndpoint() + "/" + key;
+    }
+
+    /**
+     * 删除已上传的文件
+     * @param fileUrl
+     */
+    @Override
+    public void removeFile(String fileUrl) {
+        //判断oss实例是否存在：如果不存在则创建，如果存在则获取
+        OSS ossClient = new OSSClientBuilder().build(
+                fileOssProperties.getEndpoint(),
+                fileOssProperties.getAccesskey(),
+                fileOssProperties.getSecretKey());
+        String host = "https://" + fileOssProperties.getBucket() + "." + fileOssProperties.getEndpoint() + "/";
+
+        // 删除文件。
+        ossClient.deleteObject(fileOssProperties.getBucket(),
+                fileUrl.substring(host.length()));
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+    }
 }
