@@ -47,7 +47,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
@@ -241,5 +243,27 @@ public class UserController extends BaseController {
     public R updateCollegeInformation(@ApiParam(value = "数据字典实体")
                     @RequestBody @Validated(SuperEntity.Update.class) CollegeInformationUpdateDTO collegeInformationUpdateDTO) {
         return collegeInformationApi.update(collegeInformationUpdateDTO);
+    }
+
+    @ApiOperation(value = "导出用户（学生）Excel信息模板", notes = "导出用户（学生）Excel信息模板")
+    @GetMapping("/excel/export_user_template")
+    @SysLog("导出用户（学生）Excel信息模板")
+    public void exportTemplate(HttpServletResponse response) {
+        userService.exportUserTemplate(response);
+    }
+
+    @ApiOperation(value = "导出学生信息", notes = "导出学生信息")
+    @GetMapping("/excel/export_user")
+    @SysLog("导出学生信息Excel")
+    public void exportDict(HttpServletResponse response) {
+        userService.exportUser(response);
+    }
+
+    @ApiOperation(value = "学生信息Excel导入", notes = "学生信息Excel导入")
+    @PostMapping("/excel/user_import")
+    @SysLog("学生信息Excel导入")
+    public R userImport(MultipartFile file) {
+        userService.importUser(file, getUserId());
+        return success();
     }
 }

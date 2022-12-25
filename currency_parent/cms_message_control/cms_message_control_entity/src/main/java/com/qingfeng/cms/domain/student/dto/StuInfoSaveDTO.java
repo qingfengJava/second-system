@@ -1,6 +1,5 @@
-package com.qingfeng.cms.domain.student.entity;
+package com.qingfeng.cms.domain.student.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.student.enums.EducationalSystemEnum;
@@ -9,7 +8,6 @@ import com.qingfeng.cms.domain.student.enums.IsChangeEnum;
 import com.qingfeng.cms.domain.student.enums.PoliticsStatusEnum;
 import com.qingfeng.cms.domain.student.enums.StateSchoolEnum;
 import com.qingfeng.cms.domain.student.enums.StudentTypeEnum;
-import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -21,8 +19,10 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 学生信息详情表
@@ -38,19 +38,21 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "StuInfoEntity", description = "学生信息详情实体")
-@TableName("mc_stu_info")
-public class StuInfoEntity extends Entity<Long> {
+@ApiModel(value = "StuInfoSaveDTO", description = "学生信息详情实体")
+public class StuInfoSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "用户表外键，关联用户基础信息")
+	@NotNull(message = "用户Id不能为空")
 	private Long userId;
 
 	@ApiModelProperty(value = "学号")
+	@NotBlank(message = "学号不能为空")
 	private String studentNum;
 
 	@ApiModelProperty(value = "姓名")
+	@NotBlank(message = "姓名不能为空")
 	private String studentName;
 
 	@ApiModelProperty(value = "出生日期")
@@ -116,41 +118,4 @@ public class StuInfoEntity extends Entity<Long> {
 
 	@ApiModelProperty(value = "是否可以修改 0-不可以修改  1-可以修改")
 	private IsChangeEnum isChange;
-
-	@Builder
-	public StuInfoEntity(Long id, LocalDateTime createTime, Long createUser,
-						 LocalDateTime updateTime, Long updateUser, Long userId,
-						 String studentNum, String studentName, LocalDate birth,
-						 String nation, PoliticsStatusEnum politicsStatus,
-						 LocalDate enterTime, LocalDate graduateTime, String idCard,
-						 HuKouTypeEnum hukou, String qq, String weChat, String nativePlace,
-						 String address, StateSchoolEnum stateSchool, StudentTypeEnum type,
-						 DictDepartmentEnum department, String major, String grade,
-						 String clazz, EducationalSystemEnum educationalSystem,
-						 String hobyDes, IsChangeEnum isChange) {
-		super(id, createTime, createUser, updateTime, updateUser);
-		this.userId = userId;
-		this.studentNum = studentNum;
-		this.studentName = studentName;
-		this.birth = birth;
-		this.nation = nation;
-		this.politicsStatus = politicsStatus;
-		this.enterTime = enterTime;
-		this.graduateTime = graduateTime;
-		this.idCard = idCard;
-		this.hukou = hukou;
-		this.qq = qq;
-		this.weChat = weChat;
-		this.nativePlace = nativePlace;
-		this.address = address;
-		this.stateSchool = stateSchool;
-		this.type = type;
-		this.department = department;
-		this.major = major;
-		this.grade = grade;
-		this.clazz = clazz;
-		this.educationalSystem = educationalSystem;
-		this.hobyDes = hobyDes;
-		this.isChange = isChange;
-	}
 }

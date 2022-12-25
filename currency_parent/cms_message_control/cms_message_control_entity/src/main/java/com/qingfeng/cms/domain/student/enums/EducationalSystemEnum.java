@@ -1,4 +1,4 @@
-package com.qingfeng.currency.authority.enumeration.auth;
+package com.qingfeng.cms.domain.student.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.currency.base.BaseEnum;
@@ -9,40 +9,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <p>
- * 实体注释中生成的类型枚举
- * 用户
- * </p>
- *
  * @author 清风学Java
+ * @version 1.0.0
+ * @date 2022/12/24
  */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "Sex", description = "性别-枚举")
+@ApiModel(value = "EducationalSystemEnum", description = "学制类型-枚举")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Sex implements BaseEnum {
+public enum EducationalSystemEnum implements BaseEnum {
 
-    /**
-     * W="女"
-     */
-    W("女"),
-    /**
-     * M="男"
-     */
-    M("男"),
-    /**
-     * N="未知"
-     */
-    N("未知"),
-    ;
+    TWO_YEAR_SYSTEM("两年制"),
+    THREE_YEAR_SYSTEM("三年制"),
+    FOUR_YEAR_SYSTEM("四年制"),
+    FIVE_YEAR_SYSTEM("五年制");
 
     @ApiModelProperty(value = "描述")
     private String desc;
 
-
-    public static Sex match(String val, Sex def) {
-        for (Sex enm : Sex.values()) {
+    public static EducationalSystemEnum match(String val, EducationalSystemEnum def) {
+        for (EducationalSystemEnum enm : EducationalSystemEnum.values()) {
             if (enm.name().equalsIgnoreCase(val)) {
                 return enm;
             }
@@ -50,7 +37,7 @@ public enum Sex implements BaseEnum {
         return def;
     }
 
-    public static Sex get(String val) {
+    public static EducationalSystemEnum get(String val) {
         return match(val, null);
     }
 
@@ -58,7 +45,7 @@ public enum Sex implements BaseEnum {
         return this.name().equalsIgnoreCase(val);
     }
 
-    public boolean eq(Sex val) {
+    public boolean eq(EducationalSystemEnum val) {
         if (val == null) {
             return false;
         }
@@ -67,8 +54,7 @@ public enum Sex implements BaseEnum {
 
     @Override
     @ApiModelProperty(value = "编码")
-    public String getCode() {
+    public String getDesc() {
         return this.desc;
     }
-
 }

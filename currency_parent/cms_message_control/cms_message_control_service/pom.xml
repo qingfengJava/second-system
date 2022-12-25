@@ -55,6 +55,12 @@
         <dependency>
             <groupId>com.qingfeng</groupId>
             <artifactId>currency_sdk</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-amqp</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

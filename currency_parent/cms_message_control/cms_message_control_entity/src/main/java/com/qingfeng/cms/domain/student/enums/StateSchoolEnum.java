@@ -1,4 +1,4 @@
-package com.qingfeng.currency.authority.enumeration.auth;
+package com.qingfeng.cms.domain.student.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.currency.base.BaseEnum;
@@ -9,40 +9,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <p>
- * 实体注释中生成的类型枚举
- * 用户
- * </p>
- *
  * @author 清风学Java
+ * @version 1.0.0
+ * @date 2022/12/24
  */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "Sex", description = "性别-枚举")
+@ApiModel(value = "StateSchoolEnum", description = "学生在校状态-枚举")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Sex implements BaseEnum {
+public enum StateSchoolEnum implements BaseEnum {
 
-    /**
-     * W="女"
-     */
-    W("女"),
-    /**
-     * M="男"
-     */
-    M("男"),
-    /**
-     * N="未知"
-     */
-    N("未知"),
-    ;
+    IN_SCHOOL("在籍在校"),
+    LEAVING_SCHOOL("离校"),
+    DROP_OUT_OF_SCHOOL("辍学");
 
     @ApiModelProperty(value = "描述")
     private String desc;
 
-
-    public static Sex match(String val, Sex def) {
-        for (Sex enm : Sex.values()) {
+    public static StateSchoolEnum match(String val, StateSchoolEnum def) {
+        for (StateSchoolEnum enm : StateSchoolEnum.values()) {
             if (enm.name().equalsIgnoreCase(val)) {
                 return enm;
             }
@@ -50,7 +36,7 @@ public enum Sex implements BaseEnum {
         return def;
     }
 
-    public static Sex get(String val) {
+    public static StateSchoolEnum get(String val) {
         return match(val, null);
     }
 
@@ -58,7 +44,7 @@ public enum Sex implements BaseEnum {
         return this.name().equalsIgnoreCase(val);
     }
 
-    public boolean eq(Sex val) {
+    public boolean eq(StateSchoolEnum val) {
         if (val == null) {
             return false;
         }
@@ -67,8 +53,7 @@ public enum Sex implements BaseEnum {
 
     @Override
     @ApiModelProperty(value = "编码")
-    public String getCode() {
+    public String getDesc() {
         return this.desc;
     }
-
 }

@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.currency.authority.dto.auth.UserUpdatePasswordDTO;
 import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -94,4 +96,23 @@ public interface UserService extends IService<User> {
      * @return
      */
     int resetPassErrorNum(Long id);
+
+    /**
+     * 导出学生用户信息模板
+     * @param response
+     */
+    void exportUserTemplate(HttpServletResponse response);
+
+    /**
+     * 导出学生信息Excel
+     * @param response
+     */
+    void exportUser(HttpServletResponse response);
+
+    /**
+     * 学生信息Excel导入
+     * @param file
+     * @param userId
+     */
+    void importUser(MultipartFile file, Long userId);
 }

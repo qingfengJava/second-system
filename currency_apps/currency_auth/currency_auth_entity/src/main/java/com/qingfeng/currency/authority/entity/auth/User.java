@@ -2,6 +2,7 @@ package com.qingfeng.currency.authority.entity.auth;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.currency.authority.enumeration.auth.Sex;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
@@ -78,7 +80,6 @@ public class User extends Entity<Long> {
      * 邮箱
      */
     @ApiModelProperty(value = "邮箱")
-    @Length(max = 255, message = "邮箱长度不能超过255")
     @TableField(value = "email", condition = LIKE)
     private String email;
 
@@ -86,7 +87,6 @@ public class User extends Entity<Long> {
      * 手机
      */
     @ApiModelProperty(value = "手机")
-    @Length(max = 20, message = "手机长度不能超过20")
     @TableField(value = "mobile", condition = LIKE)
     private String mobile;
 
@@ -109,7 +109,6 @@ public class User extends Entity<Long> {
      * 头像
      */
     @ApiModelProperty(value = "头像")
-    @Length(max = 255, message = "头像长度不能超过255")
     @TableField(value = "avatar", condition = LIKE)
     private String avatar;
 
@@ -118,7 +117,6 @@ public class User extends Entity<Long> {
      * 比如：  市长、管理员、局长等等   用于登陆展示
      */
     @ApiModelProperty(value = "工作描述")
-    @Length(max = 255, message = "工作描述长度不能超过255")
     @TableField(value = "work_describe", condition = LIKE)
     private String workDescribe;
 
@@ -126,6 +124,8 @@ public class User extends Entity<Long> {
      * 最后一次输错密码时间
      */
     @ApiModelProperty(value = "最后一次输错密码时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("password_error_last_time")
     private LocalDateTime passwordErrorLastTime;
 
@@ -140,6 +140,8 @@ public class User extends Entity<Long> {
      * 密码过期时间
      */
     @ApiModelProperty(value = "密码过期时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("password_expire_time")
     private LocalDateTime passwordExpireTime;
 
@@ -156,6 +158,8 @@ public class User extends Entity<Long> {
      * 最后登录时间
      */
     @ApiModelProperty(value = "最后登录时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("last_login_time")
     private LocalDateTime lastLoginTime;
 
