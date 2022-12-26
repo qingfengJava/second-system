@@ -112,7 +112,6 @@ public interface UserService extends IService<User> {
     /**
      * 学生信息Excel导入
      * @param file
-     * @param userId
      */
     void importUser(MultipartFile file);
 }

@@ -1,9 +1,10 @@
 package com.qingfeng.currency.authority.entity.auth.vo;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +30,7 @@ import java.time.LocalDate;
 @Builder
 @HeadRowHeight(25)
 @ColumnWidth(30)
-public class UserVo {
+public class UserWriteVo {
 
     @ExcelProperty(value = "账号(学号)",index = 0)
     private String account;
@@ -46,8 +47,7 @@ public class UserVo {
     @ExcelProperty(value = "性别（男，女，未知）",index = 4)
     private String sex;
 
-//    @ExcelProperty(value = "启用状态 1启用 0禁用",index = 5)
-    @ExcelIgnore
+    @ExcelProperty(value = "启用状态 1启用 0禁用",index = 5)
     private Boolean status;
 
     @ExcelProperty(value = "密码，默认取学号后六位",index = 6)
@@ -60,10 +60,9 @@ public class UserVo {
     private String studentNum;
 
     @ApiModelProperty(value = "出生日期")
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-//    @ExcelProperty(value = "出生日期（格式：xxxx-xx-xx）",index = 8, converter = EasyExcelLocalDateConverter.class)
-    @ExcelIgnore
+    @DateTimeFormat(value = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @ExcelProperty(value = "出生日期（格式：xxxx-xx-xx）",index = 8)
     private LocalDate birth;
 
     @ExcelProperty(value = "名族",index = 9)
@@ -73,17 +72,15 @@ public class UserVo {
     private String politicsStatus;
 
     @ApiModelProperty(value = "入学时间")
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-//    @ExcelProperty(value = "入学时间（格式：xxxx-xx-xx）",index = 11, converter = EasyExcelLocalDateConverter.class)
-    @ExcelIgnore
+    @DateTimeFormat(value = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @ExcelProperty(value = "入学时间（格式：xxxx-xx-xx）",index = 11)
     private LocalDate enterTime;
 
     @ApiModelProperty(value = "毕业时间")
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-//    @ExcelProperty(value = "毕业时间（格式：xxxx-xx-xx）",index = 12, converter = EasyExcelLocalDateConverter.class)
-    @ExcelIgnore
+    @DateTimeFormat(value = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @ExcelProperty(value = "毕业时间（格式：xxxx-xx-xx）",index = 12)
     private LocalDate graduateTime;
 
     @ExcelProperty(value = "身份证号",index = 13)
@@ -127,11 +124,4 @@ public class UserVo {
 
     @ExcelProperty(value = "个人描述",index = 26)
     private String hobyDes;
-
-    /**
-     * 封装一个当前操作人Id，用于进行消息通知
-     */
-    @ApiModelProperty(value = "当前操作人Id")
-    @ExcelIgnore
-    private Long userId;
 }

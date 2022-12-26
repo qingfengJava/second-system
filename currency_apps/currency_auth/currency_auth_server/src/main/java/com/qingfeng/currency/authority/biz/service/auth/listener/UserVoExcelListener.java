@@ -1,12 +1,16 @@
 package com.qingfeng.currency.authority.biz.service.auth.listener;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.CellData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.currency.authority.biz.service.auth.UserService;
 import com.qingfeng.currency.authority.biz.service.mq.producer.RabbitSendMsg;
-import com.qingfeng.currency.authority.entity.auth.vo.UserVo;
+import com.qingfeng.currency.authority.config.mq.RabbitMqConfig;
+import com.qingfeng.currency.authority.entity.auth.User;
+import com.qingfeng.currency.authority.entity.auth.vo.UserReadVo;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import lombok.SneakyThrows;
 
 import java.util.Map;
@@ -16,7 +20,7 @@ import java.util.Map;
  * @version 1.0.0
  * @date 2022/12/23
  */
-public class UserVoExcelListener  extends AnalysisEventListener<UserVo> {
+public class UserVoExcelListener  extends AnalysisEventListener<UserReadVo> {
 
     private UserService userService;
     private RabbitSendMsg rabbitSendMsg;
@@ -32,20 +36,20 @@ public class UserVoExcelListener  extends AnalysisEventListener<UserVo> {
     /**
      * 一行一行读取Excel内容，从第二行读取，第一行是表头不读取
      *
-     * @param userVo
+     * @param userReadVo
      * @param analysisContext
      */
     @SneakyThrows
     @Override
-    public void invoke(UserVo userVo, AnalysisContext analysisContext) {
+    public void invoke(UserReadVo userReadVo, AnalysisContext analysisContext) {
         //排除已经存在的用户
-        /*User user = userService.getOne(Wraps.lbQ(new User())
-                .eq(User::getAccount, userVo.getAccount()));
-        if (ObjectUtil.isNotEmpty(user)){*/
+        User user = userService.getOne(Wraps.lbQ(new User())
+                .eq(User::getAccount, userReadVo.getAccount()));
+        System.out.println(userReadVo);
+        if (ObjectUtil.isNotEmpty(user)){
             // 由于数据量可能会比较多的情况下，采用消息队列进行辅助处理
-            System.out.println(userVo);
-//            rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(userVo), RabbitMqConfig.ROUTINGKEY_USER_INFO);
-//        }
+            rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(userReadVo), RabbitMqConfig.ROUTINGKEY_USER_INFO);
+        }
 
     }
 

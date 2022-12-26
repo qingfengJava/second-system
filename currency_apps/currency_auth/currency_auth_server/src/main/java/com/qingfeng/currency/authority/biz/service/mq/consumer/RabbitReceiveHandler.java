@@ -15,7 +15,7 @@ import com.qingfeng.currency.authority.biz.service.core.OrgService;
 import com.qingfeng.currency.authority.biz.service.core.StationService;
 import com.qingfeng.currency.authority.config.mq.RabbitMqConfig;
 import com.qingfeng.currency.authority.entity.auth.User;
-import com.qingfeng.currency.authority.entity.auth.vo.UserVo;
+import com.qingfeng.currency.authority.entity.auth.vo.UserReadVo;
 import com.qingfeng.currency.authority.entity.core.Org;
 import com.qingfeng.currency.authority.entity.core.Station;
 import com.qingfeng.currency.authority.enumeration.auth.Sex;
@@ -45,6 +45,10 @@ public class RabbitReceiveHandler {
 
     private static Integer COUNT = 0;
     private static Integer MAX_LIMIT = 3;
+    /**
+     * 学生处管理员账号Id
+     */
+    private static Long STU_OFFICE_ADMIN = 641577229343523041L;
 
 
     @Autowired
@@ -78,25 +82,26 @@ public class RabbitReceiveHandler {
             COUNT = 0;
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
         }
+        System.out.println("第"+COUNT+"次啦");
 
         // 接收到对象
-        UserVo userVo = objectMapper.readValue(new String(message.getBody(), StandardCharsets.UTF_8), UserVo.class);
+        UserReadVo userReadVo = objectMapper.readValue(new String(message.getBody(), StandardCharsets.UTF_8), UserReadVo.class);
 
         //先封装用户对象
         User user = User.builder()
-                .account(userVo.getAccount())
-                .name(userVo.getName())
-                .email(userVo.getEmail())
-                .mobile(userVo.getMobile())
-                .sex(Sex.get(userVo.getSex()))
-                .status(userVo.getStatus())
-                .password(DigestUtils.md5Hex(userVo.getPassword()))
+                .account(userReadVo.getAccount())
+                .name(userReadVo.getName())
+                .email(userReadVo.getEmail())
+                .mobile(userReadVo.getMobile())
+                .sex(Sex.get(userReadVo.getSex()))
+                .status(userReadVo.getStatus())
+                .password(DigestUtils.md5Hex(userReadVo.getPassword()))
                 .build();
 
         //根据院系名称去查询组织和岗位   这里要求院系名称要和组织设定的院系名称一致 不然无法查询
-        if (StrUtil.isNotBlank(userVo.getDepartment())) {
+        if (StrUtil.isNotBlank(userReadVo.getDepartment())) {
             Org org = orgService.getOne(Wraps.lbQ(new Org())
-                    .eq(Org::getName, userVo.getDepartment()));
+                    .eq(Org::getName, userReadVo.getDepartment()));
             /*if (ObjectUtil.isNotEmpty(org)){
                 user.setOrgId(org.getId());
                 //根据组织Id查询岗位Id
@@ -126,27 +131,27 @@ public class RabbitReceiveHandler {
         //下面根据用户的Id进行用户详情信息的保存
         StuInfoSaveDTO stuInfoSaveDTO = StuInfoSaveDTO.builder()
                 .userId(user.getId())
-                .studentNum(userVo.getStudentNum())
-                .studentName(userVo.getName())
-                .birth(userVo.getBirth())
-                .nation(userVo.getNation())
-                .politicsStatus(PoliticsStatusEnum.get(userVo.getPoliticsStatus()))
-                .enterTime(userVo.getEnterTime())
-                .graduateTime(userVo.getGraduateTime())
-                .idCard(userVo.getIdCard())
-                .hukou(HuKouTypeEnum.get(userVo.getHukou()))
-                .qq(userVo.getQq())
-                .weChat(userVo.getWeChat())
-                .nativePlace(userVo.getNativePlace())
-                .address(userVo.getAddress())
-                .stateSchool(StateSchoolEnum.get(userVo.getStateSchool()))
-                .type(StudentTypeEnum.get(userVo.getType()))
-                .department(DictDepartmentEnum.get(userVo.getDepartment()))
-                .major(userVo.getMajor())
-                .grade(userVo.getGrade())
-                .clazz(userVo.getClazz())
-                .educationalSystem(EducationalSystemEnum.get(userVo.getEducationalSystem()))
-                .hobyDes(userVo.getHobyDes())
+                .studentNum(userReadVo.getStudentNum())
+                .studentName(userReadVo.getName())
+                .birth(userReadVo.getBirth())
+                .nation(userReadVo.getNation())
+                .politicsStatus(PoliticsStatusEnum.get(userReadVo.getPoliticsStatus()))
+                .enterTime(userReadVo.getEnterTime())
+                .graduateTime(userReadVo.getGraduateTime())
+                .idCard(userReadVo.getIdCard())
+                .hukou(HuKouTypeEnum.get(userReadVo.getHukou()))
+                .qq(userReadVo.getQq())
+                .weChat(userReadVo.getWeChat())
+                .nativePlace(userReadVo.getNativePlace())
+                .address(userReadVo.getAddress())
+                .stateSchool(StateSchoolEnum.get(userReadVo.getStateSchool()))
+                .type(StudentTypeEnum.get(userReadVo.getType()))
+                .department(DictDepartmentEnum.get(userReadVo.getDepartment()))
+                .major(userReadVo.getMajor())
+                .grade(userReadVo.getGrade())
+                .clazz(userReadVo.getClazz())
+                .educationalSystem(EducationalSystemEnum.get(userReadVo.getEducationalSystem()))
+                .hobyDes(userReadVo.getHobyDes())
                 .isChange(IsChangeEnum.FALSE)
                 .build();
         //直接进行保存
@@ -165,14 +170,14 @@ public class RabbitReceiveHandler {
     @RabbitListener(queues = {RabbitMqConfig.DEAD_LETTER_QUEUE})
     public void dead_email(Message message, Channel channel) throws IOException {
         // 一旦进入死信队列，需要通知当前发送邮件的人
-        UserVo userVo = objectMapper.readValue(new String(message.getBody(), StandardCharsets.UTF_8), UserVo.class);
+        UserReadVo userReadVo = objectMapper.readValue(new String(message.getBody(), StandardCharsets.UTF_8), UserReadVo.class);
         //一旦失败，需要给当前操作人发送短信或者邮件通知
-        User user = userApi.get(userVo.getUserId()).getData();
+        User user = userApi.get(STU_OFFICE_ADMIN).getData();
         if (StrUtil.isNotBlank(user.getEmail())) {
             emailApi.sendEmail(EmailEntity.builder()
                     .email(user.getEmail())
-                    .title("学生：" + userVo.getName() + "(" + userVo.getAccount() + ")的信息导入失败通知")
-                    .body("学生：" + userVo.getName() + "(" + userVo.getAccount() + ")的信息在Excel表导入的时候出现未知的异常！\r\n"
+                    .title("学生：" + userReadVo.getName() + "(" + userReadVo.getAccount() + ")的信息导入失败通知")
+                    .body("学生：" + userReadVo.getName() + "(" + userReadVo.getAccount() + ")的信息在Excel表导入的时候出现未知的异常！\r\n"
                             + "请核对信息，前往系统手动添加用户。")
                     .build());
         }

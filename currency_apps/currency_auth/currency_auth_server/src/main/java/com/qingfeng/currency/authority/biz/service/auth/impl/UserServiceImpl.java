@@ -18,7 +18,8 @@ import com.qingfeng.currency.authority.biz.service.mq.producer.RabbitSendMsg;
 import com.qingfeng.currency.authority.dto.auth.UserUpdatePasswordDTO;
 import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.authority.entity.auth.UserRole;
-import com.qingfeng.currency.authority.entity.auth.vo.UserVo;
+import com.qingfeng.currency.authority.entity.auth.vo.UserWriteVo;
+import com.qingfeng.currency.authority.entity.auth.vo.UserReadVo;
 import com.qingfeng.currency.authority.entity.core.Org;
 import com.qingfeng.currency.authority.entity.core.Station;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -177,10 +178,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                             ".xlsx");
 
             // 调用方法实现写操作
-            EasyExcel.write(response.getOutputStream(), UserVo.class)
+            EasyExcel.write(response.getOutputStream(), UserWriteVo.class)
                     .sheet("学生信息列表")
                     .doWrite(Collections.singletonList(
-                            UserVo.builder()
+                            UserWriteVo.builder()
                                     .account("使用学号（如：201910801001），学生必须保证唯一")
                                     .name("张三")
                                     .email("xxxxx@qq.com，没有可以不写")
@@ -248,11 +249,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             List<User> userList = baseMapper.selectList(Wraps.lbQ(new User())
                     .in(User::getStationId, stationIds));
             //根据学生信息去查询详情信息进行封装
-            List<UserVo> userVoList = userList.stream().map(u ->
+            List<UserWriteVo> userWriteVoList = userList.stream().map(u ->
                             // 读取数据 采用异步处理  避免进行排队等候
                             CompletableFuture.supplyAsync(() -> {
-                                        UserVo userVo = new UserVo();
-                                        userVo.setAccount(u.getAccount())
+                                        UserWriteVo userWriteVo = new UserWriteVo();
+                                        userWriteVo.setAccount(u.getAccount())
                                                 .setName(u.getName())
                                                 .setEmail(u.getEmail())
                                                 .setMobile(u.getMobile())
@@ -263,7 +264,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                         StuInfoEntity stuInfoEntity = stuInfoApi.info(u.getId()).getData();
                                         Optional.ofNullable(stuInfoEntity)
                                                 .ifPresent(s ->
-                                                    userVo.setStudentNum(s.getStudentNum())
+                                                    userWriteVo.setStudentNum(s.getStudentNum())
                                                             .setBirth(s.getBirth())
                                                             .setNation(s.getNation())
                                                             .setPoliticsStatus(s.getPoliticsStatus().getDesc())
@@ -306,7 +307,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                                     .setEducationalSystem(stuInfoEntity.getEducationalSystem().getDesc())
                                                     .setHobyDes(stuInfoEntity.getHobyDes());
                                         }*/
-                                        return userVo;
+                                        return userWriteVo;
 
                                     }
                             ))
@@ -319,7 +320,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 调用方法实现写操作
             EasyExcel.write(response.getOutputStream(), DictExcelVo.class)
                     .sheet("学生信息列表")
-                    .doWrite(userVoList);
+                    .doWrite(userWriteVoList);
         } catch (Exception e) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), UserServiceExceptionMsg.EXPORT_FAILD.getMsg());
         }
@@ -329,13 +330,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 学生信息Excel导入
      *
      * @param file
-     * @param userId
      */
     @Override
     public void importUser(MultipartFile file) {
-        System.out.println(file.getOriginalFilename());
         try {
-            EasyExcel.read(file.getInputStream(), UserVo.class, new UserVoExcelListener(this, rabbitSendMsg, objectMapper)).sheet().doRead();
+            EasyExcel.read(file.getInputStream(), UserReadVo.class, new UserVoExcelListener(this, rabbitSendMsg, objectMapper)).sheet().doRead();
         } catch (IOException e) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), UserServiceExceptionMsg.IMPORT_FAILD.getMsg());
         }
