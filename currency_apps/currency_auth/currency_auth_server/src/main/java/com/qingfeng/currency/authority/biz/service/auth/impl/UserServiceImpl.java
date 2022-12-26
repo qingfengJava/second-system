@@ -1,6 +1,5 @@
 package com.qingfeng.currency.authority.biz.service.auth.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -42,6 +41,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -177,39 +177,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                             ".xlsx");
 
             // 调用方法实现写操作
-            List<UserVo> data = Collections.singletonList(
-                    UserVo.builder()
-                            .account("使用学号（如：201910801001），学生必须保证唯一")
-                            .name("张三")
-                            .email("xxxxx@qq.com，没有可以不写")
-                            .mobile("13131313311，没有可以不写")
-                            .sex("男、女、未知")
-                            .status(true)
-                            .password("123456")
-                            .studentNum("201910801001")
-                            .birth(LocalDate.now())
-                            .nation("汉/汉族")
-                            .politicsStatus("群众/共青团员/中共党员")
-                            .enterTime(LocalDate.now())
-                            .graduateTime(LocalDate.now())
-                            .idCard("511121200008121095")
-                            .hukou("农村/城市")
-                            .qq("35317631")
-                            .weChat("13131313311")
-                            .nativePlace("四川攀枝花")
-                            .address("四川省攀枝花市炳草岗街道机场路十号攀枝花学院")
-                            .stateSchool("在籍在校/离校/辍学。。。")
-                            .type("本科/专科/研究生")
-                            .department("数学与计算机学院（大数据学院）")
-                            .major("计算机科学与技术")
-                            .grade("2019级")
-                            .clazz("1班")
-                            .educationalSystem("两年制、三年制、四年制、五年制")
-                            .hobyDes("个人描述，可以不写")
-                            .build());
             EasyExcel.write(response.getOutputStream(), UserVo.class)
                     .sheet("学生信息列表")
-                    .doWrite(data);
+                    .doWrite(Collections.singletonList(
+                            UserVo.builder()
+                                    .account("使用学号（如：201910801001），学生必须保证唯一")
+                                    .name("张三")
+                                    .email("xxxxx@qq.com，没有可以不写")
+                                    .mobile("13131313311，没有可以不写")
+                                    .sex("男、女、未知")
+                                    .status(Boolean.TRUE)
+                                    .password("123456")
+                                    .studentNum("201910801001")
+                                    .birth(LocalDate.now())
+                                    .nation("汉/汉族")
+                                    .politicsStatus("群众/共青团员/中共党员")
+                                    .enterTime(LocalDate.now())
+                                    .graduateTime(LocalDate.now())
+                                    .idCard("511121200008121095")
+                                    .hukou("农村/城市")
+                                    .qq("35317631")
+                                    .weChat("13131313311")
+                                    .nativePlace("四川攀枝花")
+                                    .address("四川省攀枝花市炳草岗街道机场路十号攀枝花学院")
+                                    .stateSchool("在籍在校/离校/辍学。。。")
+                                    .type("本科/专科/研究生")
+                                    .department("数学与计算机学院（大数据学院）")
+                                    .major("计算机科学与技术")
+                                    .grade("2019级")
+                                    .clazz("1班")
+                                    .educationalSystem("两年制、三年制、四年制、五年制")
+                                    .hobyDes("个人描述，可以不写")
+                                    .build()));
         } catch (Exception e) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), UserServiceExceptionMsg.EXPORT_TEMPLATE_FAILD.getMsg());
         }
@@ -262,7 +261,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                                 .setPassword(u.getPassword());
                                         //查询出用户对应的详细信息，然后进行封装
                                         StuInfoEntity stuInfoEntity = stuInfoApi.info(u.getId()).getData();
-                                        if (ObjectUtil.isNotEmpty(stuInfoEntity)) {
+                                        Optional.ofNullable(stuInfoEntity)
+                                                .ifPresent(s ->
+                                                    userVo.setStudentNum(s.getStudentNum())
+                                                            .setBirth(s.getBirth())
+                                                            .setNation(s.getNation())
+                                                            .setPoliticsStatus(s.getPoliticsStatus().getDesc())
+                                                            .setEnterTime(s.getEnterTime())
+                                                            .setGraduateTime(s.getGraduateTime())
+                                                            .setIdCard(s.getIdCard())
+                                                            .setHukou(s.getHukou().getDesc())
+                                                            .setQq(s.getQq())
+                                                            .setWeChat(s.getWeChat())
+                                                            .setNativePlace(s.getNativePlace())
+                                                            .setAddress(s.getAddress())
+                                                            .setStateSchool(s.getStateSchool().getDesc())
+                                                            .setType(s.getType().getDesc())
+                                                            .setDepartment(s.getDepartment().getCode())
+                                                            .setMajor(s.getMajor())
+                                                            .setGrade(s.getGrade())
+                                                            .setClazz(s.getClazz())
+                                                            .setEducationalSystem(s.getEducationalSystem().getDesc())
+                                                            .setHobyDes(s.getHobyDes())
+                                                );
+                                        /*if (ObjectUtil.isNotEmpty(stuInfoEntity)) {
                                             userVo.setStudentNum(stuInfoEntity.getStudentNum())
                                                     .setBirth(stuInfoEntity.getBirth())
                                                     .setNation(stuInfoEntity.getNation())
@@ -283,7 +305,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                                     .setClazz(stuInfoEntity.getClazz())
                                                     .setEducationalSystem(stuInfoEntity.getEducationalSystem().getDesc())
                                                     .setHobyDes(stuInfoEntity.getHobyDes());
-                                        }
+                                        }*/
                                         return userVo;
 
                                     }
@@ -305,13 +327,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 学生信息Excel导入
+     *
      * @param file
      * @param userId
      */
     @Override
-    public void importUser(MultipartFile file, Long userId) {
+    public void importUser(MultipartFile file) {
+        System.out.println(file.getOriginalFilename());
         try {
-            EasyExcel.read(file.getInputStream(),UserVo.class, new UserVoExcelListener(this, rabbitSendMsg, objectMapper, userId)).sheet().doRead();
+            EasyExcel.read(file.getInputStream(), UserVo.class, new UserVoExcelListener(this, rabbitSendMsg, objectMapper)).sheet().doRead();
         } catch (IOException e) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), UserServiceExceptionMsg.IMPORT_FAILD.getMsg());
         }

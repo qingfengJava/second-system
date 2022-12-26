@@ -59,7 +59,7 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
         DictEntity dictEntity = dictService.getOne(Wraps.lbQ(new DictEntity())
                 .eq(DictEntity::getParentId, dictExcelVo.getParentId())
                 .eq(DictEntity::getDictName, dictExcelVo.getDictName()));
-        // TODO 逻辑问题是否可以再优化一下
+        // TODO 逻辑问题是否可以再优化一下  后期使用消息队列优化存储的速度
         if (ObjectUtil.isEmpty(dictEntity)) {
             //不存在，就可以直接进行存储
             cachedAddList.add(dozerUtils.map2(dictExcelVo, DictEntity.class));

@@ -114,5 +114,5 @@ public interface UserService extends IService<User> {
      * @param file
      * @param userId
      */
-    void importUser(MultipartFile file, Long userId);
+    void importUser(MultipartFile file);
 }

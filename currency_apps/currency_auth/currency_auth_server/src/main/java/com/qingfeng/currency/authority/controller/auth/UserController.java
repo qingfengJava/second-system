@@ -260,10 +260,10 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation(value = "学生信息Excel导入", notes = "学生信息Excel导入")
-    @PostMapping("/excel/user_import")
+    @PostMapping("/excel/user/import")
     @SysLog("学生信息Excel导入")
     public R userImport(MultipartFile file) {
-        userService.importUser(file, getUserId());
+        userService.importUser(file);
         return success();
     }
 }
