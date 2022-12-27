@@ -30,7 +30,7 @@ public enum StudentTypeEnum implements BaseEnum {
 
     public static StudentTypeEnum match(String val, StudentTypeEnum def) {
         for (StudentTypeEnum enm : StudentTypeEnum.values()) {
-            if (enm.name().equalsIgnoreCase(val)) {
+            if (enm.name().equalsIgnoreCase(val) || enm.desc.contains(val) || val.contains(enm.desc)) {
                 return enm;
             }
         }

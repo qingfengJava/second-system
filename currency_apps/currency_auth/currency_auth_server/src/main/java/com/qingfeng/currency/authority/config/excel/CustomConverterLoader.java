@@ -3,9 +3,8 @@ package com.qingfeng.currency.authority.config.excel;
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.converters.ConverterKeyBuild;
 import com.alibaba.excel.converters.DefaultConverterLoader;
-import com.qingfeng.currency.converter.EasyExcelLocalDateConverter;
+import com.qingfeng.currency.authority.converter.EasyExcelLocalDateConverter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
@@ -16,7 +15,7 @@ import java.util.Map;
  * @version 1.0.0
  * @date 2022/12/26
  */
-@Configuration
+//@Configuration
 public class CustomConverterLoader {
 
     @Bean

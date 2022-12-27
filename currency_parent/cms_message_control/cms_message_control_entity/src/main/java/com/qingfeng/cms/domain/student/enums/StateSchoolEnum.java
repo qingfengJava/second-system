@@ -29,7 +29,7 @@ public enum StateSchoolEnum implements BaseEnum {
 
     public static StateSchoolEnum match(String val, StateSchoolEnum def) {
         for (StateSchoolEnum enm : StateSchoolEnum.values()) {
-            if (enm.name().equalsIgnoreCase(val)) {
+            if (enm.name().equalsIgnoreCase(val) || enm.desc.equalsIgnoreCase(val)) {
                 return enm;
             }
         }

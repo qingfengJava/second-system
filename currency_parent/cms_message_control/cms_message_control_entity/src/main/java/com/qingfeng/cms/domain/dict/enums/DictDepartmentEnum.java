@@ -31,7 +31,7 @@ public enum DictDepartmentEnum  implements BaseEnum {
 
     public static DictDepartmentEnum match(String val, DictDepartmentEnum def) {
         for (DictDepartmentEnum enm : DictDepartmentEnum.values()) {
-            if (enm.name().equalsIgnoreCase(val)) {
+            if (enm.name().equalsIgnoreCase(val) || enm.desc.contains(val) || val.contains(enm.desc)) {
                 return enm;
             }
         }

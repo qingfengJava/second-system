@@ -5,7 +5,6 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qingfeng.cms.domain.dict.vo.DictExcelVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.authority.biz.dao.auth.UserMapper;
 import com.qingfeng.currency.authority.biz.service.auth.UserRoleService;
@@ -18,8 +17,8 @@ import com.qingfeng.currency.authority.biz.service.mq.producer.RabbitSendMsg;
 import com.qingfeng.currency.authority.dto.auth.UserUpdatePasswordDTO;
 import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.authority.entity.auth.UserRole;
-import com.qingfeng.currency.authority.entity.auth.vo.UserWriteVo;
 import com.qingfeng.currency.authority.entity.auth.vo.UserReadVo;
+import com.qingfeng.currency.authority.entity.auth.vo.UserWriteVo;
 import com.qingfeng.currency.authority.entity.core.Org;
 import com.qingfeng.currency.authority.entity.core.Station;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -285,28 +284,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                                             .setEducationalSystem(s.getEducationalSystem().getDesc())
                                                             .setHobyDes(s.getHobyDes())
                                                 );
-                                        /*if (ObjectUtil.isNotEmpty(stuInfoEntity)) {
-                                            userVo.setStudentNum(stuInfoEntity.getStudentNum())
-                                                    .setBirth(stuInfoEntity.getBirth())
-                                                    .setNation(stuInfoEntity.getNation())
-                                                    .setPoliticsStatus(stuInfoEntity.getPoliticsStatus().getDesc())
-                                                    .setEnterTime(stuInfoEntity.getEnterTime())
-                                                    .setGraduateTime(stuInfoEntity.getGraduateTime())
-                                                    .setIdCard(stuInfoEntity.getIdCard())
-                                                    .setHukou(stuInfoEntity.getHukou().getDesc())
-                                                    .setQq(stuInfoEntity.getQq())
-                                                    .setWeChat(stuInfoEntity.getWeChat())
-                                                    .setNativePlace(stuInfoEntity.getNativePlace())
-                                                    .setAddress(stuInfoEntity.getAddress())
-                                                    .setStateSchool(stuInfoEntity.getStateSchool().getDesc())
-                                                    .setType(stuInfoEntity.getType().getDesc())
-                                                    .setDepartment(stuInfoEntity.getDepartment().getCode())
-                                                    .setMajor(stuInfoEntity.getMajor())
-                                                    .setGrade(stuInfoEntity.getGrade())
-                                                    .setClazz(stuInfoEntity.getClazz())
-                                                    .setEducationalSystem(stuInfoEntity.getEducationalSystem().getDesc())
-                                                    .setHobyDes(stuInfoEntity.getHobyDes());
-                                        }*/
                                         return userWriteVo;
 
                                     }
@@ -316,9 +293,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                     .map(CompletableFuture::join)
                     .collect(Collectors.toList());
 
-
             // 调用方法实现写操作
-            EasyExcel.write(response.getOutputStream(), DictExcelVo.class)
+            EasyExcel.write(response.getOutputStream(), UserWriteVo.class)
                     .sheet("学生信息列表")
                     .doWrite(userWriteVoList);
         } catch (Exception e) {

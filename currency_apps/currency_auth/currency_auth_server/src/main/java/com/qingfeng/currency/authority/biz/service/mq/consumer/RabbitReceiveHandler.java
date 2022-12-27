@@ -3,6 +3,9 @@ package com.qingfeng.currency.authority.biz.service.mq.consumer;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
+import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
 import com.qingfeng.cms.domain.student.dto.StuInfoSaveDTO;
 import com.qingfeng.cms.domain.student.enums.EducationalSystemEnum;
 import com.qingfeng.cms.domain.student.enums.HuKouTypeEnum;
@@ -22,6 +25,7 @@ import com.qingfeng.currency.authority.enumeration.auth.Sex;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.sdk.auth.user.UserApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
+import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
 import com.qingfeng.sdk.sms.email.EmailApi;
 import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 import com.rabbitmq.client.Channel;
@@ -67,6 +71,8 @@ public class RabbitReceiveHandler {
     private UserApi userApi;
     @Autowired
     private EmailApi emailApi;
+    @Autowired
+    private NewsNotifyApi newsNotifyApi;
 
     /**
      * 监听邮箱队列的消费
@@ -82,7 +88,6 @@ public class RabbitReceiveHandler {
             COUNT = 0;
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
         }
-        System.out.println("第"+COUNT+"次啦");
 
         // 接收到对象
         UserReadVo userReadVo = objectMapper.readValue(new String(message.getBody(), StandardCharsets.UTF_8), UserReadVo.class);
@@ -102,16 +107,6 @@ public class RabbitReceiveHandler {
         if (StrUtil.isNotBlank(userReadVo.getDepartment())) {
             Org org = orgService.getOne(Wraps.lbQ(new Org())
                     .eq(Org::getName, userReadVo.getDepartment()));
-            /*if (ObjectUtil.isNotEmpty(org)){
-                user.setOrgId(org.getId());
-                //根据组织Id查询岗位Id
-                Station station = stationService.getOne(Wraps.lbQ(new Station())
-                        .eq(Station::getOrgId, org.getId())
-                        .likeLeft(Station::getName, "学生"));
-                if (ObjectUtil.isNotEmpty(station)){
-                    user.setStationId(station.getId());
-                }
-            }*/
 
             Optional.ofNullable(org)
                     .ifPresent(o -> {
@@ -179,6 +174,15 @@ public class RabbitReceiveHandler {
                     .title("学生：" + userReadVo.getName() + "(" + userReadVo.getAccount() + ")的信息导入失败通知")
                     .body("学生：" + userReadVo.getName() + "(" + userReadVo.getAccount() + ")的信息在Excel表导入的时候出现未知的异常！\r\n"
                             + "请核对信息，前往系统手动添加用户。")
+                    .build());
+
+            newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                    .userId(user.getId())
+                    .newsType(NewsTypeEnum.MAILBOX)
+                    .newsTitle("学生：" + userReadVo.getName() + "(" + userReadVo.getAccount() + ")的信息导入失败通知")
+                    .newsContent("学生：" + userReadVo.getName() + "(" + userReadVo.getAccount() + ")的信息在Excel表导入的时候出现未知的异常！\r\n"
+                            + "请核对信息，前往系统手动添加用户。")
+                    .isSee(IsSeeEnum.IS_NOT_VIEWED)
                     .build());
         }
 

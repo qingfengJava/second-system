@@ -28,7 +28,7 @@ public enum HuKouTypeEnum implements BaseEnum {
 
     public static HuKouTypeEnum match(String val, HuKouTypeEnum def) {
         for (HuKouTypeEnum enm : HuKouTypeEnum.values()) {
-            if (enm.name().equalsIgnoreCase(val)) {
+            if (enm.name().equalsIgnoreCase(val) || enm.desc.equalsIgnoreCase(val)) {
                 return enm;
             }
         }

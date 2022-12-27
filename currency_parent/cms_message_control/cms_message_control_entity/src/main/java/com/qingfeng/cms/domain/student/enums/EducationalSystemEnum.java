@@ -30,7 +30,7 @@ public enum EducationalSystemEnum implements BaseEnum {
 
     public static EducationalSystemEnum match(String val, EducationalSystemEnum def) {
         for (EducationalSystemEnum enm : EducationalSystemEnum.values()) {
-            if (enm.name().equalsIgnoreCase(val)) {
+            if (enm.name().equalsIgnoreCase(val) || enm.desc.equalsIgnoreCase(val)) {
                 return enm;
             }
         }

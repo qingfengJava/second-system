@@ -45,8 +45,8 @@ public class UserVoExcelListener  extends AnalysisEventListener<UserReadVo> {
         //排除已经存在的用户
         User user = userService.getOne(Wraps.lbQ(new User())
                 .eq(User::getAccount, userReadVo.getAccount()));
-        System.out.println(userReadVo);
-        if (ObjectUtil.isNotEmpty(user)){
+        //没有再进行存储
+        if (ObjectUtil.isEmpty(user)){
             // 由于数据量可能会比较多的情况下，采用消息队列进行辅助处理
             rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(userReadVo), RabbitMqConfig.ROUTINGKEY_USER_INFO);
         }

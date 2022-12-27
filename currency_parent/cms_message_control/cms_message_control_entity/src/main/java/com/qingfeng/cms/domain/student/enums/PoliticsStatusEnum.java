@@ -23,14 +23,14 @@ public enum PoliticsStatusEnum implements BaseEnum {
     MASSES("群众"),
     COMMUNIST_YOUTH_LEAGUE_MEMBER("共青团员"),
     PROBATIONARY_PARTY_MEMBER("预备党员"),
-    Member_Communist_Party_China("中国党员");
+    Member_Communist_Party_China("中共党员");
 
     @ApiModelProperty(value = "描述")
     private String desc;
 
     public static PoliticsStatusEnum match(String val, PoliticsStatusEnum def) {
         for (PoliticsStatusEnum enm : PoliticsStatusEnum.values()) {
-            if (enm.name().equalsIgnoreCase(val)) {
+            if (enm.name().equalsIgnoreCase(val) || enm.desc.equalsIgnoreCase(val)) {
                 return enm;
             }
         }
