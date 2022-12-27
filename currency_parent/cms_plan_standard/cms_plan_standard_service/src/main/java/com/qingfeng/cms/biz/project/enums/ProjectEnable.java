@@ -1,0 +1,21 @@
+package com.qingfeng.cms.biz.project.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * 项目启用状态枚举
+ *
+ * @author 清风学Java
+ * @version 1.0.0
+ * @date 2022/10/11
+ */
+@AllArgsConstructor
+@Getter
+public enum ProjectEnable {
+
+    ENABLE_NOT(0),
+    ENABLE_TURE(1);
+
+    private Integer enable;
+}

@@ -152,6 +152,8 @@ public class RabbitReceiveHandler {
         //直接进行保存
         stuInfoApi.save(stuInfoSaveDTO);
 
+        // TODO 还要将用户与角色进行绑定
+
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
     }
 

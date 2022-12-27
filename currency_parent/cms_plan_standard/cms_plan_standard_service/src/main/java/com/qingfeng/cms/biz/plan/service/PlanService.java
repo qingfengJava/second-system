@@ -2,6 +2,7 @@ package com.qingfeng.cms.biz.plan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
+import com.qingfeng.cms.domain.plan.vo.PlanEntityVo;
 
 /**
  * 方案设定表（是否是修读标准，本科标准，专科标准）
@@ -23,5 +24,12 @@ public interface PlanService extends IService<PlanEntity> {
      * @param plan
      */
     void updatePlan(PlanEntity plan);
+
+    /**
+     * 根据学生用户Id，查询方案方针
+     * @param userId
+     * @return
+     */
+    PlanEntityVo getPlan(Long userId);
 }
 

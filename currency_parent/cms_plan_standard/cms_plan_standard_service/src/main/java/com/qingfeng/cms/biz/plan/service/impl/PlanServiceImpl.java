@@ -3,16 +3,37 @@ package com.qingfeng.cms.biz.plan.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qingfeng.cms.biz.level.dao.LevelDao;
 import com.qingfeng.cms.biz.module.dao.CreditModuleDao;
 import com.qingfeng.cms.biz.plan.dao.PlanDao;
 import com.qingfeng.cms.biz.plan.enums.PlanExceptionMsg;
 import com.qingfeng.cms.biz.plan.enums.PlanIsEnable;
 import com.qingfeng.cms.biz.plan.service.PlanService;
+import com.qingfeng.cms.biz.project.dao.ProjectDao;
+import com.qingfeng.cms.biz.project.enums.ProjectEnable;
+import com.qingfeng.cms.biz.rule.dao.CreditRulesDao;
+import com.qingfeng.cms.domain.level.entity.LevelEntity;
+import com.qingfeng.cms.domain.level.enums.LevelCheckEnum;
+import com.qingfeng.cms.domain.level.vo.LevelListVo;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.module.vo.CreditModuleVo;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
+import com.qingfeng.cms.domain.plan.vo.PlanEntityVo;
+import com.qingfeng.cms.domain.project.entity.ProjectEntity;
+import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
+import com.qingfeng.cms.domain.project.vo.ProjectListVo;
+import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
+import com.qingfeng.cms.domain.rule.vo.CreditRulesVo;
+import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
+import com.qingfeng.cms.domain.student.enums.StudentTypeEnum;
+import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
+import com.qingfeng.sdk.auth.role.RoleApi;
+import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
@@ -34,7 +58,20 @@ import java.util.List;
 public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements PlanService {
 
     @Autowired
+    private DozerUtils dozerUtils;
+    @Autowired
     private CreditModuleDao creditModuleDao;
+    @Autowired
+    private ProjectDao projectDao;
+    @Autowired
+    private LevelDao levelDao;
+    @Autowired
+    private CreditRulesDao creditRulesDao;
+
+    @Autowired
+    private RoleApi roleApi;
+    @Autowired
+    private StuInfoApi stuInfoApi;
 
     /**
      * 保存方案：新增保存方案的时候要判断该类型是否已经有启用的方案
@@ -96,7 +133,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
         //首先判断是修改成什么类型
         if (plan.getIsEnable().equals(PlanIsEnable.ENABLE_NOT.getEnable())) {
             //如果本身自己就是为启用的状态，则不进行下面的操作
-            if (baseMapper.selectById(plan.getId()).getIsEnable().equals(PlanIsEnable.ENABLE_TURE.getEnable())){
+            if (baseMapper.selectById(plan.getId()).getIsEnable().equals(PlanIsEnable.ENABLE_TURE.getEnable())) {
                 //取消启用，查看是否有关联的
                 List<CreditModuleEntity> moduleList = creditModuleDao.selectList(new LambdaQueryWrapper<CreditModuleEntity>()
                         .eq(CreditModuleEntity::getPlanId, plan.getId()));
@@ -144,5 +181,83 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
 
         //进行当前的修改
         baseMapper.updateById(plan);
+    }
+
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public PlanEntityVo getPlan(Long userId) {
+        //首先要判断用户是不是学生，只有学生可以查看
+        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.STUDENT.name()});
+        if (userIdByCode.getData().contains(userId)) {
+            //说明是学生  查询学生信息，找到对应的年级
+            StuInfoEntity stuInfoEntity = stuInfoApi.info(userId).getData();
+            AtomicReference<Integer> applicationObject = new AtomicReference<>(0);
+            Optional.ofNullable(stuInfoEntity)
+                    .ifPresent(s -> {
+                        if (s.getType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FOUR_YEARS) ||
+                                s.getType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FIVE_YEARS)) {
+                            applicationObject.set(1);
+                        } else if (s.getType().equals(StudentTypeEnum.SPECIALTY)) {
+                            applicationObject.set(2);
+                        } else if (s.getType().equals(StudentTypeEnum.GRADUATE_STUDENT)) {
+                            applicationObject.set(3);
+                        }
+                    });
+            //根据年级和本专科查询对应的方案信息
+            PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
+                    .likeLeft(PlanEntity::getGrade, stuInfoEntity.getGrade())
+                    .eq(PlanEntity::getApplicationObject, applicationObject.get())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable()));
+
+            PlanEntityVo planEntityVo = dozerUtils.map2(planEntity, PlanEntityVo.class);
+            //封装方案下的模块信息
+            List<CreditModuleEntity> creditModuleEntities = creditModuleDao.selectList(Wraps.lbQ(new CreditModuleEntity())
+                    .eq(CreditModuleEntity::getPlanId, planEntityVo.getId())
+                    .orderByAsc(CreditModuleEntity::getModuleContent));
+            List<CreditModuleVo> creditModuleVoList = dozerUtils.mapList(creditModuleEntities, CreditModuleVo.class);
+            //根据模块要查询对应的项目信息
+            creditModuleVoList.forEach(c ->
+                CompletableFuture.runAsync(() -> {
+                    List<ProjectEntity> projectEntityList = projectDao.selectList(Wraps.lbQ(new ProjectEntity())
+                            .eq(ProjectEntity::getModuleId, c.getId())
+                            .eq(ProjectEntity::getIsEnable, ProjectEnable.ENABLE_TURE.getEnable())
+                            .eq(ProjectEntity::getIsCheck, ProjectCheckEnum.IS_FINISHED)
+                            .orderByAsc(ProjectEntity::getId));
+
+                    List<ProjectListVo> projectListVos = dozerUtils.mapList(projectEntityList, ProjectListVo.class);
+                    //封装项目下的等级
+                    projectListVos.forEach(p ->
+                        CompletableFuture.runAsync(() -> {
+                            List<LevelEntity> levelEntities = levelDao.selectList(Wraps.lbQ(new LevelEntity())
+                                    .eq(LevelEntity::getProjectId, p.getId())
+                                    .eq(LevelEntity::getIsCheck, LevelCheckEnum.IS_FINISHED));
+                            List<LevelListVo> levelListVos = dozerUtils.mapList(levelEntities, LevelListVo.class);
+                            //封装等级下的学分细则
+                            levelListVos.forEach(l ->
+                                    CompletableFuture.runAsync(() -> {
+                                        List<CreditRulesEntity> creditRulesEntities = creditRulesDao.selectList(Wraps.lbQ(new CreditRulesEntity())
+                                                .eq(CreditRulesEntity::getLevelId, l.getId())
+                                                .eq(CreditRulesEntity::getIsCheck, LevelCheckEnum.IS_FINISHED));
+                                        List<CreditRulesVo> creditRulesVos = dozerUtils.mapList(creditRulesEntities, CreditRulesVo.class);
+                                        l.setCreditRulesVoList(creditRulesVos);
+                                    })
+                            );
+
+                            p.setLevelListVo(levelListVos);
+                        })
+                    );
+
+                    c.setProjectListVo(projectListVos);
+                })
+            );
+
+            //封装模块
+            planEntityVo.setCreditModuleVoList(creditModuleVoList);
+
+            return planEntityVo;
+
+        }
+
+        return null;
     }
 }

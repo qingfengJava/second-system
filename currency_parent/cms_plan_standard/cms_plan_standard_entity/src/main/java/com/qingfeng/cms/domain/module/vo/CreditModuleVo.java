@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.module.vo;
 
+import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 学分认定模块表
@@ -26,7 +28,7 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "CCreditModuleVo",description = "学分认定模块实体")
+@ApiModel(value = "CreditModuleVo",description = "学分认定模块实体")
 public class CreditModuleVo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -52,4 +54,5 @@ public class CreditModuleVo implements Serializable {
 	@ApiModelProperty(value = "年级（冗余字段，方便后面进行查询）")
 	private String grade;
 
+	private List<ProjectListVo> projectListVo;
 }

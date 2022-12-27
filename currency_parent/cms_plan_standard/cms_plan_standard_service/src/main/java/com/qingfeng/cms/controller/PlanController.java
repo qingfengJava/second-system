@@ -7,6 +7,7 @@ import com.qingfeng.cms.domain.plan.dto.PlanPageDTO;
 import com.qingfeng.cms.domain.plan.dto.PlanSaveDTO;
 import com.qingfeng.cms.domain.plan.dto.PlanUpdateDTO;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
+import com.qingfeng.cms.domain.plan.vo.PlanEntityVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
@@ -121,6 +122,14 @@ public class PlanController extends BaseController {
         planService.removeByIds(ids);
 
         return success(true);
+    }
+
+    @ApiOperation(value = "根据学生用户Id，查询方案方针", notes = "根据学生用户Id，查询方案方针")
+    @GetMapping
+    @SysLog("根据学生用户Id，查询方案方针")
+    public R<PlanEntityVo> getPlan() {
+        PlanEntityVo planEntityVo = planService.getPlan(getUserId());
+        return success(planEntityVo);
     }
 
 }

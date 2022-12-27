@@ -56,7 +56,7 @@ public class PlanEntity extends Entity<Long> {
 	@TableField(value = "grade", condition = LIKE)
 	private String grade;
 
-	@ApiModelProperty(value = "应用对象 （1：本科   2：专科）")
+	@ApiModelProperty(value = "应用对象 （1：本科   2：专科  3：研究生）")
 	private Integer applicationObject;
 
 	@ApiModelProperty(value = "是否启用改方案（0：未启用   1：启用）")
