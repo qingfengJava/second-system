@@ -62,6 +62,9 @@ public class StuInfoEntity extends Entity<Long> {
 	@ApiModelProperty(value = "政治面貌")
 	private PoliticsStatusEnum politicsStatus;
 
+	@ApiModelProperty(value = "身份证号")
+	private String idCard;
+
 	@ApiModelProperty(value = "入学时间")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
@@ -72,29 +75,20 @@ public class StuInfoEntity extends Entity<Long> {
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private LocalDate graduateTime;
 
-	@ApiModelProperty(value = "身份证号")
-	private String idCard;
+	@ApiModelProperty(value = "在校状态， 枚举类型")
+	private StateSchoolEnum stateSchool;
 
 	@ApiModelProperty(value = "户口类型，枚举类型")
 	private HuKouTypeEnum hukou;
 
-	@ApiModelProperty(value = "QQ号")
-	private String qq;
-
-	@ApiModelProperty(value = "微信号")
-	private String weChat;
-
 	@ApiModelProperty(value = "籍贯")
 	private String nativePlace;
 
-	@ApiModelProperty(value = "家庭地址")
-	private String address;
-
-	@ApiModelProperty(value = "在校状态， 枚举类型")
-	private StateSchoolEnum stateSchool;
-
 	@ApiModelProperty(value = "学生类型， 枚举类型")
 	private StudentTypeEnum type;
+
+	@ApiModelProperty(value = "家庭地址")
+	private String address;
 
 	@ApiModelProperty(value = "院系，使用数据字典的枚举类型")
 	private DictDepartmentEnum department;
@@ -110,6 +104,12 @@ public class StuInfoEntity extends Entity<Long> {
 
 	@ApiModelProperty(value = "学制")
 	private EducationalSystemEnum educationalSystem;
+
+	@ApiModelProperty(value = "QQ号")
+	private String qq;
+
+	@ApiModelProperty(value = "微信号")
+	private String weChat;
 
 	@ApiModelProperty(value = "个人描述")
 	private String hobyDes;

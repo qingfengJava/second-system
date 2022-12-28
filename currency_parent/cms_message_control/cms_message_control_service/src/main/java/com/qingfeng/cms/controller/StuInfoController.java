@@ -50,6 +50,13 @@ public class StuInfoController extends BaseController {
         return success(stuInfo);
     }
 
+    @ApiOperation(value = "查询学生用户信息详情信息", notes = "查询学生用户信息详情信息")
+    @GetMapping
+    @SysLog("查询学生用户信息详情信息")
+    public R<StuInfoEntity> info(){
+        return this.info(getUserId());
+    }
+
     @ApiOperation(value = "保存用户详情信息", notes = "保存用户详情信息")
     @PostMapping("/save")
     @SysLog("保存用户详情信息")
