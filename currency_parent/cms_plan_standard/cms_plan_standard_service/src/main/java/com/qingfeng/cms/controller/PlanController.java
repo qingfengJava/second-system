@@ -98,10 +98,10 @@ public class PlanController extends BaseController {
     @ApiOperation(value = "根据Id查询方案信息", notes = "根据Id查询方案信息")
     @GetMapping("/info/{planId}")
     @SysLog("根据Id查询方案信息")
-    public R<PlanEntity> info(@ApiParam(value = "方案Id", required = true)
+    public R<PlanEntityVo> info(@ApiParam(value = "方案Id", required = true)
                               @PathVariable("planId") @NotNull Long planId) {
-        PlanEntity plan = planService.getById(planId);
-        return success(plan);
+        PlanEntityVo planEntityVo = planService.getPlanInfo(planId);
+        return success(planEntityVo);
     }
 
     @ApiOperation(value = "修改学分修读方案", notes = "修改学分修读方案字段不能为空")

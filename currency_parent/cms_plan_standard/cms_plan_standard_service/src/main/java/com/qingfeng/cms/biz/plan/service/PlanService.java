@@ -31,5 +31,12 @@ public interface PlanService extends IService<PlanEntity> {
      * @return
      */
     PlanEntityVo getPlan(Long userId);
+
+    /**
+     * 根据方案Id查询方案详情
+     * @param planId
+     * @return
+     */
+    PlanEntityVo getPlanInfo(Long planId);
 }
 
