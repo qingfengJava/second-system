@@ -41,9 +41,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 
 /**
@@ -215,40 +217,56 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
                     .eq(CreditModuleEntity::getPlanId, planEntityVo.getId())
                     .orderByAsc(CreditModuleEntity::getModuleContent));
             List<CreditModuleVo> creditModuleVoList = dozerUtils.mapList(creditModuleEntities, CreditModuleVo.class);
+            //先查询所有模块下关联的所有项目，并根据模块Id进行map分组
+            List<ProjectEntity> projectEntities = projectDao.selectList(Wraps.lbQ(new ProjectEntity())
+                    .in(ProjectEntity::getModuleId, creditModuleVoList.stream()
+                            .map(CreditModuleVo::getId)
+                            .collect(Collectors.toList()))
+                    .eq(ProjectEntity::getIsEnable, ProjectEnable.ENABLE_TURE.getEnable())
+                    .eq(ProjectEntity::getIsCheck, ProjectCheckEnum.IS_FINISHED)
+                    .orderByAsc(ProjectEntity::getId));
+            Map<Long, List<ProjectListVo>> projectVoMap = dozerUtils.mapList(projectEntities, ProjectListVo.class)
+                    .stream()
+                    .collect(Collectors.groupingBy(ProjectListVo::getModuleId));
+            //根据所有项目查询其关联的项目等级，根据项目Id进行分组
+            List<LevelEntity> levelEntityList = levelDao.selectList(Wraps.lbQ(new LevelEntity())
+                    .in(LevelEntity::getProjectId, projectEntities.stream()
+                            .map(ProjectEntity::getId)
+                            .collect(Collectors.toList()))
+                    .eq(LevelEntity::getIsCheck, LevelCheckEnum.IS_FINISHED));
+            Map<Long, List<LevelListVo>> levelListVoMap = dozerUtils.mapList(levelEntityList, LevelListVo.class)
+                    .stream()
+                    .collect(Collectors.groupingBy(LevelListVo::getProjectId));
+            //根据项目等级，查询其关联的所有学分细则
+            List<CreditRulesEntity> creditRulesEntityList = creditRulesDao.selectList(Wraps.lbQ(new CreditRulesEntity())
+                    .in(CreditRulesEntity::getLevelId, levelEntityList.stream()
+                            .map(LevelEntity::getId)
+                            .collect(Collectors.toList()))
+                    .eq(CreditRulesEntity::getIsCheck, LevelCheckEnum.IS_FINISHED));
+            Map<Long, List<CreditRulesVo>> creditRulesVoMap = dozerUtils.mapList(creditRulesEntityList, CreditRulesVo.class)
+                    .stream()
+                    .collect(Collectors.groupingBy(CreditRulesVo::getLevelId));
+
             //根据模块要查询对应的项目信息
             creditModuleVoList.forEach(c ->
-                CompletableFuture.runAsync(() -> {
-                    List<ProjectEntity> projectEntityList = projectDao.selectList(Wraps.lbQ(new ProjectEntity())
-                            .eq(ProjectEntity::getModuleId, c.getId())
-                            .eq(ProjectEntity::getIsEnable, ProjectEnable.ENABLE_TURE.getEnable())
-                            .eq(ProjectEntity::getIsCheck, ProjectCheckEnum.IS_FINISHED)
-                            .orderByAsc(ProjectEntity::getId));
+                    CompletableFuture.runAsync(() -> {
+                        List<ProjectListVo> projectListVos = projectVoMap.get(c.getId());
+                        //封装项目下的等级
+                        projectListVos.forEach(p ->
+                                CompletableFuture.runAsync(() -> {
+                                    List<LevelListVo> levelListVos = levelListVoMap.get(p.getId());
+                                    //封装等级下的学分细则
+                                    levelListVos.forEach(l ->
+                                            CompletableFuture.runAsync(() -> {
+                                                l.setCreditRulesVoList(creditRulesVoMap.get(l.getId()));
+                                            })
+                                    );
+                                    p.setLevelListVo(levelListVos);
+                                })
+                        );
 
-                    List<ProjectListVo> projectListVos = dozerUtils.mapList(projectEntityList, ProjectListVo.class);
-                    //封装项目下的等级
-                    projectListVos.forEach(p ->
-                        CompletableFuture.runAsync(() -> {
-                            List<LevelEntity> levelEntities = levelDao.selectList(Wraps.lbQ(new LevelEntity())
-                                    .eq(LevelEntity::getProjectId, p.getId())
-                                    .eq(LevelEntity::getIsCheck, LevelCheckEnum.IS_FINISHED));
-                            List<LevelListVo> levelListVos = dozerUtils.mapList(levelEntities, LevelListVo.class);
-                            //封装等级下的学分细则
-                            levelListVos.forEach(l ->
-                                    CompletableFuture.runAsync(() -> {
-                                        List<CreditRulesEntity> creditRulesEntities = creditRulesDao.selectList(Wraps.lbQ(new CreditRulesEntity())
-                                                .eq(CreditRulesEntity::getLevelId, l.getId())
-                                                .eq(CreditRulesEntity::getIsCheck, LevelCheckEnum.IS_FINISHED));
-                                        List<CreditRulesVo> creditRulesVos = dozerUtils.mapList(creditRulesEntities, CreditRulesVo.class);
-                                        l.setCreditRulesVoList(creditRulesVos);
-                                    })
-                            );
-
-                            p.setLevelListVo(levelListVos);
-                        })
-                    );
-
-                    c.setProjectListVo(projectListVos);
-                })
+                        c.setProjectListVo(projectListVos);
+                    })
             );
 
             //封装模块
@@ -257,7 +275,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
             return planEntityVo;
 
         }
-
         return null;
     }
 }
