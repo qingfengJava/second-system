@@ -134,8 +134,33 @@ public class DictController extends BaseController {
     @ApiOperation(value = "查询所有的学院", notes = "查询所有的学院")
     @GetMapping("/find/department")
     @SysLog("查询所有的学院")
-    public R<List<DictEntity>> findDepartment(){
+    public R<List<DictEntity>> findDepartment() {
         List<DictEntity> dictEntityList = dictService.findDepartment();
         return success(dictEntityList);
+    }
+
+    @ApiOperation(value = "根据学院Id，查询对应的专业", notes = "根据学院Id，查询对应的专业")
+    @GetMapping("/find/major/{depId}")
+    @SysLog("根据学院Id，查询对应的专业")
+    public R<List<DictEntity>> findMajor(@ApiParam(value = "院系Id")
+                                         @PathVariable("depId") Long depId) {
+        List<DictEntity> dictEntityList = dictService.findMajorByDepId(depId);
+        return success(dictEntityList);
+    }
+
+    @ApiOperation(value = "查询民族", notes = "查询民族")
+    @GetMapping("/find/nation")
+    @SysLog("查询民族")
+    public R<List<DictEntity>> findNation() {
+        List<DictEntity> dictEntityList = dictService.findNation();
+        return success(dictEntityList);
+    }
+
+    @ApiOperation(value = "查询省市", notes = "查询省市")
+    @GetMapping("/find/native")
+    @SysLog("查询省市")
+    public R<List<DictVo>> findNativePlace() {
+        List<DictVo> dictVoList = dictService.findNativePlace();
+        return success(dictVoList);
     }
 }

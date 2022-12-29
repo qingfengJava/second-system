@@ -10,6 +10,7 @@ import com.qingfeng.cms.domain.dict.dto.DictSaveDTO;
 import com.qingfeng.cms.domain.dict.dto.DictUpdateDTO;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
 import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
+import com.qingfeng.cms.domain.dict.enums.DictParentEnum;
 import com.qingfeng.cms.domain.dict.vo.DictVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
@@ -59,7 +60,7 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
                 return dozerUtils.map2(dict, DictVo.class)
                         .setChildren(getChildrens(dict, dictList));
             }).collect(Collectors.toList());
-            cacheChannel.set(CacheKey.MESSAGE_RESOURCE,CacheKey.DICT_TREE, dictVoList);
+            cacheChannel.set(CacheKey.MESSAGE_RESOURCE, CacheKey.DICT_TREE, dictVoList);
             return dictVoList;
         } else {
             return (List<DictVo>) cacheObject.getValue();
@@ -68,6 +69,7 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
 
     /**
      * 添加数据字典内容
+     *
      * @param dictSaveDTO
      */
     @Override
@@ -84,6 +86,7 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
 
     /**
      * 根据Id修改数据字典内容
+     *
      * @param dictUpdateDTO
      */
     @Override
@@ -96,6 +99,7 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
 
     /**
      * 查询所有的院系信息
+     *
      * @return
      */
     @Override
@@ -108,18 +112,60 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
         return dictEntityList;
     }
 
+    @Override
+    public List<DictEntity> findMajorByDepId(Long depId) {
+        List<DictEntity> dictEntityList = baseMapper.selectList(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getParentId, depId));
+        return dictEntityList;
+    }
+
+    /**
+     * 查询民族
+     *
+     * @return
+     */
+    @Override
+    public List<DictEntity> findNation() {
+        DictEntity dictEntity = baseMapper.selectOne(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getDictCode, DictParentEnum.NATION));
+        List<DictEntity> dictEntityList = baseMapper.selectList(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getParentId, dictEntity.getId()));
+        return dictEntityList;
+    }
+
+    /**
+     * 查询籍贯信息
+     *
+     * @return
+     */
+    @Override
+    public List<DictVo> findNativePlace() {
+        DictEntity dictEntity = baseMapper.selectOne(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getDictCode, DictParentEnum.PROVINCE));
+        List<DictEntity> dictEntityList = baseMapper.selectList(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getParentId, dictEntity.getId()));
+        List<DictVo> dictVoList = dozerUtils.mapList(dictEntityList, DictVo.class);
+        dictVoList.forEach(d -> {
+            d.setChildren(dozerUtils.mapList(
+                    baseMapper.selectList(Wraps.lbQ(new DictEntity())
+                            .eq(DictEntity::getParentId, d.getId())),
+                    DictVo.class));
+        });
+        return dictVoList;
+    }
+
     private void checkDict(DictEntity dict) {
         DictEntity dictEntity = baseMapper.selectOne(Wraps.lbQ(new DictEntity())
                 .like(DictEntity::getDictName, dict.getDictName()));
-        if (ObjectUtil.isNotEmpty(dictEntity)){
+        if (ObjectUtil.isNotEmpty(dictEntity)) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), DictServiceExceptionMsg.IS_EXISTENCE.getMsg());
         }
 
         // 再排查编码是否是唯一的
-        if(ObjectUtil.isNotEmpty(dict.getDictCode())){
+        if (ObjectUtil.isNotEmpty(dict.getDictCode())) {
             List<DictEntity> dictList = baseMapper.selectList(Wraps.lbQ(new DictEntity())
                     .eq(DictEntity::getDictCode, dict.getDictCode()));
-            if (ObjectUtil.isNotEmpty(dictList)){
+            if (ObjectUtil.isNotEmpty(dictList)) {
                 throw new BizException(ExceptionCode.OPERATION_EX.getCode(), DictServiceExceptionMsg.IS_EXISTCODE.getMsg());
             }
         }

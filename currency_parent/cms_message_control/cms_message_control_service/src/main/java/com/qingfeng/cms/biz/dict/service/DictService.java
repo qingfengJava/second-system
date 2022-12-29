@@ -40,5 +40,24 @@ public interface DictService extends IService<DictEntity> {
      * @return
      */
     List<DictEntity> findDepartment();
+
+    /**
+     * 根据院系Id查询对应的专业信息
+     * @param depId
+     * @return
+     */
+    List<DictEntity> findMajorByDepId(Long depId);
+
+    /**
+     * 查询民族
+     * @return
+     */
+    List<DictEntity> findNation();
+
+    /**
+     * 查询籍贯信息
+     * @return
+     */
+    List<DictVo> findNativePlace();
 }
 
