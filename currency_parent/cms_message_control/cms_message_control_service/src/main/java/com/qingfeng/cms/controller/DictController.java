@@ -7,6 +7,7 @@ import com.qingfeng.cms.domain.dict.dto.DictSaveDTO;
 import com.qingfeng.cms.domain.dict.dto.DictUpdateDTO;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
 import com.qingfeng.cms.domain.dict.vo.DictVo;
+import com.qingfeng.cms.domain.dict.vo.NationVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
@@ -140,11 +141,11 @@ public class DictController extends BaseController {
     }
 
     @ApiOperation(value = "根据学院Id，查询对应的专业", notes = "根据学院Id，查询对应的专业")
-    @GetMapping("/find/major/{depId}")
+    @GetMapping("/find/major/{dep}")
     @SysLog("根据学院Id，查询对应的专业")
     public R<List<DictEntity>> findMajor(@ApiParam(value = "院系Id")
-                                         @PathVariable("depId") Long depId) {
-        List<DictEntity> dictEntityList = dictService.findMajorByDepId(depId);
+                                         @PathVariable("dep") String dep) {
+        List<DictEntity> dictEntityList = dictService.findMajorByDep(dep);
         return success(dictEntityList);
     }
 
@@ -159,8 +160,8 @@ public class DictController extends BaseController {
     @ApiOperation(value = "查询省市", notes = "查询省市")
     @GetMapping("/find/native")
     @SysLog("查询省市")
-    public R<List<DictVo>> findNativePlace() {
-        List<DictVo> dictVoList = dictService.findNativePlace();
+    public R<List<NationVo>> findNativePlace() {
+        List<NationVo> dictVoList = dictService.findNativePlace();
         return success(dictVoList);
     }
 }

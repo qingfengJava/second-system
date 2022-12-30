@@ -5,6 +5,7 @@ import com.qingfeng.cms.domain.dict.dto.DictSaveDTO;
 import com.qingfeng.cms.domain.dict.dto.DictUpdateDTO;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
 import com.qingfeng.cms.domain.dict.vo.DictVo;
+import com.qingfeng.cms.domain.dict.vo.NationVo;
 
 import java.util.List;
 
@@ -43,10 +44,10 @@ public interface DictService extends IService<DictEntity> {
 
     /**
      * 根据院系Id查询对应的专业信息
-     * @param depId
+     * @param dep
      * @return
      */
-    List<DictEntity> findMajorByDepId(Long depId);
+    List<DictEntity> findMajorByDep(String dep);
 
     /**
      * 查询民族
@@ -58,6 +59,6 @@ public interface DictService extends IService<DictEntity> {
      * 查询籍贯信息
      * @return
      */
-    List<DictVo> findNativePlace();
+    List<NationVo> findNativePlace();
 }
 

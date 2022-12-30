@@ -12,6 +12,7 @@ import com.qingfeng.cms.domain.dict.entity.DictEntity;
 import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.dict.enums.DictParentEnum;
 import com.qingfeng.cms.domain.dict.vo.DictVo;
+import com.qingfeng.cms.domain.dict.vo.NationVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
@@ -113,9 +114,12 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
     }
 
     @Override
-    public List<DictEntity> findMajorByDepId(Long depId) {
+    public List<DictEntity> findMajorByDep(String dep) {
+        System.out.println("数据"+dep);
+        DictEntity dictEntity = baseMapper.selectOne(Wraps.lbQ(new DictEntity())
+                .eq(DictEntity::getDictCode, dep));
         List<DictEntity> dictEntityList = baseMapper.selectList(Wraps.lbQ(new DictEntity())
-                .eq(DictEntity::getParentId, depId));
+                .eq(DictEntity::getParentId, dictEntity.getId()));
         return dictEntityList;
     }
 
@@ -139,19 +143,32 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
      * @return
      */
     @Override
-    public List<DictVo> findNativePlace() {
+    public List<NationVo> findNativePlace() {
         DictEntity dictEntity = baseMapper.selectOne(Wraps.lbQ(new DictEntity())
                 .eq(DictEntity::getDictCode, DictParentEnum.PROVINCE));
         List<DictEntity> dictEntityList = baseMapper.selectList(Wraps.lbQ(new DictEntity())
                 .eq(DictEntity::getParentId, dictEntity.getId()));
         List<DictVo> dictVoList = dozerUtils.mapList(dictEntityList, DictVo.class);
-        dictVoList.forEach(d -> {
-            d.setChildren(dozerUtils.mapList(
-                    baseMapper.selectList(Wraps.lbQ(new DictEntity())
-                            .eq(DictEntity::getParentId, d.getId())),
-                    DictVo.class));
-        });
-        return dictVoList;
+        List<NationVo> nationVoList = dictVoList.stream()
+                .map(d -> {
+                    NationVo nationVo = NationVo.builder()
+                            .label(d.getDictName())
+                            .value(d.getDictName())
+                            .build();
+
+                    nationVo.setChildren(baseMapper.selectList(Wraps.lbQ(new DictEntity())
+                                    .eq(DictEntity::getParentId, d.getId()))
+                            .stream()
+                            .map(dict -> NationVo.builder()
+                                    .label(dict.getDictName())
+                                    .value(dict.getDictName())
+                                    .build())
+                            .collect(Collectors.toList()));
+
+                    return nationVo;
+                }).collect(Collectors.toList());
+
+        return nationVoList;
     }
 
     private void checkDict(DictEntity dict) {

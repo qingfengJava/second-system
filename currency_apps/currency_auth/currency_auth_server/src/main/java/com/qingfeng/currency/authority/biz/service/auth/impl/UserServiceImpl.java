@@ -198,7 +198,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                     .hukou("农村/城市")
                                     .qq("35317631")
                                     .weChat("13131313311")
-                                    .nativePlace("四川攀枝花")
+                                    .nativePlace("四川省/攀枝花市")
                                     .address("四川省攀枝花市炳草岗街道机场路十号攀枝花学院")
                                     .stateSchool("在籍在校/离校/辍学。。。")
                                     .type("本科/专科/研究生")

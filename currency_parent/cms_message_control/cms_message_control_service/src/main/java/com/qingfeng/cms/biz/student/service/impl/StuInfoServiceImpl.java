@@ -30,12 +30,17 @@ public class StuInfoServiceImpl extends ServiceImpl<StuInfoDao, StuInfoEntity> i
      */
     @Override
     public void saveStuInfo(StuInfoSaveDTO stuInfoSaveDTO) {
-        //首先要查询当前用户下是否有详情信息  有则不做处理
-        StuInfoEntity stuInfo = baseMapper.selectOne(Wraps.lbQ(new StuInfoEntity())
-                .eq(StuInfoEntity::getUserId, stuInfoSaveDTO.getUserId()));
-        if (ObjectUtil.isEmpty(stuInfo)){
-            StuInfoEntity stuInfoEntity = dozerUtils.map2(stuInfoSaveDTO, StuInfoEntity.class);
-            baseMapper.insert(stuInfoEntity);
+        if (ObjectUtil.isNotEmpty(stuInfoSaveDTO.getId())){
+            //用户维护的信息
+            baseMapper.updateById(dozerUtils.map2(stuInfoSaveDTO, StuInfoEntity.class));
+        }else{
+            //首先要查询当前用户下是否有详情信息  有则不做处理
+            StuInfoEntity stuInfo = baseMapper.selectOne(Wraps.lbQ(new StuInfoEntity())
+                    .eq(StuInfoEntity::getUserId, stuInfoSaveDTO.getUserId()));
+            if (ObjectUtil.isEmpty(stuInfo)){
+                StuInfoEntity stuInfoEntity = dozerUtils.map2(stuInfoSaveDTO, StuInfoEntity.class);
+                baseMapper.insert(stuInfoEntity);
+            }
         }
     }
 }

@@ -43,6 +43,9 @@ public class StuInfoSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "主键Id")
+	private Long Id;
+
 	@ApiModelProperty(value = "用户表外键，关联用户基础信息")
 	@NotNull(message = "用户Id不能为空")
 	private Long userId;

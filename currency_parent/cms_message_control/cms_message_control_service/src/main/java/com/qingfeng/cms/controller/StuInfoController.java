@@ -71,6 +71,7 @@ public class StuInfoController extends BaseController {
     @SysLog("保存用户详情信息")
     public R save(@ApiParam(value = "用户详情信息保存实体", required = true)
                   @RequestBody @Validated StuInfoSaveDTO stuInfoSaveDTO) {
+        System.out.println(stuInfoSaveDTO);
         stuInfoService.saveStuInfo(stuInfoSaveDTO);
 
         return success();
