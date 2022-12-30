@@ -2,6 +2,7 @@ package com.qingfeng.cms.domain.manage.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.manage.enums.InfoTypeEnum;
+import com.qingfeng.cms.domain.manage.enums.TypeStatusEnum;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -45,13 +46,17 @@ public class InfoManageEntity extends Entity<Long> {
 	@ApiModelProperty(value = "结束时间")
 	private Date endTime;
 
+	@ApiModelProperty(value = "任务状态，待处理、处理中、已结束、已废弃")
+	private TypeStatusEnum typeStatus;
+
 	@Builder
 	public InfoManageEntity(Long id, LocalDateTime createTime, Long createUser,
 							LocalDateTime updateTime, Long updateUser, InfoTypeEnum type,
-							Date startTime, Date endTime) {
+							Date startTime, Date endTime, TypeStatusEnum typeStatus) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.type = type;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.typeStatus = typeStatus;
 	}
 }
