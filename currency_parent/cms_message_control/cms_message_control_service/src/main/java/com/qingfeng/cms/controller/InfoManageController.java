@@ -1,10 +1,21 @@
 package com.qingfeng.cms.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qingfeng.cms.biz.manage.service.InfoManageService;
+import com.qingfeng.cms.domain.manage.dto.InfoManagePageDTO;
+import com.qingfeng.cms.domain.manage.dto.InfoManageSaveDTO;
 import com.qingfeng.cms.domain.manage.entity.InfoManageEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
+import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -12,14 +23,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.Map;
 
 
 
@@ -40,13 +48,31 @@ public class InfoManageController extends BaseController  {
     @Autowired
     private InfoManageService infoManageService;
 
-    /**
-     * 列表
-     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "current", value = "当前页", dataType = "long", paramType = "query", defaultValue = "1"),
+            @ApiImplicitParam(name = "size", value = "每页显示几条", dataType = "long", paramType = "query", defaultValue = "15"),
+    })
+    @ApiOperation(value = "信息管理列表", notes = "信息管理列表")
     @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
+    @SysLog("查询信息管理列表")
+    public R<IPage<InfoManageEntity>> list(InfoManagePageDTO infoManagePageDTO){
+        IPage<InfoManageEntity> page = getPage();
 
-        return success();
+        LbqWrapper<InfoManageEntity> query = Wraps.lbQ(new InfoManageEntity())
+                .orderByDesc(InfoManageEntity::getEndTime);
+        if (ObjectUtil.isNotEmpty(infoManagePageDTO.getStartTime())){
+            query.geHeader(InfoManageEntity::getStartTime, infoManagePageDTO.getStartTime());
+        }
+        if (ObjectUtil.isNotEmpty(infoManagePageDTO.getEndTime())){
+            query.leFooter(InfoManageEntity::getEndTime, infoManagePageDTO.getEndTime());
+        }
+        if (ObjectUtil.isNotEmpty(infoManagePageDTO.getTypeStatus())){
+            query.eq(InfoManageEntity::getTypeStatus, infoManagePageDTO.getTypeStatus());
+        }
+
+        infoManageService.page(page, query);
+
+        return success(page);
     }
 
 
@@ -60,23 +86,12 @@ public class InfoManageController extends BaseController  {
         return success();
     }
 
-    /**
-     * 保存
-     */
+    @ApiOperation(value = "信息管理实体保存", notes = "信息管理实体保存")
     @PostMapping("/save")
-    public R save(@RequestBody InfoManageEntity infoManage){
-		infoManageService.save(infoManage);
-
-        return success();
-    }
-
-    /**
-     * 修改
-     */
-    @PutMapping("/update")
-    public R update(@RequestBody InfoManageEntity infoManage){
-		infoManageService.updateById(infoManage);
-
+    @SysLog("信息管理实体保存")
+    public R save(@ApiParam(value = "信息管理保存实体", required = true)
+                      @RequestBody @Validated InfoManageSaveDTO infoManageSaveDTO){
+		infoManageService.saveInfoManage(infoManageSaveDTO);
         return success();
     }
 

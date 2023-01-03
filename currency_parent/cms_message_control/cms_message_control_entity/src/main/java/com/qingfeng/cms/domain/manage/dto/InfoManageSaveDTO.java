@@ -1,9 +1,6 @@
-package com.qingfeng.cms.domain.manage.entity;
+package com.qingfeng.cms.domain.manage.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.manage.enums.InfoTypeEnum;
-import com.qingfeng.cms.domain.manage.enums.TypeStatusEnum;
-import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -14,8 +11,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 
@@ -31,38 +30,28 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "InfoManageEntity", description = "信息管理")
-@TableName("mc_info_manage")
-public class InfoManageEntity extends Entity<Long> {
+@ApiModel(value = "InfoManageSaveDTO", description = "信息管理保存实体")
+public class InfoManageSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "标题")
+	@NotBlank(message = "标题不能为空")
 	private String title;
 
 	@ApiModelProperty(value = "维护对象类型，方便以后拓展（学生，教师）枚举处理")
+	@NotNull(message = "处理对象不能为空")
 	private InfoTypeEnum type;
 
 	@ApiModelProperty(value = "执行人")
+	@NotBlank(message = "执行人不能为空")
 	private String executor;
 
 	@ApiModelProperty(value = "开始时间")
+	@NotNull(message = "开始时间不能为空")
 	private LocalDate startTime;
 
 	@ApiModelProperty(value = "结束时间")
+	@NotNull(message = "结束时间不能为")
 	private LocalDate endTime;
-
-	@ApiModelProperty(value = "任务状态，待处理、处理中、已结束、已废弃")
-	private TypeStatusEnum typeStatus;
-
-	@Builder
-	public InfoManageEntity(Long id, LocalDateTime createTime, Long createUser,
-							LocalDateTime updateTime, Long updateUser, InfoTypeEnum type,
-							LocalDate startTime, LocalDate endTime, TypeStatusEnum typeStatus) {
-		super(id, createTime, createUser, updateTime, updateUser);
-		this.type = type;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.typeStatus = typeStatus;
-	}
 }

@@ -54,7 +54,6 @@ public class NewsNotifyController extends BaseController {
     @SysLog("分页查询系统消息通知信息")
     public R<NewsNotifyListVo> list(NewsNotifyQueryDTO newsNotifyQueryDTO) {
         NewsNotifyListVo newsNotifyListVoList = newsNotifyService.findList(getPageNo(), getPageSize(), getUserId(), newsNotifyQueryDTO);
-        System.out.println(newsNotifyListVoList);
         return success(newsNotifyListVoList);
     }
 
