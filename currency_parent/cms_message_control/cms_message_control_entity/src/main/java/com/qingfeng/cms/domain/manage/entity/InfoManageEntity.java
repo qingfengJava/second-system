@@ -1,6 +1,7 @@
 package com.qingfeng.cms.domain.manage.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.cms.domain.manage.enums.InfoTypeEnum;
 import com.qingfeng.cms.domain.manage.enums.TypeStatusEnum;
 import com.qingfeng.currency.base.entity.Entity;
@@ -13,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,9 +49,13 @@ public class InfoManageEntity extends Entity<Long> {
 	private String executor;
 
 	@ApiModelProperty(value = "开始时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private LocalDate startTime;
 
 	@ApiModelProperty(value = "结束时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private LocalDate endTime;
 
 	@ApiModelProperty(value = "任务状态，待处理、处理中、已结束、已废弃")
