@@ -45,6 +45,9 @@ public class InfoManageEntity extends Entity<Long> {
 	@ApiModelProperty(value = "维护对象类型，方便以后拓展（学生，教师）枚举处理")
 	private InfoTypeEnum type;
 
+	@ApiModelProperty(value = "维护对象的年级，对于学生是年级，对于老师来说就是老师")
+	private String typeGrade;
+
 	@ApiModelProperty(value = "执行人")
 	private String executor;
 

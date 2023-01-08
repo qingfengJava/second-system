@@ -43,6 +43,10 @@ public class InfoManageSaveDTO implements Serializable {
 	@NotNull(message = "处理对象不能为空")
 	private InfoTypeEnum type;
 
+	@ApiModelProperty(value = "维护对象的年级，对于学生是年级，对于老师来说就是老师")
+	@NotNull(message = "对象的年级不能为空")
+	private String typeGrade;
+
 	@ApiModelProperty(value = "执行人")
 	@NotBlank(message = "执行人不能为空")
 	private String executor;

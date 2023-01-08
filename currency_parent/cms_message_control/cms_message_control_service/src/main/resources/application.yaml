@@ -7,6 +7,28 @@ currency:
     base-package: com.qingfeng.cms
     description: 第二课堂——信息管理模块
 
+# log config
+logging:
+  config: classpath:logback.xml
+
+
+# xxl-job admin address list, such as "http://address" or "http://address01,http://address02"
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:8080/xxl-job-admin
+    accessToken: qingfeng_java # xxl-job, access token
+    executor:
+      appname: cms-message-control-job-executor # 执行器的名称，如果要部署多个节点，执行器的名称必须相同
+      # xxl-job executor registry-address: default use address to registry , otherwise use ip:port if address is null
+      address:
+      # xxl-job executor server-info
+      ip:
+      port: 9411  # 内部调用的端口
+      # xxl-job executor log-path
+      logpath: ./data/applogs/xxl-job/jobhandler
+      ### xxl-job executor log-retention-days
+      logretentiondays: 30
 
 # 配置全局的逻辑删除值
 #mybatis-plus:

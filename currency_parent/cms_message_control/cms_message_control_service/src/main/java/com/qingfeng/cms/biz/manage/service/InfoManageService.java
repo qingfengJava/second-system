@@ -3,6 +3,9 @@ package com.qingfeng.cms.biz.manage.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.manage.dto.InfoManageSaveDTO;
 import com.qingfeng.cms.domain.manage.entity.InfoManageEntity;
+import com.qingfeng.cms.domain.manage.vo.InfoCurrencyVo;
+
+import java.util.List;
 
 /**
  * 
@@ -19,5 +22,10 @@ public interface InfoManageService extends IService<InfoManageEntity> {
      */
     void saveInfoManage(InfoManageSaveDTO infoManageSaveDTO);
 
+    /**
+     * 根据当前年获取年级信息
+     * @return
+     */
+    List<InfoCurrencyVo> getGradeList();
 }
 

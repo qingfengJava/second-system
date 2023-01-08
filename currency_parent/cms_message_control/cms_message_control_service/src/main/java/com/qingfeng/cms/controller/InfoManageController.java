@@ -7,7 +7,7 @@ import com.qingfeng.cms.domain.manage.dto.InfoManagePageDTO;
 import com.qingfeng.cms.domain.manage.dto.InfoManageSaveDTO;
 import com.qingfeng.cms.domain.manage.entity.InfoManageEntity;
 import com.qingfeng.cms.domain.manage.enums.TypeStatusEnum;
-import com.qingfeng.cms.domain.manage.vo.InfoTypeVo;
+import com.qingfeng.cms.domain.manage.vo.InfoCurrencyVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -84,8 +84,8 @@ public class InfoManageController extends BaseController {
     @GetMapping("/InfoType")
     @SysLog("查询信息管理列表")
     public R getInfoTypeEnums() {
-        List<InfoTypeVo> typeVoList = Arrays.stream(TypeStatusEnum.values()).map(typeStatusEnum ->
-                InfoTypeVo.builder()
+        List<InfoCurrencyVo> typeVoList = Arrays.stream(TypeStatusEnum.values()).map(typeStatusEnum ->
+                InfoCurrencyVo.builder()
                         .label(typeStatusEnum.getDesc())
                         .value(typeStatusEnum.name())
                         .build()
@@ -134,4 +134,13 @@ public class InfoManageController extends BaseController {
         return success();
     }
 
+    @ApiOperation(value = "返回相关年级信息", notes = "返回相关年级信息")
+    @GetMapping("/anno/grade")
+    @SysLog("返回相关年级信息")
+    public R getGradeList(){
+        //根据当前年封装所有的年级信息
+        List<InfoCurrencyVo> gradeList = infoManageService.getGradeList();
+
+        return success(gradeList);
+    }
 }

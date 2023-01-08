@@ -24,7 +24,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "InfoTypeVo", description = "任务状态")
-public class InfoTypeVo implements Serializable {
+public class InfoCurrencyVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
