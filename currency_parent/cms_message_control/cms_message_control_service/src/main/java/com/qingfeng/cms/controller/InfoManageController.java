@@ -140,7 +140,6 @@ public class InfoManageController extends BaseController {
     public R getGradeList(){
         //根据当前年封装所有的年级信息
         List<InfoCurrencyVo> gradeList = infoManageService.getGradeList();
-
         return success(gradeList);
     }
 }

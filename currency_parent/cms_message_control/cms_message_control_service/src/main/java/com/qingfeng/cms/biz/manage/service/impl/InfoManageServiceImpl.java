@@ -47,6 +47,7 @@ public class InfoManageServiceImpl extends ServiceImpl<InfoManageDao, InfoManage
             List<InfoManageEntity> infoManageEntities = baseMapper.selectList(Wraps.lbQ(new InfoManageEntity())
                     .leFooter(InfoManageEntity::getStartTime, infoManageSaveDTO.getEndTime())
                     .geHeader(InfoManageEntity::getEndTime, infoManageSaveDTO.getStartTime())
+                    .eq(InfoManageEntity::getTypeGrade, infoManageSaveDTO.getTypeGrade())
                     .in(InfoManageEntity::getTypeStatus, Arrays.asList(TypeStatusEnum.INIT, TypeStatusEnum.PROCESS)));
             if (CollUtil.isNotEmpty(infoManageEntities)) {
                 throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), InfoManageExceptionMsg.WRONG_DATE_RANGE.getDesc());
@@ -80,10 +81,10 @@ public class InfoManageServiceImpl extends ServiceImpl<InfoManageDao, InfoManage
                 .value("研三")
                 .build());
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = 4; i < 0; i++) {
+        for (int i = 4; i >= 0; i--) {
             gradeList.add(InfoCurrencyVo.builder()
-                    .label(currentYear-i+"级")
-                    .value(currentYear-i+"级")
+                    .label(currentYear - i + "级")
+                    .value(currentYear - i + "级")
                     .build());
 
         }
