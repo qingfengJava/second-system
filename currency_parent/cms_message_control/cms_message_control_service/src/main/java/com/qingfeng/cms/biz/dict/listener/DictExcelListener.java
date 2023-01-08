@@ -33,7 +33,7 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
     /**
      * 每隔100条存储数据库，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 500;
+    private static final int BATCH_COUNT = 100;
     /**
      * 缓存的数据
      */
@@ -41,6 +41,26 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
     private List<DictEntity> cachedUpdateList = new ArrayList<>(BATCH_COUNT);
 
     private static final int THREAD_POOL_SIZE = 20;
+
+    /**
+     * 使用多线程进行分批导入或者更新    自定义一个线程池实现创建线程
+     */
+    private static final ExecutorService THREADPOOL = new ThreadPoolExecutor(
+            //常驻线程的个数
+            10,
+            //最大线程的数量
+            THREAD_POOL_SIZE,
+            //存活的时间
+            2L,
+            //存活时间的单位
+            TimeUnit.SECONDS,
+            //阻塞队列的长度
+            new ArrayBlockingQueue<>(3),
+            //使用默认的线程工厂
+            Executors.defaultThreadFactory(),
+            //拒绝策略
+            new ThreadPoolExecutor.AbortPolicy()
+    );
 
 
     /**
@@ -80,33 +100,15 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
 
         }
 
-        // 使用多线程进行分批导入或者更新    自定义一个线程池实现创建线程
-        ExecutorService threadPool = new ThreadPoolExecutor(
-                //常驻线程的个数
-                10,
-                //最大线程的数量
-                THREAD_POOL_SIZE,
-                //存活的时间
-                2L,
-                //存活时间的单位
-                TimeUnit.SECONDS,
-                //阻塞队列的长度
-                new ArrayBlockingQueue<>(3),
-                //使用默认的线程工厂
-                Executors.defaultThreadFactory(),
-                //拒绝策略
-                new ThreadPoolExecutor.AbortPolicy()
-        );
-
         //执行
         if (cachedAddList.size() >= BATCH_COUNT) {
-            threadPool.execute(() -> {
+            THREADPOOL.execute(() -> {
                 dictService.saveBatch(cachedAddList);
                 cachedAddList.clear();
             });
         }
         if (cachedUpdateList.size() >= BATCH_COUNT) {
-            threadPool.execute(() -> {
+            THREADPOOL.execute(() -> {
                 dictService.updateBatchById(cachedUpdateList);
                 cachedUpdateList.clear();
             });
@@ -131,32 +133,16 @@ public class DictExcelListener extends AnalysisEventListener<DictExcelVo> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        ExecutorService threadPool = new ThreadPoolExecutor(
-                //常驻线程的个数
-                10,
-                //最大线程的数量
-                THREAD_POOL_SIZE,
-                //存活的时间
-                2L,
-                //存活时间的单位
-                TimeUnit.SECONDS,
-                //阻塞队列的长度
-                new ArrayBlockingQueue<>(3),
-                //使用默认的线程工厂
-                Executors.defaultThreadFactory(),
-                //拒绝策略
-                new ThreadPoolExecutor.AbortPolicy()
-        );
 
         if (CollUtil.isNotEmpty(cachedAddList)) {
-            threadPool.execute(() ->
+            THREADPOOL.execute(() ->
                     //确保最后的数据能够存储
                     dictService.saveBatch(cachedAddList)
             );
         }
 
         if (CollUtil.isNotEmpty(cachedUpdateList)) {
-            threadPool.execute(() ->
+            THREADPOOL.execute(() ->
                     //确保最后的数据能够存储
                     dictService.updateBatchById(cachedUpdateList)
             );
