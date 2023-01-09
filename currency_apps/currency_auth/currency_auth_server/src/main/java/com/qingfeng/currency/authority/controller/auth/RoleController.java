@@ -5,6 +5,7 @@ import com.qingfeng.currency.authority.biz.service.auth.RoleAuthorityService;
 import com.qingfeng.currency.authority.biz.service.auth.RoleOrgService;
 import com.qingfeng.currency.authority.biz.service.auth.RoleService;
 import com.qingfeng.currency.authority.biz.service.auth.UserRoleService;
+import com.qingfeng.currency.authority.biz.service.auth.UserService;
 import com.qingfeng.currency.authority.dto.auth.RoleAuthoritySaveDTO;
 import com.qingfeng.currency.authority.dto.auth.RolePageDTO;
 import com.qingfeng.currency.authority.dto.auth.RoleQueryDTO;
@@ -13,7 +14,9 @@ import com.qingfeng.currency.authority.dto.auth.RoleUpdateDTO;
 import com.qingfeng.currency.authority.dto.auth.UserRoleSaveDTO;
 import com.qingfeng.currency.authority.entity.auth.Role;
 import com.qingfeng.currency.authority.entity.auth.RoleAuthority;
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.authority.entity.auth.UserRole;
+import com.qingfeng.currency.authority.entity.auth.vo.UserInfoVo;
 import com.qingfeng.currency.authority.enumeration.auth.AuthorizeType;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
@@ -65,6 +68,8 @@ public class RoleController extends BaseController {
     private RoleOrgService roleOrgService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private DozerUtils dozer;
 
@@ -171,5 +176,29 @@ public class RoleController extends BaseController {
     @SysLog("根据角色编码查询用户ID")
     public R<List<Long>> findUserIdByCode(@RequestParam(value = "codes") String[] codes) {
         return success(roleService.findUserIdByCode(codes));
+    }
+
+    @ApiOperation(value = "根据角色编码查询对应的用户信息", notes = "根据角色编码查询对应的用户信息")
+    @GetMapping("/userInfo")
+    @SysLog("根据角色编码查询对应的用户信息")
+    public R<List<UserInfoVo>> findUserInfoByCode(@RequestParam(value = "code") String code){
+        Role role = roleService.getOne(Wraps.lbQ(new Role())
+                .eq(Role::getCode, code));
+        List<Long> userIds = userRoleService.list(Wraps.lbQ(new UserRole())
+                        .eq(UserRole::getRoleId, role.getId()))
+                .stream()
+                .map(UserRole::getUserId)
+                .collect(Collectors.toList());
+
+        List<UserInfoVo> userInfoVos = userService.list(Wraps.lbQ(new User())
+                        .in(User::getId, userIds))
+                .stream()
+                .map(u -> UserInfoVo.builder()
+                        .userId(u.getId())
+                        .name(u.getName())
+                        .build())
+                .collect(Collectors.toList());
+
+        return success(userInfoVos);
     }
 }

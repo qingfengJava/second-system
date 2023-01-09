@@ -1,5 +1,6 @@
 package com.qingfeng.sdk.auth.role;
 
+import com.qingfeng.currency.authority.entity.auth.vo.UserInfoVo;
 import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -24,4 +25,12 @@ public interface RoleApi {
      */
     @GetMapping("/role/codes")
     public R<List<Long>> findUserIdByCode(@RequestParam(value = "codes") String[] codes);
+
+    /**
+     * 根据角色编码查询对应的用户信息
+     * @param code
+     * @return
+     */
+    @GetMapping("/userInfo")
+    public R<List<UserInfoVo>> findUserInfoByCode(@RequestParam(value = "code") String code);
 }

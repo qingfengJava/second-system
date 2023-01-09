@@ -1,6 +1,5 @@
 package com.qingfeng.cms.domain.dict.dto;
 
-import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -13,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 组织架构表   数据字典
@@ -29,7 +29,7 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "DictSaveDTO", description = "组织架构表   数据字典保存实体")
-public class DictSaveDTO extends Entity<Long> {
+public class DictSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

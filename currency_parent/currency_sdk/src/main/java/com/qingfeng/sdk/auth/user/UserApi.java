@@ -23,4 +23,14 @@ public interface UserApi {
      */
     @GetMapping("/user/{id}")
     public R<User> get(@PathVariable Long id);
+
+    /**
+     * 根据组织和岗位Id查询用户信息
+     * @param orgId
+     * @param stationId
+     * @return
+     */
+    @GetMapping("/user/{orgId}/{stationId}")
+    public R<User> getByOrgIdAndStationId(@PathVariable("orgId") Long orgId,
+                                          @PathVariable("stationId") Long stationId);
 }

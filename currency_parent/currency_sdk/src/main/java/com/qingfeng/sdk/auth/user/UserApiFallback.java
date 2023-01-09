@@ -16,4 +16,9 @@ public class UserApiFallback implements UserApi {
     public R<User> get(Long id) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R<User> getByOrgIdAndStationId(Long orgId, Long stationId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

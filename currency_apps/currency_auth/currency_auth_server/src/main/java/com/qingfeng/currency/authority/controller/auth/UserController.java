@@ -224,7 +224,7 @@ public class UserController extends BaseController {
     @GetMapping("/info/{userId}")
     @SysLog("根据用户Id查询用户关联的二级学院的信息")
     public R<CollegeInformationEntity> getCollegeInfo(@ApiParam(value = "用户Id", required = true)
-                                            @PathVariable("userId") @NotNull Long userId) {
+                                                      @PathVariable("userId") @NotNull Long userId) {
         System.out.println(getUserId());
         return collegeInformationApi.info(userId);
     }
@@ -233,7 +233,7 @@ public class UserController extends BaseController {
     @PostMapping("/save")
     @SysLog("保存用户关联的二级学院的信息")
     public R saveCollegeInformation(@ApiParam(value = "院系信息保存实体", required = true)
-                  @RequestBody @Validated CollegeInformationSaveDTO collegeInformationSaveDTO) {
+                                    @RequestBody @Validated CollegeInformationSaveDTO collegeInformationSaveDTO) {
         return collegeInformationApi.save(collegeInformationSaveDTO);
     }
 
@@ -241,7 +241,7 @@ public class UserController extends BaseController {
     @PutMapping("/update")
     @SysLog("修改用户关联的二级学院的信息")
     public R updateCollegeInformation(@ApiParam(value = "数据字典实体")
-                    @RequestBody @Validated(SuperEntity.Update.class) CollegeInformationUpdateDTO collegeInformationUpdateDTO) {
+                                      @RequestBody @Validated(SuperEntity.Update.class) CollegeInformationUpdateDTO collegeInformationUpdateDTO) {
         return collegeInformationApi.update(collegeInformationUpdateDTO);
     }
 
@@ -265,5 +265,15 @@ public class UserController extends BaseController {
     public R userImport(MultipartFile file) {
         userService.importUser(file);
         return success();
+    }
+
+    @ApiOperation(value = "根据组织和岗位Id查询用户信息", notes = "根据组织和岗位Id查询用户信息")
+    @GetMapping("/{orgId}/{stationId}")
+    @SysLog("根据组织和岗位Id查询用户信息")
+    public R<User> getByOrgIdAndStationId(@PathVariable("orgId") Long orgId,
+                                          @PathVariable("stationId") Long stationId) {
+        return success(userService.getOne(Wraps.lbQ(new User())
+                .eq(User::getOrgId, orgId)
+                .eq(User::getStationId, stationId)));
     }
 }

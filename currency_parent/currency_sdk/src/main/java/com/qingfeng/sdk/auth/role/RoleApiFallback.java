@@ -1,5 +1,6 @@
 package com.qingfeng.sdk.auth.role;
 
+import com.qingfeng.currency.authority.entity.auth.vo.UserInfoVo;
 import com.qingfeng.currency.base.R;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +16,11 @@ public class RoleApiFallback  implements RoleApi{
 
     @Override
     public R<List<Long>> findUserIdByCode(String[] codes) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<List<UserInfoVo>> findUserInfoByCode(String code) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }

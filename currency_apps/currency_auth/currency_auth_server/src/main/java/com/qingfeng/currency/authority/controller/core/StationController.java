@@ -74,7 +74,7 @@ public class StationController extends BaseController {
     @ApiOperation(value = "根据组织id查询岗位", notes = "根据组织id查询岗位")
     @GetMapping("/orgId/{orgId}")
     @SysLog("根据组织id查询岗位")
-    public R<List<Station>> findByOrgId(@PathVariable Long orgId) {
+    public R<List<Station>> findByOrgId(@PathVariable("orgId") Long orgId) {
         return success(stationService.list(new QueryWrapper<Station>().eq("org_id", orgId).eq("status",true)));
     }
 

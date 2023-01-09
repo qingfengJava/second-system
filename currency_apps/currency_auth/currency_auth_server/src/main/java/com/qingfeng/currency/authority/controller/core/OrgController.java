@@ -134,4 +134,13 @@ public class OrgController extends BaseController {
         List<OrgTreeDTO> treeList = this.dozer.mapList(list, OrgTreeDTO.class);
         return this.success(TreeUtil.build(treeList));
     }
+
+    @ApiOperation(value = "根据数据字典的院系名称查询组织中对应的院系信息", notes = "根据数据字典的院系名称查询组织中对应的院系信息")
+    @GetMapping("/dict_name")
+    @SysLog("根据数据字典的院系名称查询组织中对应的院系信息")
+    public R<Org> getOrgByDictName(@RequestParam("dictName") String dictName) {
+        // TODO 后序使用ES做模糊检索，保证可靠性
+        return success(orgService.getOne(Wraps.lbQ(new Org())
+                .likeRight(Org::getName, dictName)));
+    }
 }
