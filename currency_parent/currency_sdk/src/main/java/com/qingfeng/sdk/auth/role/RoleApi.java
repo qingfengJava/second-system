@@ -31,6 +31,6 @@ public interface RoleApi {
      * @param code
      * @return
      */
-    @GetMapping("/userInfo")
+    @GetMapping("/role/userInfo")
     public R<List<UserInfoVo>> findUserInfoByCode(@RequestParam(value = "code") String code);
 }

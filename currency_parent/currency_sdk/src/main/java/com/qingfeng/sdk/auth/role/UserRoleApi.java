@@ -21,6 +21,6 @@ public interface UserRoleApi {
      * @param userId
      * @return
      */
-    @GetMapping("/user_role/findByUserI/{userId}")
+    @GetMapping("/user_role/findByUserId/{userId}")
     public R<UserRoleVo> findRoleIdByUserId(@PathVariable("userId") Long userId);
 }

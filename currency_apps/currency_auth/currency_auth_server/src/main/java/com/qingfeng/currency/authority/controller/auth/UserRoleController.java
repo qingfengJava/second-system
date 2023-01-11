@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author 清风学Java
  * @version 1.0.0
@@ -38,10 +40,16 @@ public class UserRoleController extends BaseController {
     private RoleService roleService;
 
     @ApiOperation(value = "根据用户Id查询角色Id及编码", notes = "根据用户Id查询角色Id及编码")
-    @GetMapping("/findByUserI/{userId}")
+    @GetMapping("/findByUserId/{userId}")
     @SysLog("根据用户Id查询角色Id及编码")
     public R<UserRoleVo> findRoleIdByUserId(@ApiParam(value = "用户Id")
                                       @PathVariable("userId") Long userId) {
+
+        List<UserRole> list = userRoleService.list(Wraps.lbQ(new UserRole())
+                .eq(UserRole::getUserId, userId));
+        for (UserRole userRole : list) {
+            System.out.println(userRole);
+        }
 
         UserRole userRole = userRoleService.getOne(Wraps.lbQ(new UserRole())
                 .eq(UserRole::getUserId, userId));

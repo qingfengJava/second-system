@@ -1,5 +1,6 @@
 package com.qingfeng.cms.biz.project.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -240,12 +241,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     @Transactional(rollbackFor = BizException.class)
     public void removeProjectById(Long id) {
         //删除等级下关联的学分
-        creditRulesService.remove(Wraps.lbQ(new CreditRulesEntity())
-                .in(CreditRulesEntity::getLevelId, levelService.list(Wraps.lbQ(new LevelEntity())
-                                .eq(LevelEntity::getProjectId, id))
-                        .stream()
-                        .map(LevelEntity::getId)
-                        .collect(Collectors.toList())));
+        List<Long> levelIds = levelService.list(Wraps.lbQ(new LevelEntity())
+                        .eq(LevelEntity::getProjectId, id))
+                .stream()
+                .map(LevelEntity::getId)
+                .collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(levelIds)){
+            creditRulesService.remove(Wraps.lbQ(new CreditRulesEntity())
+                    .in(CreditRulesEntity::getLevelId, levelIds));
+        }
 
         //删除关联的等级
         levelService.remove(Wraps.lbQ(new LevelEntity())

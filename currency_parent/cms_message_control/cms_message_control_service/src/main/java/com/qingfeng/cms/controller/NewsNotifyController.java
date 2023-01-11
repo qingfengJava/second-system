@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@Api(value = "提供的相关功能", tags = "")
+@Api(value = "提供消息通知的相关功能", tags = "提供消息通知的相关功能")
 @RequestMapping("/newsnotify")
 public class NewsNotifyController extends BaseController {
 

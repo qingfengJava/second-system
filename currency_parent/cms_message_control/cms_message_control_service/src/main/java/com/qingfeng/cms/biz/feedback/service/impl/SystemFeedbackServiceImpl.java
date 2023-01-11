@@ -9,6 +9,7 @@ import com.qingfeng.cms.biz.student.service.StuInfoService;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
 import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackSaveDTO;
 import com.qingfeng.cms.domain.feedback.entity.SystemFeedbackEntity;
+import com.qingfeng.cms.domain.feedback.enums.IsReceiveEnum;
 import com.qingfeng.cms.domain.feedback.vo.UserLeaderVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.authority.entity.auth.User;
@@ -97,11 +98,13 @@ public class SystemFeedbackServiceImpl extends ServiceImpl<SystemFeedbackDao, Sy
                     .map(userInfoVo -> String.valueOf(userInfoVo.getUserId()))
                     .distinct()
                     .collect(Collectors.joining("、")));
-            systemFeedbackEntity.setFeedbackObjectId(userInfoVoList.stream()
+            systemFeedbackEntity.setFeedbackObjectName(userInfoVoList.stream()
                     .map(UserInfoVo::getName)
                     .distinct()
                     .collect(Collectors.joining("、")));
         }
+
+        systemFeedbackEntity.setIsReceive(IsReceiveEnum.INIT);
 
         baseMapper.insert(systemFeedbackEntity);
     }
