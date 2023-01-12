@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -58,6 +56,8 @@ public class SystemFeedbackController extends BaseController {
     @SysLog("查询个人对系统反馈的信息列表")
     public R<IPage<SystemFeedbackEntity>> list(@RequestBody SystemFeedbackQueryDTO systemFeedbackQueryDTO) {
         IPage<SystemFeedbackEntity> page = getPage();
+        page.setSize(systemFeedbackQueryDTO.getSize());
+        page.setCurrent(systemFeedbackQueryDTO.getCurrent());
 
         LbqWrapper<SystemFeedbackEntity> query = Wraps.lbQ(new SystemFeedbackEntity())
                 .eq(SystemFeedbackEntity::getUserId, getUserId());
@@ -76,14 +76,11 @@ public class SystemFeedbackController extends BaseController {
     }
 
 
-    /**
-     * 信息
-     */
+    @ApiOperation(value = "根据id查询反馈详情信息", notes = "根据Id查询反馈详情信息")
     @GetMapping("/info/{id}")
-    public R info(@PathVariable("id") Long id) {
-        SystemFeedbackEntity systemFeedback = systemFeedbackService.getById(id);
-
-        return success();
+    @SysLog("根据id查询反馈详情信息")
+    public R<SystemFeedbackEntity> info(@PathVariable("id") Long id) {
+        return success(systemFeedbackService.getById(id));
     }
 
     @ApiOperation(value = "保存系统反馈的信息", notes = "保存系统反馈的信息")
@@ -96,20 +93,19 @@ public class SystemFeedbackController extends BaseController {
         return success();
     }
 
-    /**
-     * 删除
-     */
-    @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] ids) {
-        systemFeedbackService.removeByIds(Arrays.asList(ids));
-
+    @ApiOperation(value = "根据反馈的信息Id删除反馈信息", notes = "根据反馈的信息Id删除反馈信息")
+    @PostMapping("delete")
+    @SysLog("根据反馈的信息Id删除反馈信息")
+    public R delete(@ApiParam(value = "反馈信息Id", required = true)
+                    @RequestBody List<Long> ids) {
+        systemFeedbackService.removeByIds(ids);
         return success();
     }
 
     @ApiOperation(value = "查询当前用户对应的上级反馈领导", notes = "查询当前用户对应的上级反馈领导")
     @GetMapping("/leader")
     @SysLog("查询当前用户对应的上级领导")
-    public R<List<UserLeaderVo>> getLeader(){
+    public R<List<UserLeaderVo>> getLeader() {
         List<UserLeaderVo> userLeaderVoList = systemFeedbackService.getLeader(getUserId());
         return success(userLeaderVoList);
     }

@@ -40,4 +40,7 @@ public class SystemFeedbackQueryDTO implements Serializable {
 
 	@ApiModelProperty(value = "是否已回复（未回复   已回复）（枚举类型）")
 	private IsReceiveEnum isReceive;
+
+	private Integer current;
+	private Integer size;
 }
