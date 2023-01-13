@@ -7,6 +7,7 @@ import com.qingfeng.cms.biz.feedback.dao.SystemFeedbackDao;
 import com.qingfeng.cms.biz.feedback.service.SystemFeedbackService;
 import com.qingfeng.cms.biz.student.service.StuInfoService;
 import com.qingfeng.cms.domain.dict.entity.DictEntity;
+import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackReceiveDTO;
 import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackSaveDTO;
 import com.qingfeng.cms.domain.feedback.entity.SystemFeedbackEntity;
 import com.qingfeng.cms.domain.feedback.enums.IsReceiveEnum;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,7 +78,7 @@ public class SystemFeedbackServiceImpl extends ServiceImpl<SystemFeedbackDao, Sy
         systemFeedbackEntity.setUserName(user.getName());
         //查 反馈对象对应的Id和名字   如果是学院，要查询用户对应的学院信息
         List<UserInfoVo> userInfoVoList = roleApi.findUserInfoByCode(systemFeedbackSaveDTO.getFeedbackType()).getData();
-        if (systemFeedbackSaveDTO.getFeedbackType().equalsIgnoreCase(RoleEnum.STUDENT.name())){
+        if (systemFeedbackSaveDTO.getFeedbackType().equalsIgnoreCase(RoleEnum.STUDENT.name())) {
             //学生
             StuInfoEntity stuInfoEntity = stuInfoService.getOne(Wraps.lbQ(new StuInfoEntity())
                     .eq(StuInfoEntity::getUserId, userId));
@@ -93,7 +95,7 @@ public class SystemFeedbackServiceImpl extends ServiceImpl<SystemFeedbackDao, Sy
             systemFeedbackEntity.setFeedbackObjectId(String.valueOf(data.getId()));
             systemFeedbackEntity.setFeedbackObjectName(data.getName());
 
-        }else{
+        } else {
             systemFeedbackEntity.setFeedbackObjectId(userInfoVoList.stream()
                     .map(userInfoVo -> String.valueOf(userInfoVo.getUserId()))
                     .distinct()
@@ -119,7 +121,7 @@ public class SystemFeedbackServiceImpl extends ServiceImpl<SystemFeedbackDao, Sy
     public List<UserLeaderVo> getLeader(Long userId) {
         //先判断当前用户的类型
         UserRoleVo userRoleVo = userRoleApi.findRoleIdByUserId(userId).getData();
-        if (ObjectUtil.isNotEmpty(userRoleVo)){
+        if (ObjectUtil.isNotEmpty(userRoleVo)) {
             if (RoleEnum.STUDENT.name().equals(userRoleVo.getCode())) {
                 //学生  社团联、（自己）学院、学生处处长、系统管理员
                 return Arrays.stream(RoleEnum.values()).filter(r ->
@@ -169,5 +171,13 @@ public class SystemFeedbackServiceImpl extends ServiceImpl<SystemFeedbackDao, Sy
         }
 
         return null;
+    }
+
+    @Override
+    public void receive(SystemFeedbackReceiveDTO systemFeedbackReceiveDTO) {
+        SystemFeedbackEntity systemFeedbackEntity = dozerUtils.map2(systemFeedbackReceiveDTO, SystemFeedbackEntity.class);
+        systemFeedbackEntity.setIsReceive(IsReceiveEnum.COMPLETE)
+                .setReceiveTime(new Date());
+        baseMapper.updateById(systemFeedbackEntity);
     }
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qingfeng.cms.biz.feedback.service.SystemFeedbackService;
 import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackQueryDTO;
+import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackReceiveDTO;
 import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackSaveDTO;
 import com.qingfeng.cms.domain.feedback.entity.SystemFeedbackEntity;
 import com.qingfeng.cms.domain.feedback.vo.UserLeaderVo;
@@ -13,8 +14,6 @@ import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +46,6 @@ public class SystemFeedbackController extends BaseController {
     @Autowired
     private SystemFeedbackService systemFeedbackService;
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "current", value = "当前页", dataType = "long", paramType = "query", defaultValue = "1"),
-            @ApiImplicitParam(name = "size", value = "每页显示几条", dataType = "long", paramType = "query", defaultValue = "15"),
-    })
     @ApiOperation(value = "查询个人对系统反馈的信息列表", notes = "查询个人对系统反馈的信息列表")
     @PostMapping("/list")
     @SysLog("查询个人对系统反馈的信息列表")
@@ -67,6 +62,25 @@ public class SystemFeedbackController extends BaseController {
         if (ObjectUtil.isNotEmpty(systemFeedbackQueryDTO.getFeedbackType())) {
             query.eq(SystemFeedbackEntity::getFeedbackType, systemFeedbackQueryDTO.getFeedbackType());
         }
+        if (ObjectUtil.isNotEmpty(systemFeedbackQueryDTO.getIsReceive())) {
+            query.eq(SystemFeedbackEntity::getIsReceive, systemFeedbackQueryDTO.getIsReceive());
+        }
+
+        systemFeedbackService.page(page, query);
+        return success(page);
+    }
+
+    @ApiOperation(value = "查询用户个人接收到的反馈信息", notes = "查询用户个人接收到的反馈信息")
+    @PostMapping("/personal")
+    @SysLog("查询用户个人接收到的反馈信息")
+    public R getPersonal(@RequestBody SystemFeedbackQueryDTO systemFeedbackQueryDTO){
+        IPage<SystemFeedbackEntity> page = getPage();
+        page.setSize(systemFeedbackQueryDTO.getSize());
+        page.setCurrent(systemFeedbackQueryDTO.getCurrent());
+
+        LbqWrapper<SystemFeedbackEntity> query = Wraps.lbQ(new SystemFeedbackEntity())
+                .eq(SystemFeedbackEntity::getFeedbackObjectId, getUserId())
+                .orderByDesc(SystemFeedbackEntity::getIsReceive);
         if (ObjectUtil.isNotEmpty(systemFeedbackQueryDTO.getIsReceive())) {
             query.eq(SystemFeedbackEntity::getIsReceive, systemFeedbackQueryDTO.getIsReceive());
         }
@@ -108,6 +122,14 @@ public class SystemFeedbackController extends BaseController {
     public R<List<UserLeaderVo>> getLeader() {
         List<UserLeaderVo> userLeaderVoList = systemFeedbackService.getLeader(getUserId());
         return success(userLeaderVoList);
+    }
+
+    @ApiOperation(value = "回复反馈信息", notes = "回复反馈信息")
+    @PostMapping("/receive")
+    @SysLog("回复反馈内容")
+    public R receive(@RequestBody @Validated SystemFeedbackReceiveDTO systemFeedbackReceiveDTO){
+        systemFeedbackService.receive(systemFeedbackReceiveDTO);
+        return success();
     }
 
 }

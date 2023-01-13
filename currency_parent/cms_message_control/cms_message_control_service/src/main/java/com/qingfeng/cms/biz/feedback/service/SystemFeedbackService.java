@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.feedback.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackReceiveDTO;
 import com.qingfeng.cms.domain.feedback.dto.SystemFeedbackSaveDTO;
 import com.qingfeng.cms.domain.feedback.entity.SystemFeedbackEntity;
 import com.qingfeng.cms.domain.feedback.vo.UserLeaderVo;
@@ -29,5 +30,11 @@ public interface SystemFeedbackService extends IService<SystemFeedbackEntity> {
      * @return
      */
     List<UserLeaderVo> getLeader(Long userId);
+
+    /**
+     * 回复反馈内容
+     * @param systemFeedbackReceiveDTO
+     */
+    void receive(SystemFeedbackReceiveDTO systemFeedbackReceiveDTO);
 }
 

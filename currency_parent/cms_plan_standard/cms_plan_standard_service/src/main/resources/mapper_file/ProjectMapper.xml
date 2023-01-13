@@ -40,13 +40,11 @@
         </if>
         ORDER BY
         CASE
-        is_check
-        WHEN 'IS_FINISHED' THEN
-        1
-        WHEN 'INIT' THEN
-        2
-        ELSE 3
-        END asc,
+            is_check
+            WHEN 'IS_FINISHED' THEN 1
+            WHEN 'INIT' THEN 2
+            ELSE 3
+            END asc,
         is_enable desc,
         id asc
     </select>
