@@ -34,3 +34,11 @@ spring:
             - Path=/api/message/**
           filters: # 指定路径重写
             - RewritePath=/api/message/(?<segment>.*),/$\{segment}
+
+        # 社团活动管理服务的网关路由
+        - id: cms-community-activities # 网关Id
+          uri: lb://cms-community-activities
+          predicates:
+            - Path=/api/active/**
+          filters: # 指定路径重写
+            - RewritePath=/api/active/(?<segment>.*),/$\{segment}

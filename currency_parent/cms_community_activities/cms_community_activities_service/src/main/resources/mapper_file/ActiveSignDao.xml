@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.sign.dao.ActiveSignDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.sign.entity.ActiveSignEntity" id="activeSignMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="applyId" column="apply_id"/>
+        <result property="studentNum" column="student_num"/>
+        <result property="studentName" column="student_name"/>
+        <result property="studentCollege" column="student_college"/>
+        <result property="studentMajor" column="student_major"/>
+        <result property="studentSex" column="student_sex"/>
+        <result property="studentTel" column="student_tel"/>
+        <result property="studentQq" column="student_qq"/>
+        <result property="signStatus" column="sign_status"/>
+        <result property="evaluationStatus" column="evaluation_status"/>
+        <result property="evaluationValue" column="evaluation_value"/>
+        <result property="evaluationContent" column="evaluation_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+    </resultMap>
+
+
+</mapper>

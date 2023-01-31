@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.apply.dao.ApplyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.apply.entity.ApplyEntity" id="applyMap">
+        <result property="id" column="id"/>
+        <result property="applyUserId" column="apply_user_id"/>
+        <result property="activeName" column="active_name"/>
+        <result property="activeScale" column="active_scale"/>
+        <result property="activeType" column="active_type"/>
+        <result property="activeLevel" column="active_level"/>
+        <result property="activePrincipal" column="active_principal"/>
+        <result property="activeStartTime" column="active_start_time"/>
+        <result property="activeEndTime" column="active_end_time"/>
+        <result property="registrationDeadTime" column="registration_dead_time"/>
+        <result property="isQuota" column="is_quota"/>
+        <result property="quotaNum" column="quota_num"/>
+        <result property="year" column="year"/>
+        <result property="schoolYear" column="school_year"/>
+        <result property="isBonusPointsApply" column="is_bonus_points_apply"/>
+        <result property="bonusFile" column="bonus_file"/>
+        <result property="activeScore" column="active_score"/>
+        <result property="activeIntroduction" column="active_introduction"/>
+        <result property="activeContent" column="active_content"/>
+        <result property="activeApplyTime" column="active_apply_time"/>
+        <result property="agreeStatus" column="agree_status"/>
+        <result property="activeStatus" column="active_status"/>
+        <result property="isRelease" column="is_release"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+    </resultMap>
+
+
+</mapper>

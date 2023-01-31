@@ -23,6 +23,7 @@
         <module>currency_sdk</module>
         <module>cms_sms</module>
         <module>cms_message_control</module>
+        <module>cms_community_activities</module>
     </modules>
 
     <licenses>
