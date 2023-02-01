@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "IsQuotaEnum", description = "是否发布-枚举")
+@ApiModel(value = "IsQuotaEnum", description = "是否限制报名人数-枚举")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum IsQuotaEnum implements BaseEnum {
 
-    INIT("待发布"),
-    FINISH("已发布");
+    IS_LIMIT("限制"),
+    IS_NOT_LIMIT("不限制");
 
     @ApiModelProperty(value = "描述")
     private String desc;

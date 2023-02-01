@@ -1,10 +1,13 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.apply.service.ApplyService;
+import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -60,13 +63,11 @@ public class ApplyController extends BaseController  {
         return success();
     }
 
-    /**
-     * 保存
-     */
+    @ApiOperation(value = "活动申请信息保存", notes = "活动申请信息保存")
     @PostMapping("/save")
-    public R save(@RequestBody ApplyEntity apply){
-		applyService.save(apply);
-
+    @SysLog("活动申请信息保存")
+    public R save(@RequestBody @Validated ApplySaveDTO applySaveDTO){
+		applyService.saveApply(applySaveDTO);
         return success();
     }
 
