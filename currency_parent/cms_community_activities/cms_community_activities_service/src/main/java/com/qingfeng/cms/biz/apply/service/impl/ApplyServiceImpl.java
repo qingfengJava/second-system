@@ -49,7 +49,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
             applyEntity.setAgreeStatus(AgreeStatusEnum.INIT)
                     .setActiveStatus(ActiveStatusEnum.INIT)
                     .setIsRelease(IsReleaseEnum.INIT);
-
+            baseMapper.insert(applyEntity);
         }else{
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
