@@ -90,6 +90,9 @@ public class ApplyEntity extends Entity<Long> {
 	@ApiModelProperty(value = "学年——学期")
 	private String schoolYear;
 
+	@ApiModelProperty(value = "申请资料链接")
+	private String applyDataLink;
+
 	@ApiModelProperty(value = "是否需要主办方单独进行加分文件上传  枚举设置")
 	private IsBonusPointsApplyEnum isBonusPointsApply;
 

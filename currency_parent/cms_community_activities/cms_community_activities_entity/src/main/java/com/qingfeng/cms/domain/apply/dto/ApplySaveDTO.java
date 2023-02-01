@@ -93,11 +93,12 @@ public class ApplySaveDTO implements Serializable {
 	@NotNull(message = "学年——学期不能为空")
 	private String schoolYear;
 
+	@ApiModelProperty(value = "申请资料链接")
+	@NotBlank(message = "申请资料链接不能为空")
+	private String applyDataLink;
+
 	@ApiModelProperty(value = "是否需要主办方单独进行加分文件上传  枚举设置")
 	private IsBonusPointsApplyEnum isBonusPointsApply;
-
-	@ApiModelProperty(value = "加分文件连接   默认为空")
-	private String bonusFile;
 
 	@ApiModelProperty(value = "不需要上传加分文件的时候，需要设置活动分值，否则默认为0")
 	private Double activeScore;
