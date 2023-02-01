@@ -8,6 +8,7 @@ import com.qingfeng.cms.biz.apply.service.ApplyService;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum;
+import com.qingfeng.cms.domain.apply.enums.ActiveTypeEnum;
 import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -46,7 +47,8 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         if (CollUtil.isEmpty(applyEntityList)){
             //说明没有重复的活动
             ApplyEntity applyEntity = dozerUtils.map2(applySaveDTO, ApplyEntity.class);
-            applyEntity.setAgreeStatus(AgreeStatusEnum.INIT)
+            applyEntity.setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
+                    .setAgreeStatus(AgreeStatusEnum.INIT)
                     .setActiveStatus(ActiveStatusEnum.INIT)
                     .setIsRelease(IsReleaseEnum.INIT);
             baseMapper.insert(applyEntity);
