@@ -3,6 +3,7 @@ package com.qingfeng.cms.biz.organize.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.organize.dao.OrganizeInfoDao;
 import com.qingfeng.cms.biz.organize.service.OrganizeInfoService;
+import com.qingfeng.cms.domain.organize.dto.OrganizeInfoSaveDTO;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,4 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrganizeInfoServiceImpl extends ServiceImpl<OrganizeInfoDao, OrganizeInfoEntity> implements OrganizeInfoService {
 
+    /**
+     * 保存社团组织详情信息
+     * @param organizeInfoSaveDTO
+     */
+    @Override
+    public void saveOrganizeInfo(OrganizeInfoSaveDTO organizeInfoSaveDTO) {
+
+    }
 }

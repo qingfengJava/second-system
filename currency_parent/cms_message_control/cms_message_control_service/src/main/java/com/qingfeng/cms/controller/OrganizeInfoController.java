@@ -1,10 +1,13 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.organize.service.OrganizeInfoService;
+import com.qingfeng.cms.domain.organize.dto.OrganizeInfoSaveDTO;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +37,7 @@ import java.util.Map;
 @Validated
 @RestController
 @Api(value = "提供社团组织的相关功能", tags = "社团组织")
-@RequestMapping("message/organizeinfo")
+@RequestMapping("/organizeinfo")
 public class OrganizeInfoController extends BaseController {
 
     @Autowired
@@ -60,13 +63,11 @@ public class OrganizeInfoController extends BaseController {
         return success();
     }
 
-    /**
-     * 保存
-     */
+    @ApiOperation(value = "保存社团组织详情信息", notes = "保存社团组织详情信息")
     @PostMapping("/save")
-    public R save(@RequestBody OrganizeInfoEntity organizeInfo){
-		organizeInfoService.save(organizeInfo);
-
+    @SysLog("保存社团组织详情信息")
+    public R save(@RequestBody @Validated OrganizeInfoSaveDTO organizeInfoSaveDTO){
+		organizeInfoService.saveOrganizeInfo(organizeInfoSaveDTO);
         return success();
     }
 

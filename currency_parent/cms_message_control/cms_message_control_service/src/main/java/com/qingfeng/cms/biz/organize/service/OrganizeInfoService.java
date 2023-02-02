@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.organize.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.organize.dto.OrganizeInfoSaveDTO;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 
 /**
@@ -12,5 +13,10 @@ import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
  */
 public interface OrganizeInfoService extends IService<OrganizeInfoEntity> {
 
+    /**
+     * 保存社团组织详情信息
+     * @param organizeInfoSaveDTO
+     */
+    void saveOrganizeInfo(OrganizeInfoSaveDTO organizeInfoSaveDTO);
 }
 
