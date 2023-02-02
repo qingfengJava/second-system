@@ -2,6 +2,7 @@ package com.qingfeng.cms.biz.apply.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
+import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 
 /**
@@ -18,5 +19,11 @@ public interface ApplyService extends IService<ApplyEntity> {
      * @param applySaveDTO
      */
     void saveApply(ApplySaveDTO applySaveDTO);
+
+    /**
+     * 活动申请信息修改
+     * @param applyUpdateDTO
+     */
+    void updateApplyById(ApplyUpdateDTO applyUpdateDTO);
 }
 

@@ -6,6 +6,7 @@ import com.qingfeng.cms.biz.apply.dao.ApplyDao;
 import com.qingfeng.cms.biz.apply.enums.ApplyExceptionMsg;
 import com.qingfeng.cms.biz.apply.service.ApplyService;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
+import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.ActiveTypeEnum;
@@ -40,9 +41,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     @Override
     public void saveApply(ApplySaveDTO applySaveDTO) {
         //同一学期，同一活动不能重复申请
-        List<ApplyEntity> applyEntityList = baseMapper.selectList(Wraps.lbQ(new ApplyEntity())
-                .eq(ApplyEntity::getActiveName, applySaveDTO.getActiveName())
-                .eq(ApplyEntity::getSchoolYear, applySaveDTO.getSchoolYear()));
+        List<ApplyEntity> applyEntityList = getApplyEntities(applySaveDTO.getActiveName(), applySaveDTO.getSchoolYear());
 
         if (CollUtil.isEmpty(applyEntityList)){
             //说明没有重复的活动
@@ -56,5 +55,34 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
         }
+    }
+
+    /**
+     * 活动申请信息修改
+     * @param applyUpdateDTO
+     */
+    @Override
+    public void updateApplyById(ApplyUpdateDTO applyUpdateDTO) {
+        //同一学期，同一活动不能重复申请
+        List<ApplyEntity> applyEntityList = getApplyEntities(applyUpdateDTO.getActiveName(), applyUpdateDTO.getSchoolYear());
+
+        if (CollUtil.isEmpty(applyEntityList)){
+            //说明没有重复的活动
+            ApplyEntity applyEntity = dozerUtils.map2(applyUpdateDTO, ApplyEntity.class);
+            applyEntity.setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
+                    .setAgreeStatus(AgreeStatusEnum.INIT)
+                    .setActiveStatus(ActiveStatusEnum.INIT)
+                    .setIsRelease(IsReleaseEnum.INIT);
+            baseMapper.updateById(applyEntity);
+        }else{
+            //抛出活动重复的异常
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
+        }
+    }
+
+    private List<ApplyEntity> getApplyEntities(String activeName, String schoolYear) {
+        return baseMapper.selectList(Wraps.lbQ(new ApplyEntity())
+                .eq(ApplyEntity::getActiveName, activeName)
+                .eq(ApplyEntity::getSchoolYear, schoolYear));
     }
 }

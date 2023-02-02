@@ -49,29 +49,28 @@ public class OrganizeInfoEntity extends Entity<Long> {
 	@ApiModelProperty(value = "社团介绍")
 	private String organizeIntroduce;
 
+	@ApiModelProperty(value = "社团指导老师")
+	private String teacherName;
+
 	@ApiModelProperty(value = "社团介绍视频")
 	private String video;
 
 	@ApiModelProperty(value = "成立时间")
 	private LocalDateTime birthTime;
 
-	@ApiModelProperty(value = "是否删除（0：未删除   1：已删除）")
-	private Integer isDeleted;
-
 	@Builder
-	public OrganizeInfoEntity(Long id, LocalDateTime createTime, Long createUser,
-							  LocalDateTime updateTime, Long updateUser,
-							  Long userId, String organizeName, String organizeDepartment,
-							  String organizeLevel, String organizeIntroduce, String video,
-							  LocalDateTime birthTime, Integer isDeleted) {
+	public OrganizeInfoEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime,
+							  Long updateUser, Long userId, String organizeName, String organizeDepartment,
+							  String organizeLevel, String organizeIntroduce, String teacherName, String video,
+							  LocalDateTime birthTime) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.userId = userId;
 		this.organizeName = organizeName;
 		this.organizeDepartment = organizeDepartment;
 		this.organizeLevel = organizeLevel;
 		this.organizeIntroduce = organizeIntroduce;
+		this.teacherName = teacherName;
 		this.video = video;
 		this.birthTime = birthTime;
-		this.isDeleted = isDeleted;
 	}
 }

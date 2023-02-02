@@ -36,7 +36,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="ApplySaveDTO", description = "院级信息（包含班级），数据字典实体")
+@ApiModel(value="ApplySaveDTO", description = "活动申请保存实体")
 public class ApplySaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;

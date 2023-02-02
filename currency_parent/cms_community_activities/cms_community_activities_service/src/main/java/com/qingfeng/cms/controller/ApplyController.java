@@ -2,6 +2,7 @@ package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.apply.service.ApplyService;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
+import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.enums.ActiveLevelEnum;
 import com.qingfeng.cms.domain.apply.enums.ActiveScaleEnum;
@@ -14,6 +15,7 @@ import com.qingfeng.cms.domain.apply.ro.EnumsRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyEnumsVoList;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.base.entity.SuperEntity;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -65,8 +68,8 @@ public class ApplyController extends BaseController {
     @ApiOperation(value = "根据Id查询活动申请的详细信息", notes = "根据Id查询活动申请的详细信息")
     @GetMapping("/info/{id}")
     @SysLog("根据Id查询活动申请的详细信息")
-    public R<ApplyEntity> info(@ApiParam(value = "活动申请Id")
-                               @PathVariable("id") Long id) {
+    public R<ApplyEntity> info(@ApiParam(value = "活动申请Id", required = true)
+                               @PathVariable("id") @NotNull Long id) {
 
         return success(applyService.getById(id));
     }
@@ -79,13 +82,11 @@ public class ApplyController extends BaseController {
         return success();
     }
 
-    /**
-     * 修改
-     */
+    @ApiOperation(value = "活动申请信息修改", notes = "活动申请信息修改")
     @PutMapping("/update")
-    public R update(@RequestBody ApplyEntity apply) {
-        applyService.updateById(apply);
-
+    @SysLog("活动申请信息修改")
+    public R update(@RequestBody @Validated(SuperEntity.Update.class) ApplyUpdateDTO applyUpdateDTO) {
+        applyService.updateApplyById(applyUpdateDTO);
         return success();
     }
 
