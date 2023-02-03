@@ -2,28 +2,25 @@ package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.organize.service.OrganizeInfoService;
 import com.qingfeng.cms.domain.organize.dto.OrganizeInfoSaveDTO;
+import com.qingfeng.cms.domain.organize.dto.OrganizeInfoUpdateDTO;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
-import java.util.Map;
-
 
 
 /**
@@ -43,51 +40,29 @@ public class OrganizeInfoController extends BaseController {
     @Autowired
     private OrganizeInfoService organizeInfoService;
 
-    /**
-     * 列表
-     */
-    @GetMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
 
-        return success();
-    }
-
-
-    /**
-     * 信息
-     */
-    @GetMapping("/info/{id}")
-    public R info(@PathVariable("id") Long id){
-		OrganizeInfoEntity organizeInfo = organizeInfoService.getById(id);
-
-        return success();
+    @ApiOperation(value = "根据用户Id查询社团组织详情信息", notes = "根据用户Id查询社团组织详情信息")
+    @GetMapping("/info")
+    @SysLog("根据用户Id查询社团组织详情信息")
+    public R<OrganizeInfoEntity> info() {
+        return success(organizeInfoService.getOne(Wraps.lbQ(new OrganizeInfoEntity())
+                .eq(OrganizeInfoEntity::getUserId, this.getUserId())));
     }
 
     @ApiOperation(value = "保存社团组织详情信息", notes = "保存社团组织详情信息")
     @PostMapping("/save")
     @SysLog("保存社团组织详情信息")
-    public R save(@RequestBody @Validated OrganizeInfoSaveDTO organizeInfoSaveDTO){
-		organizeInfoService.saveOrganizeInfo(organizeInfoSaveDTO);
+    public R save(@RequestBody @Validated OrganizeInfoSaveDTO organizeInfoSaveDTO) {
+        organizeInfoService.saveOrganizeInfo(organizeInfoSaveDTO, this.getUserId());
         return success();
     }
 
-    /**
-     * 修改
-     */
+    @ApiOperation(value = "修改社团组织详情信息", notes = "修改社团组织详情信息")
     @PutMapping("/update")
-    public R update(@RequestBody OrganizeInfoEntity organizeInfo){
-		organizeInfoService.updateById(organizeInfo);
-
-        return success();
-    }
-
-    /**
-     * 删除
-     */
-    @DeleteMapping("/delete")
-    public R delete(@RequestBody Long[] ids){
-		organizeInfoService.removeByIds(Arrays.asList(ids));
-
+    @SysLog("修改社团组织详情信息")
+    public R update(@ApiParam(value = "社团信息修改实体")
+                    @RequestBody @Validated(SuperEntity.Update.class) OrganizeInfoUpdateDTO organizeInfoUpdateDTO) {
+        organizeInfoService.updateOrganizeInfoById(organizeInfoUpdateDTO, getUserId());
         return success();
     }
 
