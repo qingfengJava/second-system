@@ -78,7 +78,7 @@ public class ApplyController extends BaseController {
     @PostMapping("/save")
     @SysLog("活动申请信息保存")
     public R save(@RequestBody @Validated ApplySaveDTO applySaveDTO) {
-        applyService.saveApply(applySaveDTO);
+        applyService.saveApply(applySaveDTO, getUserId());
         return success();
     }
 

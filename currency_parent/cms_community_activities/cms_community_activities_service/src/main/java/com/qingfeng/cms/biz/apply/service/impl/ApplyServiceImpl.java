@@ -37,16 +37,18 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     /**
      * 活动申请信息保存
      * @param applySaveDTO
+     * @param userId
      */
     @Override
-    public void saveApply(ApplySaveDTO applySaveDTO) {
+    public void saveApply(ApplySaveDTO applySaveDTO, Long userId) {
         //同一学期，同一活动不能重复申请
         List<ApplyEntity> applyEntityList = getApplyEntities(applySaveDTO.getActiveName(), applySaveDTO.getSchoolYear());
 
         if (CollUtil.isEmpty(applyEntityList)){
             //说明没有重复的活动
             ApplyEntity applyEntity = dozerUtils.map2(applySaveDTO, ApplyEntity.class);
-            applyEntity.setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
+            applyEntity.setApplyUserId(userId)
+                    .setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
                     .setAgreeStatus(AgreeStatusEnum.INIT)
                     .setActiveStatus(ActiveStatusEnum.INIT)
                     .setIsRelease(IsReleaseEnum.INIT);

@@ -17,8 +17,9 @@ public interface ApplyService extends IService<ApplyEntity> {
     /**
      * 活动申请信息保存
      * @param applySaveDTO
+     * @param userId
      */
-    void saveApply(ApplySaveDTO applySaveDTO);
+    void saveApply(ApplySaveDTO applySaveDTO, Long userId);
 
     /**
      * 活动申请信息修改
