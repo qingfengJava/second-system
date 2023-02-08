@@ -6,4 +6,10 @@ currency:
     base-package: com.qingfeng.cms
     description: 第二课堂——文件服务
 
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024MB # 最大上传单个文件大小：默认1M
+      max-request-size: 1024MB # 最大置总上传的数据大小 ：默认10M
+
 

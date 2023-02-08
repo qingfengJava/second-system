@@ -13,6 +13,16 @@
     <version>3.0.0</version>
     <description>文件服务</description>
 
+    <properties>
+        <aliyun-java-sdk-core.version>4.3.3</aliyun-java-sdk-core.version>
+        <aliyun-sdk-oss.version>3.1.0</aliyun-sdk-oss.version>
+        <aliyun-java-sdk-vod.version>2.15.2</aliyun-java-sdk-vod.version>
+        <aliyun-java-vod-upload.version>1.4.14</aliyun-java-vod-upload.version>
+        <aliyun-sdk-vod-upload.version>1.4.14</aliyun-sdk-vod-upload.version>
+        <fastjson.version>1.2.28</fastjson.version>
+        <json.version>20170516</json.version>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -21,10 +31,10 @@
         </dependency>
 
         <!--aliyunOSS-->
-        <dependency>
+        <!--<dependency>
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.qingfeng</groupId>
@@ -48,6 +58,43 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!--aliyun-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>${aliyun-java-sdk-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun-sdk-oss.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-vod</artifactId>
+            <version>${aliyun-java-sdk-vod.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-vod-upload</artifactId>
+            <version>${aliyun-java-vod-upload.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-sdk-vod-upload</artifactId>
+            <version>${aliyun-sdk-vod-upload.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
         </dependency>
 
 

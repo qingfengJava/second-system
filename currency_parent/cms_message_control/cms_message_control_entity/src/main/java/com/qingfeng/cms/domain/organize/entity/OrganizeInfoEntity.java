@@ -1,6 +1,7 @@
 package com.qingfeng.cms.domain.organize.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.cms.domain.organize.enums.OrganizeLevelEnum;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,6 +60,8 @@ public class OrganizeInfoEntity extends Entity<Long> {
 	private String video;
 
 	@ApiModelProperty(value = "成立时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private LocalDate birthTime;
 
 	@Builder

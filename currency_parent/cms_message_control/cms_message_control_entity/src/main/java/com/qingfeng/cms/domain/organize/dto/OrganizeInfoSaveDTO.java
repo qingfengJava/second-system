@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.organize.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.cms.domain.organize.enums.OrganizeLevelEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -63,6 +65,8 @@ public class OrganizeInfoSaveDTO implements Serializable {
 	private String video;
 
 	@ApiModelProperty(value = "成立时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	@NotNull(message = "社团成立时间不能为空")
 	private LocalDate birthTime;
 }
