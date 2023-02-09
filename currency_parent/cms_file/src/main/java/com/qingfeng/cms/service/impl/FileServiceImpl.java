@@ -31,17 +31,7 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public String upload(MultipartFile file) throws IOException {
-        //判断oss实例是否存在：如果不存在则创建，如果存在则获取
-        OSS ossClient = new OSSClientBuilder().build(
-                fileOssProperties.getEndpoint(),
-                fileOssProperties.getAccesskey(),
-                fileOssProperties.getSecretKey());
-        if (!ossClient.doesBucketExist(fileOssProperties.getBucket())) {
-            //创建bucket
-            ossClient.createBucket(fileOssProperties.getBucket());
-            //设置oss实例的访问权限：公共读
-            ossClient.setBucketAcl(fileOssProperties.getBucket(), CannedAccessControlList.PublicRead);
-        }
+        OSS ossClient = getClient();
 
         //构建日期路径：avatar/2019/02/26/文件名
         String folder = new DateTime().toString("yyyy/MM/dd");
@@ -69,21 +59,40 @@ public class FileServiceImpl implements FileService {
     @Override
     public String fileUpload(MultipartFile file) throws IOException {
         //判断oss实例是否存在：如果不存在则创建，如果存在则获取
-        OSS ossClient = new OSSClientBuilder().build(
-                fileOssProperties.getEndpoint(),
-                fileOssProperties.getAccesskey(),
-                fileOssProperties.getSecretKey());
-        if (!ossClient.doesBucketExist(fileOssProperties.getBucket())) {
-            //创建bucket
-            ossClient.createBucket(fileOssProperties.getBucket());
-            //设置oss实例的访问权限：公共读
-            ossClient.setBucketAcl(fileOssProperties.getBucket(), CannedAccessControlList.PublicRead);
-        }
+        return getImgUrl(file, "file");
+    }
+
+    /**
+     * 删除已上传的文件
+     * @param fileUrl
+     */
+    @Override
+    public void removeFile(String fileUrl) {
+        //判断oss实例是否存在：如果不存在则创建，如果存在则获取
+        OSS ossClient = getOssClient();
+        String host = "https://" + fileOssProperties.getBucket() + "." + fileOssProperties.getEndpoint() + "/";
+
+        // 删除文件。
+        ossClient.deleteObject(fileOssProperties.getBucket(),
+                fileUrl.substring(host.length()));
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+    }
+
+    @Override
+    public String uploadImg(MultipartFile file) throws IOException {
+        return getImgUrl(file, "img");
+    }
+
+    private String getImgUrl(MultipartFile file, String name) throws IOException {
+        //判断oss实例是否存在：如果不存在则创建，如果存在则获取
+        OSS ossClient = getClient();
 
 
         //文件名：uuid.扩展名
         String fileName = UUID.randomUUID().toString().replaceAll("-", "");
-        String key = "file/"+ fileName +"-"+ file.getOriginalFilename();
+        String key = name + "/" + fileName + "-" + file.getOriginalFilename();
 
         //文件上传至阿里云
         ossClient.putObject(fileOssProperties.getBucket(), key, file.getInputStream());
@@ -95,24 +104,22 @@ public class FileServiceImpl implements FileService {
         return "https://" + fileOssProperties.getBucket() + "." + fileOssProperties.getEndpoint() + "/" + key;
     }
 
-    /**
-     * 删除已上传的文件
-     * @param fileUrl
-     */
-    @Override
-    public void removeFile(String fileUrl) {
+    private OSS getClient() {
+        OSS ossClient = getOssClient();
+        if (!ossClient.doesBucketExist(fileOssProperties.getBucket())) {
+            //创建bucket
+            ossClient.createBucket(fileOssProperties.getBucket());
+            //设置oss实例的访问权限：公共读
+            ossClient.setBucketAcl(fileOssProperties.getBucket(), CannedAccessControlList.PublicRead);
+        }
+        return ossClient;
+    }
+
+    private OSS getOssClient() {
         //判断oss实例是否存在：如果不存在则创建，如果存在则获取
-        OSS ossClient = new OSSClientBuilder().build(
+        return new OSSClientBuilder().build(
                 fileOssProperties.getEndpoint(),
                 fileOssProperties.getAccesskey(),
                 fileOssProperties.getSecretKey());
-        String host = "https://" + fileOssProperties.getBucket() + "." + fileOssProperties.getEndpoint() + "/";
-
-        // 删除文件。
-        ossClient.deleteObject(fileOssProperties.getBucket(),
-                fileUrl.substring(host.length()));
-
-        // 关闭OSSClient。
-        ossClient.shutdown();
     }
 }

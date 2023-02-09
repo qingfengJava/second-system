@@ -31,4 +31,11 @@ public interface FileService {
      * @param fileUrl
      */
     void removeFile(String fileUrl);
+
+    /**
+     * 图片文件上传
+     * @param file
+     * @return
+     */
+    String uploadImg(MultipartFile file) throws IOException;
 }

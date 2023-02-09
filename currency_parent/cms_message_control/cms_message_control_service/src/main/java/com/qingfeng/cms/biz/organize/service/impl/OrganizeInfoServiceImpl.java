@@ -6,6 +6,7 @@ import com.qingfeng.cms.biz.organize.service.OrganizeInfoService;
 import com.qingfeng.cms.domain.organize.dto.OrganizeInfoSaveDTO;
 import com.qingfeng.cms.domain.organize.dto.OrganizeInfoUpdateDTO;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,19 @@ public class OrganizeInfoServiceImpl extends ServiceImpl<OrganizeInfoDao, Organi
         OrganizeInfoEntity organizeInfoEntity = dozerUtils.map2(organizeInfoUpdateDTO, OrganizeInfoEntity.class);
         organizeInfoEntity.setUserId(userId);
 
+        baseMapper.updateById(organizeInfoEntity);
+    }
+
+    /**
+     * 删除视频信息
+     * @param vodId
+     */
+    @Override
+    public void removeVodId(String vodId) {
+        OrganizeInfoEntity organizeInfoEntity = baseMapper.selectOne(Wraps.lbQ(new OrganizeInfoEntity())
+                .eq(OrganizeInfoEntity::getVideo, vodId));
+        organizeInfoEntity.setVideo("")
+                .setVideoName("");
         baseMapper.updateById(organizeInfoEntity);
     }
 }

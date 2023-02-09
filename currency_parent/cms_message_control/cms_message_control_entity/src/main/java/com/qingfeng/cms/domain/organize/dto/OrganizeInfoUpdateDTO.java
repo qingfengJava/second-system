@@ -69,6 +69,9 @@ public class OrganizeInfoUpdateDTO implements Serializable {
 	@ApiModelProperty(value = "社团介绍视频")
 	private String video;
 
+	@ApiModelProperty(value = "视频名字")
+	private String videoName;
+
 	@ApiModelProperty(value = "成立时间")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")

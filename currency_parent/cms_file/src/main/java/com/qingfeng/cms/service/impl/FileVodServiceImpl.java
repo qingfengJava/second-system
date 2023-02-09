@@ -10,13 +10,16 @@ import com.aliyuncs.vod.model.v20170321.DeleteVideoResponse;
 import com.qingfeng.cms.service.FileVodService;
 import com.qingfeng.cms.utils.AliyunVodSDKUtils;
 import com.qingfeng.cms.utils.VodConstantPropertiesUtil;
+import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
+import com.qingfeng.sdk.messagecontrol.organize.OrganizeInfoApi;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,6 +31,10 @@ import java.io.InputStream;
 @Service
 @Slf4j
 public class FileVodServiceImpl implements FileVodService {
+
+    @Resource
+    private OrganizeInfoApi organizeInfoApi;
+
 
     /**
      * 上传视频
@@ -69,17 +76,20 @@ public class FileVodServiceImpl implements FileVodService {
     @Override
     public void removeVideo(String videoId) {
         try{
-            DefaultAcsClient client = AliyunVodSDKUtils.initVodClient(
-                    VodConstantPropertiesUtil.ACCESS_KEY_ID,
-                    VodConstantPropertiesUtil.ACCESS_KEY_SECRET);
+            // 删除前，先修改数据库的数据
+            R r = organizeInfoApi.removeVod(videoId);
+            if (r.getIsSuccess()){
+                DefaultAcsClient client = AliyunVodSDKUtils.initVodClient(
+                        VodConstantPropertiesUtil.ACCESS_KEY_ID,
+                        VodConstantPropertiesUtil.ACCESS_KEY_SECRET);
 
-            DeleteVideoRequest request = new DeleteVideoRequest();
+                DeleteVideoRequest request = new DeleteVideoRequest();
 
-            request.setVideoIds(videoId);
-
-            DeleteVideoResponse response = client.getAcsResponse(request);
-
-            System.out.print("RequestId = " + response.getRequestId() + "\n");
+                request.setVideoIds(videoId);
+                DeleteVideoResponse response = client.getAcsResponse(request);
+            }else {
+                throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "视频删除失败！");
+            }
 
         }catch (ClientException e){
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "视频删除失败！");

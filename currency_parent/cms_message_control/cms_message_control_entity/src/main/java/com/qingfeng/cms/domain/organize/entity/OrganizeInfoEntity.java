@@ -59,6 +59,9 @@ public class OrganizeInfoEntity extends Entity<Long> {
 	@ApiModelProperty(value = "社团介绍视频")
 	private String video;
 
+	@ApiModelProperty(value = "视频名字")
+	private String videoName;
+
 	@ApiModelProperty(value = "成立时间")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
@@ -68,7 +71,7 @@ public class OrganizeInfoEntity extends Entity<Long> {
 	public OrganizeInfoEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime,
 							  Long updateUser, Long userId, String organizeName, String organizeDepartment,
 							  OrganizeLevelEnum organizeLevel, String organizeIntroduce, String teacherName,
-							  String video, LocalDate birthTime) {
+							  String video, String videoName, LocalDate birthTime) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.userId = userId;
 		this.organizeName = organizeName;
@@ -77,6 +80,7 @@ public class OrganizeInfoEntity extends Entity<Long> {
 		this.organizeIntroduce = organizeIntroduce;
 		this.teacherName = teacherName;
 		this.video = video;
+		this.videoName = videoName;
 		this.birthTime = birthTime;
 	}
 }

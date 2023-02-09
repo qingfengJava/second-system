@@ -68,4 +68,19 @@ public class FileOssController extends BaseController {
         //返回r对象
         return success();
     }
+
+    @ApiOperation(value = "图片文件上传", notes = "图片文件上传")
+    @PostMapping("/upload_img")
+    public R<String> uploadImg(@ApiParam(value = "文件", required = true)
+                    @RequestParam("file") MultipartFile file) {
+        try {
+            String uploadUrl = fileService.uploadImg(file);
+
+            //返回r对象
+            return success(uploadUrl);
+        } catch (Exception e) {
+            throw new BizException(ExceptionCode.OPERATION_EX.getCode(), ExceptionCode.OPERATION_EX.getMsg());
+        }
+    }
+
 }

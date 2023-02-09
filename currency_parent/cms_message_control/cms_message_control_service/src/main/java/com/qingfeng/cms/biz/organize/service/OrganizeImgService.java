@@ -2,6 +2,9 @@ package com.qingfeng.cms.biz.organize.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * 社团组织图片信息
@@ -12,5 +15,19 @@ import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
  */
 public interface OrganizeImgService extends IService<OrganizeImgEntity> {
 
+    /**
+     * 查询社团设置的图片信息
+     * @param organizeId
+     * @param userId
+     * @return
+     */
+    List<OrganizeImgEntity> getImgList(Long organizeId, Long userId);
+
+    /**
+     * 保存社团轮播图信息
+     * @param organizeId
+     * @param file
+     */
+    void saveOrganizeImg(Long organizeId, MultipartFile file);
 }
 

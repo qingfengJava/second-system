@@ -1,7 +1,5 @@
-package com.qingfeng.cms.domain.organize.entity;
+package com.qingfeng.cms.domain.organize.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 社团组织图片信息
@@ -28,25 +28,16 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "OrganizeImgEntity", description = "社团组织图片信息实体")
-@TableName("mc_organize_img")
-public class OrganizeImgEntity extends Entity<Long> {
+@ApiModel(value = "OrganizeImgSaveDTO", description = "社团组织图片信息保存实体")
+public class OrganizeImgSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "外键，社团部门Id")
+	@NotNull(message = "社团部门Id不能为空")
 	private Long organizeId;
 
 	@ApiModelProperty(value = "轮播图路径")
+	@NotBlank(message = "轮播图路径不能为空")
 	private String imgUrl;
-
-
-	@Builder
-	public OrganizeImgEntity(Long id, LocalDateTime createTime, Long createUser,
-							 LocalDateTime updateTime, Long updateUser,
-							 Long organizeId, String imgUrl, Integer status) {
-		super(id, createTime, createUser, updateTime, updateUser);
-		this.organizeId = organizeId;
-		this.imgUrl = imgUrl;
-	}
 }

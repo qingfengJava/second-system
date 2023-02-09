@@ -15,7 +15,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +65,14 @@ public class OrganizeInfoController extends BaseController {
     public R update(@ApiParam(value = "社团信息修改实体")
                     @RequestBody @Validated(SuperEntity.Update.class) OrganizeInfoUpdateDTO organizeInfoUpdateDTO) {
         organizeInfoService.updateOrganizeInfoById(organizeInfoUpdateDTO, getUserId());
+        return success();
+    }
+
+    @ApiOperation(value = "删除视频信息", notes = "删除视频信息")
+    @DeleteMapping("/vod/{vodId}")
+    @SysLog("删除视频信息")
+    public R removeVod(@PathVariable("vodId") String vodId){
+        organizeInfoService.removeVodId(vodId);
         return success();
     }
 

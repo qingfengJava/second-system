@@ -27,5 +27,11 @@ public interface OrganizeInfoService extends IService<OrganizeInfoEntity> {
      * @param userId
      */
     void updateOrganizeInfoById(OrganizeInfoUpdateDTO organizeInfoUpdateDTO, Long userId);
+
+    /**
+     * 删除vodId
+     * @param vodId
+     */
+    void removeVodId(String vodId);
 }
 
