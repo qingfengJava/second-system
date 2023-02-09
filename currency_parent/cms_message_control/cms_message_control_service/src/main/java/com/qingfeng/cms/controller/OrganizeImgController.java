@@ -64,6 +64,7 @@ public class OrganizeImgController extends BaseController {
 
     @ApiOperation(value = "根据Id删除图片信息", notes = "根据Id删除图片信息")
     @DeleteMapping("/{id}")
+    @SysLog("根据Id删除图片信息")
     public R delete(@PathVariable("id") Long id) {
         organizeImgService.removeById(id);
 
