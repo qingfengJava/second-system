@@ -4,8 +4,10 @@ import cn.hutool.core.date.DateTime;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.CannedAccessControlList;
+import com.qingfeng.cms.domain.organize.dto.OrganizeImgSaveDTO;
 import com.qingfeng.cms.service.FileService;
 import com.qingfeng.cms.utils.FileOssProperties;
+import com.qingfeng.sdk.messagecontrol.organize.OrganizeImgApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,9 +25,12 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private FileOssProperties fileOssProperties;
+    @Autowired
+    private OrganizeImgApi organizeImgApi;
 
     /**
      * 上传头像文件
+     *
      * @param file
      * @return
      */
@@ -53,6 +58,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 上传文件
+     *
      * @param file
      * @return
      */
@@ -64,6 +70,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 删除已上传的文件
+     *
      * @param fileUrl
      */
     @Override
@@ -81,8 +88,15 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String uploadImg(MultipartFile file) throws IOException {
-        return getImgUrl(file, "img");
+    public String uploadImg(Long organizeId, MultipartFile file) throws IOException {
+        String imgUrl = getImgUrl(file, "img");
+        // 调用服务，保存社团组织图片信息
+        organizeImgApi.save(OrganizeImgSaveDTO.builder()
+                .organizeId(organizeId)
+                .imgUrl(imgUrl)
+                .build());
+
+        return imgUrl;
     }
 
     private String getImgUrl(MultipartFile file, String name) throws IOException {

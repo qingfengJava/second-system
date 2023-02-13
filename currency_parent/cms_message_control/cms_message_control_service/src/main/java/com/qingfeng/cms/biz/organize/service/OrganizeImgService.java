@@ -2,7 +2,6 @@ package com.qingfeng.cms.biz.organize.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,11 +22,5 @@ public interface OrganizeImgService extends IService<OrganizeImgEntity> {
      */
     List<OrganizeImgEntity> getImgList(Long organizeId, Long userId);
 
-    /**
-     * 保存社团轮播图信息
-     * @param organizeId
-     * @param file
-     */
-    void saveOrganizeImg(Long organizeId, MultipartFile file);
 }
 

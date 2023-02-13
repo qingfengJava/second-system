@@ -37,5 +37,5 @@ public interface FileService {
      * @param file
      * @return
      */
-    String uploadImg(MultipartFile file) throws IOException;
+    String uploadImg(Long organizeId, MultipartFile file) throws IOException;
 }

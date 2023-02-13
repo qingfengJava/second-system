@@ -40,7 +40,6 @@ public class OrganizeImgEntity extends Entity<Long> {
 	@ApiModelProperty(value = "轮播图路径")
 	private String imgUrl;
 
-
 	@Builder
 	public OrganizeImgEntity(Long id, LocalDateTime createTime, Long createUser,
 							 LocalDateTime updateTime, Long updateUser,

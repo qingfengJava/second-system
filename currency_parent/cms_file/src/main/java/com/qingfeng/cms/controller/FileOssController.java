@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,11 +71,13 @@ public class FileOssController extends BaseController {
     }
 
     @ApiOperation(value = "图片文件上传", notes = "图片文件上传")
-    @PostMapping("/upload_img")
-    public R<String> uploadImg(@ApiParam(value = "文件", required = true)
-                    @RequestParam("file") MultipartFile file) {
+    @PostMapping("/upload_img/{organizeId}")
+    public R<String> uploadImg(
+            @PathVariable("organizeId") Long organizeId,
+            @ApiParam(value = "文件", required = true)
+            @RequestParam("file") MultipartFile file) {
         try {
-            String uploadUrl = fileService.uploadImg(file);
+            String uploadUrl = fileService.uploadImg(organizeId, file);
 
             //返回r对象
             return success(uploadUrl);
