@@ -2,7 +2,6 @@ package com.qingfeng.sdk.messagecontrol.organize;
 
 import com.qingfeng.cms.domain.organize.dto.OrganizeImgSaveDTO;
 import com.qingfeng.currency.base.R;
-import com.qingfeng.currency.log.annotation.SysLog;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +22,6 @@ public interface OrganizeImgApi {
      * @param organizeImgSaveDTO
      * @return
      */
-    @PostMapping("/save")
+    @PostMapping("/organizeimg/save")
     public R save(@RequestBody @Validated OrganizeImgSaveDTO organizeImgSaveDTO);
 }
