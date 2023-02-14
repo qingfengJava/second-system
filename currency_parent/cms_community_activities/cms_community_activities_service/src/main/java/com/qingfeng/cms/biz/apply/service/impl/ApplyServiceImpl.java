@@ -19,6 +19,8 @@ import com.qingfeng.currency.exception.code.ExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
 
     /**
      * 活动申请信息保存
+     *
      * @param applySaveDTO
      * @param userId
      */
@@ -44,16 +47,21 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         //同一学期，同一活动不能重复申请
         List<ApplyEntity> applyEntityList = getApplyEntities(applySaveDTO.getActiveName(), applySaveDTO.getSchoolYear());
 
-        if (CollUtil.isEmpty(applyEntityList)){
+        if (CollUtil.isEmpty(applyEntityList)) {
             //说明没有重复的活动
             ApplyEntity applyEntity = dozerUtils.map2(applySaveDTO, ApplyEntity.class);
+
+            //校验日期的合法性
+            inspectionTime(applyEntity);
+
             applyEntity.setApplyUserId(userId)
                     .setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
                     .setAgreeStatus(AgreeStatusEnum.INIT)
                     .setActiveStatus(ActiveStatusEnum.INIT)
-                    .setIsRelease(IsReleaseEnum.INIT);
+                    .setIsRelease(IsReleaseEnum.INIT)
+                    .setActiveApplyTime(LocalDateTime.now());
             baseMapper.insert(applyEntity);
-        }else{
+        } else {
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
         }
@@ -61,6 +69,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
 
     /**
      * 活动申请信息修改
+     *
      * @param applyUpdateDTO
      */
     @Override
@@ -68,17 +77,37 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         //同一学期，同一活动不能重复申请
         List<ApplyEntity> applyEntityList = getApplyEntities(applyUpdateDTO.getActiveName(), applyUpdateDTO.getSchoolYear());
 
-        if (CollUtil.isEmpty(applyEntityList)){
+        if (CollUtil.isEmpty(applyEntityList)) {
             //说明没有重复的活动
             ApplyEntity applyEntity = dozerUtils.map2(applyUpdateDTO, ApplyEntity.class);
+
+            //校验日期的合法性
+            inspectionTime(applyEntity);
+
             applyEntity.setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
                     .setAgreeStatus(AgreeStatusEnum.INIT)
                     .setActiveStatus(ActiveStatusEnum.INIT)
                     .setIsRelease(IsReleaseEnum.INIT);
             baseMapper.updateById(applyEntity);
-        }else{
+        } else {
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
+        }
+    }
+
+    private void inspectionTime(ApplyEntity applyEntity) {
+        if (applyEntity.getActiveStartTime().toEpochDay() - LocalDate.now().toEpochDay() < 7) {
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "活动必须提前一周时间申请");
+        }
+        // 活动开始时间，必须小于等于活动结束时间  isBefore：比较第一个日期是否在第二个日期之前
+        if (applyEntity.getActiveEndTime().isBefore(applyEntity.getActiveStartTime())) {
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "活动开始时间必须小于等于活动结束时间");
+        }
+        if (applyEntity.getActiveStartTime().isBefore(applyEntity.getRegistrationDeadTime())) {
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "活动报名截止时间必须小于等于活动开始时间");
+        }
+        if (applyEntity.getRegistrationDeadTime().isBefore(LocalDate.now())) {
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "活动报名截止时间必须大于当前时间");
         }
     }
 

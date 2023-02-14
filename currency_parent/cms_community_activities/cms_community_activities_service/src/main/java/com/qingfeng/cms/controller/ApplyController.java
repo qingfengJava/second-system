@@ -70,7 +70,6 @@ public class ApplyController extends BaseController {
     @SysLog("根据Id查询活动申请的详细信息")
     public R<ApplyEntity> info(@ApiParam(value = "活动申请Id", required = true)
                                @PathVariable("id") @NotNull Long id) {
-
         return success(applyService.getById(id));
     }
 
@@ -102,7 +101,7 @@ public class ApplyController extends BaseController {
     @GetMapping("/anno/enums")
     public R<ApplyEnumsVoList> getApplyEnumsVoList() {
         return success(ApplyEnumsVoList.builder()
-                .activeLevel(Arrays.stream(ActiveScaleEnum.values())
+                .activeScale(Arrays.stream(ActiveScaleEnum.values())
                         .map(a -> buildEnum(a.name(), a.getDesc()))
                         .collect(Collectors.toList()))
                 .activeLevel(Arrays.stream(ActiveLevelEnum.values())

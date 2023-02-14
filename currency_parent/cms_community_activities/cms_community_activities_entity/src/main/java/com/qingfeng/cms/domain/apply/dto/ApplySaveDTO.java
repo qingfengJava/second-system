@@ -20,7 +20,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 社团活动申请表
@@ -42,7 +41,6 @@ public class ApplySaveDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "申请活动的用户Id，关联用户表")
-	@NotNull(message = "用户Id不能为空")
 	private Long applyUserId;
 
 	@ApiModelProperty(value = "活动的名称")
@@ -106,10 +104,5 @@ public class ApplySaveDTO implements Serializable {
 	@ApiModelProperty(value = "活动简介   申请活动时需要")
 	@NotBlank(message = "活动简介不能为空")
 	private String activeIntroduction;
-
-	@ApiModelProperty(value = "活动申请时间")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private LocalDateTime activeApplyTime;
 
 }
