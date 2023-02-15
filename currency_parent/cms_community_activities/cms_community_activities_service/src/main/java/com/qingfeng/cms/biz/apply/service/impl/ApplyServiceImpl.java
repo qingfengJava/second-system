@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.apply.dao.ApplyDao;
 import com.qingfeng.cms.biz.apply.enums.ApplyExceptionMsg;
 import com.qingfeng.cms.biz.apply.service.ApplyService;
+import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
@@ -12,6 +13,7 @@ import com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.ActiveTypeEnum;
 import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
+import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,6 +38,8 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
 
     @Autowired
     private DozerUtils dozerUtils;
+    @Autowired
+    private ApplyDao applyDao;
 
     /**
      * 活动申请信息保存
@@ -93,6 +98,40 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
         }
+    }
+
+    /**
+     * 活动申请分页条件查询
+     *
+     * @param applyQueryDTO
+     */
+    @Override
+    public ApplyListVo findApplyList(ApplyQueryDTO applyQueryDTO, Long userId) {
+        Integer pageNo = applyQueryDTO.getPageNo();
+        Integer pageSize = applyQueryDTO.getPageSize();
+        applyQueryDTO.setPageNo((pageNo - 1) * pageSize);
+        //查询总记录数
+        Integer total = baseMapper.selectCount(Wraps.lbQ(new ApplyEntity())
+                .eq(ApplyEntity::getApplyUserId, userId));
+
+        if (total == 0){
+            return ApplyListVo.builder()
+                    .total(0)
+                    .applyEntityList(Collections.emptyList())
+                    .pageNo(pageNo)
+                    .pageSize(pageSize)
+                    .build();
+        }
+
+        //分页查询活动申请列表
+        List<ApplyEntity> applyEntityList = applyDao.findList(applyQueryDTO, userId);
+
+        return ApplyListVo.builder()
+                .total(total)
+                .applyEntityList(applyEntityList)
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .build();
     }
 
     private void inspectionTime(ApplyEntity applyEntity) {

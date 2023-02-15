@@ -3,7 +3,7 @@
 
 <mapper namespace="com.qingfeng.cms.biz.apply.dao.ApplyDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.qingfeng.cms.domain.apply.entity.ApplyEntity" id="applyMap">
         <result property="id" column="id"/>
         <result property="applyUserId" column="apply_user_id"/>
@@ -33,6 +33,43 @@
         <result property="updateTime" column="update_time"/>
         <result property="updateUser" column="update_user"/>
     </resultMap>
+
+    <select id="findList" resultMap="applyMap">
+        SELECT *
+        FROM ca_apply
+        WHERE apply_user_id = #{userId}
+        <if test="applyQueryDTO.activeName != null and applyQueryDTO.activeName != ''">
+            and active_name like concat('%',#{applyQueryDTO.activeName},'%')
+        </if>
+        <if test="applyQueryDTO.year != null and applyQueryDTO.year != 0">
+            and year = #{applyQueryDTO.year}
+        </if>
+        <if test="applyQueryDTO.activeLevel != null">
+            and active_level = #{applyQueryDTO.activeLevel}
+        </if>
+        <if test="applyQueryDTO.activeStartTime != null">
+            and active_start_time &gt;= #{applyQueryDTO.activeStartTime}
+        </if>
+        <if test="applyQueryDTO.activeEndTime != null">
+            and active_end_time &lt;= #{applyQueryDTO.activeEndTime}
+        </if>
+        ORDER BY
+        CASE
+            agree_status
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum@INIT.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum@IS_NOT_PASSED.name}' THEN 2
+            ELSE 3
+            END,
+        CASE
+            active_status
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@INIT.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@HAVING.name}' THEN 2
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@COMPLETE.name}' THEN 3
+            ELSE 4
+            END,
+        create_time desc
+        LIMIT #{applyQueryDTO.pageNo}, #{applyQueryDTO.pageSize}
+    </select>
 
 
 </mapper>

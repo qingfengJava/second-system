@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.apply.service.ApplyService;
+import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
@@ -13,6 +14,7 @@ import com.qingfeng.cms.domain.apply.enums.IsQuotaEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.cms.domain.apply.ro.EnumsRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyEnumsVoList;
+import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
@@ -55,15 +57,12 @@ public class ApplyController extends BaseController {
     @Autowired
     private ApplyService applyService;
 
-    /**
-     * 列表
-     */
-    @GetMapping("/list")
-    public R list() {
-
-        return success();
+    @ApiOperation(value = "活动申请查询列表", notes = "活动申请查询列表")
+    @PostMapping("/list")
+    @SysLog("活动申请查询列表")
+    public R<ApplyListVo> list(@RequestBody ApplyQueryDTO applyQueryDTO) {
+        return success(applyService.findApplyList(applyQueryDTO, getUserId()));
     }
-
 
     @ApiOperation(value = "根据Id查询活动申请的详细信息", notes = "根据Id查询活动申请的详细信息")
     @GetMapping("/info/{id}")

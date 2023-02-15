@@ -1,9 +1,11 @@
 package com.qingfeng.cms.biz.apply.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
+import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 
 /**
  * 社团活动申请表
@@ -26,5 +28,11 @@ public interface ApplyService extends IService<ApplyEntity> {
      * @param applyUpdateDTO
      */
     void updateApplyById(ApplyUpdateDTO applyUpdateDTO);
+
+    /**
+     * 活动申请分页查询
+     * @param applyQueryDTO
+     */
+    ApplyListVo findApplyList(ApplyQueryDTO applyQueryDTO, Long userId);
 }
 
