@@ -96,6 +96,14 @@ public class ApplyController extends BaseController {
         return success();
     }
 
+    @ApiOperation(value = "活动申请审核", notes = "活动申请审核")
+    @PostMapping("/apply/check")
+    @SysLog("活动申请审核")
+    public R activeApplyCheck(){
+
+        return success();
+    }
+
     @ApiOperation(value = "返回相关的枚举值", notes = "返回相关的枚举值")
     @GetMapping("/anno/enums")
     public R<ApplyEnumsVoList> getApplyEnumsVoList() {
