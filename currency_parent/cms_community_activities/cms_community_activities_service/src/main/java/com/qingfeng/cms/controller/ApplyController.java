@@ -60,7 +60,7 @@ public class ApplyController extends BaseController {
     @ApiOperation(value = "活动申请查询列表", notes = "活动申请查询列表")
     @PostMapping("/list")
     @SysLog("活动申请查询列表")
-    public R<ApplyListVo> list(@RequestBody ApplyQueryDTO applyQueryDTO) {
+    public R<ApplyListVo> list(@RequestBody @Validated ApplyQueryDTO applyQueryDTO) {
         return success(applyService.findApplyList(applyQueryDTO, getUserId()));
     }
 
@@ -92,7 +92,7 @@ public class ApplyController extends BaseController {
     @DeleteMapping
     @SysLog("撤销活动申请")
     public R delete(@RequestParam("id") Long id) {
-        applyService.removeById(id);
+        applyService.removeActiveById(id);
         return success();
     }
 

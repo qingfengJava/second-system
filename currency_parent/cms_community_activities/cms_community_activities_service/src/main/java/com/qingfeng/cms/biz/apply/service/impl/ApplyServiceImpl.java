@@ -18,6 +18,7 @@ import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
+import com.qingfeng.sdk.oss.file.FileOssApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,8 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     private DozerUtils dozerUtils;
     @Autowired
     private ApplyDao applyDao;
+    @Autowired
+    private FileOssApi fileOssApi;
 
     /**
      * 活动申请信息保存
@@ -62,7 +65,6 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
             applyEntity.setApplyUserId(userId)
                     .setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
                     .setAgreeStatus(AgreeStatusEnum.INIT)
-                    .setActiveStatus(ActiveStatusEnum.INIT)
                     .setIsRelease(IsReleaseEnum.INIT)
                     .setActiveApplyTime(LocalDateTime.now());
             baseMapper.insert(applyEntity);
@@ -132,6 +134,18 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
                 .pageNo(pageNo)
                 .pageSize(pageSize)
                 .build();
+    }
+
+    /**
+     * 根据Id删除申请的活动信息
+     * @param id
+     */
+    @Override
+    public void removeActiveById(Long id) {
+        //删除信息前要将申请的资料信息删除
+        ApplyEntity applyEntity = baseMapper.selectById(id);
+        fileOssApi.fileDelete(applyEntity.getApplyDataLink());
+        baseMapper.deleteById(id);
     }
 
     private void inspectionTime(ApplyEntity applyEntity) {

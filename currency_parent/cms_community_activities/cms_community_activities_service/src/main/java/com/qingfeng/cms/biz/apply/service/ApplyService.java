@@ -34,5 +34,11 @@ public interface ApplyService extends IService<ApplyEntity> {
      * @param applyQueryDTO
      */
     ApplyListVo findApplyList(ApplyQueryDTO applyQueryDTO, Long userId);
+
+    /**
+     * 根据Id删除申请的活动信息
+     * @param id
+     */
+    void removeActiveById(Long id);
 }
 
