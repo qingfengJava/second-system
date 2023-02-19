@@ -11,6 +11,7 @@ import com.qingfeng.cms.biz.project.dao.ProjectDao;
 import com.qingfeng.cms.biz.project.enums.ProjectExceptionMsg;
 import com.qingfeng.cms.biz.project.service.ProjectService;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
+import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.level.vo.LevelListVo;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
@@ -38,6 +39,7 @@ import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.auth.role.RoleApi;
 import com.qingfeng.sdk.auth.user.UserApi;
+import com.qingfeng.sdk.messagecontrol.collegeinformation.CollegeInformationApi;
 import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
 import com.qingfeng.sdk.sms.email.EmailApi;
 import com.qingfeng.sdk.sms.email.domain.EmailEntity;
@@ -83,6 +85,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
     private EmailApi emailApi;
     @Autowired
     private NewsNotifyApi newsNotifyApi;
+    @Autowired
+    private CollegeInformationApi collegeInformationApi;
 
     @Autowired
     private RabbitSendMsg rabbitSendMsg;
@@ -107,13 +111,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(userId)) {
             //是学院申请的项目
-            // TODO 查询用户对应的学院信息
-
+            // 查询用户对应的学院信息
+            R<CollegeInformationEntity> r = collegeInformationApi.info(userId);
+            if (ObjectUtil.isNotEmpty(r.getData())){
+                projectEntity.setDepartment(r.getData().getOrganizationCode());
+            }
             //封装信息
-            projectEntity.setDepartment("SJ");
+//            projectEntity.setDepartment("SJ");
             projectEntity.setIsCheck(ProjectCheckEnum.INIT);
         } else {
-            // TODO 不是学院直接封装 PZHU
+            // 不是学院直接封装 PZHU
             projectEntity.setDepartment("PZHU");
             projectEntity.setIsCheck(ProjectCheckEnum.IS_FINISHED);
         }
@@ -135,16 +142,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         // 需要判断修改的内容是否已经重复
         ProjectEntity projectEntity = dozer.map2(projectUpdateDTO, ProjectEntity.class);
         checkProject(projectEntity);
-        // TODO 需要判断用户角色
+        // 需要判断用户角色
         R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(userId)) {
             //是学院申请的项目 要重新进行审核
-            // TODO 查询用户对应的学院信息
-
+            // 查询用户对应的学院信息
+            R<CollegeInformationEntity> r = collegeInformationApi.info(userId);
+            if (ObjectUtil.isNotEmpty(r.getData())){
+                projectEntity.setDepartment(r.getData().getOrganizationCode());
+            }
             //封装信息
             projectEntity.setIsCheck(ProjectCheckEnum.INIT);
         } else {
-            // TODO 不是学院直接封装 PZHU
+            // 不是学院直接封装 PZHU
             projectEntity.setDepartment("PZHU");
             projectEntity.setIsCheck(ProjectCheckEnum.IS_FINISHED);
         }

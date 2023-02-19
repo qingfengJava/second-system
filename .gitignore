@@ -1,4 +1,5 @@
 .git
+.log
 logs
 #*.gitignore
 rebel.xml

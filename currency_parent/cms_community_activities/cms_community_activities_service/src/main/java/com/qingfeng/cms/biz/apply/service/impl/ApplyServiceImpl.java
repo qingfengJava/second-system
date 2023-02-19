@@ -13,6 +13,8 @@ import com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.ActiveTypeEnum;
 import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
+import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
+import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
@@ -68,6 +70,9 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
                     .setIsRelease(IsReleaseEnum.INIT)
                     .setActiveApplyTime(LocalDateTime.now());
             baseMapper.insert(applyEntity);
+
+            // TODO 活动申请成功要通知社团联负责人进行活动信息的审核(短信或者邮箱)
+
         } else {
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
@@ -96,6 +101,8 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
                     .setActiveStatus(ActiveStatusEnum.INIT)
                     .setIsRelease(IsReleaseEnum.INIT);
             baseMapper.updateById(applyEntity);
+
+            // TODO 活动申请修改成功要通知社团联负责人进行活动信息的审核(短信或者邮箱)
         } else {
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
@@ -146,6 +153,42 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         ApplyEntity applyEntity = baseMapper.selectById(id);
         fileOssApi.fileDelete(applyEntity.getApplyDataLink());
         baseMapper.deleteById(id);
+    }
+
+    /**
+     * 活动申请信息审核
+     * @param activeApplyCheckRo
+     * @param userId
+     */
+    @Override
+    public void activeApplyCheck(ActiveApplyCheckRo activeApplyCheckRo, Long userId) {
+        //更新活动信息状态
+        try {
+            ApplyEntity entity = dozerUtils.map2(activeApplyCheckRo, ApplyEntity.class);
+            //设置活动状态
+//            entity.setActiveStatus(ActiveStatusEnum.INIT);
+            baseMapper.updateById(entity);
+
+            // TODO 信息更新完成之后，没有异常的状态下，需要发送邮件
+            // 内容：某某社团，申请的某某活动，已经审核成功，请尽早审核
+
+        } catch (Exception e) {
+            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.ACTIVITY_APPLICATION_APPROVAL_EXCEPTION.getMsg());
+        }
+
+    }
+
+    /**
+     * 进行活动的一键发布
+     * @param activeReleaseRo
+     */
+    @Override
+    public void activeRelease(ActiveReleaseRo activeReleaseRo) {
+        ApplyEntity applyEntity = baseMapper.selectById(activeReleaseRo.getId());
+        applyEntity.setActiveStatus(ActiveStatusEnum.INIT)
+                .setIsRelease(IsReleaseEnum.FINISH)
+                .setActiveContent(activeReleaseRo.getActiveContent());
+        baseMapper.updateById(applyEntity);
     }
 
     private void inspectionTime(ApplyEntity applyEntity) {

@@ -5,6 +5,8 @@ import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
+import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
+import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 
 /**
@@ -40,5 +42,18 @@ public interface ApplyService extends IService<ApplyEntity> {
      * @param id
      */
     void removeActiveById(Long id);
+
+    /**
+     * 活动申请信息审核
+     * @param activeApplyCheckRo
+     * @param userId
+     */
+    void activeApplyCheck(ActiveApplyCheckRo activeApplyCheckRo, Long userId);
+
+    /**
+     * 进行活动发布
+     * @param activeReleaseRo
+     */
+    void activeRelease(ActiveReleaseRo activeReleaseRo);
 }
 

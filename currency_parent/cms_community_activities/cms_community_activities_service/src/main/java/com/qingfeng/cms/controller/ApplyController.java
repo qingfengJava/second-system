@@ -12,6 +12,8 @@ import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsBonusPointsApplyEnum;
 import com.qingfeng.cms.domain.apply.enums.IsQuotaEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
+import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
+import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
 import com.qingfeng.cms.domain.apply.ro.EnumsRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyEnumsVoList;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
@@ -99,8 +101,16 @@ public class ApplyController extends BaseController {
     @ApiOperation(value = "活动申请审核", notes = "活动申请审核")
     @PostMapping("/apply/check")
     @SysLog("活动申请审核")
-    public R activeApplyCheck(){
+    public R activeApplyCheck(@RequestBody @Validated(SuperEntity.Update.class) ActiveApplyCheckRo activeApplyCheckRo) {
+        applyService.activeApplyCheck(activeApplyCheckRo, getUserId());
+        return success();
+    }
 
+    @ApiOperation(value = "活动一键发布", notes = "活动一键发布")
+    @PostMapping("/release")
+    @SysLog("活动一键发布")
+    public R activeRelease(@RequestBody @Validated(SuperEntity.Update.class) ActiveReleaseRo activeReleaseRo) {
+        applyService.activeRelease(activeReleaseRo);
         return success();
     }
 

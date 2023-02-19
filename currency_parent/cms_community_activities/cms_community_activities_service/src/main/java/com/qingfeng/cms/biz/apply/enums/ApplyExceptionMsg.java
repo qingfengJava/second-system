@@ -12,7 +12,8 @@ import lombok.Getter;
 @Getter
 public enum ApplyExceptionMsg {
 
-    REPETITION_OF_CLASSMATE_ACTIVITIES("非法用户！");
+    REPETITION_OF_CLASSMATE_ACTIVITIES("非法用户！"),
+    ACTIVITY_APPLICATION_APPROVAL_EXCEPTION("活动申请审核异常");
 
     private String msg;
 }
