@@ -33,7 +33,7 @@ public class ActiveApplyTimingDetection {
      */
     @XxlJob(value = "activeApplyRelease")
     public ReturnT activeApplyRelease() {
-        // 查询出所有符合条件的活动   查询活动申请通过两天以后的，你或者是活动即将开始前三天的
+        // 查询出所有符合条件的活动   查询活动申请通过超过两天，并且活动还未开始的
         applyService.list(Wraps.lbQ(new ApplyEntity())
                 .eq(ApplyEntity::getAgreeStatus, AgreeStatusEnum.IS_PASSED)
                 .eq(ApplyEntity::getIsRelease, IsReleaseEnum.INIT));

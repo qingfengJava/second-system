@@ -1,5 +1,6 @@
 package com.qingfeng.sdk.auth.role;
 
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
 import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -23,4 +24,11 @@ public interface UserRoleApi {
      */
     @GetMapping("/user_role/findByUserId/{userId}")
     public R<UserRoleVo> findRoleIdByUserId(@PathVariable("userId") Long userId);
+
+    /**
+     * 查询社团联用户信息
+     * @return
+     */
+    @GetMapping("/user_role/findroleUserInfo")
+    public R<User> findRoleInfo();
 }

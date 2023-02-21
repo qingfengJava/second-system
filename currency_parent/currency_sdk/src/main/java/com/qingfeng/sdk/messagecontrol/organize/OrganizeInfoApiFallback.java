@@ -1,5 +1,6 @@
 package com.qingfeng.sdk.messagecontrol.organize;
 
+import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.currency.base.R;
 
 /**
@@ -17,5 +18,19 @@ public class OrganizeInfoApiFallback implements OrganizeInfoApi {
     @Override
     public R removeVod(String vodId) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    /**
+     * 根据用户Id查询社团组织信息
+     * @return
+     */
+    @Override
+    public R<OrganizeInfoEntity> info() {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<OrganizeInfoEntity> info(Long userId) {
+        return this.info();
     }
 }

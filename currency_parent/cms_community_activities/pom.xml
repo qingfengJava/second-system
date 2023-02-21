@@ -26,4 +26,13 @@
         <module>cms_community_activities_service</module>
         <module>cms_community_activities_entity</module>
     </modules>
+
+    <dependencies>
+
+        <!-- rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+    </dependencies>
 </project>

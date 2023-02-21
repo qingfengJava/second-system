@@ -1,5 +1,6 @@
 package com.qingfeng.sdk.auth.role;
 
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
 import com.qingfeng.currency.base.R;
 
@@ -12,6 +13,11 @@ public class UserRoleApiFallback implements UserRoleApi {
 
     @Override
     public R<UserRoleVo> findRoleIdByUserId(Long userId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<User> findRoleInfo() {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }

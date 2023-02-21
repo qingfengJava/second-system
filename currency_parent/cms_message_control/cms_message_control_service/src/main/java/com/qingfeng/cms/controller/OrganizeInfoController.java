@@ -51,6 +51,14 @@ public class OrganizeInfoController extends BaseController {
                 .eq(OrganizeInfoEntity::getUserId, this.getUserId())));
     }
 
+    @ApiOperation(value = "根据用户Id查询社团组织详情信息", notes = "根据用户Id查询社团组织详情信息")
+    @GetMapping("/info/{userId}")
+    @SysLog("根据用户Id查询社团组织详情信息")
+    public R<OrganizeInfoEntity> info(@PathVariable("userId") Long userId) {
+        return success(organizeInfoService.getOne(Wraps.lbQ(new OrganizeInfoEntity())
+                .eq(OrganizeInfoEntity::getUserId, userId)));
+    }
+
     @ApiOperation(value = "保存社团组织详情信息", notes = "保存社团组织详情信息")
     @PostMapping("/save")
     @SysLog("保存社团组织详情信息")

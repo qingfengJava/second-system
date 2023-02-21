@@ -2,7 +2,9 @@ package com.qingfeng.currency.authority.controller.auth;
 
 import com.qingfeng.currency.authority.biz.service.auth.RoleService;
 import com.qingfeng.currency.authority.biz.service.auth.UserRoleService;
+import com.qingfeng.currency.authority.biz.service.auth.UserService;
 import com.qingfeng.currency.authority.entity.auth.Role;
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.authority.entity.auth.UserRole;
 import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
 import com.qingfeng.currency.base.BaseController;
@@ -38,6 +40,8 @@ public class UserRoleController extends BaseController {
     private UserRoleService userRoleService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private UserService userService;
 
     @ApiOperation(value = "根据用户Id查询角色Id及编码", notes = "根据用户Id查询角色Id及编码")
     @GetMapping("/findByUserId/{userId}")
@@ -59,5 +63,18 @@ public class UserRoleController extends BaseController {
                 .roleId(role.getId())
                 .code(role.getCode())
                 .build());
+    }
+
+    @ApiOperation(value = "查询社团联用户信息", notes = "查询社团联用户信息")
+    @GetMapping("/findroleUserInfo")
+    @SysLog("查询社团联用户信息")
+    public R<User> findRoleInfo(){
+        //查询出社团联用户的角色Id
+        Role role = roleService.getOne(Wraps.lbQ(new Role())
+                .eq(Role::getCode, "SHETUANLIAN_LEADER")
+                .eq(Role::getStatus, 1));
+        UserRole userRole = userRoleService.getOne(Wraps.lbQ(new UserRole())
+                .eq(UserRole::getRoleId, role.getId()));
+        return success(userService.getById(userRole.getUserId()));
     }
 }

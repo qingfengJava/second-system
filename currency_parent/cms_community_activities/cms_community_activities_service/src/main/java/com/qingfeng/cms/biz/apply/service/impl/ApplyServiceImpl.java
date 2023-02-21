@@ -1,10 +1,14 @@
 package com.qingfeng.cms.biz.apply.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.biz.apply.dao.ApplyDao;
 import com.qingfeng.cms.biz.apply.enums.ApplyExceptionMsg;
 import com.qingfeng.cms.biz.apply.service.ApplyService;
+import com.qingfeng.cms.biz.mq.service.producer.RabbitSendMsg;
 import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
@@ -16,11 +20,22 @@ import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
 import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
+import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
+import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
+import com.qingfeng.currency.authority.entity.auth.User;
+import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
+import com.qingfeng.sdk.auth.role.UserRoleApi;
+import com.qingfeng.sdk.auth.user.UserApi;
+import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
+import com.qingfeng.sdk.messagecontrol.organize.OrganizeInfoApi;
 import com.qingfeng.sdk.oss.file.FileOssApi;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +59,21 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     @Autowired
     private ApplyDao applyDao;
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private FileOssApi fileOssApi;
+
+    @Autowired
+    private RabbitSendMsg rabbitSendMsg;
+    @Autowired
+    private UserRoleApi userRoleApi;
+    @Autowired
+    private OrganizeInfoApi organizeInfoApi;
+    @Autowired
+    private NewsNotifyApi newsNotifyApi;
+    @Autowired
+    private UserApi userApi;
 
     /**
      * 活动申请信息保存
@@ -71,7 +100,8 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
                     .setActiveApplyTime(LocalDateTime.now());
             baseMapper.insert(applyEntity);
 
-            // TODO 活动申请成功要通知社团联负责人进行活动信息的审核(短信或者邮箱)
+            // 活动申请成功要通知社团联负责人进行活动信息的审核(短信或者邮箱)
+            sendApplySuccess(applyEntity);
 
         } else {
             //抛出活动重复的异常
@@ -102,10 +132,53 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
                     .setIsRelease(IsReleaseEnum.INIT);
             baseMapper.updateById(applyEntity);
 
-            // TODO 活动申请修改成功要通知社团联负责人进行活动信息的审核(短信或者邮箱)
+            // 活动申请修改成功要通知社团联负责人进行活动信息的审核(短信或者邮箱)
+            sendApplySuccess(applyEntity);
         } else {
             //抛出活动重复的异常
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.REPETITION_OF_CLASSMATE_ACTIVITIES.getMsg());
+        }
+    }
+
+    private void sendApplySuccess(ApplyEntity applyEntity) {
+        User user = userRoleApi.findRoleInfo().getData();
+        OrganizeInfoEntity organizeInfoEntity = organizeInfoApi.info().getData();
+
+        String title = "活动《" + applyEntity.getActiveName() + "》申请待审核通知";
+        String body = "亲爱的社团联负责人：\r\n       "
+                + organizeInfoEntity.getOrganizeName()
+                + "申请的《" + applyEntity.getActiveName()
+                + "》活动已经申请成功，请尽早进行审核，以免影响活动进度！";
+
+        if (StrUtil.isNotBlank(user.getEmail())) {
+            //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+            try {
+                rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
+                        .email(user.getEmail())
+                        .title(title)
+                        .body(body)
+                        .key("apply_active.email")
+                        .build()), "apply_active.email");
+
+                // 进行消息存储
+                //将消息通知写入数据库
+                R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                        .userId(user.getId())
+                        .newsType(NewsTypeEnum.MAILBOX)
+                        .newsTitle(title)
+                        .newsContent(body)
+                        .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                        .build());
+
+                if (r.getIsError()) {
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.NEWS_SAVE_FAILED.getMsg());
+                }
+            } catch (JsonProcessingException e) {
+                throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.ACTIVITY_APPLICATION_APPROVAL_EXCEPTION.getMsg());
+            }
+
+        } else {
+            // TODO 短信发送
         }
     }
 
@@ -123,7 +196,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         Integer total = baseMapper.selectCount(Wraps.lbQ(new ApplyEntity())
                 .eq(ApplyEntity::getApplyUserId, userId));
 
-        if (total == 0){
+        if (total == 0) {
             return ApplyListVo.builder()
                     .total(0)
                     .applyEntityList(Collections.emptyList())
@@ -145,6 +218,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
 
     /**
      * 根据Id删除申请的活动信息
+     *
      * @param id
      */
     @Override
@@ -157,6 +231,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
 
     /**
      * 活动申请信息审核
+     *
      * @param activeApplyCheckRo
      * @param userId
      */
@@ -166,11 +241,48 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         try {
             ApplyEntity entity = dozerUtils.map2(activeApplyCheckRo, ApplyEntity.class);
             //设置活动状态
-//            entity.setActiveStatus(ActiveStatusEnum.INIT);
             baseMapper.updateById(entity);
 
-            // TODO 信息更新完成之后，没有异常的状态下，需要发送邮件
-            // 内容：某某社团，申请的某某活动，已经审核成功，请尽早审核
+            ApplyEntity applyEntity = baseMapper.selectById(entity.getId());
+            User user = userApi.get(applyEntity.getApplyUserId()).getData();
+            OrganizeInfoEntity organizeInfoEntity = organizeInfoApi.info(user.getId()).getData();
+
+            String title = "活动《" + applyEntity.getActiveName() + "》申请审核通知";
+            String body = "亲爱的：\r\n       "
+                    + organizeInfoEntity.getOrganizeName()
+                    + "，您申请的《" + applyEntity.getActiveName()
+                    + "》活动已经审核成功，请尽早发布，避免影响活动正常进行！";
+
+            if (StrUtil.isNotBlank(user.getEmail())) {
+                //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+                try {
+                    rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
+                            .email(user.getEmail())
+                            .title(title)
+                            .body(body)
+                            .key("apply_active.check.email")
+                            .build()), "apply_active.check.email");
+
+                    // 进行消息存储
+                    //将消息通知写入数据库
+                    R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                            .userId(user.getId())
+                            .newsType(NewsTypeEnum.MAILBOX)
+                            .newsTitle(title)
+                            .newsContent(body)
+                            .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                            .build());
+
+                    if (r.getIsError()) {
+                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.NEWS_SAVE_FAILED.getMsg());
+                    }
+                } catch (JsonProcessingException e) {
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.ACTIVITY_APPLICATION_APPROVAL_EXCEPTION.getMsg());
+                }
+
+            } else {
+                // TODO 短信发送
+            }
 
         } catch (Exception e) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.ACTIVITY_APPLICATION_APPROVAL_EXCEPTION.getMsg());
@@ -180,6 +292,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
 
     /**
      * 进行活动的一键发布
+     *
      * @param activeReleaseRo
      */
     @Override
