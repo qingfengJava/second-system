@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.apply.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,6 +10,7 @@ import com.qingfeng.cms.biz.apply.dao.ApplyDao;
 import com.qingfeng.cms.biz.apply.enums.ApplyExceptionMsg;
 import com.qingfeng.cms.biz.apply.service.ApplyService;
 import com.qingfeng.cms.biz.mq.service.producer.RabbitSendMsg;
+import com.qingfeng.cms.domain.apply.dto.ApplyCheckQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
@@ -19,6 +21,8 @@ import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
 import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
+import com.qingfeng.cms.domain.apply.vo.ApplyCheckEntityVo;
+import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
@@ -27,6 +31,7 @@ import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
@@ -43,6 +48,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 社团活动申请表
@@ -84,7 +92,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     @Override
     public void saveApply(ApplySaveDTO applySaveDTO, Long userId) {
         //同一学期，同一活动不能重复申请
-        List<ApplyEntity> applyEntityList = getApplyEntities(applySaveDTO.getActiveName(), applySaveDTO.getSchoolYear());
+        List<ApplyEntity> applyEntityList = getApplyEntities(applySaveDTO.getActiveName(), applySaveDTO.getSchoolYear(), null);
 
         if (CollUtil.isEmpty(applyEntityList)) {
             //说明没有重复的活动
@@ -117,7 +125,9 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     @Override
     public void updateApplyById(ApplyUpdateDTO applyUpdateDTO) {
         //同一学期，同一活动不能重复申请
-        List<ApplyEntity> applyEntityList = getApplyEntities(applyUpdateDTO.getActiveName(), applyUpdateDTO.getSchoolYear());
+        List<ApplyEntity> applyEntityList = getApplyEntities(applyUpdateDTO.getActiveName(),
+                applyUpdateDTO.getSchoolYear(),
+                applyUpdateDTO.getId());
 
         if (CollUtil.isEmpty(applyEntityList)) {
             //说明没有重复的活动
@@ -128,7 +138,6 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
 
             applyEntity.setActiveType(ActiveTypeEnum.COMMUNITY_WORK)
                     .setAgreeStatus(AgreeStatusEnum.INIT)
-                    .setActiveStatus(ActiveStatusEnum.INIT)
                     .setIsRelease(IsReleaseEnum.INIT);
             baseMapper.updateById(applyEntity);
 
@@ -144,11 +153,21 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         User user = userRoleApi.findRoleInfo().getData();
         OrganizeInfoEntity organizeInfoEntity = organizeInfoApi.info().getData();
 
-        String title = "活动《" + applyEntity.getActiveName() + "》申请待审核通知";
-        String body = "亲爱的社团联负责人：\r\n       "
-                + organizeInfoEntity.getOrganizeName()
-                + "申请的《" + applyEntity.getActiveName()
-                + "》活动已经申请成功，请尽早进行审核，以免影响活动进度！";
+        String title = "";
+        String body = "";
+        if (ObjectUtil.isNotEmpty(applyEntity.getId())) {
+            title = "活动《" + applyEntity.getActiveName() + "》修改待审核通知";
+            body = "亲爱的社团联负责人：\r\n       "
+                    + organizeInfoEntity.getOrganizeName()
+                    + "申请的《" + applyEntity.getActiveName()
+                    + "》活动已经修改，并申请成功，请尽早进行审核，以免影响活动进度！";
+        } else {
+            title = "活动《" + applyEntity.getActiveName() + "》申请待审核通知";
+            body = "亲爱的社团联负责人：\r\n       "
+                    + organizeInfoEntity.getOrganizeName()
+                    + "申请的《" + applyEntity.getActiveName()
+                    + "》活动已经申请成功，请尽早进行审核，以免影响活动进度！";
+        }
 
         if (StrUtil.isNotBlank(user.getEmail())) {
             //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
@@ -248,10 +267,18 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
             OrganizeInfoEntity organizeInfoEntity = organizeInfoApi.info(user.getId()).getData();
 
             String title = "活动《" + applyEntity.getActiveName() + "》申请审核通知";
-            String body = "亲爱的：\r\n       "
-                    + organizeInfoEntity.getOrganizeName()
-                    + "，您申请的《" + applyEntity.getActiveName()
-                    + "》活动已经审核成功，请尽早发布，避免影响活动正常进行！";
+            String body = "";
+            if (activeApplyCheckRo.getAgreeStatus().equals(AgreeStatusEnum.IS_PASSED)) {
+                body = "亲爱的：\r\n       "
+                        + organizeInfoEntity.getOrganizeName()
+                        + "，您申请的《" + applyEntity.getActiveName()
+                        + "》活动已经【审核通过】，请尽早发布，避免影响活动正常进行！";
+            } else {
+                body = "亲爱的：\r\n       "
+                        + organizeInfoEntity.getOrganizeName()
+                        + "，您申请的《" + applyEntity.getActiveName()
+                        + "》活动【审核不通过】，请尽早修改，避免影响活动正常进行！";
+            }
 
             if (StrUtil.isNotBlank(user.getEmail())) {
                 //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
@@ -304,6 +331,51 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         baseMapper.updateById(applyEntity);
     }
 
+    /**
+     * 活动申请审核列表
+     *
+     * @param applyCheckQueryDTO
+     * @return
+     */
+    @Override
+    public ApplyCheckListVo findApplyCheckList(ApplyCheckQueryDTO applyCheckQueryDTO) {
+        Integer pageNo = applyCheckQueryDTO.getPageNo();
+        Integer pageSize = applyCheckQueryDTO.getPageSize();
+        applyCheckQueryDTO.setPageNo((pageNo - 1) * pageSize);
+        //查询总记录数
+        Integer total = baseMapper.selectCount(Wraps.lbQ(new ApplyEntity()));
+        if (total == 0) {
+            return ApplyCheckListVo.builder()
+                    .total(0)
+                    .applyCheckEntityVoList(Collections.emptyList())
+                    .pageNo(pageNo)
+                    .pageSize(pageSize)
+                    .build();
+        }
+        List<ApplyEntity> applyEntityList = applyDao.findApplyCheckList(applyCheckQueryDTO);
+        List<Long> applyUserIds = applyEntityList.stream()
+                .map(ApplyEntity::getApplyUserId)
+                .distinct()
+                .collect(Collectors.toList());
+        //查询社团信息
+        ConcurrentMap<Long, OrganizeInfoEntity> organizeInfoEntityConcurrentMap = organizeInfoApi.infoList(applyUserIds)
+                .getData()
+                .stream()
+                .collect(Collectors.toConcurrentMap(
+                        OrganizeInfoEntity::getUserId,
+                        Function.identity())
+                );
+
+        List<ApplyCheckEntityVo> applyCheckEntityVos = dozerUtils.mapList(applyEntityList, ApplyCheckEntityVo.class);
+        applyCheckEntityVos.forEach(a -> a.setOrganizeInfoEntity(organizeInfoEntityConcurrentMap.get(a.getApplyUserId())));
+        return ApplyCheckListVo.builder()
+                .total(total)
+                .applyCheckEntityVoList(applyCheckEntityVos)
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .build();
+    }
+
     private void inspectionTime(ApplyEntity applyEntity) {
         if (applyEntity.getActiveStartTime().toEpochDay() - LocalDate.now().toEpochDay() < 7) {
             throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "活动必须提前一周时间申请");
@@ -320,9 +392,13 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
         }
     }
 
-    private List<ApplyEntity> getApplyEntities(String activeName, String schoolYear) {
-        return baseMapper.selectList(Wraps.lbQ(new ApplyEntity())
+    private List<ApplyEntity> getApplyEntities(String activeName, String schoolYear, Long id) {
+        LbqWrapper<ApplyEntity> wrapper = Wraps.lbQ(new ApplyEntity())
                 .eq(ApplyEntity::getActiveName, activeName)
-                .eq(ApplyEntity::getSchoolYear, schoolYear));
+                .eq(ApplyEntity::getSchoolYear, schoolYear);
+        if (ObjectUtil.isNotEmpty(id)) {
+            wrapper.ne(ApplyEntity::getId, id);
+        }
+        return baseMapper.selectList(wrapper);
     }
 }

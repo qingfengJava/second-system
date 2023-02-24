@@ -1,12 +1,14 @@
 package com.qingfeng.cms.biz.apply.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.apply.dto.ApplyCheckQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
 import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
+import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 
 /**
@@ -55,5 +57,12 @@ public interface ApplyService extends IService<ApplyEntity> {
      * @param activeReleaseRo
      */
     void activeRelease(ActiveReleaseRo activeReleaseRo);
+
+    /**
+     * 活动申请审核列表
+     * @param applyCheckQueryDTO
+     * @return
+     */
+    ApplyCheckListVo findApplyCheckList(ApplyCheckQueryDTO applyCheckQueryDTO);
 }
 

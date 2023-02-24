@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 /**
  * 社团组织详情表
@@ -57,6 +59,14 @@ public class OrganizeInfoController extends BaseController {
     public R<OrganizeInfoEntity> info(@PathVariable("userId") Long userId) {
         return success(organizeInfoService.getOne(Wraps.lbQ(new OrganizeInfoEntity())
                 .eq(OrganizeInfoEntity::getUserId, userId)));
+    }
+
+    @ApiOperation(value = "根据用户Id批量查询社团组织详情信息", notes = "根据用户Id批量查询社团组织详情信息")
+    @PostMapping("/info")
+    @SysLog("根据用户Id批量查询社团组织详情信息")
+    public R<List<OrganizeInfoEntity>> infoList(@RequestBody List<Long> userIds) {
+        return success(organizeInfoService.list(Wraps.lbQ(new OrganizeInfoEntity())
+                .in(OrganizeInfoEntity::getUserId, userIds)));
     }
 
     @ApiOperation(value = "保存社团组织详情信息", notes = "保存社团组织详情信息")

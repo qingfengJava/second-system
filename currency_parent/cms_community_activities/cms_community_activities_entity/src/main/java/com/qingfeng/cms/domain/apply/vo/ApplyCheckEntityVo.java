@@ -1,4 +1,4 @@
-package com.qingfeng.cms.domain.apply.entity;
+package com.qingfeng.cms.domain.apply.vo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -10,7 +10,7 @@ import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsBonusPointsApplyEnum;
 import com.qingfeng.cms.domain.apply.enums.IsQuotaEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
-import com.qingfeng.currency.base.entity.Entity;
+import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -41,9 +42,12 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ApplyEntity", description = "社团活动申请表")
 @TableName("ca_apply")
-public class ApplyEntity extends Entity<Long> {
+public class ApplyCheckEntityVo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@ApiModelProperty(value = "主键")
+	private Long id;
 
 	@ApiModelProperty(value = "申请活动的用户Id，关联用户表")
 	private Long applyUserId;
@@ -125,37 +129,13 @@ public class ApplyEntity extends Entity<Long> {
 	@ApiModelProperty(value = "是否发布")
 	private IsReleaseEnum isRelease;
 
-	@Builder
-	public ApplyEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime, Long updateUser,
-					   Long applyUserId, String activeName, ActiveScaleEnum activeScale, ActiveTypeEnum activeType,
-					   ActiveLevelEnum activeLevel, String activePrincipal, LocalDate activeStartTime, LocalDate activeEndTime,
-					   LocalDate registrationDeadTime, IsQuotaEnum isQuota, Integer quotaNum, Integer year, String schoolYear,
-					   String applyDataLink, IsBonusPointsApplyEnum isBonusPointsApply, String bonusFile, Double activeScore,
-					   String activeIntroduction, String activeContent, LocalDateTime activeApplyTime, AgreeStatusEnum agreeStatus,
-					   ActiveStatusEnum activeStatus, IsReleaseEnum isRelease) {
-		super(id, createTime, createUser, updateTime, updateUser);
-		this.applyUserId = applyUserId;
-		this.activeName = activeName;
-		this.activeScale = activeScale;
-		this.activeType = activeType;
-		this.activeLevel = activeLevel;
-		this.activePrincipal = activePrincipal;
-		this.activeStartTime = activeStartTime;
-		this.activeEndTime = activeEndTime;
-		this.registrationDeadTime = registrationDeadTime;
-		this.isQuota = isQuota;
-		this.quotaNum = quotaNum;
-		this.year = year;
-		this.schoolYear = schoolYear;
-		this.applyDataLink = applyDataLink;
-		this.isBonusPointsApply = isBonusPointsApply;
-		this.bonusFile = bonusFile;
-		this.activeScore = activeScore;
-		this.activeIntroduction = activeIntroduction;
-		this.activeContent = activeContent;
-		this.activeApplyTime = activeApplyTime;
-		this.agreeStatus = agreeStatus;
-		this.activeStatus = activeStatus;
-		this.isRelease = isRelease;
-	}
+	private LocalDateTime createTime;
+	private Long createUser;
+	private LocalDateTime updateTime;
+	private Long updateUser;
+
+	/**
+	 * 维护活动关联的社团组织信息
+	 */
+	private OrganizeInfoEntity organizeInfoEntity;
 }

@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.apply.service.ApplyService;
+import com.qingfeng.cms.domain.apply.dto.ApplyCheckQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
@@ -15,6 +16,7 @@ import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
 import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
 import com.qingfeng.cms.domain.apply.ro.EnumsRo;
+import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyEnumsVoList;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 import com.qingfeng.currency.base.BaseController;
@@ -64,6 +66,13 @@ public class ApplyController extends BaseController {
     @SysLog("活动申请查询列表")
     public R<ApplyListVo> list(@RequestBody @Validated ApplyQueryDTO applyQueryDTO) {
         return success(applyService.findApplyList(applyQueryDTO, getUserId()));
+    }
+
+    @ApiOperation(value = "活动申请审核列表", notes = "活动申请审核列表")
+    @PostMapping("/list/check")
+    @SysLog("活动申请审核列表")
+    public R<ApplyCheckListVo> applyCheckList(@RequestBody @Validated ApplyCheckQueryDTO applyCheckQueryDTO) {
+        return success(applyService.findApplyCheckList(applyCheckQueryDTO));
     }
 
     @ApiOperation(value = "根据Id查询活动申请的详细信息", notes = "根据Id查询活动申请的详细信息")

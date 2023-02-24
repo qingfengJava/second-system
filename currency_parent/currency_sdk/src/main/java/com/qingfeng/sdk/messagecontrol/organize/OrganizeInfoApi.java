@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 /**
  * @author 清风学Java
@@ -39,4 +43,12 @@ public interface OrganizeInfoApi {
      */
     @GetMapping("/organizeinfo/info/{userId}")
     public R<OrganizeInfoEntity> info(@PathVariable("userId") Long userId);
+
+    /**
+     * 根据用户Id批量查询社团组织详情信息
+     * @param userIds
+     * @return
+     */
+    @PostMapping("/organizeinfo/info")
+    public R<List<OrganizeInfoEntity>> infoList(@RequestBody List<Long> userIds);
 }

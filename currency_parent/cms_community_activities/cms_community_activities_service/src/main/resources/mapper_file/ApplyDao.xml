@@ -71,5 +71,39 @@
         LIMIT #{applyQueryDTO.pageNo}, #{applyQueryDTO.pageSize}
     </select>
 
+    <select id="findApplyCheckList" resultMap="applyMap">
+        SELECT *
+        FROM ca_apply
+        WHERE 1=1
+        <if test="applyCheckQueryDTO.activeName != null and applyCheckQueryDTO.activeName != ''">
+            and active_name like concat('%',#{applyCheckQueryDTO.activeName},'%')
+        </if>
+        <if test="applyCheckQueryDTO.year != null and applyCheckQueryDTO.year != 0">
+            and year = #{applyCheckQueryDTO.year}
+        </if>
+        <if test="applyCheckQueryDTO.activeLevel != null">
+            and active_level = #{applyCheckQueryDTO.activeLevel}
+        </if>
+        <if test="applyCheckQueryDTO.agreeStatusEnum != null">
+            and agree_status = #{applyCheckQueryDTO.agreeStatusEnum}
+        </if>
+        ORDER BY
+        CASE
+            agree_status
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum@INIT.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum@IS_NOT_PASSED.name}' THEN 2
+            ELSE 3
+            END,
+        CASE
+            active_status
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@INIT.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@HAVING.name}' THEN 2
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@COMPLETE.name}' THEN 3
+            ELSE 4
+            END,
+        create_time desc
+        LIMIT #{applyCheckQueryDTO.pageNo}, #{applyCheckQueryDTO.pageSize}
+    </select>
+
 
 </mapper>

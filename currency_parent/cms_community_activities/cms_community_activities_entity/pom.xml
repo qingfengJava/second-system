@@ -38,5 +38,12 @@
             <optional>true</optional>
             <scope>compile</scope>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>cms_message_control_entity</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

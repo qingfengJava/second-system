@@ -3,6 +3,8 @@ package com.qingfeng.sdk.messagecontrol.organize;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.currency.base.R;
 
+import java.util.List;
+
 /**
  * @author 清风学Java
  * @version 1.0.0
@@ -32,5 +34,10 @@ public class OrganizeInfoApiFallback implements OrganizeInfoApi {
     @Override
     public R<OrganizeInfoEntity> info(Long userId) {
         return this.info();
+    }
+
+    @Override
+    public R<List<OrganizeInfoEntity>> infoList(List<Long> userIds) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }
