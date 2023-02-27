@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qingfeng.cms.domain.apply.dto.ApplyCheckQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
+import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
+import com.qingfeng.cms.domain.sign.vo.ApplyVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +36,11 @@ public interface ApplyDao extends BaseMapper<ApplyEntity> {
      * @return
      */
     List<ApplyEntity> findApplyCheckList(@Param("applyCheckQueryDTO") ApplyCheckQueryDTO applyCheckQueryDTO);
+
+    /**
+     * 根据条件查询已经发布的活动列表
+     * @param activeQueryDTO
+     * @return
+     */
+    List<ApplyVo> getApplyList(@Param("activeQueryDTO") ActiveQueryDTO activeQueryDTO);
 }

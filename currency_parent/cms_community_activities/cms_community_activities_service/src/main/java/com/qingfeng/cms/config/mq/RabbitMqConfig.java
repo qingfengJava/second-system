@@ -21,13 +21,13 @@ public class RabbitMqConfig {
     /**
      * 声明项目模块邮箱和短信队列
      */
-    public static final String QUEUE_INFORM_EMAIL = "email_queue";
-    public static final String QUEUE_INFORM_SMS = "sms_queue";
+    public static final String QUEUE_INFORM_EMAIL = "email_queue_apply";
+    public static final String QUEUE_INFORM_SMS = "sms_queue_apply";
 
     /**
      * 主题交换机名字
      */
-    public static final String CRRM_EXCHANGE_DECLARE_INFORM="crrm_topic_exchange";
+    public static final String CRRM_EXCHANGE_DECLARE_INFORM="crrm_topic_exchange_apply";
 
     /**
      * 路由键

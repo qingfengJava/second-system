@@ -21,9 +21,6 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class RabbitReceiveHandler {
 
-    private static Integer COUNT = 0;
-    private static Integer MAX_LIMIT = 3;
-
     @Autowired
     private EmailApi emailApi;
     @Autowired
@@ -38,17 +35,13 @@ public class RabbitReceiveHandler {
      */
     @RabbitListener(queues = {RabbitMqConfig.QUEUE_INFORM_EMAIL})
     public void send_email(Message message, Channel channel) throws IOException {
-        // 采用手动应答模式, 手动确认应答更为安全稳定
-        if (COUNT.equals(MAX_LIMIT)){
-            COUNT = 0;
-            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
-        }
 
         //进行邮件的发送
         emailApi.sendEmail(objectMapper.readValue(
                 new String(message.getBody(), StandardCharsets.UTF_8),
                 EmailEntity.class));
 
+        // 手动应答
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
     }
 

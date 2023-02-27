@@ -16,7 +16,8 @@
 
 
     <select id="findUserIdByCode" parameterType="map" resultType="java.lang.Long">
-        select ur.user_id from currency_auth_user_role ur INNER JOIN currency_auth_role r on r.id = ur.role_id
+        select ur.user_id
+        from currency_auth_user_role ur INNER JOIN currency_auth_role r on r.id = ur.role_id
         where r.status = true
         and r.`code` in
         <foreach close=")" collection="codes" item="code" open="(" separator=",">
