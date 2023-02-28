@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 社团组织图片信息
@@ -40,6 +42,14 @@ public class OrganizeImgServiceImpl extends ServiceImpl<OrganizeImgDao, Organize
             return baseMapper.selectList(Wraps.lbQ(new OrganizeImgEntity())
                     .eq(OrganizeImgEntity::getCreateUser, userId));
         }
+    }
+
+    @Override
+    public Map<Long, List<OrganizeImgEntity>> getImgLists(List<Long> organizeIds) {
+        return baseMapper.selectList(Wraps.lbQ(new OrganizeImgEntity())
+                        .in(OrganizeImgEntity::getOrganizeId, organizeIds))
+                .stream()
+                .collect(Collectors.groupingBy(OrganizeImgEntity::getOrganizeId));
     }
 
 }

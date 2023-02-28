@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -68,4 +69,10 @@ public class OrganizeImgController extends BaseController {
         return success();
     }
 
+    @ApiOperation(value = "根据社团Ids查询社团设置的图片", notes = "根据社团Ids查询社团设置的图片")
+    @PostMapping("/list/img")
+    @SysLog("根据社团Id查询社团设置的图片")
+    public R<Map<Long, List<OrganizeImgEntity>>> listImg(@RequestBody List<Long> organizeIds) {
+        return success(organizeImgService.getImgLists(organizeIds));
+    }
 }

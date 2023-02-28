@@ -38,4 +38,7 @@ public class ApplyPageVo {
 
     @ApiModelProperty(value = "活动申请列表实体")
     private List<ApplyVo> applyVoList;
+
+    @ApiModelProperty(value = "用户信息")
+    private ActiveSignSaveVo activeSignSaveVo;
 }

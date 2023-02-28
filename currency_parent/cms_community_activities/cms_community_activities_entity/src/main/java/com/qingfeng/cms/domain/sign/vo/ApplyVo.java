@@ -9,6 +9,8 @@ import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsBonusPointsApplyEnum;
 import com.qingfeng.cms.domain.apply.enums.IsQuotaEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
+import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
+import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,6 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 社团活动申请表
@@ -139,6 +142,10 @@ public class ApplyVo implements Serializable {
 	private Long updateUser;
 
 	private ActiveSignEntity activeSignEntity;
+
+	private OrganizeInfoEntity organizeInfoEntity;
+
+	private List<OrganizeImgEntity> orgImgs;
 
 	@ApiModelProperty(value = "报名人数")
 	private Long signNum;

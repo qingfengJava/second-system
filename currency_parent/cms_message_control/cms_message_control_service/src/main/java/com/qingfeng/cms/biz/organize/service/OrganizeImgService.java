@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 社团组织图片信息
@@ -22,5 +23,11 @@ public interface OrganizeImgService extends IService<OrganizeImgEntity> {
      */
     List<OrganizeImgEntity> getImgList(Long organizeId, Long userId);
 
+    /**
+     * 根据社团Ids查询社团的轮播图信息
+     * @param organizeIds
+     * @return
+     */
+    Map<Long, List<OrganizeImgEntity>> getImgLists(List<Long> organizeIds);
 }
 

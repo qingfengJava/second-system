@@ -1,7 +1,11 @@
 package com.qingfeng.sdk.messagecontrol.organize;
 
 import com.qingfeng.cms.domain.organize.dto.OrganizeImgSaveDTO;
+import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
 import com.qingfeng.currency.base.R;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 清风学Java
@@ -18,6 +22,11 @@ public class OrganizeImgApiFallback implements OrganizeImgApi{
      */
     @Override
     public R save(OrganizeImgSaveDTO organizeImgSaveDTO) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<Map<Long, List<OrganizeImgEntity>>> listImg(List<Long> organizeIds) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }

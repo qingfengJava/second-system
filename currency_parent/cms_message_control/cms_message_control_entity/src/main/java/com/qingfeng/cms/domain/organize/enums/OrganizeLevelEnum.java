@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum OrganizeLevelEnum implements BaseEnum {
 
-    SCHOOL_LEVEL("校级"),
-    HOSPITAL_LEVEL("院级");
+    SCHOOL_LEVEL("校级组织"),
+    HOSPITAL_LEVEL("院级组织");
 
     @ApiModelProperty(value = "描述")
     private String desc;

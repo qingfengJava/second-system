@@ -7,19 +7,26 @@ import com.qingfeng.cms.biz.sign.dao.ActiveSignDao;
 import com.qingfeng.cms.biz.sign.service.ActiveSignService;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
+import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveSignSaveDTO;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import com.qingfeng.cms.domain.sign.enums.EvaluationStatusEnum;
 import com.qingfeng.cms.domain.sign.enums.SignStatusEnum;
+import com.qingfeng.cms.domain.sign.vo.ActiveSignSaveVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
+import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.sdk.auth.role.RoleApi;
+import com.qingfeng.sdk.auth.user.UserApi;
+import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
+import com.qingfeng.sdk.messagecontrol.organize.OrganizeImgApi;
 import com.qingfeng.sdk.messagecontrol.organize.OrganizeInfoApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +59,12 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
     private RoleApi roleApi;
     @Autowired
     private OrganizeInfoApi organizeInfoApi;
+    @Autowired
+    private OrganizeImgApi organizeImgApi;
+    @Autowired
+    private StuInfoApi stuInfoApi;
+    @Autowired
+    private UserApi userApi;
 
     /**
      * 查询社团组织列表
@@ -106,7 +119,8 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
                                 .eq(ActiveSignEntity::getUserId, userId))
                         .stream()
                         .collect(Collectors.toConcurrentMap(ActiveSignEntity::getApplyId,
-                                Function.identity()));
+                                Function.identity())
+                        );
         //查询活动当前的报名人数
         Map<Long, Long> applyIdMap = baseMapper.selectList(Wraps.lbQ(new ActiveSignEntity())
                         .in(ActiveSignEntity::getApplyId, applyVoList.stream()
@@ -119,23 +133,64 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
                         Collectors.counting()
                 ));
 
+        // 查询对应的社团组织信息
+        ConcurrentMap<Long, OrganizeInfoEntity> organizeInfoEntityConcurrentMap =
+                organizeInfoApi.infoList(
+                                applyVoList.stream()
+                                        .map(ApplyVo::getApplyUserId)
+                                        .distinct()
+                                        .collect(Collectors.toList())
+                        )
+                        .getData()
+                        .stream()
+                        .collect(Collectors.toConcurrentMap(
+                                        OrganizeInfoEntity::getUserId,
+                                        Function.identity()
+                                )
+                        );
+
+        // 查询社团对应的轮播图信息
+        Map<Long, List<OrganizeImgEntity>> orgImgMap = organizeImgApi.listImg(
+                organizeInfoEntityConcurrentMap
+                        .entrySet()
+                        .stream()
+                        .map(e -> e.getValue().getId())
+                        .collect(Collectors.toList())
+        ).getData();
+
+
         applyVoList.forEach(a -> {
-
-
                     a.setActiveSignEntity(
                             activeSignEntityConcurrentMap.getOrDefault(a.getId(),
                                     null)
                     );
                     a.setSignNum(applyIdMap.getOrDefault(a.getId(), 0L));
+                    a.setOrganizeInfoEntity(organizeInfoEntityConcurrentMap.get(a.getApplyUserId()));
+                    a.setOrgImgs(orgImgMap.get(a.getOrganizeInfoEntity().getId()));
                 }
         );
 
+        // 查询用户信息
+        StuInfoEntity stuInfoEntity = stuInfoApi.info(userId).getData();
+        User user = userApi.get(userId).getData();
 
         return ApplyPageVo.builder()
                 .total(count)
                 .pageNo(pageNo)
                 .pageSize(pageSize)
                 .applyVoList(applyVoList)
+                .activeSignSaveVo(ActiveSignSaveVo.builder()
+                        .userId(userId)
+                        .studentNum(stuInfoEntity.getStudentNum())
+                        .studentName(stuInfoEntity.getStudentName())
+                        .studentCollege(ObjectUtil.isEmpty(stuInfoEntity.getDepartment())
+                                ? null : stuInfoEntity.getDepartment().getDesc())
+                        .studentMajor(stuInfoEntity.getMajor())
+                        .studentSex(ObjectUtil.isEmpty(user.getSex())
+                                ? null : user.getSex().getDesc())
+                        .studentTel(user.getMobile())
+                        .studentQq(stuInfoEntity.getQq())
+                        .build())
                 .build();
     }
 

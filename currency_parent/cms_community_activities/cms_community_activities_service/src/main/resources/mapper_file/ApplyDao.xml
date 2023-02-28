@@ -120,6 +120,7 @@
         select *
         from ca_apply
         where is_release = '${@com.qingfeng.cms.domain.apply.enums.IsReleaseEnum@FINISH.name}'
+          and active_status = '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@INIT.name}'
         <if test="activeQueryDTO.userId != null">
             and apply_user_id = #{activeQueryDTO.userId}
         </if>

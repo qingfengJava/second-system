@@ -38,5 +38,6 @@ public interface ActiveSignService extends IService<ActiveSignEntity> {
      * @param userId
      */
     void saveSign(ActiveSignSaveDTO activeSignSaveDTO, Long userId);
+
 }
 
