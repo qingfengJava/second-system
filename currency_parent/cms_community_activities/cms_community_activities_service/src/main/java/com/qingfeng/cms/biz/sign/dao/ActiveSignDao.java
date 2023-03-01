@@ -1,8 +1,12 @@
 package com.qingfeng.cms.biz.sign.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 活动报名表
@@ -13,5 +17,22 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ActiveSignDao extends BaseMapper<ActiveSignEntity> {
-	
+
+    /**
+     * 根据条件查询已报名的活动信息
+     * @param activeApplySignQueryDTO
+     * @param userId
+     * @return
+     */
+    Integer selectSignCount(@Param("activeApplySignQueryDTO") ActiveApplySignQueryDTO activeApplySignQueryDTO,
+                            @Param("userId") Long userId);
+
+    /**
+     * 查询用户已经报名的活动信息
+     * @param activeApplySignQueryDTO
+     * @param userId
+     * @return
+     */
+    List<ActiveSignEntity> selectSignList(@Param("activeApplySignQueryDTO") ActiveApplySignQueryDTO activeApplySignQueryDTO,
+                                          @Param("userId") Long userId);
 }

@@ -9,11 +9,14 @@ import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
+import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveSignSaveDTO;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import com.qingfeng.cms.domain.sign.enums.EvaluationStatusEnum;
 import com.qingfeng.cms.domain.sign.enums.SignStatusEnum;
+import com.qingfeng.cms.domain.sign.ro.ActiveApplySignRo;
+import com.qingfeng.cms.domain.sign.vo.ActiveApplySignVo;
 import com.qingfeng.cms.domain.sign.vo.ActiveSignSaveVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyVo;
@@ -52,6 +55,8 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
 
     @Autowired
     private ApplyDao applyDao;
+    @Autowired
+    private ActiveSignDao activeSignDao;
     @Autowired
     private DozerUtils dozerUtils;
 
@@ -209,5 +214,75 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
         activeSignEntity.setSignStatus(SignStatusEnum.INIT);
         activeSignEntity.setEvaluationStatus(EvaluationStatusEnum.INIT);
         baseMapper.insert(activeSignEntity);
+    }
+
+    /**
+     * 分页查询用户报名的活动信息
+     *
+     * @param activeApplySignQueryDTO
+     * @return
+     */
+    @Override
+    public ActiveApplySignVo getActiveSignList(ActiveApplySignQueryDTO activeApplySignQueryDTO, Long userId) {
+        // 先根据条件查询用户的报名信息
+        Integer pageNo = activeApplySignQueryDTO.getPageNo();
+        Integer pageSize = activeApplySignQueryDTO.getPageSize();
+        activeApplySignQueryDTO.setPageNo((pageNo - 1) * pageSize);
+
+        // 先查询总记录数
+        Integer count = activeSignDao.selectSignCount(activeApplySignQueryDTO, userId);
+        if (count == 0) {
+            return ActiveApplySignVo.builder()
+                    .total(count)
+                    .pageNo(pageNo)
+                    .pageSize(pageSize)
+                    .activeApplySignRoList(Collections.emptyList())
+                    .build();
+        }
+
+        // 根据条件查询用户报名的活动信息
+        List<ActiveSignEntity> activeSignEntityList = activeSignDao.selectSignList(activeApplySignQueryDTO, userId);
+        ConcurrentMap<Long, ActiveSignEntity> activeSignEntityConcurrentMap = activeSignEntityList.stream()
+                .collect(Collectors.toConcurrentMap(
+                        ActiveSignEntity::getApplyId,
+                        Function.identity())
+                );
+        // 查询活动信息
+        List<ApplyEntity> applyEntityList = applyDao.selectList(Wraps.lbQ(new ApplyEntity())
+                .in(ApplyEntity::getId, activeSignEntityList.stream()
+                        .map(ActiveSignEntity::getApplyId)
+                        .collect(Collectors.toList())
+                )
+        );
+        ConcurrentMap<Long, OrganizeInfoEntity> organizeInfoEntityConcurrentMap = organizeInfoApi.infoList(
+                        applyEntityList.stream()
+                                .map(ApplyEntity::getApplyUserId)
+                                .distinct()
+                                .collect(Collectors.toList())
+                )
+                .getData()
+                .stream()
+                .collect(Collectors.toConcurrentMap(
+                                OrganizeInfoEntity::getUserId,
+                                Function.identity()
+                        )
+                );
+
+        // 封装数据
+        List<ActiveApplySignRo> activeApplySignRoList = applyEntityList.stream()
+                .map(applyEntity -> ActiveApplySignRo.builder()
+                        .apply(applyEntity)
+                        .activeSign(activeSignEntityConcurrentMap.get(applyEntity.getId()))
+                        .organizeInfo(organizeInfoEntityConcurrentMap.get(applyEntity.getApplyUserId()))
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+        return ActiveApplySignVo.builder()
+                .total(count)
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .activeApplySignRoList(activeApplySignRoList)
+                .build();
     }
 }

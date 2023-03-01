@@ -1,8 +1,10 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.sign.service.ActiveSignService;
+import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveSignSaveDTO;
+import com.qingfeng.cms.domain.sign.vo.ActiveApplySignVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
 import com.qingfeng.currency.base.BaseController;
@@ -57,12 +59,11 @@ public class ActiveSignController extends BaseController  {
     }
 
     @ApiOperation(value = "查询用户已报名的活动信息", notes = "查询用户已报名的活动信息")
-    @GetMapping("/apply/sign")
+    @PostMapping("/apply/sign")
     @SysLog("查询用户已报名的活动信息")
-    public R getActiveSignList(){
-        // TODO 设计查询用户已经报名的活动信息
-
-        return success();
+    public R<ActiveApplySignVo> getActiveSignList(@RequestBody @Validated ActiveApplySignQueryDTO activeApplySignQueryDTO){
+        // 设计查询用户已经报名的活动信息
+        return success(activeSignService.getActiveSignList(activeApplySignQueryDTO, getUserId()));
     }
 
     @ApiOperation(value = "活动报名", notes = "活动报名")

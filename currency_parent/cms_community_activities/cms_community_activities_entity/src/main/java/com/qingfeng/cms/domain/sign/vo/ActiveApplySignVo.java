@@ -1,44 +1,45 @@
-package com.qingfeng.cms.domain.sign.dto;
+package com.qingfeng.cms.domain.sign.vo;
 
+import com.qingfeng.cms.domain.sign.ro.ActiveApplySignRo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author 清风学Java
  * @version 1.0.0
- * @date 2023/2/27
+ * @date 2023/3/1
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ActiveQueryDTO",description = "已发布活动查询条件实体")
-public class ActiveQueryDTO implements Serializable {
+@ApiModel(value = "ActiveApplySignVo", description = "学生用户查询活动报名的实体")
+public class ActiveApplySignVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户Id")
-    private Long userId;
+    @ApiModelProperty(value = "总记录数")
+    private Integer total;
 
     @ApiModelProperty(value = "页码")
-    @NotNull(message = "页码不能为空")
     private Integer pageNo;
 
     @ApiModelProperty(value = "每页条目数")
-    @NotNull(message = "每页条目数不能为空")
     private Integer pageSize;
 
-//    @ApiModelProperty(value = "是否是最新的")
-//    private Boolean isNew;
+    @ApiModelProperty(value = "学生报名的活动信息")
+    private List<ActiveApplySignRo> activeApplySignRoList;
 }

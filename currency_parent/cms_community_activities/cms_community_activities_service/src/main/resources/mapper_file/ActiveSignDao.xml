@@ -25,5 +25,59 @@
         <result property="updateUser" column="update_user"/>
     </resultMap>
 
+    <select id="selectSignCount" resultType="java.lang.Integer">
+        select count(*)
+        from ca_active_sign s left join ca_apply a
+            on s.apply_id =  a.id
+        where s.user_id = #{userId}
+        <if test="activeApplySignQueryDTO.year != null">
+            and a.year = #{activeApplySignQueryDTO.year}
+        </if>
+        <if test="activeApplySignQueryDTO.activeLevel != null">
+            and a.active_level = #{activeApplySignQueryDTO.activeLevel}
+        </if>
+        <if test="activeApplySignQueryDTO.activeStatus != null">
+            and a.active_status = #{activeApplySignQueryDTO.activeStatus}
+        </if>
+        <if test="activeApplySignQueryDTO.signStatus != null">
+            and a.sign_status = #{activeApplySignQueryDTO.signStatus}
+        </if>
+        <if test="activeApplySignQueryDTO.evaluationStatus != null">
+            and a.evaluation_status = #{activeApplySignQueryDTO.evaluationStatus}
+        </if>
+    </select>
+
+    <select id="selectSignList" resultMap="activeSignMap">
+        select s.*
+        from ca_active_sign s left join ca_apply a
+        on s.apply_id =  a.id
+        where s.user_id = #{userId}
+        <if test="activeApplySignQueryDTO.year != null">
+            and a.year = #{activeApplySignQueryDTO.year}
+        </if>
+        <if test="activeApplySignQueryDTO.activeLevel != null">
+            and a.active_level = #{activeApplySignQueryDTO.activeLevel}
+        </if>
+        <if test="activeApplySignQueryDTO.activeStatus != null">
+            and a.active_status = #{activeApplySignQueryDTO.activeStatus}
+        </if>
+        <if test="activeApplySignQueryDTO.signStatus != null">
+            and a.sign_status = #{activeApplySignQueryDTO.signStatus}
+        </if>
+        <if test="activeApplySignQueryDTO.evaluationStatus != null">
+            and a.evaluation_status = #{activeApplySignQueryDTO.evaluationStatus}
+        </if>
+        ORDER BY
+        CASE
+            a.active_status
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@COMPLETE.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@HAVING.name}' THEN 2
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@INIT.name}' THEN 3
+            ELSE 4
+            END,
+        s.create_time
+        limit #{activeApplySignQueryDTO.pageNo}, #{activeApplySignQueryDTO.pageSize}
+    </select>
+
 
 </mapper>

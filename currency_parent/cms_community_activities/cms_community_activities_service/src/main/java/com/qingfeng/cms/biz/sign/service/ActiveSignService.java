@@ -1,9 +1,11 @@
 package com.qingfeng.cms.biz.sign.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveSignSaveDTO;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
+import com.qingfeng.cms.domain.sign.vo.ActiveApplySignVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
 
@@ -39,5 +41,11 @@ public interface ActiveSignService extends IService<ActiveSignEntity> {
      */
     void saveSign(ActiveSignSaveDTO activeSignSaveDTO, Long userId);
 
+    /**
+     * 分页查询用户报名的活动信息
+     * @param activeApplySignQueryDTO
+     * @return
+     */
+    ActiveApplySignVo getActiveSignList(ActiveApplySignQueryDTO activeApplySignQueryDTO, Long userId);
 }
 
