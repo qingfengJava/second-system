@@ -1,5 +1,6 @@
 package com.qingfeng.cms.domain.module.dto;
 
+import com.qingfeng.cms.domain.module.enums.CreditModuleTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,10 @@ public class CreditModuleSaveDTO implements Serializable {
 	@NotEmpty(message = "模块名不能为空")
 	@ApiModelProperty(value = "模块名")
 	private String moduleName;
+
+	@ApiModelProperty(value = "模块的标识编码")
+	@NotNull(message = "模块标识编码不能玩为空")
+	private CreditModuleTypeEnum code;
 
 	@NotEmpty(message = "模块内容不能为空")
 	@ApiModelProperty(value = "模块的内容")

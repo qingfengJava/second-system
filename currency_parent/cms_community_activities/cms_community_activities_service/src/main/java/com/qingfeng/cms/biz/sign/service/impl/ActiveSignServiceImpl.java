@@ -1,15 +1,19 @@
 package com.qingfeng.cms.biz.sign.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.apply.dao.ApplyDao;
 import com.qingfeng.cms.biz.sign.dao.ActiveSignDao;
 import com.qingfeng.cms.biz.sign.service.ActiveSignService;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
+import com.qingfeng.cms.domain.apply.enums.IsBonusPointsApplyEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
+import com.qingfeng.cms.domain.sign.dto.ActiveEvaluationDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveSignSaveDTO;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
@@ -21,11 +25,14 @@ import com.qingfeng.cms.domain.sign.vo.ActiveSignSaveVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
+import com.qingfeng.cms.domain.sign.vo.SingBonusPointsVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.dozer.DozerUtils;
+import com.qingfeng.currency.exception.BizException;
+import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.auth.role.RoleApi;
 import com.qingfeng.sdk.auth.user.UserApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
@@ -34,6 +41,9 @@ import com.qingfeng.sdk.messagecontrol.organize.OrganizeInfoApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -284,5 +294,101 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
                 .pageSize(pageSize)
                 .activeApplySignRoList(activeApplySignRoList)
                 .build();
+    }
+
+    /**
+     * 进行活动评价
+     *
+     * @param activeEvaluationDTO
+     */
+    @Override
+    public void setActivityEvaluation(ActiveEvaluationDTO activeEvaluationDTO) {
+        ActiveSignEntity activeSignEntity = dozerUtils.map2(activeEvaluationDTO, ActiveSignEntity.class);
+        //先进行更新
+        activeSignEntity.setEvaluationStatus(EvaluationStatusEnum.FINISH);
+        baseMapper.updateById(activeSignEntity);
+        //查询活动信息
+        ApplyEntity applyEntity = applyDao.selectById(baseMapper.selectById(activeSignEntity.getId()).getApplyId());
+        if (IsBonusPointsApplyEnum.NOT.equals(applyEntity.getIsBonusPointsApply())) {
+            // TODO 需要直接进行加分的
+
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        // 取消报名的活动，一定要在活动未开始之前才能取消
+        Long applyId = baseMapper.selectById(id).getApplyId();
+        ApplyEntity applyEntity = applyDao.selectById(applyId);
+        if (LocalDate.now().isBefore(applyEntity.getActiveStartTime())) {
+            baseMapper.deleteById(id);
+        } else {
+            throw new BizException(ExceptionCode.OPERATION_EX.getCode(), "活动已开始，不能取消报名，请认真对待活动！");
+        }
+    }
+
+    /**
+     * 查询报名的学生列表
+     *
+     * @param applyId
+     * @return
+     */
+    @Override
+    public List<ActiveSignEntity> getStudentSignList(Long applyId) {
+        // 查询活动下报名的学生列表
+        List<ActiveSignEntity> signEntities = baseMapper.selectList(Wraps.lbQ(new ActiveSignEntity())
+                .eq(ActiveSignEntity::getApplyId, applyId));
+        return signEntities;
+    }
+
+    /**
+     * 导出学生报名加分表
+     *
+     * @param response
+     */
+    @Override
+    public void exportStuBonusPoints(HttpServletResponse response, Long applyId) {
+        try {
+            ApplyEntity applyEntity = applyDao.selectById(applyId);
+
+            response.setContentType("application/vnd.ms-excel");
+            response.setCharacterEncoding("utf-8");
+            //设置URLEncoder.encode可以解决中文乱码问题   这个和EasyExcel没有关系
+            response.setHeader("Content-Disposition",
+                    "attachment;filename=" +
+                            URLEncoder.encode(applyEntity.getActiveName() + "-学生加分表", "UTF-8") +
+                            ".xlsx");
+
+            // 查询报名信息
+            List<ActiveSignEntity> signList = baseMapper.selectList(Wraps.lbQ(new ActiveSignEntity())
+                    .eq(ActiveSignEntity::getApplyId, applyId));
+            //封装数据
+            List<SingBonusPointsVo> singBonusPointsVoList = Collections.emptyList();
+            if (CollUtil.isNotEmpty(signList)) {
+                singBonusPointsVoList = signList.stream()
+                        .map(a -> SingBonusPointsVo.builder()
+                                .activeName(applyEntity.getActiveName())
+                                .activeScore(applyEntity.getActiveScore())
+                                .userId(a.getUserId())
+                                .studentNum(a.getStudentNum())
+                                .studentName(a.getStudentName())
+                                .studentCollege(a.getStudentCollege())
+                                .studentMajor(a.getStudentMajor())
+                                .studentSex(a.getStudentSex())
+                                .studentTel(a.getStudentTel())
+                                .studentQq(a.getStudentQq())
+                                .build()
+                        )
+                        .collect(Collectors.toList());
+            }
+
+
+            // 调用方法实现写操作
+            EasyExcel.write(response.getOutputStream(), SingBonusPointsVo.class)
+                    .sheet("活动加分表")
+                    .doWrite(singBonusPointsVoList);
+        } catch (Exception e) {
+            throw new BizException(ExceptionCode.OPERATION_EX.getCode(), "出现未知异常，导出失败，请稍后重试！！！");
+        }
     }
 }

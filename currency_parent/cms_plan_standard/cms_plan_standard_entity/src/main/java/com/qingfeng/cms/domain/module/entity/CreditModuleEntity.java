@@ -2,6 +2,7 @@ package com.qingfeng.cms.domain.module.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.qingfeng.cms.domain.module.enums.CreditModuleTypeEnum;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,6 +42,9 @@ public class CreditModuleEntity extends Entity<Long> {
 	@ApiModelProperty(value = "模块名")
 	@TableField(value = "module_name", condition = LIKE)
 	private String moduleName;
+
+	@ApiModelProperty(value = "模块的标识编码")
+	private CreditModuleTypeEnum code;
 
 	@ApiModelProperty(value = "模块的内容")
 	private String moduleContent;

@@ -115,7 +115,6 @@ public class DictServiceImpl extends ServiceImpl<DictDao, DictEntity> implements
 
     @Override
     public List<DictEntity> findMajorByDep(String dep) {
-        System.out.println("数据"+dep);
         DictEntity dictEntity = baseMapper.selectOne(Wraps.lbQ(new DictEntity())
                 .eq(DictEntity::getDictCode, dep));
         List<DictEntity> dictEntityList = baseMapper.selectList(Wraps.lbQ(new DictEntity())

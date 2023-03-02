@@ -46,5 +46,11 @@ public interface CreditModuleService extends IService<CreditModuleEntity> {
      * @return
      */
     List<PlanTreeRo> findPlanAndModule();
+
+    /**
+     * 删除学分认定模块
+     * @param ids
+     */
+    void deleteByIds(List<Long> ids);
 }
 

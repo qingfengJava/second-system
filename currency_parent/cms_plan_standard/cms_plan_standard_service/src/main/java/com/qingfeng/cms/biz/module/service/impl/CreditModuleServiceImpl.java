@@ -1,14 +1,19 @@
 package com.qingfeng.cms.biz.module.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qingfeng.cms.biz.level.service.LevelService;
 import com.qingfeng.cms.biz.module.dao.CreditModuleDao;
 import com.qingfeng.cms.biz.module.enums.CreditModuleServiceExceptionMsg;
 import com.qingfeng.cms.biz.module.service.CreditModuleService;
 import com.qingfeng.cms.biz.plan.enums.PlanIsEnable;
 import com.qingfeng.cms.biz.plan.service.PlanService;
+import com.qingfeng.cms.biz.project.service.ProjectService;
+import com.qingfeng.cms.biz.rule.service.CreditRulesService;
+import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.module.dto.CreditModuleQueryDTO;
 import com.qingfeng.cms.domain.module.dto.CreditModuleSaveDTO;
 import com.qingfeng.cms.domain.module.dto.CreditModuleUpdateDTO;
@@ -18,6 +23,8 @@ import com.qingfeng.cms.domain.module.vo.CreditModuleVo;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
 import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.cms.domain.plan.vo.PlanVo;
+import com.qingfeng.cms.domain.project.entity.ProjectEntity;
+import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.dozer.DozerUtils;
@@ -48,6 +55,12 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
 
     @Autowired
     private PlanService planService;
+    @Autowired
+    private ProjectService projectService;
+    @Autowired
+    private LevelService levelService;
+    @Autowired
+    private CreditRulesService creditRulesService;
 
     /**
      * 保存学分认定模块：要判断模块名是否重复
@@ -138,9 +151,9 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         List<PlanEntity> planEntityList = planService.list(query);
         List<PlanTreeRo> planTreeRoList = planEntityList.stream().map(p -> PlanTreeRo.builder()
                         .id(p.getId())
-                        .planModuleLabel(p.getGrade() + "（"+
-                                (p.getApplicationObject() == 1 ? "本科":"专科")
-                                +"）" + p.getPlanName())
+                        .planModuleLabel(p.getGrade() + "（" +
+                                (p.getApplicationObject() == 1 ? "本科" : "专科")
+                                + "）" + p.getPlanName())
                         .build())
                 .collect(Collectors.toList());
 
@@ -162,10 +175,49 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         return planTreeRoList;
     }
 
+    /**
+     * 删除学分认定模块  将关联的等级学分一并删除
+     *
+     * @param ids
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public void deleteByIds(List<Long> ids) {
+        baseMapper.deleteBatchIds(ids);
+        // 根据模块Id查询项目信息
+        List<ProjectEntity> projectList = projectService.list(Wraps.lbQ(new ProjectEntity())
+                .in(ProjectEntity::getModuleId, ids));
+        if (CollUtil.isNotEmpty(projectList)) {
+            List<Long> projectIds = projectList.stream()
+                    .map(ProjectEntity::getId)
+                    .collect(Collectors.toList());
+            projectService.removeByIds(projectIds);
+            // 查询项目下的等级信息
+            List<LevelEntity> levelList = levelService.list(Wraps.lbQ(new LevelEntity())
+                    .in(LevelEntity::getProjectId, projectIds));
+            if (CollUtil.isNotEmpty(levelList)) {
+                List<Long> levelIds = levelList.stream()
+                        .map(LevelEntity::getId)
+                        .collect(Collectors.toList());
+                levelService.removeByIds(levelIds);
+                // 查询项目下的学分
+                List<CreditRulesEntity> ruleList = creditRulesService.list(Wraps.lbQ(new CreditRulesEntity())
+                        .in(CreditRulesEntity::getLevelId));
+                if (CollUtil.isNotEmpty(ruleList)) {
+                    creditRulesService.removeByIds(ruleList.stream()
+                            .map(CreditRulesEntity::getId)
+                            .collect(Collectors.toList()
+                            )
+                    );
+                }
+            }
+        }
+    }
+
     private void checkCreditModule(CreditModuleEntity creditModuleEntity) {
         //检查是否有重名的模块名出现
         LbqWrapper<CreditModuleEntity> wrapper = Wraps.lbQ(new CreditModuleEntity())
-                .like(CreditModuleEntity::getModuleName, creditModuleEntity.getModuleName())
+                .eq(CreditModuleEntity::getCode, creditModuleEntity.getCode())
                 .eq(CreditModuleEntity::getPlanId, creditModuleEntity.getPlanId());
 
         LbqWrapper<CreditModuleEntity> lbqWrapper = Wraps.lbQ(new CreditModuleEntity())

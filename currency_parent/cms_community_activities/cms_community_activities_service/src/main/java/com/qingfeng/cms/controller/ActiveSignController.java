@@ -2,8 +2,10 @@ package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.sign.service.ActiveSignService;
 import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
+import com.qingfeng.cms.domain.sign.dto.ActiveEvaluationDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveSignSaveDTO;
+import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import com.qingfeng.cms.domain.sign.vo.ActiveApplySignVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -79,8 +82,44 @@ public class ActiveSignController extends BaseController  {
     @SysLog("取消活动报名")
     public R delete(@PathVariable("id") Long id){
 		//取消活动报名，直接根据id删除报名信息
-        activeSignService.removeById(id);
+        activeSignService.deleteById(id);
         return success();
     }
 
+    @ApiOperation(value = "活动评价", notes = "活动评价")
+    @PostMapping("/evaluation")
+    @SysLog("活动评价")
+    public R activityEvaluation(@RequestBody @Validated ActiveEvaluationDTO activeEvaluationDTO){
+        activeSignService.setActivityEvaluation(activeEvaluationDTO);
+        return success();
+    }
+
+    @ApiOperation(value = "查询活动报名表（学生）", notes = "查询活动报名表（学生）")
+    @GetMapping("/stu/sign/list/{applyId}")
+    @SysLog("查询活动报名表（学生）")
+    public R<List<ActiveSignEntity>> studentSignList(@PathVariable("applyId") Long applyId){
+        List<ActiveSignEntity> signList = activeSignService.getStudentSignList(applyId);
+        return success(signList);
+    }
+
+    @ApiOperation(value = "导出加分报表", notes = "导出加分报表")
+    @GetMapping("/export/sign/{applyId}")
+    @SysLog("导出加分报表")
+    public void exportStuBonusPoints(HttpServletResponse response,
+                                     @PathVariable("applyId") Long applyId){
+        activeSignService.exportStuBonusPoints(response, applyId);
+    }
+
+    /**
+     * TODO 单独签到的服务调用SDK
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "进行活动一键签到", notes = "进行活动一键签到")
+    @GetMapping("/sign/check/{id}")
+    @SysLog("进行活动一键签到")
+    public R oneClickCheckIn(@PathVariable("id") Long id){
+        // 活动签到
+        return success();
+    }
 }

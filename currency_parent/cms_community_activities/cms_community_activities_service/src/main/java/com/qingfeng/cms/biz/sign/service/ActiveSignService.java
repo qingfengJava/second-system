@@ -2,6 +2,7 @@ package com.qingfeng.cms.biz.sign.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
+import com.qingfeng.cms.domain.sign.dto.ActiveEvaluationDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveQueryDTO;
 import com.qingfeng.cms.domain.sign.dto.ActiveSignSaveDTO;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
@@ -9,6 +10,7 @@ import com.qingfeng.cms.domain.sign.vo.ActiveApplySignVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -47,5 +49,30 @@ public interface ActiveSignService extends IService<ActiveSignEntity> {
      * @return
      */
     ActiveApplySignVo getActiveSignList(ActiveApplySignQueryDTO activeApplySignQueryDTO, Long userId);
+
+    /**
+     * 进行活动评价
+     * @param activeEvaluationDTO
+     */
+    void setActivityEvaluation(ActiveEvaluationDTO activeEvaluationDTO);
+
+    /**
+     * 取消活动报名
+     * @param id
+     */
+    void deleteById(Long id);
+
+    /**
+     * 查询报名的学生列表
+     * @param applyId
+     * @return
+     */
+    List<ActiveSignEntity> getStudentSignList(Long applyId);
+
+    /**
+     * 导出学生报名加分表
+     * @param response
+     */
+    void exportStuBonusPoints(HttpServletResponse response, Long applyId);
 }
 

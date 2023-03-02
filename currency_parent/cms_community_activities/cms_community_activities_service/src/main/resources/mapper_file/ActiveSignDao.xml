@@ -40,10 +40,10 @@
             and a.active_status = #{activeApplySignQueryDTO.activeStatus}
         </if>
         <if test="activeApplySignQueryDTO.signStatus != null">
-            and a.sign_status = #{activeApplySignQueryDTO.signStatus}
+            and s.sign_status = #{activeApplySignQueryDTO.signStatus}
         </if>
         <if test="activeApplySignQueryDTO.evaluationStatus != null">
-            and a.evaluation_status = #{activeApplySignQueryDTO.evaluationStatus}
+            and s.evaluation_status = #{activeApplySignQueryDTO.evaluationStatus}
         </if>
     </select>
 
@@ -62,10 +62,10 @@
             and a.active_status = #{activeApplySignQueryDTO.activeStatus}
         </if>
         <if test="activeApplySignQueryDTO.signStatus != null">
-            and a.sign_status = #{activeApplySignQueryDTO.signStatus}
+            and s.sign_status = #{activeApplySignQueryDTO.signStatus}
         </if>
         <if test="activeApplySignQueryDTO.evaluationStatus != null">
-            and a.evaluation_status = #{activeApplySignQueryDTO.evaluationStatus}
+            and s.evaluation_status = #{activeApplySignQueryDTO.evaluationStatus}
         </if>
         ORDER BY
         CASE

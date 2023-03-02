@@ -8,6 +8,11 @@ currency:
     description: 第二课堂——信息管理模块
 
 spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
   rabbitmq:
     username: guest
     password: guest
