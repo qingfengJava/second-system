@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qingfeng.cms.biz.bonus.dao.BonusCheckDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.qingfeng.cms.domain.bonus.entity.BonusCheckEntity" id="bonusCheckMap">
+        <result property="id" column="id"/>
+        <result property="applyId" column="apply_id"/>
+        <result property="checkStatus" column="check_status"/>
+        <result property="checkContent" column="check_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUser" column="update_user"/>
+    </resultMap>
+
+    <select id="bonusList" resultType="com.qingfeng.cms.domain.bonus.ro.BonusCheckRo">
+        SELECT b.id,
+               b.apply_id,
+               b.check_status,
+               b.check_content,
+               a.active_name,
+               a.active_level,
+               a.bonus_file,
+               a.active_status
+        FROM ca_bonus_check b LEFT JOIN ca_apply a
+                                        ON b.apply_id = a.id
+        WHERE 1=1
+        <if test="bonusCheckQueryDTO.checkStatus != null">
+            AND  b.check_status = #{bonusCheckQueryDTO.checkStatus}
+        </if>
+        <if test="bonusCheckQueryDTO.activeName != null">
+            AND a.active_name LIKE concat('%',#{bonusCheckQueryDTO.activeName},'%')
+        </if>
+        CASE
+            b.check_status
+            WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusCheckStatusEnum@INIT.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusCheckStatusEnum@IS_NOT_PASSED.name}' THEN 2
+            ELSE 3
+            END
+        LIMIT #{bonusCheckQueryDTO.pageNo},#{bonusCheckQueryDTO.pageSize}
+    </select>
+
+
+</mapper>

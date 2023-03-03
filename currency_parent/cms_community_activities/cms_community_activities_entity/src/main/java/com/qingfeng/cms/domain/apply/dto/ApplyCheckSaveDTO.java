@@ -1,8 +1,6 @@
-package com.qingfeng.cms.domain.apply.entity;
+package com.qingfeng.cms.domain.apply.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.apply.enums.ApplyCheckStatusEnum;
-import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -13,7 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 活动审核表
@@ -29,32 +29,25 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ApplyCheckEntity", description = "活动审核表")
-@TableName("ca_apply_check")
-public class ApplyCheckEntity extends Entity<Long> {
+@ApiModel(value = "ApplyCheckSaveDTO", description = "活动审核提交")
+public class ApplyCheckSaveDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "活动申请表Id")
+	@NotNull(message = "活动Id不能为空")
 	private Long applyId;
 
 	@ApiModelProperty(value = "审核资料(活动中的材料，比如活动照片等)")
+	@NotBlank(message = "审核资料不能为空")
 	private String activeCheckData;
 
 	@ApiModelProperty(value = "审核状态  枚举（待审核、已通过、未通过、超时废弃）（审核时间为活动结束后的一周以内，超时就废弃）")
+	@NotNull(message = "审核状态不能为空")
 	private ApplyCheckStatusEnum checkStatus;
 
 	@ApiModelProperty(value = "审核建议")
+	@NotBlank(message = "审核建议不能为空")
 	private String checkContent;
 
-	@Builder
-	public ApplyCheckEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime,
-							Long updateUser, Long applyId, String activeCheckData,
-							ApplyCheckStatusEnum checkStatus, String checkContent) {
-		super(id, createTime, createUser, updateTime, updateUser);
-		this.applyId = applyId;
-		this.activeCheckData = activeCheckData;
-		this.checkStatus = checkStatus;
-		this.checkContent = checkContent;
-	}
 }

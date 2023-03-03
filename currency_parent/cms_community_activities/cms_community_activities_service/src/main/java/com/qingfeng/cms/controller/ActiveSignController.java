@@ -110,6 +110,7 @@ public class ActiveSignController extends BaseController  {
         activeSignService.exportStuBonusPoints(response, applyId);
     }
 
+
     /**
      * TODO 单独签到的服务调用SDK
      * @param id

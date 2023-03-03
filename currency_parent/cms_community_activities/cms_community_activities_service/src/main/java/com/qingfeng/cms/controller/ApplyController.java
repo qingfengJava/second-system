@@ -19,6 +19,7 @@ import com.qingfeng.cms.domain.apply.ro.EnumsRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyEnumsVoList;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
+import com.qingfeng.cms.domain.apply.vo.BonusFileVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
@@ -120,6 +121,14 @@ public class ApplyController extends BaseController {
     @SysLog("活动一键发布")
     public R activeRelease(@RequestBody @Validated(SuperEntity.Update.class) ActiveReleaseRo activeReleaseRo) {
         applyService.activeRelease(activeReleaseRo);
+        return success();
+    }
+
+    @ApiOperation(value = "提交加分文件", notes = "提交加分文件")
+    @PostMapping("/bonus/file")
+    @SysLog("提交加分文件")
+    public R uploadBonusFile(@RequestBody @Validated BonusFileVo bonusFileVo){
+        applyService.uploadBonusFile(bonusFileVo);
         return success();
     }
 

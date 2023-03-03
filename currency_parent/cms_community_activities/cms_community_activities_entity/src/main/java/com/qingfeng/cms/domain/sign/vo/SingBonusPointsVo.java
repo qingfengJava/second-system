@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@HeadRowHeight(25)
+@HeadRowHeight(30)
 @ColumnWidth(30)
 public class SingBonusPointsVo {
 

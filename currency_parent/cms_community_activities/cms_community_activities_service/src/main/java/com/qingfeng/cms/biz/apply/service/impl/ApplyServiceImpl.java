@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.biz.apply.dao.ApplyDao;
 import com.qingfeng.cms.biz.apply.enums.ApplyExceptionMsg;
 import com.qingfeng.cms.biz.apply.service.ApplyService;
+import com.qingfeng.cms.biz.bonus.service.BonusCheckService;
 import com.qingfeng.cms.biz.mq.service.producer.RabbitSendMsg;
 import com.qingfeng.cms.domain.apply.dto.ApplyCheckQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
@@ -24,6 +25,9 @@ import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyCheckEntityVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
+import com.qingfeng.cms.domain.apply.vo.BonusFileVo;
+import com.qingfeng.cms.domain.bonus.entity.BonusCheckEntity;
+import com.qingfeng.cms.domain.bonus.enums.BonusCheckStatusEnum;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
 import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
@@ -66,6 +70,8 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     private DozerUtils dozerUtils;
     @Autowired
     private ApplyDao applyDao;
+    @Autowired
+    private BonusCheckService bonusCheckService;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -374,6 +380,27 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
                 .pageNo(pageNo)
                 .pageSize(pageSize)
                 .build();
+    }
+
+    @Override
+    public void uploadBonusFile(BonusFileVo bonusFileVo) {
+        // 活动加分文件，直接刷新进对应的活动
+        baseMapper.updateById(dozerUtils.map2(bonusFileVo, ApplyEntity.class));
+        // 往加分活动审核表里面添加一条数据
+        BonusCheckEntity bonusCheck = bonusCheckService.getOne(Wraps.lbQ(new BonusCheckEntity())
+                .eq(BonusCheckEntity::getApplyId, bonusFileVo.getId()));
+
+        if (ObjectUtil.isEmpty(bonusCheck)) {
+            bonusCheck = BonusCheckEntity.builder()
+                    .applyId(bonusFileVo.getId())
+                    .checkStatus(BonusCheckStatusEnum.INIT)
+                    .build();
+            bonusCheckService.save(bonusCheck);
+        } else {
+            bonusCheck.setCheckStatus(BonusCheckStatusEnum.INIT);
+            bonusCheckService.updateById(bonusCheck);
+        }
+
     }
 
     private void inspectionTime(ApplyEntity applyEntity) {

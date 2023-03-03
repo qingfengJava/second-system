@@ -10,6 +10,7 @@ import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
 import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
 import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
+import com.qingfeng.cms.domain.apply.vo.BonusFileVo;
 
 /**
  * 社团活动申请表
@@ -64,5 +65,11 @@ public interface ApplyService extends IService<ApplyEntity> {
      * @return
      */
     ApplyCheckListVo findApplyCheckList(ApplyCheckQueryDTO applyCheckQueryDTO);
+
+    /**
+     * 上传活动加分文件
+     * @param bonusFileVo
+     */
+    void uploadBonusFile(BonusFileVo bonusFileVo);
 }
 

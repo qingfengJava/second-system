@@ -1,6 +1,5 @@
 package com.qingfeng.cms.domain.apply.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qingfeng.cms.domain.apply.enums.ActiveLevelEnum;
 import com.qingfeng.cms.domain.apply.enums.ActiveScaleEnum;
@@ -40,8 +39,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ApplyEntity", description = "社团活动申请表")
-@TableName("ca_apply")
+@ApiModel(value = "ApplyCheckEntityVo", description = "社团活动申请表")
 public class ApplyCheckEntityVo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
