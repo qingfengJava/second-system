@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.apply.service.ApplyCheckService;
+import com.qingfeng.cms.domain.apply.dto.ActiveCheckQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyCheckSaveDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyCheckEntity;
 import com.qingfeng.currency.base.BaseController;
@@ -16,10 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 
 
@@ -43,7 +41,7 @@ public class ApplyCheckController extends BaseController  {
     @ApiOperation(value = "查询待终审的活动" , notes = "查询待终审的活动")
     @PostMapping("/list")
     @SysLog("查询待终审的活动")
-    public R list(@RequestParam Map<String, Object> params){
+    public R applyCheckList(@RequestBody ActiveCheckQueryDTO activeCheckQueryDTO){
 
         return success();
     }
