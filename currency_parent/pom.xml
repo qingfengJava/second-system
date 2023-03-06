@@ -24,6 +24,7 @@
         <module>cms_sms</module>
         <module>cms_message_control</module>
         <module>cms_community_activities</module>
+        <module>cms_item_manage</module>
     </modules>
 
     <licenses>
