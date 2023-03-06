@@ -6,9 +6,8 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.qingfeng.cms.domain.apply.entity.ApplyCheckEntity" id="applyCheckMap">
         <result property="id" column="id"/>
-        <result property="applyUserId" column="apply_user_id"/>
         <result property="applyId" column="apply_id"/>
-        <result property="checkUsername" column="check_username"/>
+        <result property="checkContent" column="check_content"/>
         <result property="activeCheckData" column="active_check_data"/>
         <result property="checkStatus" column="check_status"/>
         <result property="createTime" column="create_time"/>
@@ -16,6 +15,49 @@
         <result property="updateTime" column="update_time"/>
         <result property="updateUser" column="update_user"/>
     </resultMap>
+
+    <select id="selectCountByQuery"
+            resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM ca_apply_check ac LEFT JOIN ca_apply a
+            ON ac.apply_id = a.id
+        WHERE 1=1
+        <if test="activeCheckQueryDTO.checkStatus != null">
+            AND  ac.check_status = #{activeCheckQueryDTO.checkStatus}
+        </if>
+        <if test="activeCheckQueryDTO.activeName != null">
+            AND a.active_name LIKE concat('%',#{activeCheckQueryDTO.activeName},'%')
+        </if>
+    </select>
+
+    <select id="selectApplyCheckList"
+            resultType="com.qingfeng.cms.domain.apply.ro.ApplyCheckRo">
+        SELECT ac.id,
+               ac.apply_id,
+               ac.check_status,
+               ac.check_content,
+               ac.active_check_data,
+               a.active_name,
+               a.active_level,
+               a.active_status
+        FROM ca_apply_check ac LEFT JOIN ca_apply a
+        ON ac.apply_id = a.id
+        WHERE 1=1
+        <if test="activeCheckQueryDTO.checkStatus != null">
+            AND  ac.check_status = #{activeCheckQueryDTO.checkStatus}
+        </if>
+        <if test="activeCheckQueryDTO.activeName != null">
+            AND a.active_name LIKE concat('%',#{activeCheckQueryDTO.activeName},'%')
+        </if>
+        ORDER BY
+        CASE
+        ac.check_status
+        WHEN '${@com.qingfeng.cms.domain.apply.enums.ApplyCheckStatusEnum@INIT.name}' THEN 1
+        WHEN '${@com.qingfeng.cms.domain.apply.enums.ApplyCheckStatusEnum@IS_NOT_PASSED.name}' THEN 2
+        ELSE 3
+        END
+        LIMIT #{activeCheckQueryDTO.pageNo},#{activeCheckQueryDTO.pageSize}
+    </select>
 
 
 </mapper>

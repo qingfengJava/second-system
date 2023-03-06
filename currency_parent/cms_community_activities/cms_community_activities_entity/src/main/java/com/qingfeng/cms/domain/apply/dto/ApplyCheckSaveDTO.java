@@ -1,6 +1,5 @@
 package com.qingfeng.cms.domain.apply.dto;
 
-import com.qingfeng.cms.domain.apply.enums.ApplyCheckStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -41,13 +40,5 @@ public class ApplyCheckSaveDTO implements Serializable {
 	@ApiModelProperty(value = "审核资料(活动中的材料，比如活动照片等)")
 	@NotBlank(message = "审核资料不能为空")
 	private String activeCheckData;
-
-	@ApiModelProperty(value = "审核状态  枚举（待审核、已通过、未通过、超时废弃）（审核时间为活动结束后的一周以内，超时就废弃）")
-	@NotNull(message = "审核状态不能为空")
-	private ApplyCheckStatusEnum checkStatus;
-
-	@ApiModelProperty(value = "审核建议")
-	@NotBlank(message = "审核建议不能为空")
-	private String checkContent;
 
 }

@@ -25,4 +25,11 @@ public interface BonusCheckDao extends BaseMapper<BonusCheckEntity> {
      * @return
      */
     List<BonusCheckRo> bonusList(@Param("bonusCheckQueryDTO") BonusCheckQueryDTO bonusCheckQueryDTO);
+
+    /**
+     * 查询总记录数
+     * @param bonusCheckQueryDTO
+     * @return
+     */
+    Integer selectCountByQuery(@Param("bonusCheckQueryDTO") BonusCheckQueryDTO bonusCheckQueryDTO);
 }

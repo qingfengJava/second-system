@@ -33,6 +33,7 @@
         <if test="bonusCheckQueryDTO.activeName != null">
             AND a.active_name LIKE concat('%',#{bonusCheckQueryDTO.activeName},'%')
         </if>
+        ORDER BY
         CASE
             b.check_status
             WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusCheckStatusEnum@INIT.name}' THEN 1
@@ -40,6 +41,20 @@
             ELSE 3
             END
         LIMIT #{bonusCheckQueryDTO.pageNo},#{bonusCheckQueryDTO.pageSize}
+    </select>
+
+    <select id="selectCountByQuery"
+            resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM ca_bonus_check b LEFT JOIN ca_apply a
+                                ON b.apply_id = a.id
+        WHERE 1=1
+        <if test="bonusCheckQueryDTO.checkStatus != null">
+            AND  b.check_status = #{bonusCheckQueryDTO.checkStatus}
+        </if>
+        <if test="bonusCheckQueryDTO.activeName != null">
+            AND a.active_name LIKE concat('%',#{bonusCheckQueryDTO.activeName},'%')
+        </if>
     </select>
 
 
