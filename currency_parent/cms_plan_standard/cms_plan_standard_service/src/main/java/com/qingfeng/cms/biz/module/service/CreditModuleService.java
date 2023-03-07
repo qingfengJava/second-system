@@ -52,5 +52,12 @@ public interface CreditModuleService extends IService<CreditModuleEntity> {
      * @param ids
      */
     void deleteByIds(List<Long> ids);
+
+    /**
+     * 查询学生所属的方案模块列表
+     * @param userId
+     * @return
+     */
+    List<CreditModuleEntity> moduleListByStuId(Long userId);
 }
 

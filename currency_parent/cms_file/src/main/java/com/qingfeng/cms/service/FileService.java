@@ -26,6 +26,8 @@ public interface FileService {
      */
     String fileUpload(MultipartFile file) throws IOException;
 
+    String fileUpload(MultipartFile file, String fileName) throws IOException;
+
     /**
      * 删除已上传的文件
      * @param fileUrl

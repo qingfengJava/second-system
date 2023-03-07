@@ -60,6 +60,21 @@ public class FileOssController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "资料文件上传的接口", notes = "资料文件上传的接口")
+    @PostMapping("/file_upload/{fileName}")
+    public R fileUpload(@ApiParam(value = "文件", required = true)
+                        @RequestParam("file") MultipartFile file,
+                        @PathVariable("fileName") String fileName) {
+        try {
+            String uploadUrl = fileService.fileUpload(file, fileName);
+
+            //返回r对象
+            return success(uploadUrl);
+        } catch (Exception e) {
+            throw new BizException(ExceptionCode.OPERATION_EX.getCode(), ExceptionCode.OPERATION_EX.getMsg());
+        }
+    }
+
     @ApiOperation(value = "删除上传的文件", notes = "删除上传的文件")
     @DeleteMapping("/file_delete")
     public R fileDelete(@ApiParam(value = "文件名", required = true)

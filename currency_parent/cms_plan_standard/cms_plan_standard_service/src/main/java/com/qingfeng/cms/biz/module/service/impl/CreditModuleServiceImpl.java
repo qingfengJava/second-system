@@ -25,17 +25,22 @@ import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.cms.domain.plan.vo.PlanVo;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
+import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
+import com.qingfeng.cms.domain.student.enums.StudentTypeEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.database.mybatis.conditions.query.LbqWrapper;
 import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
+import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 
@@ -61,6 +66,9 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
     private LevelService levelService;
     @Autowired
     private CreditRulesService creditRulesService;
+
+    @Autowired
+    private StuInfoApi stuInfoApi;
 
     /**
      * 保存学分认定模块：要判断模块名是否重复
@@ -245,5 +253,37 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         if (planEntity.getTotalScore() < (minSum + creditModuleEntity.getMinScore())) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), CreditModuleServiceExceptionMsg.OUTOF_MIN.getMsg());
         }
+    }
+
+    /**
+     * 查询学生下的所属的方案模块集合
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CreditModuleEntity> moduleListByStuId(Long userId) {
+        // 根据学生年级的学历类型进行查询
+        StuInfoEntity stuInfoEntity = stuInfoApi.info(userId).getData();
+        AtomicReference<Integer> applicationObject = new AtomicReference<>(0);
+        Optional.ofNullable(stuInfoEntity)
+                .ifPresent(s -> {
+                    if (s.getType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FOUR_YEARS) ||
+                            s.getType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FIVE_YEARS)) {
+                        applicationObject.set(1);
+                    } else if (s.getType().equals(StudentTypeEnum.SPECIALTY)) {
+                        applicationObject.set(2);
+                    } else if (s.getType().equals(StudentTypeEnum.GRADUATE_STUDENT)) {
+                        applicationObject.set(3);
+                    }
+                });
+        //根据年级和本专科查询对应的方案信息
+        PlanEntity planEntity = planService.getOne(Wraps.lbQ(new PlanEntity())
+                .likeLeft(PlanEntity::getGrade, stuInfoEntity.getGrade())
+                .eq(PlanEntity::getApplicationObject, applicationObject.get())
+                .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable()));
+
+        return baseMapper.selectList(Wraps.lbQ(new CreditModuleEntity())
+                .eq(CreditModuleEntity::getPlanId, planEntity.getId())
+                .orderByAsc(CreditModuleEntity::getModuleContent));
     }
 }

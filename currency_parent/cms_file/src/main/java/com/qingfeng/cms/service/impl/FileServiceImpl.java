@@ -68,6 +68,11 @@ public class FileServiceImpl implements FileService {
         return getImgUrl(file, "file");
     }
 
+    @Override
+    public String fileUpload(MultipartFile file, String fileName) throws IOException {
+        return getImgUrl(file, fileName);
+    }
+
     /**
      * 删除已上传的文件
      *

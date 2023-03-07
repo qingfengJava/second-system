@@ -116,6 +116,14 @@ public class CreditModuleController extends BaseController {
         return success();
     }
 
+    @ApiOperation(value = "查询学生下的方案模块", notes = "查询学生下的方案模块")
+    @GetMapping("/stuId")
+    @SysLog("查询学生下的方案模块")
+    public R<List<CreditModuleEntity>> moduleListByStuId(){
+        List<CreditModuleEntity> moduleList = creditModuleService.moduleListByStuId(getUserId());
+        return success(moduleList);
+    }
+
     @ApiOperation(value = "返回模块类型枚举", notes = "返回模块类型枚举")
     @GetMapping("/anno/module/enum")
     public R<List<EnumsRo>> moduleEnum() {
