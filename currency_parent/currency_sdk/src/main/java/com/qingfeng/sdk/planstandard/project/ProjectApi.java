@@ -1,6 +1,7 @@
 package com.qingfeng.sdk.planstandard.project;
 
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
+import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -27,4 +28,12 @@ public interface ProjectApi {
      */
     @PostMapping("/project/list")
     public R<List<ProjectListVo>> list(@RequestBody @Validated ProjectQueryDTO projectQueryDTO);
+
+    /**
+     * 根据项目Id集合查询项目信息
+     * @param projectIds
+     * @return
+     */
+    @PostMapping("/project/info/list")
+    public R<List<ProjectEntity>> projectInfoByIds(@RequestBody List<Long> projectIds);
 }

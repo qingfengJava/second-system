@@ -13,13 +13,23 @@ import com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums;
 import com.qingfeng.cms.domain.bonus.vo.BonusScoreApplyVo;
 import com.qingfeng.cms.domain.check.entity.ScoreCheckEntity;
 import com.qingfeng.cms.domain.check.enums.CheckStatusEnums;
+import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.evaluation.entity.EvaluationFeedbackEntity;
+import com.qingfeng.cms.domain.level.entity.LevelEntity;
+import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
+import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
+import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
+import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
+import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
+import com.qingfeng.sdk.planstandard.level.LevelApi;
+import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import com.qingfeng.sdk.planstandard.project.ProjectApi;
+import com.qingfeng.sdk.planstandard.rule.RulesApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +59,14 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
     private DozerUtils dozerUtils;
     @Autowired
     private ProjectApi projectApi;
+    @Autowired
+    private StuInfoApi stuInfoApi;
+    @Autowired
+    private CreditModuleApi creditModuleApi;
+    @Autowired
+    private LevelApi levelApi;
+    @Autowired
+    private RulesApi rulesApi;
 
     /**
      * 根据模块Id查询项目等级学分信息
@@ -59,13 +77,21 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
      */
     @Override
     public List<ProjectListVo> projectList(Long moduleId, Long userId) {
-        List<ProjectListVo> projectVoList = projectApi.list(
+        List<ProjectListVo> projectList = projectApi.list(
                 ProjectQueryDTO.builder()
                         .moduleId(moduleId)
                         .isCheck(ProjectCheckEnum.IS_FINISHED)
                         .isEnable(1)
                         .build()
         ).getData();
+
+        // 查询用户所属的学院信息
+        StuInfoEntity stuInfo = stuInfoApi.info(userId).getData();
+        // 过滤学校和自己学院下的项目信息
+        List<ProjectListVo> projectVoList = projectList.stream()
+                .filter(p -> p.getDepartment().equals(DictDepartmentEnum.PZHU.name())
+                        || p.getDepartment().equals(stuInfo.getDepartment().name()))
+                .collect(Collectors.toList());
 
         // TODO 是否排除已经报名的项目等级信息
         /*List<BonusScoreApplyEntity> bonusScoreApplyList = baseMapper.selectList(Wraps.lbQ(new BonusScoreApplyEntity())
@@ -88,6 +114,7 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
     public void saveBonusScoreApply(BonusScoreApplySaveDTO bonusScoreApplySaveDTO, Long userId) {
         BonusScoreApplyEntity bonusScoreApply = dozerUtils.map2(bonusScoreApplySaveDTO, BonusScoreApplyEntity.class);
         bonusScoreApply.setUserId(userId);
+        bonusScoreApply.setBonusStatus(BonusStatusEnums.HAVING);
         baseMapper.insert(bonusScoreApply);
 
         // 保存一条初始的审核记录
@@ -157,10 +184,9 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
             return Collections.emptyList();
         }
 
-        List<BonusScoreApplyVo> bonusScoreApplyVoList = dozerUtils.mapList(bonusScoreApplyList, BonusScoreApplyVo.class);
         // 查询审核和评价信息
-        List<Long> scoreApplyIds = bonusScoreApplyVoList.stream()
-                .map(BonusScoreApplyVo::getId)
+        List<Long> scoreApplyIds = bonusScoreApplyList.stream()
+                .map(BonusScoreApplyEntity::getId)
                 .collect(Collectors.toList());
 
         ConcurrentMap<Long, ScoreCheckEntity> scoreCheckMap = scoreCheckService.list(Wraps.lbQ(new ScoreCheckEntity())
@@ -184,13 +210,73 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
                     );
         }
 
+        // 查询模块信息
+        Map<Long, CreditModuleEntity> moduleMap = creditModuleApi.moduleByIds(bonusScoreApplyList.stream()
+                        .map(BonusScoreApplyEntity::getModuleId)
+                        .collect(Collectors.toList()
+                        )
+                )
+                .getData()
+                .stream()
+                .collect(Collectors.toMap(
+                        CreditModuleEntity::getId,
+                        Function.identity()
+                ));
+        //查询项目信息
+        Map<Long, ProjectEntity> projectMap = projectApi.projectInfoByIds(bonusScoreApplyList.stream()
+                        .map(BonusScoreApplyEntity::getProjectId)
+                        .collect(Collectors.toList()
+                        )
+                ).getData()
+                .stream()
+                .collect(Collectors.toMap(
+                        ProjectEntity::getId,
+                        Function.identity()
+                ));
+
+        // 查询等级信息
+        Map<Long, LevelEntity> levelMap = levelApi.levelInfoByIds(bonusScoreApplyList.stream()
+                        .map(BonusScoreApplyEntity::getLevelId)
+                        .collect(Collectors.toList()
+                        )
+                ).getData()
+                .stream()
+                .collect(Collectors.toMap(
+                        LevelEntity::getId,
+                        Function.identity()
+                ));
+        // 查询学分细则信息
+        Map<Long, CreditRulesEntity> rulesMap = rulesApi.ruleInfoByIds(bonusScoreApplyList.stream()
+                        .map(BonusScoreApplyEntity::getCreditRulesId)
+                        .collect(Collectors.toList()
+                        )
+                ).getData()
+                .stream()
+                .collect(Collectors.toMap(
+                        CreditRulesEntity::getId,
+                        Function.identity()
+                ));
+
         // 封装数据
         Map<Long, EvaluationFeedbackEntity> finalEvaluationFeedbackMap = evaluationFeedbackMap;
-        bonusScoreApplyVoList.forEach(bonusScoreApplyVo -> {
-            bonusScoreApplyVo.setScoreCheck(scoreCheckMap.getOrDefault(bonusScoreApplyVo.getId(), null));
-            bonusScoreApplyVo.setEvaluationFeedback(finalEvaluationFeedbackMap.getOrDefault(bonusScoreApplyVo.getId(), null));
-        });
-
-        return bonusScoreApplyVoList;
+        return bonusScoreApplyList.stream()
+                .map(bonusScoreApply -> BonusScoreApplyVo.builder()
+                        .id(bonusScoreApply.getId())
+                        .userId(bonusScoreApply.getUserId())
+                        .moduleName(moduleMap.get(bonusScoreApply.getModuleId()).getModuleName())
+                        .projectName(projectMap.get(bonusScoreApply.getProjectId()).getProjectName())
+                        .levelName(levelMap.get(bonusScoreApply.getLevelId()).getLevelContent())
+                        .score(rulesMap.get(bonusScoreApply.getCreditRulesId()).getScore())
+                        .scoreGrade(rulesMap.get(bonusScoreApply.getCreditRulesId()).getScoreGrade())
+                        .conditions(rulesMap.get(bonusScoreApply.getCreditRulesId()).getConditions())
+                        .supportMaterial(bonusScoreApply.getSupportMaterial())
+                        .bonusStatus(bonusScoreApply.getBonusStatus())
+                        .year(bonusScoreApply.getYear())
+                        .schoolYear(bonusScoreApply.getSchoolYear())
+                        .scoreCheck(scoreCheckMap.getOrDefault(bonusScoreApply.getId(), null))
+                        .evaluationFeedback(finalEvaluationFeedbackMap.getOrDefault(bonusScoreApply.getId(), null))
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 }

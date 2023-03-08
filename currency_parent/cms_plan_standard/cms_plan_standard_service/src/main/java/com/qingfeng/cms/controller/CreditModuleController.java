@@ -14,6 +14,7 @@ import com.qingfeng.cms.domain.plan.vo.PlanVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -119,7 +120,7 @@ public class CreditModuleController extends BaseController {
     @ApiOperation(value = "查询学生下的方案模块", notes = "查询学生下的方案模块")
     @GetMapping("/stuId")
     @SysLog("查询学生下的方案模块")
-    public R<List<CreditModuleEntity>> moduleListByStuId(){
+    public R<List<CreditModuleEntity>> moduleListByStuId() {
         List<CreditModuleEntity> moduleList = creditModuleService.moduleListByStuId(getUserId());
         return success(moduleList);
     }
@@ -129,10 +130,19 @@ public class CreditModuleController extends BaseController {
     public R<List<EnumsRo>> moduleEnum() {
         return success(Arrays.stream(CreditModuleTypeEnum.values())
                 .map(m -> EnumsRo.builder()
-                        .label(m.getCode()+"("+m.getDesc()+")")
+                        .label(m.getCode() + "(" + m.getDesc() + ")")
                         .value(m.getCode())
                         .build())
                 .collect(Collectors.toList()));
+    }
+
+    @ApiOperation(value = "根据模块Id集合查询模块详细信息", notes = "根据模块Id集合查询模块详细信息")
+    @PostMapping("/info_list")
+    public R<List<CreditModuleEntity>> moduleByIds(@RequestBody List<Long> moduleIds) {
+        return success(creditModuleService.list(Wraps.lbQ(new CreditModuleEntity())
+                        .in(CreditModuleEntity::getId, moduleIds)
+                )
+        );
     }
 
 }

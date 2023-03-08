@@ -69,7 +69,7 @@ public class BonusScoreApplyController extends BaseController {
     @ApiOperation(value = "项目加分申报", notes = "项目加分申报")
     @PostMapping("/save")
     public R save(@ApiParam(value = "加分申报实体")
-                  @RequestBody @Validated BonusScoreApplySaveDTO bonusScoreApplySaveDTO) {
+                  @RequestBody BonusScoreApplySaveDTO bonusScoreApplySaveDTO) {
         bonusScoreApplyService.saveBonusScoreApply(bonusScoreApplySaveDTO, getUserId());
         return success();
     }

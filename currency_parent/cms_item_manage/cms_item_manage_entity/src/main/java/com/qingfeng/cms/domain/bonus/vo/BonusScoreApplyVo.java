@@ -40,17 +40,23 @@ public class BonusScoreApplyVo implements Serializable {
 	@ApiModelProperty(value = "用户id")
 	private Long userId;
 
-	@ApiModelProperty(value = "模块Id")
-	private Long moduleId;
+	@ApiModelProperty(value = "模块名")
+	private String moduleName;
 
-	@ApiModelProperty(value = "项目Id")
-	private Long projectId;
+	@ApiModelProperty(value = "项目名")
+	private String projectName;
 
-	@ApiModelProperty(value = "等级Id")
-	private Long levelId;
+	@ApiModelProperty(value = "等级名")
+	private String levelName;
 
-	@ApiModelProperty(value = "学分细则Id")
-	private Long creditRulesId;
+	@ApiModelProperty(value = "分数")
+	private Double score;
+
+	@ApiModelProperty(value = "分数等级划分，默认无等级（院级、校级、市级、省级、省（市）级、国家级）")
+	private String scoreGrade;
+
+	@ApiModelProperty(value = "分数条件字段，没有就是无")
+	private String conditions;
 
 	@ApiModelProperty(value = "证明材料（一般为提供照片为准）zip包")
 	private String supportMaterial;

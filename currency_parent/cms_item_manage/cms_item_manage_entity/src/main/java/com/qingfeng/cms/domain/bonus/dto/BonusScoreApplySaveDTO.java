@@ -44,7 +44,6 @@ public class BonusScoreApplySaveDTO implements Serializable {
 	private Long levelId;
 
 	@ApiModelProperty(value = "学分细则Id")
-	@NotNull(message = "学分细则Id不能为空")
 	private Long creditRulesId;
 
 	@ApiModelProperty(value = "证明材料（一般为提供照片为准）zip包")

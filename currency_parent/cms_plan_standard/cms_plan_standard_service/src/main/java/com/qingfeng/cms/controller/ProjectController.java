@@ -6,12 +6,14 @@ import com.qingfeng.cms.domain.project.dto.ProjectCheckDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectSaveDTO;
 import com.qingfeng.cms.domain.project.dto.ProjectUpdateDTO;
+import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.vo.ProjectCheckEnumsVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.cms.domain.project.vo.ProjectTypeEnumsVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -106,4 +108,10 @@ public class ProjectController extends BaseController {
         return success();
     }
 
+    @ApiOperation(value = "根据项目Id集合查询项目信息", notes = "根据项目Id集合查询项目信息")
+    @PostMapping("/info/list")
+    public R<List<ProjectEntity>> projectInfoByIds(@RequestBody List<Long> projectIds) {
+        return success(projectService.list(Wraps.lbQ(new ProjectEntity())
+                .in(ProjectEntity::getId, projectIds)));
+    }
 }

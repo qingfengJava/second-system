@@ -42,3 +42,11 @@ spring:
             - Path=/api/active/**
           filters: # 指定路径重写
             - RewritePath=/api/active/(?<segment>.*),/$\{segment}
+
+        # 项目管理服务的网关路由
+        - id: cms-item-manage # 网关Id
+          uri: lb://cms-item-manage
+          predicates:
+            - Path=/api/item/**
+          filters: # 指定路径重写
+            - RewritePath=/api/item/(?<segment>.*),/$\{segment}

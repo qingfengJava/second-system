@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesCheckDTO;
 import com.qingfeng.cms.domain.rule.dto.CreditRulesSaveDTO;
+import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,5 +67,15 @@ public class CreditRulesController extends BaseController {
                         @RequestBody @Validated(SuperEntity.Update.class) CreditRulesCheckDTO creditRulesCheckDTO) throws JsonProcessingException {
         creditRulesService.checkRule(creditRulesCheckDTO, getUserId());
         return success();
+    }
+
+    @ApiOperation(value = "根据学分细则Id集合查询学分细则信息", notes = "根据学分细则Id查询学分细则信息")
+    @PostMapping("/info/list")
+    public R<List<CreditRulesEntity>> ruleInfoByIds(@RequestBody List<Long> rulesIds) {
+        return success(creditRulesService.list(
+                        Wraps.lbQ(new CreditRulesEntity())
+                                .in(CreditRulesEntity::getId, rulesIds)
+                )
+        );
     }
 }

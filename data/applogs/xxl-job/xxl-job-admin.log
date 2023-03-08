@@ -1,518 +1,709 @@
-2023-03-07 11:08:30,971 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 55] Starting XxlJobAdminApplication using Java 1.8.0_131 on qingfeng_java with PID 32436 (D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority\currency_xxl_job\xxl-job-admin\target\classes started by 25627 in D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority)
-2023-03-07 11:08:30,980 INFO [main] c.x.job.admin.XxlJobAdminApplication [SpringApplication.java : 660] No active profile set, falling back to default profiles: default
-2023-03-07 11:08:34,836 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 108] Tomcat initialized with port(s): 8080 (http)
-2023-03-07 11:08:34,876 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Initializing ProtocolHandler ["http-nio-8080"]
-2023-03-07 11:08:34,877 INFO [main] o.a.catalina.core.StandardService [DirectJDKLog.java : 173] Starting service [Tomcat]
-2023-03-07 11:08:34,878 INFO [main] o.a.catalina.core.StandardEngine [DirectJDKLog.java : 173] Starting Servlet engine: [Apache Tomcat/9.0.41]
-2023-03-07 11:08:35,168 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring embedded WebApplicationContext
-2023-03-07 11:08:35,169 INFO [main] o.s.b.w.s.c.ServletWebServerApplicationContext [ServletWebServerApplicationContext.java : 289] Root WebApplicationContext: initialization completed in 3558 ms
-2023-03-07 11:08:36,177 INFO [main] c.x.j.a.c.scheduler.XxlJobScheduler [XxlJobScheduler.java : 45] >>>>>>>>> init xxl-job admin success.
-2023-03-07 11:08:36,198 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 110] HikariCP - Starting...
-2023-03-07 11:08:36,358 INFO [main] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 181] Initializing ExecutorService 'applicationTaskExecutor'
-2023-03-07 11:08:36,544 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java : 57] Adding welcome page template: index
-2023-03-07 11:08:37,256 INFO [main] o.s.b.a.e.web.EndpointLinksResolver [EndpointLinksResolver.java : 58] Exposing 2 endpoint(s) beneath base path '/actuator'
-2023-03-07 11:08:37,294 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Starting ProtocolHandler ["http-nio-8080"]
-2023-03-07 11:08:37,328 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-03-07 11:08:37,329 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 525] Initializing Servlet 'dispatcherServlet'
-2023-03-07 11:08:37,330 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 547] Completed initialization in 1 ms
-2023-03-07 11:08:37,331 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 220] Tomcat started on port(s): 8080 (http) with context path '/xxl-job-admin'
-2023-03-07 11:08:37,347 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 61] Started XxlJobAdminApplication in 7.92 seconds (JVM running for 13.878)
-2023-03-07 11:08:37,465 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 123] HikariCP - Start completed.
-2023-03-07 11:08:41,000 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 52] >>>>>>>>> init xxl-job admin scheduler success.
-2023-03-07 11:08:41,291 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 2
-2023-03-07 11:08:41,300 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 3
-2023-03-07 11:08:41,301 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 4
-2023-03-07 11:08:41,302 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 5
-2023-03-07 11:08:41,302 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 6
-2023-03-07 11:08:41,302 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 7
-2023-03-07 11:08:41,302 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 8
-2023-03-07 11:08:41,302 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 9
-2023-03-07 11:09:11,801 INFO [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 218] Shutting down ExecutorService 'applicationTaskExecutor'
-2023-03-07 11:09:12,007 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 212] >>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop
-2023-03-07 11:09:13,014 INFO [xxl-job, admin JobScheduleHelper#ringThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 264] >>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop
-2023-03-07 11:09:13,805 INFO [SpringContextShutdownHook] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 353] >>>>>>>>>>> xxl-job, JobScheduleHelper stop
-2023-03-07 11:09:13,805 INFO [xxl-job, admin JobLogReportHelper] c.x.j.a.c.thread.JobLogReportHelper [JobLogReportHelper.java : 132] >>>>>>>>>>> xxl-job, job log report thread stop
-2023-03-07 11:09:13,805 INFO [xxl-job, admin JobLosedMonitorHelper] c.x.j.a.c.thread.JobCompleteHelper [JobCompleteHelper.java : 111] >>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop
-2023-03-07 11:09:13,806 INFO [xxl-job, admin JobFailMonitorHelper] c.x.j.a.c.t.JobFailMonitorHelper [JobFailMonitorHelper.java : 90] >>>>>>>>>>> xxl-job, job fail monitor thread stop
-2023-03-07 11:09:13,806 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] c.x.j.a.c.thread.JobRegistryHelper [JobRegistryHelper.java : 123] >>>>>>>>>>> xxl-job, job registry monitor thread stop
-2023-03-07 11:09:13,806 INFO [SpringContextShutdownHook] c.x.j.a.c.t.JobTriggerPoolHelper [JobTriggerPoolHelper.java : 60] >>>>>>>>> xxl-job trigger thread pool shutdown success.
-2023-03-07 11:09:13,809 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 350] HikariCP - Shutdown initiated...
-2023-03-07 11:09:13,815 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 352] HikariCP - Shutdown completed.
-2023-03-07 11:28:51,426 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 55] Starting XxlJobAdminApplication using Java 1.8.0_131 on qingfeng_java with PID 4928 (D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority\currency_xxl_job\xxl-job-admin\target\classes started by 25627 in D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority)
-2023-03-07 11:28:51,433 INFO [main] c.x.job.admin.XxlJobAdminApplication [SpringApplication.java : 660] No active profile set, falling back to default profiles: default
-2023-03-07 11:28:55,537 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 108] Tomcat initialized with port(s): 8080 (http)
-2023-03-07 11:28:55,578 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Initializing ProtocolHandler ["http-nio-8080"]
-2023-03-07 11:28:55,579 INFO [main] o.a.catalina.core.StandardService [DirectJDKLog.java : 173] Starting service [Tomcat]
-2023-03-07 11:28:55,579 INFO [main] o.a.catalina.core.StandardEngine [DirectJDKLog.java : 173] Starting Servlet engine: [Apache Tomcat/9.0.41]
-2023-03-07 11:28:55,955 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring embedded WebApplicationContext
-2023-03-07 11:28:55,955 INFO [main] o.s.b.w.s.c.ServletWebServerApplicationContext [ServletWebServerApplicationContext.java : 289] Root WebApplicationContext: initialization completed in 3675 ms
-2023-03-07 11:28:57,155 INFO [main] c.x.j.a.c.scheduler.XxlJobScheduler [XxlJobScheduler.java : 45] >>>>>>>>> init xxl-job admin success.
-2023-03-07 11:28:57,172 INFO [xxl-job, admin JobLogReportHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 110] HikariCP - Starting...
-2023-03-07 11:28:57,319 INFO [main] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 181] Initializing ExecutorService 'applicationTaskExecutor'
-2023-03-07 11:28:57,476 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java : 57] Adding welcome page template: index
-2023-03-07 11:28:57,996 INFO [xxl-job, admin JobLogReportHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 123] HikariCP - Start completed.
-2023-03-07 11:28:58,149 INFO [main] o.s.b.a.e.web.EndpointLinksResolver [EndpointLinksResolver.java : 58] Exposing 2 endpoint(s) beneath base path '/actuator'
-2023-03-07 11:28:58,192 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Starting ProtocolHandler ["http-nio-8080"]
-2023-03-07 11:28:58,237 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-03-07 11:28:58,238 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 525] Initializing Servlet 'dispatcherServlet'
-2023-03-07 11:28:58,240 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 547] Completed initialization in 2 ms
-2023-03-07 11:28:58,242 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 220] Tomcat started on port(s): 8080 (http) with context path '/xxl-job-admin'
-2023-03-07 11:28:58,267 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 61] Started XxlJobAdminApplication in 8.274 seconds (JVM running for 15.784)
-2023-03-07 11:29:02,000 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 52] >>>>>>>>> init xxl-job admin scheduler success.
-2023-03-07 11:30:34,537 INFO [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 218] Shutting down ExecutorService 'applicationTaskExecutor'
-2023-03-07 11:30:35,537 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 212] >>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop
-2023-03-07 11:30:36,001 INFO [xxl-job, admin JobScheduleHelper#ringThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 264] >>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop
-2023-03-07 11:30:36,537 INFO [SpringContextShutdownHook] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 353] >>>>>>>>>>> xxl-job, JobScheduleHelper stop
-2023-03-07 11:30:36,537 INFO [xxl-job, admin JobLogReportHelper] c.x.j.a.c.thread.JobLogReportHelper [JobLogReportHelper.java : 132] >>>>>>>>>>> xxl-job, job log report thread stop
-2023-03-07 11:30:36,537 INFO [xxl-job, admin JobLosedMonitorHelper] c.x.j.a.c.thread.JobCompleteHelper [JobCompleteHelper.java : 111] >>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop
-2023-03-07 11:30:36,538 INFO [xxl-job, admin JobFailMonitorHelper] c.x.j.a.c.t.JobFailMonitorHelper [JobFailMonitorHelper.java : 90] >>>>>>>>>>> xxl-job, job fail monitor thread stop
-2023-03-07 11:30:36,538 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] c.x.j.a.c.thread.JobRegistryHelper [JobRegistryHelper.java : 123] >>>>>>>>>>> xxl-job, job registry monitor thread stop
-2023-03-07 11:30:36,538 INFO [SpringContextShutdownHook] c.x.j.a.c.t.JobTriggerPoolHelper [JobTriggerPoolHelper.java : 60] >>>>>>>>> xxl-job trigger thread pool shutdown success.
-2023-03-07 11:30:36,540 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 350] HikariCP - Shutdown initiated...
-2023-03-07 11:30:36,544 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 352] HikariCP - Shutdown completed.
-2023-03-07 11:31:08,478 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 55] Starting XxlJobAdminApplication using Java 1.8.0_131 on qingfeng_java with PID 4544 (D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority\currency_xxl_job\xxl-job-admin\target\classes started by 25627 in D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority)
-2023-03-07 11:31:08,482 INFO [main] c.x.job.admin.XxlJobAdminApplication [SpringApplication.java : 660] No active profile set, falling back to default profiles: default
-2023-03-07 11:31:11,890 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 108] Tomcat initialized with port(s): 8080 (http)
-2023-03-07 11:31:11,944 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Initializing ProtocolHandler ["http-nio-8080"]
-2023-03-07 11:31:11,946 INFO [main] o.a.catalina.core.StandardService [DirectJDKLog.java : 173] Starting service [Tomcat]
-2023-03-07 11:31:11,946 INFO [main] o.a.catalina.core.StandardEngine [DirectJDKLog.java : 173] Starting Servlet engine: [Apache Tomcat/9.0.41]
-2023-03-07 11:31:12,249 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring embedded WebApplicationContext
-2023-03-07 11:31:12,249 INFO [main] o.s.b.w.s.c.ServletWebServerApplicationContext [ServletWebServerApplicationContext.java : 289] Root WebApplicationContext: initialization completed in 3292 ms
-2023-03-07 11:31:13,458 INFO [main] c.x.j.a.c.scheduler.XxlJobScheduler [XxlJobScheduler.java : 45] >>>>>>>>> init xxl-job admin success.
-2023-03-07 11:31:13,477 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 110] HikariCP - Starting...
-2023-03-07 11:31:13,631 INFO [main] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 181] Initializing ExecutorService 'applicationTaskExecutor'
-2023-03-07 11:31:13,824 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java : 57] Adding welcome page template: index
-2023-03-07 11:31:14,327 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 123] HikariCP - Start completed.
-2023-03-07 11:31:14,494 INFO [main] o.s.b.a.e.web.EndpointLinksResolver [EndpointLinksResolver.java : 58] Exposing 2 endpoint(s) beneath base path '/actuator'
-2023-03-07 11:31:14,538 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Starting ProtocolHandler ["http-nio-8080"]
-2023-03-07 11:31:14,608 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-03-07 11:31:14,608 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 525] Initializing Servlet 'dispatcherServlet'
-2023-03-07 11:31:14,609 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 547] Completed initialization in 1 ms
-2023-03-07 11:31:14,612 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 220] Tomcat started on port(s): 8080 (http) with context path '/xxl-job-admin'
-2023-03-07 11:31:14,630 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 61] Started XxlJobAdminApplication in 7.415 seconds (JVM running for 14.62)
-2023-03-07 11:31:18,000 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 52] >>>>>>>>> init xxl-job admin scheduler success.
-2023-03-07 11:45:59,152 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7007a7ff (Communications link failure
-
-The last packet successfully received from the server was 882,820 milliseconds ago. The last packet sent successfully to the server was 882,860 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 11:46:15,014 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4ee7ce52 (Communications link failure
-
-The last packet successfully received from the server was 896,907 milliseconds ago. The last packet sent successfully to the server was 896,940 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:00:56,019 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@24008d3b (Communications link failure
-
-The last packet successfully received from the server was 890,947 milliseconds ago. The last packet sent successfully to the server was 890,984 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:00:57,031 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@52fda66d (Communications link failure
+2023-03-08 10:12:07,932 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 55] Starting XxlJobAdminApplication using Java 1.8.0_131 on qingfeng_java with PID 20200 (D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority\currency_xxl_job\xxl-job-admin\target\classes started by 25627 in D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority)
+2023-03-08 10:12:07,946 INFO [main] c.x.job.admin.XxlJobAdminApplication [SpringApplication.java : 660] No active profile set, falling back to default profiles: default
+2023-03-08 10:12:12,424 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 108] Tomcat initialized with port(s): 8080 (http)
+2023-03-08 10:12:12,476 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Initializing ProtocolHandler ["http-nio-8080"]
+2023-03-08 10:12:12,478 INFO [main] o.a.catalina.core.StandardService [DirectJDKLog.java : 173] Starting service [Tomcat]
+2023-03-08 10:12:12,479 INFO [main] o.a.catalina.core.StandardEngine [DirectJDKLog.java : 173] Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-03-08 10:12:12,677 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring embedded WebApplicationContext
+2023-03-08 10:12:12,677 INFO [main] o.s.b.w.s.c.ServletWebServerApplicationContext [ServletWebServerApplicationContext.java : 289] Root WebApplicationContext: initialization completed in 4098 ms
+2023-03-08 10:12:14,523 INFO [main] c.x.j.a.c.scheduler.XxlJobScheduler [XxlJobScheduler.java : 45] >>>>>>>>> init xxl-job admin success.
+2023-03-08 10:12:14,573 INFO [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 110] HikariCP - Starting...
+2023-03-08 10:12:14,819 INFO [main] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 181] Initializing ExecutorService 'applicationTaskExecutor'
+2023-03-08 10:12:15,084 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java : 57] Adding welcome page template: index
+2023-03-08 10:12:16,000 INFO [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 123] HikariCP - Start completed.
+2023-03-08 10:12:16,112 INFO [main] o.s.b.a.e.web.EndpointLinksResolver [EndpointLinksResolver.java : 58] Exposing 2 endpoint(s) beneath base path '/actuator'
+2023-03-08 10:12:16,186 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Starting ProtocolHandler ["http-nio-8080"]
+2023-03-08 10:12:16,232 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-03-08 10:12:16,232 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 525] Initializing Servlet 'dispatcherServlet'
+2023-03-08 10:12:16,235 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 547] Completed initialization in 3 ms
+2023-03-08 10:12:16,237 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 220] Tomcat started on port(s): 8080 (http) with context path '/xxl-job-admin'
+2023-03-08 10:12:16,263 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 61] Started XxlJobAdminApplication in 9.826 seconds (JVM running for 17.012)
+2023-03-08 10:12:19,001 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 52] >>>>>>>>> init xxl-job admin scheduler success.
+2023-03-08 10:12:19,325 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 2
+2023-03-08 10:12:19,338 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 3
+2023-03-08 10:12:19,340 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 4
+2023-03-08 10:12:19,341 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 5
+2023-03-08 10:12:19,342 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 6
+2023-03-08 10:12:19,342 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 7
+2023-03-08 10:12:19,343 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 8
+2023-03-08 10:12:19,343 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 88] >>>>>>>>>>> xxl-job, schedule misfire, jobId = 9
+2023-03-08 10:27:13,010 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1c21cd29 (Communications link failure
+
+The last packet successfully received from the server was 894,915 milliseconds ago. The last packet sent successfully to the server was 894,974 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:27:14,015 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d49571e (Communications link failure
+
+The last packet successfully received from the server was 893,928 milliseconds ago. The last packet sent successfully to the server was 893,981 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:27:15,018 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4c53dd80 (Communications link failure
+
+The last packet successfully received from the server was 892,621 milliseconds ago. The last packet sent successfully to the server was 892,679 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:41:51,001 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1982caa4 (Communications link failure
+
+The last packet successfully received from the server was 886,735 milliseconds ago. The last packet sent successfully to the server was 886,801 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:41:51,529 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6fcaa890 (Communications link failure
+
+The last packet successfully received from the server was 882,611 milliseconds ago. The last packet sent successfully to the server was 882,648 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:41:52,007 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7c3fafcf (Communications link failure
+
+The last packet successfully received from the server was 882,170 milliseconds ago. The last packet sent successfully to the server was 882,207 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:41:52,533 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@22a91ad (Communications link failure
+
+The last packet successfully received from the server was 881,606 milliseconds ago. The last packet sent successfully to the server was 881,668 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:41:53,010 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@26ea0b24 (Communications link failure
+
+The last packet successfully received from the server was 879,315 milliseconds ago. The last packet sent successfully to the server was 879,382 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:41:53,535 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3e1556b6 (Communications link failure
+
+The last packet successfully received from the server was 879,233 milliseconds ago. The last packet sent successfully to the server was 879,301 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 10:43:40,976 INFO [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 218] Shutting down ExecutorService 'applicationTaskExecutor'
+2023-03-08 10:43:41,978 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 212] >>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop
+2023-03-08 10:43:42,001 INFO [xxl-job, admin JobScheduleHelper#ringThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 264] >>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop
+2023-03-08 10:43:42,978 INFO [SpringContextShutdownHook] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 353] >>>>>>>>>>> xxl-job, JobScheduleHelper stop
+2023-03-08 10:43:42,978 INFO [xxl-job, admin JobLogReportHelper] c.x.j.a.c.thread.JobLogReportHelper [JobLogReportHelper.java : 132] >>>>>>>>>>> xxl-job, job log report thread stop
+2023-03-08 10:43:42,978 INFO [xxl-job, admin JobLosedMonitorHelper] c.x.j.a.c.thread.JobCompleteHelper [JobCompleteHelper.java : 111] >>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop
+2023-03-08 10:43:42,979 INFO [xxl-job, admin JobFailMonitorHelper] c.x.j.a.c.t.JobFailMonitorHelper [JobFailMonitorHelper.java : 90] >>>>>>>>>>> xxl-job, job fail monitor thread stop
+2023-03-08 10:43:42,979 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] c.x.j.a.c.thread.JobRegistryHelper [JobRegistryHelper.java : 123] >>>>>>>>>>> xxl-job, job registry monitor thread stop
+2023-03-08 10:43:42,981 INFO [SpringContextShutdownHook] c.x.j.a.c.t.JobTriggerPoolHelper [JobTriggerPoolHelper.java : 60] >>>>>>>>> xxl-job trigger thread pool shutdown success.
+2023-03-08 10:43:42,984 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 350] HikariCP - Shutdown initiated...
+2023-03-08 10:43:42,993 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 352] HikariCP - Shutdown completed.
+2023-03-08 10:44:10,956 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 55] Starting XxlJobAdminApplication using Java 1.8.0_131 on qingfeng_java with PID 12828 (D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority\currency_xxl_job\xxl-job-admin\target\classes started by 25627 in D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority)
+2023-03-08 10:44:10,963 INFO [main] c.x.job.admin.XxlJobAdminApplication [SpringApplication.java : 660] No active profile set, falling back to default profiles: default
+2023-03-08 10:44:16,221 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 108] Tomcat initialized with port(s): 8080 (http)
+2023-03-08 10:44:16,272 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Initializing ProtocolHandler ["http-nio-8080"]
+2023-03-08 10:44:16,273 INFO [main] o.a.catalina.core.StandardService [DirectJDKLog.java : 173] Starting service [Tomcat]
+2023-03-08 10:44:16,273 INFO [main] o.a.catalina.core.StandardEngine [DirectJDKLog.java : 173] Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-03-08 10:44:16,483 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring embedded WebApplicationContext
+2023-03-08 10:44:16,483 INFO [main] o.s.b.w.s.c.ServletWebServerApplicationContext [ServletWebServerApplicationContext.java : 289] Root WebApplicationContext: initialization completed in 4935 ms
+2023-03-08 10:44:18,515 INFO [main] c.x.j.a.c.scheduler.XxlJobScheduler [XxlJobScheduler.java : 45] >>>>>>>>> init xxl-job admin success.
+2023-03-08 10:44:18,538 INFO [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 110] HikariCP - Starting...
+2023-03-08 10:44:18,719 INFO [main] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 181] Initializing ExecutorService 'applicationTaskExecutor'
+2023-03-08 10:44:18,898 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java : 57] Adding welcome page template: index
+2023-03-08 10:44:19,516 INFO [main] o.s.b.a.e.web.EndpointLinksResolver [EndpointLinksResolver.java : 58] Exposing 2 endpoint(s) beneath base path '/actuator'
+2023-03-08 10:44:19,557 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Starting ProtocolHandler ["http-nio-8080"]
+2023-03-08 10:44:19,587 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-03-08 10:44:19,587 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 525] Initializing Servlet 'dispatcherServlet'
+2023-03-08 10:44:19,588 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 547] Completed initialization in 1 ms
+2023-03-08 10:44:19,589 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 220] Tomcat started on port(s): 8080 (http) with context path '/xxl-job-admin'
+2023-03-08 10:44:19,610 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 61] Started XxlJobAdminApplication in 10.232 seconds (JVM running for 18.435)
+2023-03-08 10:44:19,894 INFO [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 123] HikariCP - Start completed.
+2023-03-08 10:44:23,000 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 52] >>>>>>>>> init xxl-job admin scheduler success.
+2023-03-08 10:45:04,270 INFO [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 218] Shutting down ExecutorService 'applicationTaskExecutor'
+2023-03-08 10:45:05,270 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 212] >>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop
+2023-03-08 10:45:06,001 INFO [xxl-job, admin JobScheduleHelper#ringThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 264] >>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop
+2023-03-08 10:45:06,274 INFO [SpringContextShutdownHook] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 353] >>>>>>>>>>> xxl-job, JobScheduleHelper stop
+2023-03-08 10:45:06,274 INFO [xxl-job, admin JobLogReportHelper] c.x.j.a.c.thread.JobLogReportHelper [JobLogReportHelper.java : 132] >>>>>>>>>>> xxl-job, job log report thread stop
+2023-03-08 10:45:06,274 INFO [xxl-job, admin JobLosedMonitorHelper] c.x.j.a.c.thread.JobCompleteHelper [JobCompleteHelper.java : 111] >>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop
+2023-03-08 10:45:06,275 INFO [xxl-job, admin JobFailMonitorHelper] c.x.j.a.c.t.JobFailMonitorHelper [JobFailMonitorHelper.java : 90] >>>>>>>>>>> xxl-job, job fail monitor thread stop
+2023-03-08 10:45:06,275 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] c.x.j.a.c.thread.JobRegistryHelper [JobRegistryHelper.java : 123] >>>>>>>>>>> xxl-job, job registry monitor thread stop
+2023-03-08 10:45:06,275 INFO [SpringContextShutdownHook] c.x.j.a.c.t.JobTriggerPoolHelper [JobTriggerPoolHelper.java : 60] >>>>>>>>> xxl-job trigger thread pool shutdown success.
+2023-03-08 10:45:06,279 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 350] HikariCP - Shutdown initiated...
+2023-03-08 10:45:06,286 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 352] HikariCP - Shutdown completed.
+2023-03-08 10:45:46,098 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 55] Starting XxlJobAdminApplication using Java 1.8.0_131 on qingfeng_java with PID 21872 (D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority\currency_xxl_job\xxl-job-admin\target\classes started by 25627 in D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority)
+2023-03-08 10:45:46,106 INFO [main] c.x.job.admin.XxlJobAdminApplication [SpringApplication.java : 660] No active profile set, falling back to default profiles: default
+2023-03-08 10:45:50,315 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 108] Tomcat initialized with port(s): 8080 (http)
+2023-03-08 10:45:50,351 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Initializing ProtocolHandler ["http-nio-8080"]
+2023-03-08 10:45:50,353 INFO [main] o.a.catalina.core.StandardService [DirectJDKLog.java : 173] Starting service [Tomcat]
+2023-03-08 10:45:50,353 INFO [main] o.a.catalina.core.StandardEngine [DirectJDKLog.java : 173] Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-03-08 10:45:50,699 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring embedded WebApplicationContext
+2023-03-08 10:45:50,700 INFO [main] o.s.b.w.s.c.ServletWebServerApplicationContext [ServletWebServerApplicationContext.java : 289] Root WebApplicationContext: initialization completed in 3977 ms
+2023-03-08 10:45:51,955 INFO [main] c.x.j.a.c.scheduler.XxlJobScheduler [XxlJobScheduler.java : 45] >>>>>>>>> init xxl-job admin success.
+2023-03-08 10:45:51,978 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 110] HikariCP - Starting...
+2023-03-08 10:45:52,218 INFO [main] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 181] Initializing ExecutorService 'applicationTaskExecutor'
+2023-03-08 10:45:52,481 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java : 57] Adding welcome page template: index
+2023-03-08 10:45:53,280 INFO [main] o.s.b.a.e.web.EndpointLinksResolver [EndpointLinksResolver.java : 58] Exposing 2 endpoint(s) beneath base path '/actuator'
+2023-03-08 10:45:53,329 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Starting ProtocolHandler ["http-nio-8080"]
+2023-03-08 10:45:53,367 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-03-08 10:45:53,368 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 525] Initializing Servlet 'dispatcherServlet'
+2023-03-08 10:45:53,369 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 547] Completed initialization in 1 ms
+2023-03-08 10:45:53,370 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 220] Tomcat started on port(s): 8080 (http) with context path '/xxl-job-admin'
+2023-03-08 10:45:53,391 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 61] Started XxlJobAdminApplication in 9.205 seconds (JVM running for 19.0)
+2023-03-08 10:45:53,490 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 123] HikariCP - Start completed.
+2023-03-08 10:45:56,000 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 52] >>>>>>>>> init xxl-job admin scheduler success.
+2023-03-08 11:00:53,011 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@93d242a (Communications link failure
 
-The last packet successfully received from the server was 888,250 milliseconds ago. The last packet sent successfully to the server was 888,286 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:00:58,049 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@76b976fb (Communications link failure
+The last packet successfully received from the server was 896,964 milliseconds ago. The last packet sent successfully to the server was 897,050 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:00:54,022 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1cdd0e44 (Communications link failure
 
-The last packet successfully received from the server was 883,029 milliseconds ago. The last packet sent successfully to the server was 883,067 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:00:59,060 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@23eed0ac (Communications link failure
+The last packet successfully received from the server was 894,893 milliseconds ago. The last packet sent successfully to the server was 894,936 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:15:39,472 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1259037322] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@77a78d78 (Communications link failure
 
-The last packet successfully received from the server was 883,584 milliseconds ago. The last packet sent successfully to the server was 883,622 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:15:44,021 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4b8b622a (Communications link failure
+The last packet successfully received from the server was 887,730 milliseconds ago. The last packet sent successfully to the server was 887,770 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:15:40,175 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1cfd1fb0 (Communications link failure
 
-The last packet successfully received from the server was 889,138 milliseconds ago. The last packet sent successfully to the server was 889,173 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:15:45,029 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5e090635 (Communications link failure
+The last packet successfully received from the server was 887,208 milliseconds ago. The last packet sent successfully to the server was 887,243 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:15:40,487 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1259037322] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@43a9df25 (Communications link failure
 
-The last packet successfully received from the server was 888,597 milliseconds ago. The last packet sent successfully to the server was 888,629 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:15:46,032 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@366a48d8 (Communications link failure
+The last packet successfully received from the server was 886,903 milliseconds ago. The last packet sent successfully to the server was 886,939 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:15:41,178 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@53ae952c (Communications link failure
 
-The last packet successfully received from the server was 888,550 milliseconds ago. The last packet sent successfully to the server was 888,586 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:15:46,540 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1cd029d8 (Communications link failure
+The last packet successfully received from the server was 886,362 milliseconds ago. The last packet sent successfully to the server was 886,404 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:30:22,138 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@36a8a4df (Communications link failure
 
-The last packet successfully received from the server was 888,051 milliseconds ago. The last packet sent successfully to the server was 888,086 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:30:22,138 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@57ae4308 (Communications link failure
+The last packet successfully received from the server was 882,003 milliseconds ago. The last packet sent successfully to the server was 882,067 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:30:23,140 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@bba8a82 (Communications link failure
 
-The last packet successfully received from the server was 883,690 milliseconds ago. The last packet sent successfully to the server was 883,725 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:30:23,147 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1a1a85ea (Communications link failure
+The last packet successfully received from the server was 881,778 milliseconds ago. The last packet sent successfully to the server was 881,836 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:30:24,144 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3e2c74cd (Communications link failure
 
-The last packet successfully received from the server was 881,116 milliseconds ago. The last packet sent successfully to the server was 881,155 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:30:23,854 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4b441115 (Communications link failure
+The last packet successfully received from the server was 882,135 milliseconds ago. The last packet sent successfully to the server was 882,213 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:30:25,146 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@20871616 (Communications link failure
 
-The last packet successfully received from the server was 881,013 milliseconds ago. The last packet sent successfully to the server was 881,054 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:30:24,163 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@567cbfe6 (Communications link failure
+The last packet successfully received from the server was 882,516 milliseconds ago. The last packet sent successfully to the server was 882,552 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:30:26,148 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@53fad085 (Communications link failure
 
-The last packet successfully received from the server was 879,148 milliseconds ago. The last packet sent successfully to the server was 879,188 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:30:24,868 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6035c259 (Communications link failure
+The last packet successfully received from the server was 691,817 milliseconds ago. The last packet sent successfully to the server was 691,854 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:45:02,269 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@47fc7c6d (Communications link failure
 
-The last packet successfully received from the server was 879,432 milliseconds ago. The last packet sent successfully to the server was 879,464 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:30:24,914 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@132078e2 (Communications link failure
+The last packet successfully received from the server was 879,850 milliseconds ago. The last packet sent successfully to the server was 879,910 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:45:07,144 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@62abce53 (Communications link failure
 
-The last packet successfully received from the server was 878,416 milliseconds ago. The last packet sent successfully to the server was 878,454 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:45:10,148 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1e2d7553 (Communications link failure
+The last packet successfully received from the server was 884,107 milliseconds ago. The last packet sent successfully to the server was 884,168 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:45:08,156 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@16a46226 (Communications link failure
 
-The last packet successfully received from the server was 887,052 milliseconds ago. The last packet sent successfully to the server was 887,092 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:45:11,155 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@175edfbf (Communications link failure
+The last packet successfully received from the server was 884,467 milliseconds ago. The last packet sent successfully to the server was 884,508 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:45:09,156 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4369b81d (Communications link failure
 
-The last packet successfully received from the server was 886,814 milliseconds ago. The last packet sent successfully to the server was 886,846 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:45:12,166 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@22c6eeba (Communications link failure
+The last packet successfully received from the server was 884,791 milliseconds ago. The last packet sent successfully to the server was 884,853 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:45:10,064 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1259037322] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5a91b7a (Communications link failure
 
-The last packet successfully received from the server was 886,889 milliseconds ago. The last packet sent successfully to the server was 886,921 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:59:53,127 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@17fc4be (Communications link failure
+The last packet successfully received from the server was 884,324 milliseconds ago. The last packet sent successfully to the server was 884,365 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:59:50,003 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6dc536f1 (Communications link failure
 
-The last packet successfully received from the server was 883,690 milliseconds ago. The last packet sent successfully to the server was 883,729 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:59:54,132 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@756bd1c9 (Communications link failure
+The last packet successfully received from the server was 882,428 milliseconds ago. The last packet sent successfully to the server was 882,469 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:59:51,005 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6b3b1414 (Communications link failure
 
-The last packet successfully received from the server was 884,282 milliseconds ago. The last packet sent successfully to the server was 884,315 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:59:54,579 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@579c45af (Communications link failure
+The last packet successfully received from the server was 882,717 milliseconds ago. The last packet sent successfully to the server was 882,753 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:59:52,007 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2d5a0741 (Communications link failure
 
-The last packet successfully received from the server was 884,004 milliseconds ago. The last packet sent successfully to the server was 884,041 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:59:55,144 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@15dcfd74 (Communications link failure
+The last packet successfully received from the server was 883,103 milliseconds ago. The last packet sent successfully to the server was 883,138 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:59:53,008 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7ab162c9 (Communications link failure
 
-The last packet successfully received from the server was 884,123 milliseconds ago. The last packet sent successfully to the server was 884,159 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:59:55,585 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1a2e25d (Communications link failure
+The last packet successfully received from the server was 883,426 milliseconds ago. The last packet sent successfully to the server was 883,486 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 11:59:54,013 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3e87b1d0 (Communications link failure
 
-The last packet successfully received from the server was 884,075 milliseconds ago. The last packet sent successfully to the server was 884,114 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 12:59:56,154 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4a8b6c5a (Communications link failure
+The last packet successfully received from the server was 779,570 milliseconds ago. The last packet sent successfully to the server was 779,625 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:12:05,190 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1a5c6bb4 (Communications link failure
 
-The last packet successfully received from the server was 884,150 milliseconds ago. The last packet sent successfully to the server was 884,190 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:14:37,136 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@365b0328 (Communications link failure
+The last packet successfully received from the server was 739,361 milliseconds ago. The last packet sent successfully to the server was 739,426 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:13:16,151 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2738b1f2 (Communications link failure
 
-The last packet successfully received from the server was 882,724 milliseconds ago. The last packet sent successfully to the server was 882,761 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:14:37,984 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@41ad4b64 (Communications link failure
+The last packet successfully received from the server was 808,547 milliseconds ago. The last packet sent successfully to the server was 808,583 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:14:27,043 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@28c7d368 (Communications link failure
 
-The last packet successfully received from the server was 883,081 milliseconds ago. The last packet sent successfully to the server was 883,119 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:14:38,139 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@345f61b7 (Communications link failure
+The last packet successfully received from the server was 876,404 milliseconds ago. The last packet sent successfully to the server was 876,468 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:14:27,169 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@242e458f (Communications link failure
 
-The last packet successfully received from the server was 882,790 milliseconds ago. The last packet sent successfully to the server was 882,825 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:14:38,994 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@188483a5 (Communications link failure
+The last packet successfully received from the server was 875,915 milliseconds ago. The last packet sent successfully to the server was 875,978 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:14:28,046 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4f78addd (Communications link failure
 
-The last packet successfully received from the server was 883,237 milliseconds ago. The last packet sent successfully to the server was 883,270 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:14:39,150 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@56259ec5 (Communications link failure
+The last packet successfully received from the server was 876,177 milliseconds ago. The last packet sent successfully to the server was 876,241 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:14:28,172 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@582df751 (Communications link failure
 
-The last packet successfully received from the server was 882,968 milliseconds ago. The last packet sent successfully to the server was 883,002 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:29:35,128 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@9344da0 (Communications link failure
+The last packet successfully received from the server was 875,553 milliseconds ago. The last packet sent successfully to the server was 875,586 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:14:29,047 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7eee572 (Communications link failure
 
-The last packet successfully received from the server was 896,590 milliseconds ago. The last packet sent successfully to the server was 896,626 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:41:06,086 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@621a7fbf (Communications link failure
+The last packet successfully received from the server was 874,515 milliseconds ago. The last packet sent successfully to the server was 874,583 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:28:14,173 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@34e9c3a8 (Communications link failure
 
-The last packet successfully received from the server was 702,138 milliseconds ago. The last packet sent successfully to the server was 702,174 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:43:07,022 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5428a670 (Communications link failure
+The last packet successfully received from the server was 826,469 milliseconds ago. The last packet sent successfully to the server was 826,533 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:28:15,182 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@243006fd (Communications link failure
 
-The last packet successfully received from the server was 822,386 milliseconds ago. The last packet sent successfully to the server was 822,426 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:44:08,094 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@28114a30 (Communications link failure
+The last packet successfully received from the server was 826,864 milliseconds ago. The last packet sent successfully to the server was 826,930 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:28:16,184 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2d27c659 (Communications link failure
 
-The last packet successfully received from the server was 879,386 milliseconds ago. The last packet sent successfully to the server was 879,425 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:44:09,105 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3f169dda (Communications link failure
+The last packet successfully received from the server was 827,249 milliseconds ago. The last packet sent successfully to the server was 827,315 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:28:17,189 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4f5e8d68 (Communications link failure
 
-The last packet successfully received from the server was 879,968 milliseconds ago. The last packet sent successfully to the server was 880,001 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:44:10,121 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@65f7a274 (Communications link failure
+The last packet successfully received from the server was 827,635 milliseconds ago. The last packet sent successfully to the server was 827,702 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:28:18,038 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-964130824] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1778730a (Communications link failure
 
-The last packet successfully received from the server was 880,505 milliseconds ago. The last packet sent successfully to the server was 880,542 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:44:11,132 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@47152430 (Communications link failure
+The last packet successfully received from the server was 827,737 milliseconds ago. The last packet sent successfully to the server was 827,774 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:28:18,190 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3550f3a8 (Communications link failure
 
-The last packet successfully received from the server was 875,556 milliseconds ago. The last packet sent successfully to the server was 875,593 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:44:12,148 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@146a648b (Communications link failure
+The last packet successfully received from the server was 826,249 milliseconds ago. The last packet sent successfully to the server was 826,289 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:42:04,157 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@546fe0b (Communications link failure
 
-The last packet successfully received from the server was 876,034 milliseconds ago. The last packet sent successfully to the server was 876,075 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:58:53,113 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@717396c9 (Communications link failure
+The last packet successfully received from the server was 829,020 milliseconds ago. The last packet sent successfully to the server was 829,056 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:42:55,162 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@633b3dfe (Communications link failure
 
-The last packet successfully received from the server was 883,750 milliseconds ago. The last packet sent successfully to the server was 883,784 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:58:54,128 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@41a5c644 (Communications link failure
+The last packet successfully received from the server was 879,409 milliseconds ago. The last packet sent successfully to the server was 879,443 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:42:56,175 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@43993bf6 (Communications link failure
 
-The last packet successfully received from the server was 884,306 milliseconds ago. The last packet sent successfully to the server was 884,342 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:58:55,138 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@21726267 (Communications link failure
+The last packet successfully received from the server was 879,190 milliseconds ago. The last packet sent successfully to the server was 879,228 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:42:57,176 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@28e7cf6f (Communications link failure
 
-The last packet successfully received from the server was 884,521 milliseconds ago. The last packet sent successfully to the server was 884,562 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:58:55,953 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@62a19380 (Communications link failure
+The last packet successfully received from the server was 878,967 milliseconds ago. The last packet sent successfully to the server was 878,999 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:54:08,146 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@430f7b5 (Communications link failure
 
-The last packet successfully received from the server was 884,296 milliseconds ago. The last packet sent successfully to the server was 884,332 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 13:58:56,211 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@79128a32 (Communications link failure
+The last packet successfully received from the server was 703,485 milliseconds ago. The last packet sent successfully to the server was 703,525 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:54:08,643 WARN [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@224d08b5 (Communications link failure
 
-The last packet successfully received from the server was 875,254 milliseconds ago. The last packet sent successfully to the server was 875,290 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:10:17,111 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2f2c2090 (Communications link failure
+The last packet successfully received from the server was 673,973 milliseconds ago. The last packet sent successfully to the server was 674,013 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:54:09,149 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3c99a6ac (Communications link failure
 
-The last packet successfully received from the server was 686,472 milliseconds ago. The last packet sent successfully to the server was 686,505 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:11:18,123 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1564f011 (Communications link failure
+The last packet successfully received from the server was 673,868 milliseconds ago. The last packet sent successfully to the server was 673,905 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:54:09,644 WARN [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@77d34cce (Communications link failure
 
-The last packet successfully received from the server was 744,561 milliseconds ago. The last packet sent successfully to the server was 744,599 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:13:44,133 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@34a2dc7d (Communications link failure
+The last packet successfully received from the server was 673,749 milliseconds ago. The last packet sent successfully to the server was 673,786 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:54:09,800 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2fae2d9b (Communications link failure
 
-The last packet successfully received from the server was 890,153 milliseconds ago. The last packet sent successfully to the server was 890,186 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:13:45,146 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@36f1a33c (Communications link failure
+The last packet successfully received from the server was 673,297 milliseconds ago. The last packet sent successfully to the server was 673,332 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:54:10,156 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@604e470f (Communications link failure
 
-The last packet successfully received from the server was 890,754 milliseconds ago. The last packet sent successfully to the server was 890,789 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:13:46,148 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@20599e4a (Communications link failure
+The last packet successfully received from the server was 673,043 milliseconds ago. The last packet sent successfully to the server was 673,074 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 12:54:10,646 WARN [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@613adcc7 (Communications link failure
 
-The last packet successfully received from the server was 890,007 milliseconds ago. The last packet sent successfully to the server was 890,043 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:25:02,138 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1dc614fc (Communications link failure
+The last packet successfully received from the server was 672,913 milliseconds ago. The last packet sent successfully to the server was 672,949 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:09:01,176 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4c4c412 (Communications link failure
 
-The last packet successfully received from the server was 680,655 milliseconds ago. The last packet sent successfully to the server was 680,689 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:25:02,750 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-32609253] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@615ef4de (Communications link failure
+The last packet successfully received from the server was 889,272 milliseconds ago. The last packet sent successfully to the server was 889,342 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:21:37,269 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3f0888e0 (Communications link failure
 
-The last packet successfully received from the server was 679,121 milliseconds ago. The last packet sent successfully to the server was 679,157 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:25:03,152 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@a02602c (Communications link failure
+The last packet successfully received from the server was 766,613 milliseconds ago. The last packet sent successfully to the server was 766,658 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:22:42,181 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@52f8772d (Communications link failure
 
-The last packet successfully received from the server was 679,020 milliseconds ago. The last packet sent successfully to the server was 679,062 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:25:03,764 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-32609253] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7c6b949a (Communications link failure
+The last packet successfully received from the server was 824,303 milliseconds ago. The last packet sent successfully to the server was 824,364 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:22:43,196 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1ff27d72 (Communications link failure
 
-The last packet successfully received from the server was 679,181 milliseconds ago. The last packet sent successfully to the server was 679,217 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:25:03,949 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@25c91441 (Communications link failure
+The last packet successfully received from the server was 824,463 milliseconds ago. The last packet sent successfully to the server was 824,499 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:22:49,246 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2da45d90 (Communications link failure
 
-The last packet successfully received from the server was 678,916 milliseconds ago. The last packet sent successfully to the server was 678,962 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:25:04,162 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@274a5a84 (Communications link failure
+The last packet successfully received from the server was 829,320 milliseconds ago. The last packet sent successfully to the server was 829,389 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:23:20,180 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2d8dd40e (Communications link failure
 
-The last packet successfully received from the server was 678,591 milliseconds ago. The last packet sent successfully to the server was 678,623 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:25:04,194 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@d1fa81c (Communications link failure
+The last packet successfully received from the server was 859,397 milliseconds ago. The last packet sent successfully to the server was 859,434 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:23:31,179 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6bd40c43 (Communications link failure
 
-The last packet successfully received from the server was 677,595 milliseconds ago. The last packet sent successfully to the server was 677,632 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:39:50,138 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5e814cc9 (Communications link failure
+The last packet successfully received from the server was 869,776 milliseconds ago. The last packet sent successfully to the server was 869,818 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:23:32,188 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2c9374cd (Communications link failure
 
-The last packet successfully received from the server was 886,246 milliseconds ago. The last packet sent successfully to the server was 886,277 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:39:51,152 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3a4f53f5 (Communications link failure
+The last packet successfully received from the server was 697,466 milliseconds ago. The last packet sent successfully to the server was 697,530 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:36:39,151 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1790d277 (Communications link failure
 
-The last packet successfully received from the server was 886,698 milliseconds ago. The last packet sent successfully to the server was 886,737 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:39:52,167 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@c881528 (Communications link failure
+The last packet successfully received from the server was 835,687 milliseconds ago. The last packet sent successfully to the server was 835,721 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:36:40,152 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5164f618 (Communications link failure
 
-The last packet successfully received from the server was 887,293 milliseconds ago. The last packet sent successfully to the server was 887,325 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:54:28,145 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@20aaa3d6 (Communications link failure
+The last packet successfully received from the server was 836,071 milliseconds ago. The last packet sent successfully to the server was 836,108 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:36:41,156 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d07f058 (Communications link failure
 
-The last packet successfully received from the server was 878,968 milliseconds ago. The last packet sent successfully to the server was 879,005 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:54:29,149 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@35bce7a (Communications link failure
+The last packet successfully received from the server was 790,415 milliseconds ago. The last packet sent successfully to the server was 790,477 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:36:42,157 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@160d6576 (Communications link failure
 
-The last packet successfully received from the server was 878,589 milliseconds ago. The last packet sent successfully to the server was 878,622 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:54:30,071 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5e4ebab4 (Communications link failure
+The last packet successfully received from the server was 790,804 milliseconds ago. The last packet sent successfully to the server was 790,866 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:36:42,297 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1259037322] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5905f3d (Communications link failure
 
-The last packet successfully received from the server was 879,100 milliseconds ago. The last packet sent successfully to the server was 879,135 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:54:30,160 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5c44850e (Communications link failure
+The last packet successfully received from the server was 790,290 milliseconds ago. The last packet sent successfully to the server was 790,327 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:36:43,164 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@71f0eaa (Communications link failure
 
-The last packet successfully received from the server was 878,790 milliseconds ago. The last packet sent successfully to the server was 878,823 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:54:30,979 WARN [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1014855e (Communications link failure
+The last packet successfully received from the server was 790,543 milliseconds ago. The last packet sent successfully to the server was 790,579 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:49:14,191 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@642cb443 (Communications link failure
 
-The last packet successfully received from the server was 879,183 milliseconds ago. The last packet sent successfully to the server was 879,216 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 14:54:31,087 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@31fc6b71 (Communications link failure
+The last packet successfully received from the server was 754,413 milliseconds ago. The last packet sent successfully to the server was 754,451 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:50:34,192 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@11942e84 (Communications link failure
 
-The last packet successfully received from the server was 878,515 milliseconds ago. The last packet sent successfully to the server was 878,547 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:09:21,113 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4d602312 (Communications link failure
+The last packet successfully received from the server was 833,799 milliseconds ago. The last packet sent successfully to the server was 833,837 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:51:20,098 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5df6c0ed (Communications link failure
 
-The last packet successfully received from the server was 892,067 milliseconds ago. The last packet sent successfully to the server was 892,109 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:09:22,116 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1e7e9615 (Communications link failure
+The last packet successfully received from the server was 879,090 milliseconds ago. The last packet sent successfully to the server was 879,126 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:51:21,114 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7029e98c (Communications link failure
 
-The last packet successfully received from the server was 892,618 milliseconds ago. The last packet sent successfully to the server was 892,654 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:23:57,652 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1b8cb9a6 (Communications link failure
+The last packet successfully received from the server was 879,493 milliseconds ago. The last packet sent successfully to the server was 879,527 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 13:51:22,115 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5aab63cc (Communications link failure
 
-The last packet successfully received from the server was 880,739 milliseconds ago. The last packet sent successfully to the server was 880,830 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:23:58,003 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2d46f05c (Communications link failure
+The last packet successfully received from the server was 879,880 milliseconds ago. The last packet sent successfully to the server was 879,917 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:04:13,001 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@46aee59b (Communications link failure
 
-The last packet successfully received from the server was 878,800 milliseconds ago. The last packet sent successfully to the server was 878,836 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:23:58,663 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@30f10918 (Communications link failure
+The last packet successfully received from the server was 772,305 milliseconds ago. The last packet sent successfully to the server was 772,375 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:04:14,240 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@55f13532 (Communications link failure
 
-The last packet successfully received from the server was 877,040 milliseconds ago. The last packet sent successfully to the server was 877,079 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:23:59,017 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@12dcc7fa (Communications link failure
+The last packet successfully received from the server was 772,929 milliseconds ago. The last packet sent successfully to the server was 772,988 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:04:15,241 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5706b1b3 (Communications link failure
 
-The last packet successfully received from the server was 876,944 milliseconds ago. The last packet sent successfully to the server was 876,980 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:23:59,678 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@699380b3 (Communications link failure
+The last packet successfully received from the server was 773,316 milliseconds ago. The last packet sent successfully to the server was 773,380 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:04:15,270 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@36c900bb (Communications link failure
 
-The last packet successfully received from the server was 877,105 milliseconds ago. The last packet sent successfully to the server was 877,143 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:24:00,020 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@23224f82 (Communications link failure
+The last packet successfully received from the server was 772,731 milliseconds ago. The last packet sent successfully to the server was 772,799 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:04:16,255 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@66b514f5 (Communications link failure
 
-The last packet successfully received from the server was 876,895 milliseconds ago. The last packet sent successfully to the server was 876,931 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:38:46,113 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2f09eb44 (Communications link failure
+The last packet successfully received from the server was 773,101 milliseconds ago. The last packet sent successfully to the server was 773,162 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:04:16,286 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1c4eebc8 (Communications link failure
 
-The last packet successfully received from the server was 887,465 milliseconds ago. The last packet sent successfully to the server was 887,504 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:38:47,128 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@769f822a (Communications link failure
+The last packet successfully received from the server was 761,049 milliseconds ago. The last packet sent successfully to the server was 761,114 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:16:13,217 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4244435c (Communications link failure
 
-The last packet successfully received from the server was 888,072 milliseconds ago. The last packet sent successfully to the server was 888,104 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:38:48,130 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2b37b7a9 (Communications link failure
+The last packet successfully received from the server was 719,368 milliseconds ago. The last packet sent successfully to the server was 719,455 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:17:54,266 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3f358cb4 (Communications link failure
 
-The last packet successfully received from the server was 888,676 milliseconds ago. The last packet sent successfully to the server was 888,708 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:38:49,131 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4e8ac810 (Communications link failure
+The last packet successfully received from the server was 819,601 milliseconds ago. The last packet sent successfully to the server was 819,680 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:17:55,278 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@600b535e (Communications link failure
 
-The last packet successfully received from the server was 889,279 milliseconds ago. The last packet sent successfully to the server was 889,310 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:38:50,132 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2eb9494e (Communications link failure
+The last packet successfully received from the server was 819,787 milliseconds ago. The last packet sent successfully to the server was 819,877 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:17:56,294 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5b86489e (Communications link failure
 
-The last packet successfully received from the server was 602,314 milliseconds ago. The last packet sent successfully to the server was 602,349 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:49:56,103 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@79cb3898 (Communications link failure
+The last packet successfully received from the server was 819,900 milliseconds ago. The last packet sent successfully to the server was 820,059 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:17:57,298 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@48c52f76 (Communications link failure
 
-The last packet successfully received from the server was 671,225 milliseconds ago. The last packet sent successfully to the server was 671,263 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:49:57,116 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4c68da77 (Communications link failure
+The last packet successfully received from the server was 819,852 milliseconds ago. The last packet sent successfully to the server was 819,890 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:17:58,312 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@631d0462 (Communications link failure
 
-The last packet successfully received from the server was 670,500 milliseconds ago. The last packet sent successfully to the server was 670,540 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:49:58,167 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@48f4f157 (Communications link failure
+The last packet successfully received from the server was 820,166 milliseconds ago. The last packet sent successfully to the server was 820,256 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:27:59,166 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6670be3c (Communications link failure
 
-The last packet successfully received from the server was 670,729 milliseconds ago. The last packet sent successfully to the server was 670,761 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:51:58,104 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3ba17794 (Communications link failure
+The last packet successfully received from the server was 604,152 milliseconds ago. The last packet sent successfully to the server was 604,186 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:29:15,156 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@64e5e0d3 (Communications link failure
 
-The last packet successfully received from the server was 790,254 milliseconds ago. The last packet sent successfully to the server was 790,288 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:53:34,001 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1a88d959 (Communications link failure
+The last packet successfully received from the server was 679,320 milliseconds ago. The last packet sent successfully to the server was 679,357 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:30:16,175 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1121dafa (Communications link failure
 
-The last packet successfully received from the server was 885,288 milliseconds ago. The last packet sent successfully to the server was 885,401 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:53:34,465 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-32609253] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1bb98db3 (Communications link failure
+The last packet successfully received from the server was 739,513 milliseconds ago. The last packet sent successfully to the server was 739,553 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:31:02,142 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@55b70a7f (Communications link failure
 
-The last packet successfully received from the server was 884,863 milliseconds ago. The last packet sent successfully to the server was 884,899 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 15:53:35,002 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@32598ed7 (Communications link failure
+The last packet successfully received from the server was 784,669 milliseconds ago. The last packet sent successfully to the server was 784,706 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:31:03,151 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2d5a3279 (Communications link failure
 
-The last packet successfully received from the server was 884,454 milliseconds ago. The last packet sent successfully to the server was 884,492 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:04:56,007 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@54c030ec (Communications link failure
+The last packet successfully received from the server was 784,854 milliseconds ago. The last packet sent successfully to the server was 784,895 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:31:04,162 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@22d51394 (Communications link failure
 
-The last packet successfully received from the server was 777,500 milliseconds ago. The last packet sent successfully to the server was 777,532 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:04:57,008 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@28b88a27 (Communications link failure
+The last packet successfully received from the server was 785,046 milliseconds ago. The last packet sent successfully to the server was 785,085 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:41:30,267 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1f8afe84 (Communications link failure
 
-The last packet successfully received from the server was 687,594 milliseconds ago. The last packet sent successfully to the server was 687,634 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:04:58,011 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@74f82e15 (Communications link failure
+The last packet successfully received from the server was 673,165 milliseconds ago. The last packet sent successfully to the server was 673,251 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:42:21,258 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@21b950ec (Communications link failure
 
-The last packet successfully received from the server was 686,908 milliseconds ago. The last packet sent successfully to the server was 686,958 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:04:58,475 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5299c600 (Communications link failure
+The last packet successfully received from the server was 680,945 milliseconds ago. The last packet sent successfully to the server was 681,026 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:43:22,192 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@569abb4e (Communications link failure
 
-The last packet successfully received from the server was 683,980 milliseconds ago. The last packet sent successfully to the server was 684,018 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:04:59,019 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@d01c973 (Communications link failure
+The last packet successfully received from the server was 739,301 milliseconds ago. The last packet sent successfully to the server was 739,388 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:43:22,207 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@23672912 (Communications link failure
 
-The last packet successfully received from the server was 684,025 milliseconds ago. The last packet sent successfully to the server was 684,065 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:04:59,480 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4d929904 (Communications link failure
+The last packet successfully received from the server was 738,536 milliseconds ago. The last packet sent successfully to the server was 738,587 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:43:23,201 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@727d229b (Communications link failure
 
-The last packet successfully received from the server was 611,571 milliseconds ago. The last packet sent successfully to the server was 611,610 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:19:40,112 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1bf51512 (Communications link failure
+The last packet successfully received from the server was 738,710 milliseconds ago. The last packet sent successfully to the server was 738,790 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:55:13,250 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1e0b1757 (Communications link failure
 
-The last packet successfully received from the server was 885,853 milliseconds ago. The last packet sent successfully to the server was 885,891 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:19:41,113 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@983f9bc (Communications link failure
+The last packet successfully received from the server was 771,154 milliseconds ago. The last packet sent successfully to the server was 771,226 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:55:24,220 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@24ced1c (Communications link failure
 
-The last packet successfully received from the server was 884,657 milliseconds ago. The last packet sent successfully to the server was 884,693 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:19:42,114 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2b8fbfcb (Communications link failure
+The last packet successfully received from the server was 722,406 milliseconds ago. The last packet sent successfully to the server was 722,443 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:55:55,146 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d6aed1e (Communications link failure
 
-The last packet successfully received from the server was 885,197 milliseconds ago. The last packet sent successfully to the server was 885,235 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:19:43,120 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@df0face (Communications link failure
+The last packet successfully received from the server was 752,512 milliseconds ago. The last packet sent successfully to the server was 752,549 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:55:56,158 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7c5b4675 (Communications link failure
 
-The last packet successfully received from the server was 885,655 milliseconds ago. The last packet sent successfully to the server was 885,694 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:34:24,014 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@365b3221 (Communications link failure
+The last packet successfully received from the server was 752,707 milliseconds ago. The last packet sent successfully to the server was 752,791 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:55:57,171 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5337415f (Communications link failure
 
-The last packet successfully received from the server was 884,941 milliseconds ago. The last packet sent successfully to the server was 884,980 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:34:24,962 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@44695567 (Communications link failure
+The last packet successfully received from the server was 752,814 milliseconds ago. The last packet sent successfully to the server was 752,886 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 14:55:58,181 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@61e586eb (Communications link failure
 
-The last packet successfully received from the server was 885,412 milliseconds ago. The last packet sent successfully to the server was 885,450 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:34:25,016 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7cb64f65 (Communications link failure
+The last packet successfully received from the server was 714,214 milliseconds ago. The last packet sent successfully to the server was 714,297 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:09:14,202 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@33297803 (Communications link failure
 
-The last packet successfully received from the server was 884,497 milliseconds ago. The last packet sent successfully to the server was 884,530 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:34:25,966 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1ba10405 (Communications link failure
+The last packet successfully received from the server was 799,163 milliseconds ago. The last packet sent successfully to the server was 799,247 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:10:05,193 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4365acd3 (Communications link failure
 
-The last packet successfully received from the server was 884,344 milliseconds ago. The last packet sent successfully to the server was 884,381 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:34:26,023 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@179a219a (Communications link failure
+The last packet successfully received from the server was 849,331 milliseconds ago. The last packet sent successfully to the server was 849,416 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:10:06,201 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@183f4d5b (Communications link failure
 
-The last packet successfully received from the server was 883,991 milliseconds ago. The last packet sent successfully to the server was 884,022 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:47:02,115 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5755b0a1 (Communications link failure
+The last packet successfully received from the server was 849,525 milliseconds ago. The last packet sent successfully to the server was 849,608 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:10:06,603 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@26957199 (Communications link failure
 
-The last packet successfully received from the server was 758,982 milliseconds ago. The last packet sent successfully to the server was 759,041 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:49:03,076 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2b73523b (Communications link failure
+The last packet successfully received from the server was 849,189 milliseconds ago. The last packet sent successfully to the server was 849,280 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:10:07,211 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@134a8f0d (Communications link failure
 
-The last packet successfully received from the server was 879,379 milliseconds ago. The last packet sent successfully to the server was 879,452 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:49:04,085 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d24b75c (Communications link failure
+The last packet successfully received from the server was 848,980 milliseconds ago. The last packet sent successfully to the server was 849,069 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:10:07,618 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1935b20 (Communications link failure
 
-The last packet successfully received from the server was 879,775 milliseconds ago. The last packet sent successfully to the server was 879,842 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:49:05,087 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@75a5f2c5 (Communications link failure
+The last packet successfully received from the server was 761,816 milliseconds ago. The last packet sent successfully to the server was 761,851 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:22:43,244 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3b77a8ff (Communications link failure
 
-The last packet successfully received from the server was 879,677 milliseconds ago. The last packet sent successfully to the server was 879,715 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 16:49:05,521 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-32609253] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@74c889f8 (Communications link failure
+The last packet successfully received from the server was 759,964 milliseconds ago. The last packet sent successfully to the server was 759,999 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:23:14,253 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5dfba4f7 (Communications link failure
 
-The last packet successfully received from the server was 879,645 milliseconds ago. The last packet sent successfully to the server was 879,702 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:03:46,110 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4c29c3a5 (Communications link failure
+The last packet successfully received from the server was 788,311 milliseconds ago. The last packet sent successfully to the server was 788,348 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:23:55,216 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2aaecbaf (Communications link failure
 
-The last packet successfully received from the server was 882,092 milliseconds ago. The last packet sent successfully to the server was 882,127 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:03:47,113 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6e450683 (Communications link failure
+The last packet successfully received from the server was 828,481 milliseconds ago. The last packet sent successfully to the server was 828,573 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:23:56,228 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@21cea2a3 (Communications link failure
 
-The last packet successfully received from the server was 882,592 milliseconds ago. The last packet sent successfully to the server was 882,632 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:03:48,116 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@9996bcb (Communications link failure
+The last packet successfully received from the server was 828,683 milliseconds ago. The last packet sent successfully to the server was 828,768 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:23:57,239 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4ba1b36 (Communications link failure
 
-The last packet successfully received from the server was 883,187 milliseconds ago. The last packet sent successfully to the server was 883,220 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:03:49,118 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5ab9b32e (Communications link failure
+The last packet successfully received from the server was 828,874 milliseconds ago. The last packet sent successfully to the server was 828,957 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:23:58,256 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@58955bbd (Communications link failure
 
-The last packet successfully received from the server was 630,942 milliseconds ago. The last packet sent successfully to the server was 630,979 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:14:15,119 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@75766b4f (Communications link failure
+The last packet successfully received from the server was 829,158 milliseconds ago. The last packet sent successfully to the server was 829,192 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:23:59,269 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@55c41d1a (Communications link failure
 
-The last packet successfully received from the server was 630,474 milliseconds ago. The last packet sent successfully to the server was 630,509 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:14:36,118 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@630ea028 (Communications link failure
+The last packet successfully received from the server was 829,346 milliseconds ago. The last packet sent successfully to the server was 829,385 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:37:45,111 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@47a5d63c (Communications link failure
 
-The last packet successfully received from the server was 649,496 milliseconds ago. The last packet sent successfully to the server was 649,537 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:16:27,132 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@a668465 (Communications link failure
+The last packet successfully received from the server was 834,637 milliseconds ago. The last packet sent successfully to the server was 834,673 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:37:46,114 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7eaf4825 (Communications link failure
 
-The last packet successfully received from the server was 760,005 milliseconds ago. The last packet sent successfully to the server was 760,053 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:17:38,130 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@662097e (Communications link failure
+The last packet successfully received from the server was 830,146 milliseconds ago. The last packet sent successfully to the server was 830,228 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:37:46,943 WARN [xxl-job, admin JobLogReportHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2b284aea (Communications link failure
 
-The last packet successfully received from the server was 830,077 milliseconds ago. The last packet sent successfully to the server was 830,113 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:17:39,131 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@36bd8d44 (Communications link failure
+The last packet successfully received from the server was 830,152 milliseconds ago. The last packet sent successfully to the server was 830,235 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:37:47,116 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7f2094b8 (Communications link failure
 
-The last packet successfully received from the server was 830,572 milliseconds ago. The last packet sent successfully to the server was 830,607 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:17:40,132 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@17f7409d (Communications link failure
+The last packet successfully received from the server was 829,509 milliseconds ago. The last packet sent successfully to the server was 829,580 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:37:47,944 WARN [xxl-job, admin JobLogReportHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d7dcbab (Communications link failure
 
-The last packet successfully received from the server was 829,529 milliseconds ago. The last packet sent successfully to the server was 829,567 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:28:56,109 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3f77afba (Communications link failure
+The last packet successfully received from the server was 829,514 milliseconds ago. The last packet sent successfully to the server was 829,609 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:37:48,122 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7e0b4980 (Communications link failure
 
-The last packet successfully received from the server was 677,507 milliseconds ago. The last packet sent successfully to the server was 677,542 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:28:57,123 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1d0a4fc2 (Communications link failure
+The last packet successfully received from the server was 828,876 milliseconds ago. The last packet sent successfully to the server was 828,960 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:52:34,119 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@431a214f (Communications link failure
 
-The last packet successfully received from the server was 678,077 milliseconds ago. The last packet sent successfully to the server was 678,114 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:28:58,128 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@33110211 (Communications link failure
+The last packet successfully received from the server was 887,264 milliseconds ago. The last packet sent successfully to the server was 887,357 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:52:35,122 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@770dd418 (Communications link failure
 
-The last packet successfully received from the server was 678,586 milliseconds ago. The last packet sent successfully to the server was 678,626 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:28:59,131 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@13bcb7e0 (Communications link failure
+The last packet successfully received from the server was 887,454 milliseconds ago. The last packet sent successfully to the server was 887,538 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:52:36,127 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@219ca57e (Communications link failure
 
-The last packet successfully received from the server was 679,121 milliseconds ago. The last packet sent successfully to the server was 679,158 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:28:59,971 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@27a27ab2 (Communications link failure
+The last packet successfully received from the server was 887,638 milliseconds ago. The last packet sent successfully to the server was 887,727 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:52:37,128 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@475343f5 (Communications link failure
 
-The last packet successfully received from the server was 679,380 milliseconds ago. The last packet sent successfully to the server was 679,417 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:43:50,136 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4fefeff1 (Communications link failure
+The last packet successfully received from the server was 887,990 milliseconds ago. The last packet sent successfully to the server was 888,024 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:52:38,130 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@55511209 (Communications link failure
 
-The last packet successfully received from the server was 893,648 milliseconds ago. The last packet sent successfully to the server was 893,683 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:43:51,137 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@33c18f95 (Communications link failure
+The last packet successfully received from the server was 888,127 milliseconds ago. The last packet sent successfully to the server was 888,208 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 15:52:39,137 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4c65b1af (Communications link failure
 
-The last packet successfully received from the server was 892,563 milliseconds ago. The last packet sent successfully to the server was 892,599 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:43:52,139 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6fc37558 (Communications link failure
+The last packet successfully received from the server was 884,470 milliseconds ago. The last packet sent successfully to the server was 884,505 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:07:25,129 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@72486496 (Communications link failure
 
-The last packet successfully received from the server was 692,036 milliseconds ago. The last packet sent successfully to the server was 692,070 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:58:03,123 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@63db56a0 (Communications link failure
+The last packet successfully received from the server was 888,197 milliseconds ago. The last packet sent successfully to the server was 888,235 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:07:25,165 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@83c0dfe (Communications link failure
 
-The last packet successfully received from the server was 854,276 milliseconds ago. The last packet sent successfully to the server was 854,316 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:58:38,146 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2b58d9ae (Communications link failure
+The last packet successfully received from the server was 887,618 milliseconds ago. The last packet sent successfully to the server was 887,654 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:07:26,181 WARN [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5ada6d85 (Communications link failure
 
-The last packet successfully received from the server was 887,136 milliseconds ago. The last packet sent successfully to the server was 887,173 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 17:58:39,148 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@120f657e (Communications link failure
+The last packet successfully received from the server was 888,020 milliseconds ago. The last packet sent successfully to the server was 888,059 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:07:26,465 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@373d7c93 (Communications link failure
 
-The last packet successfully received from the server was 887,244 milliseconds ago. The last packet sent successfully to the server was 887,285 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:12:55,123 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@70bfbcc6 (Communications link failure
+The last packet successfully received from the server was 630,142 milliseconds ago. The last packet sent successfully to the server was 630,182 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:21:07,308 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@68875f85 (Communications link failure
 
-The last packet successfully received from the server was 861,198 milliseconds ago. The last packet sent successfully to the server was 861,249 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:12:56,125 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@b11e202 (Communications link failure
+The last packet successfully received from the server was 827,513 milliseconds ago. The last packet sent successfully to the server was 827,581 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:21:52,173 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@30fa1940 (Communications link failure
 
-The last packet successfully received from the server was 860,553 milliseconds ago. The last packet sent successfully to the server was 860,590 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:12:57,127 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3b74cbb5 (Communications link failure
+The last packet successfully received from the server was 866,336 milliseconds ago. The last packet sent successfully to the server was 866,392 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:21:52,730 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-964130824] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@736b2445 (Communications link failure
 
-The last packet successfully received from the server was 857,539 milliseconds ago. The last packet sent successfully to the server was 857,574 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:12:58,135 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@38313bcb (Communications link failure
+The last packet successfully received from the server was 866,273 milliseconds ago. The last packet sent successfully to the server was 866,347 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:21:53,176 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@1a86e7da (Communications link failure
 
-The last packet successfully received from the server was 858,090 milliseconds ago. The last packet sent successfully to the server was 858,128 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:12:59,152 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3565e987 (Communications link failure
+The last packet successfully received from the server was 866,110 milliseconds ago. The last packet sent successfully to the server was 866,177 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:21:53,731 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-964130824] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@c74196c (Communications link failure
 
-The last packet successfully received from the server was 858,618 milliseconds ago. The last packet sent successfully to the server was 858,658 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:27:40,142 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6c754991 (Communications link failure
+The last packet successfully received from the server was 866,013 milliseconds ago. The last packet sent successfully to the server was 866,053 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:21:54,190 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@28ba58e0 (Communications link failure
 
-The last packet successfully received from the server was 883,560 milliseconds ago. The last packet sent successfully to the server was 883,599 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:27:41,143 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@17e97748 (Communications link failure
+The last packet successfully received from the server was 865,864 milliseconds ago. The last packet sent successfully to the server was 865,897 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:21:54,738 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-964130824] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@21ae099d (Communications link failure
 
-The last packet successfully received from the server was 884,090 milliseconds ago. The last packet sent successfully to the server was 884,127 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:27:42,157 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@71c0cafa (Communications link failure
+The last packet successfully received from the server was 777,976 milliseconds ago. The last packet sent successfully to the server was 778,046 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:35:20,217 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4610efe0 (Communications link failure
 
-The last packet successfully received from the server was 883,482 milliseconds ago. The last packet sent successfully to the server was 883,521 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:27:43,158 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@14c8858a (Communications link failure
+The last packet successfully received from the server was 807,416 milliseconds ago. The last packet sent successfully to the server was 807,450 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:36:21,140 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3f07e5f7 (Communications link failure
 
-The last packet successfully received from the server was 883,513 milliseconds ago. The last packet sent successfully to the server was 883,551 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:42:30,125 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5d5fae9a (Communications link failure
+The last packet successfully received from the server was 867,721 milliseconds ago. The last packet sent successfully to the server was 867,760 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:36:32,171 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@372db29d (Communications link failure
 
-The last packet successfully received from the server was 890,370 milliseconds ago. The last packet sent successfully to the server was 890,406 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:42:31,130 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@16e4d564 (Communications link failure
+The last packet successfully received from the server was 878,139 milliseconds ago. The last packet sent successfully to the server was 878,176 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:36:33,173 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7da813aa (Communications link failure
 
-The last packet successfully received from the server was 890,513 milliseconds ago. The last packet sent successfully to the server was 890,548 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:42:31,439 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-717192016] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d53441a (Communications link failure
+The last packet successfully received from the server was 878,532 milliseconds ago. The last packet sent successfully to the server was 878,569 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:36:34,182 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4711b4bd (Communications link failure
 
-The last packet successfully received from the server was 889,845 milliseconds ago. The last packet sent successfully to the server was 889,882 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:42:32,132 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@57fe0fa (Communications link failure
+The last packet successfully received from the server was 878,921 milliseconds ago. The last packet sent successfully to the server was 878,963 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:36:35,183 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3bf42c44 (Communications link failure
 
-The last packet successfully received from the server was 888,504 milliseconds ago. The last packet sent successfully to the server was 888,541 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
-2023-03-07 18:45:15,994 INFO [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 218] Shutting down ExecutorService 'applicationTaskExecutor'
-2023-03-07 18:45:16,997 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 212] >>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop
-2023-03-07 18:45:17,001 INFO [xxl-job, admin JobScheduleHelper#ringThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 264] >>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop
-2023-03-07 18:45:17,997 INFO [SpringContextShutdownHook] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 353] >>>>>>>>>>> xxl-job, JobScheduleHelper stop
-2023-03-07 18:45:17,997 INFO [xxl-job, admin JobLogReportHelper] c.x.j.a.c.thread.JobLogReportHelper [JobLogReportHelper.java : 132] >>>>>>>>>>> xxl-job, job log report thread stop
-2023-03-07 18:45:17,998 INFO [xxl-job, admin JobLosedMonitorHelper] c.x.j.a.c.thread.JobCompleteHelper [JobCompleteHelper.java : 111] >>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop
-2023-03-07 18:45:17,998 INFO [xxl-job, admin JobFailMonitorHelper] c.x.j.a.c.t.JobFailMonitorHelper [JobFailMonitorHelper.java : 90] >>>>>>>>>>> xxl-job, job fail monitor thread stop
-2023-03-07 18:45:17,999 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] c.x.j.a.c.thread.JobRegistryHelper [JobRegistryHelper.java : 123] >>>>>>>>>>> xxl-job, job registry monitor thread stop
-2023-03-07 18:45:17,999 INFO [SpringContextShutdownHook] c.x.j.a.c.t.JobTriggerPoolHelper [JobTriggerPoolHelper.java : 60] >>>>>>>>> xxl-job trigger thread pool shutdown success.
-2023-03-07 18:45:18,003 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 350] HikariCP - Shutdown initiated...
-2023-03-07 18:45:18,009 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 352] HikariCP - Shutdown completed.
+The last packet successfully received from the server was 879,314 milliseconds ago. The last packet sent successfully to the server was 879,348 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:36:36,184 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6117d8fd (Communications link failure
+
+The last packet successfully received from the server was 869,190 milliseconds ago. The last packet sent successfully to the server was 869,247 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 16:49:17,278 INFO [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 218] Shutting down ExecutorService 'applicationTaskExecutor'
+2023-03-08 16:49:18,287 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 212] >>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop
+2023-03-08 16:49:19,008 INFO [xxl-job, admin JobScheduleHelper#ringThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 264] >>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop
+2023-03-08 16:49:19,303 INFO [SpringContextShutdownHook] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 353] >>>>>>>>>>> xxl-job, JobScheduleHelper stop
+2023-03-08 16:49:19,303 INFO [xxl-job, admin JobLogReportHelper] c.x.j.a.c.thread.JobLogReportHelper [JobLogReportHelper.java : 132] >>>>>>>>>>> xxl-job, job log report thread stop
+2023-03-08 16:49:19,304 INFO [xxl-job, admin JobLosedMonitorHelper] c.x.j.a.c.thread.JobCompleteHelper [JobCompleteHelper.java : 111] >>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop
+2023-03-08 16:49:19,304 INFO [xxl-job, admin JobFailMonitorHelper] c.x.j.a.c.t.JobFailMonitorHelper [JobFailMonitorHelper.java : 90] >>>>>>>>>>> xxl-job, job fail monitor thread stop
+2023-03-08 16:49:19,304 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] c.x.j.a.c.thread.JobRegistryHelper [JobRegistryHelper.java : 123] >>>>>>>>>>> xxl-job, job registry monitor thread stop
+2023-03-08 16:49:19,305 INFO [SpringContextShutdownHook] c.x.j.a.c.t.JobTriggerPoolHelper [JobTriggerPoolHelper.java : 60] >>>>>>>>> xxl-job trigger thread pool shutdown success.
+2023-03-08 16:49:19,308 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 350] HikariCP - Shutdown initiated...
+2023-03-08 16:49:19,313 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 352] HikariCP - Shutdown completed.
+2023-03-08 16:49:57,289 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 55] Starting XxlJobAdminApplication using Java 1.8.0_131 on qingfeng_java with PID 18784 (D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority\currency_xxl_job\xxl-job-admin\target\classes started by 25627 in D:\IDEA版java相关知识学习\web项目开发\基于SpringBoot的攀枝花学院第二课堂素质拓展学分管理系统\微服务架构版\后端\currency_authority)
+2023-03-08 16:49:57,294 INFO [main] c.x.job.admin.XxlJobAdminApplication [SpringApplication.java : 660] No active profile set, falling back to default profiles: default
+2023-03-08 16:50:00,643 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 108] Tomcat initialized with port(s): 8080 (http)
+2023-03-08 16:50:00,678 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Initializing ProtocolHandler ["http-nio-8080"]
+2023-03-08 16:50:00,679 INFO [main] o.a.catalina.core.StandardService [DirectJDKLog.java : 173] Starting service [Tomcat]
+2023-03-08 16:50:00,680 INFO [main] o.a.catalina.core.StandardEngine [DirectJDKLog.java : 173] Starting Servlet engine: [Apache Tomcat/9.0.41]
+2023-03-08 16:50:00,802 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring embedded WebApplicationContext
+2023-03-08 16:50:00,802 INFO [main] o.s.b.w.s.c.ServletWebServerApplicationContext [ServletWebServerApplicationContext.java : 289] Root WebApplicationContext: initialization completed in 3053 ms
+2023-03-08 16:50:02,268 INFO [main] c.x.j.a.c.scheduler.XxlJobScheduler [XxlJobScheduler.java : 45] >>>>>>>>> init xxl-job admin success.
+2023-03-08 16:50:02,305 INFO [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 110] HikariCP - Starting...
+2023-03-08 16:50:02,438 INFO [main] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 181] Initializing ExecutorService 'applicationTaskExecutor'
+2023-03-08 16:50:02,630 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java : 57] Adding welcome page template: index
+2023-03-08 16:50:03,369 INFO [main] o.s.b.a.e.web.EndpointLinksResolver [EndpointLinksResolver.java : 58] Exposing 2 endpoint(s) beneath base path '/actuator'
+2023-03-08 16:50:03,416 INFO [main] o.a.coyote.http11.Http11NioProtocol [DirectJDKLog.java : 173] Starting ProtocolHandler ["http-nio-8080"]
+2023-03-08 16:50:03,453 INFO [main] o.a.c.c.C.[.[.[/xxl-job-admin] [DirectJDKLog.java : 173] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-03-08 16:50:03,455 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 525] Initializing Servlet 'dispatcherServlet'
+2023-03-08 16:50:03,457 INFO [main] o.s.web.servlet.DispatcherServlet [FrameworkServlet.java : 547] Completed initialization in 2 ms
+2023-03-08 16:50:03,458 INFO [main] o.s.b.w.e.tomcat.TomcatWebServer [TomcatWebServer.java : 220] Tomcat started on port(s): 8080 (http) with context path '/xxl-job-admin'
+2023-03-08 16:50:03,479 INFO [main] c.x.job.admin.XxlJobAdminApplication [StartupInfoLogger.java : 61] Started XxlJobAdminApplication in 7.406 seconds (JVM running for 14.685)
+2023-03-08 16:50:03,512 INFO [xxl-job, admin JobFailMonitorHelper] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 123] HikariCP - Start completed.
+2023-03-08 16:50:07,001 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 52] >>>>>>>>> init xxl-job admin scheduler success.
+2023-03-08 17:00:13,288 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@66ef8fb6 (Communications link failure
+
+The last packet successfully received from the server was 607,900 milliseconds ago. The last packet sent successfully to the server was 607,939 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:04:48,126 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@30209cb6 (Communications link failure
+
+The last packet successfully received from the server was 882,130 milliseconds ago. The last packet sent successfully to the server was 882,167 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:04:48,157 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@216e91a3 (Communications link failure
+
+The last packet successfully received from the server was 881,533 milliseconds ago. The last packet sent successfully to the server was 881,573 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:04:49,143 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7de5cbcd (Communications link failure
+
+The last packet successfully received from the server was 881,845 milliseconds ago. The last packet sent successfully to the server was 881,902 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:04:49,173 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@62bc827e (Communications link failure
+
+The last packet successfully received from the server was 881,266 milliseconds ago. The last packet sent successfully to the server was 881,325 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:04:50,145 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4b69b636 (Communications link failure
+
+The last packet successfully received from the server was 881,415 milliseconds ago. The last packet sent successfully to the server was 881,484 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:04:50,175 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5810bd16 (Communications link failure
+
+The last packet successfully received from the server was 880,680 milliseconds ago. The last packet sent successfully to the server was 880,722 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:15:31,150 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1992644289] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@119c9b1f (Communications link failure
+
+The last packet successfully received from the server was 640,715 milliseconds ago. The last packet sent successfully to the server was 640,750 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:16:01,234 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6e54df98 (Communications link failure
+
+The last packet successfully received from the server was 670,183 milliseconds ago. The last packet sent successfully to the server was 670,216 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:19:31,239 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1992644289] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@18b04783 (Communications link failure
+
+The last packet successfully received from the server was 879,575 milliseconds ago. The last packet sent successfully to the server was 879,612 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:19:41,282 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5086fae6 (Communications link failure
+
+The last packet successfully received from the server was 887,763 milliseconds ago. The last packet sent successfully to the server was 887,802 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:29:47,201 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5ac1bc8f (Communications link failure
+
+The last packet successfully received from the server was 621,543 milliseconds ago. The last packet sent successfully to the server was 621,582 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:30:23,243 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@35b716cb (Communications link failure
+
+The last packet successfully received from the server was 651,343 milliseconds ago. The last packet sent successfully to the server was 651,377 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:30:24,244 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@ac49b30 (Communications link failure
+
+The last packet successfully received from the server was 647,669 milliseconds ago. The last packet sent successfully to the server was 647,733 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:30:25,246 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2870102 (Communications link failure
+
+The last packet successfully received from the server was 648,047 milliseconds ago. The last packet sent successfully to the server was 648,118 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:30:26,258 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6de90e6 (Communications link failure
+
+The last packet successfully received from the server was 648,445 milliseconds ago. The last packet sent successfully to the server was 648,523 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:30:26,802 WARN [xxl-job, admin JobLogReportHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7573bef7 (Communications link failure
+
+The last packet successfully received from the server was 644,860 milliseconds ago. The last packet sent successfully to the server was 644,898 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:30:27,258 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3c6b1e2e (Communications link failure
+
+The last packet successfully received from the server was 644,177 milliseconds ago. The last packet sent successfully to the server was 644,230 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:44:33,255 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@49f8f6d9 (Communications link failure
+
+The last packet successfully received from the server was 849,990 milliseconds ago. The last packet sent successfully to the server was 850,075 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:44:34,262 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4df2f0ec (Communications link failure
+
+The last packet successfully received from the server was 850,180 milliseconds ago. The last packet sent successfully to the server was 850,266 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:44:35,263 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@291ecebd (Communications link failure
+
+The last packet successfully received from the server was 850,447 milliseconds ago. The last packet sent successfully to the server was 850,480 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:44:36,265 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@270d6d19 (Communications link failure
+
+The last packet successfully received from the server was 850,630 milliseconds ago. The last packet sent successfully to the server was 850,665 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:44:37,266 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@29cd091f (Communications link failure
+
+The last packet successfully received from the server was 850,725 milliseconds ago. The last packet sent successfully to the server was 850,813 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:44:37,749 WARN [xxl-job, admin JobLogReportHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@31f61f8b (Communications link failure
+
+The last packet successfully received from the server was 850,389 milliseconds ago. The last packet sent successfully to the server was 850,479 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:55:08,266 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@16978219 (Communications link failure
+
+The last packet successfully received from the server was 634,172 milliseconds ago. The last packet sent successfully to the server was 634,254 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:56:19,200 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7711df3d (Communications link failure
+
+The last packet successfully received from the server was 704,289 milliseconds ago. The last packet sent successfully to the server was 704,370 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:57:30,192 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@252198df (Communications link failure
+
+The last packet successfully received from the server was 774,462 milliseconds ago. The last packet sent successfully to the server was 774,544 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:57:47,193 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1142342288] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@50bed1b8 (Communications link failure
+
+The last packet successfully received from the server was 790,644 milliseconds ago. The last packet sent successfully to the server was 790,725 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:58:17,211 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1142342288] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3b84d70 (Communications link failure
+
+The last packet successfully received from the server was 819,844 milliseconds ago. The last packet sent successfully to the server was 819,922 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 17:58:47,221 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1142342288] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3fbb2260 (Communications link failure
+
+The last packet successfully received from the server was 849,083 milliseconds ago. The last packet sent successfully to the server was 849,115 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:09:17,424 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1142342288] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4ad00d50 (Communications link failure
+
+The last packet successfully received from the server was 706,048 milliseconds ago. The last packet sent successfully to the server was 706,114 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:09:32,276 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1992644289] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6bd6c827 (Communications link failure
+
+The last packet successfully received from the server was 704,250 milliseconds ago. The last packet sent successfully to the server was 704,337 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:09:57,225 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6f822ad7 (Communications link failure
+
+The last packet successfully received from the server was 699,168 milliseconds ago. The last packet sent successfully to the server was 699,211 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:10:08,249 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5233be77 (Communications link failure
+
+The last packet successfully received from the server was 680,216 milliseconds ago. The last packet sent successfully to the server was 680,315 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:10:09,258 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@cebaa3e (Communications link failure
+
+The last packet successfully received from the server was 680,405 milliseconds ago. The last packet sent successfully to the server was 680,489 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:20:15,189 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2f56d424 (Communications link failure
+
+The last packet successfully received from the server was 656,901 milliseconds ago. The last packet sent successfully to the server was 656,980 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:20:16,125 WARN [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d55dd3e (Communications link failure
+
+The last packet successfully received from the server was 642,966 milliseconds ago. The last packet sent successfully to the server was 643,052 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:20:16,203 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5500c7ba (Communications link failure
+
+The last packet successfully received from the server was 610,808 milliseconds ago. The last packet sent successfully to the server was 610,890 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:20:17,126 WARN [xxl-job, admin JobLosedMonitorHelper] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3ad7f77b (Communications link failure
+
+The last packet successfully received from the server was 608,044 milliseconds ago. The last packet sent successfully to the server was 608,128 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:20:17,204 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@73e179e2 (Communications link failure
+
+The last packet successfully received from the server was 607,304 milliseconds ago. The last packet sent successfully to the server was 607,382 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:20:17,655 WARN [xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-1142342288] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@57e8b46d (Communications link failure
+
+The last packet successfully received from the server was 606,929 milliseconds ago. The last packet sent successfully to the server was 607,014 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:34:53,207 WARN [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6f99318d (Communications link failure
+
+The last packet successfully received from the server was 876,357 milliseconds ago. The last packet sent successfully to the server was 876,448 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:35:03,001 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@6df6f5a4 (Communications link failure
+
+The last packet successfully received from the server was 885,331 milliseconds ago. The last packet sent successfully to the server was 885,412 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:35:04,242 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@2c87820e (Communications link failure
+
+The last packet successfully received from the server was 885,754 milliseconds ago. The last packet sent successfully to the server was 885,837 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:35:05,244 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4f8eedf0 (Communications link failure
+
+The last packet successfully received from the server was 720,340 milliseconds ago. The last packet sent successfully to the server was 720,385 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:35:06,250 WARN [xxl-job, admin JobScheduleHelper#scheduleThread] com.zaxxer.hikari.pool.PoolBase [PoolBase.java : 184] HikariCP - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@150f7a70 (Communications link failure
+
+The last packet successfully received from the server was 683,504 milliseconds ago. The last packet sent successfully to the server was 683,572 milliseconds ago.). Possibly consider using a shorter maxLifetime value.
+2023-03-08 18:39:39,571 INFO [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskExecutor [ExecutorConfigurationSupport.java : 218] Shutting down ExecutorService 'applicationTaskExecutor'
+2023-03-08 18:39:40,572 INFO [xxl-job, admin JobScheduleHelper#scheduleThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 212] >>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop
+2023-03-08 18:39:41,001 INFO [xxl-job, admin JobScheduleHelper#ringThread] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 264] >>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop
+2023-03-08 18:39:41,579 INFO [SpringContextShutdownHook] c.x.j.a.c.thread.JobScheduleHelper [JobScheduleHelper.java : 353] >>>>>>>>>>> xxl-job, JobScheduleHelper stop
+2023-03-08 18:39:41,580 INFO [xxl-job, admin JobLogReportHelper] c.x.j.a.c.thread.JobLogReportHelper [JobLogReportHelper.java : 132] >>>>>>>>>>> xxl-job, job log report thread stop
+2023-03-08 18:39:41,581 INFO [xxl-job, admin JobLosedMonitorHelper] c.x.j.a.c.thread.JobCompleteHelper [JobCompleteHelper.java : 111] >>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop
+2023-03-08 18:39:41,581 INFO [xxl-job, admin JobFailMonitorHelper] c.x.j.a.c.t.JobFailMonitorHelper [JobFailMonitorHelper.java : 90] >>>>>>>>>>> xxl-job, job fail monitor thread stop
+2023-03-08 18:39:41,582 INFO [xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread] c.x.j.a.c.thread.JobRegistryHelper [JobRegistryHelper.java : 123] >>>>>>>>>>> xxl-job, job registry monitor thread stop
+2023-03-08 18:39:41,583 INFO [SpringContextShutdownHook] c.x.j.a.c.t.JobTriggerPoolHelper [JobTriggerPoolHelper.java : 60] >>>>>>>>> xxl-job trigger thread pool shutdown success.
+2023-03-08 18:39:41,586 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 350] HikariCP - Shutdown initiated...
+2023-03-08 18:39:41,594 INFO [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource [HikariDataSource.java : 352] HikariCP - Shutdown completed.

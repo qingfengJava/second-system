@@ -5,6 +5,8 @@ import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -23,4 +25,12 @@ public interface CreditModuleApi {
      */
     @GetMapping("/creditmodule/stuId")
     public R<List<CreditModuleEntity>> moduleListByStuId();
+
+    /**
+     * 根据模块Id集合查询模块详细信息
+     * @param moduleIds
+     * @return
+     */
+    @PostMapping("/creditmodule/info_list")
+    public R<List<CreditModuleEntity>> moduleByIds(@RequestBody List<Long> moduleIds);
 }
