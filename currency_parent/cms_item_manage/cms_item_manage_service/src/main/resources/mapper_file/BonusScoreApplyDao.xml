@@ -3,7 +3,7 @@
 
 <mapper namespace="com.qingfeng.cms.biz.bonus.dao.BonusScoreApplyDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity" id="bonusScoreApplyMap">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
@@ -18,6 +18,60 @@
         <result property="updateTime" column="update_time"/>
         <result property="updateUser" column="update_user"/>
     </resultMap>
+
+    <select id="findBonusScorePageCount"
+            resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM im_bonus_score_apply
+        WHERE user_id = #{userId}
+        <if test="bonusScoreApplyPageDTO.moduleId != null">
+            AND module_id = #{bonusScoreApplyPageDTO.moduleId}
+        </if>
+        <if test="bonusScoreApplyPageDTO.bonusStatus != null">
+            AND bonus_status = #{bonusScoreApplyPageDTO.bonusStatus}
+        </if>
+        <if test="bonusScoreApplyPageDTO.schoolYear != null and  bonusScoreApplyPageDTO.schoolYear != ''">
+            AND school_year = #{bonusScoreApplyPageDTO.schoolYear}
+        </if>
+    </select>
+
+    <select id="findBonusScorePage"
+            resultType="com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity">
+        SELECT id,
+               user_id,
+               module_id,
+               project_id,
+               level_id,
+               credit_rules_id,
+               support_material,
+               bonus_status,
+               `year`,
+               school_year,
+               create_time,
+               create_user,
+               update_time,
+               update_user
+        FROM im_bonus_score_apply
+        WHERE user_id = #{userId}
+        <if test="bonusScoreApplyPageDTO.moduleId != null">
+            AND module_id = #{bonusScoreApplyPageDTO.moduleId}
+        </if>
+        <if test="bonusScoreApplyPageDTO.bonusStatus != null">
+            AND bonus_status = #{bonusScoreApplyPageDTO.bonusStatus}
+        </if>
+        <if test="bonusScoreApplyPageDTO.schoolYear != null and  bonusScoreApplyPageDTO.schoolYear != ''">
+            AND school_year = #{bonusScoreApplyPageDTO.schoolYear}
+        </if>
+        ORDER BY
+        CASE
+            bonus_status
+            WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@HAVING.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@FAIL.name}' THEN 2
+            ELSE 3
+            END,
+        create_time DESC
+        LIMIT #{bonusScoreApplyPageDTO.pageNo}, #{bonusScoreApplyPageDTO.pageSize}
+    </select>
 
 
 </mapper>

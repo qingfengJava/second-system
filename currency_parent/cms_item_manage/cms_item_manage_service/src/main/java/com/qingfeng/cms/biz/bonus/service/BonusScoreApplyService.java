@@ -1,10 +1,12 @@
 package com.qingfeng.cms.biz.bonus.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyPageDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplySaveDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyUpdateDTO;
 import com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity;
 import com.qingfeng.cms.domain.bonus.vo.BonusScoreApplyVo;
+import com.qingfeng.cms.domain.bonus.vo.BonusScorePageVo;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 
 import java.util.List;
@@ -17,6 +19,13 @@ import java.util.List;
  * @date 2023-03-07 11:12:55
  */
 public interface BonusScoreApplyService extends IService<BonusScoreApplyEntity> {
+
+    /**
+     * 分页查询加分申报表
+     * @param bonusScoreApplyPageDTO
+     * @return
+     */
+    BonusScorePageVo findBonusScorePage(BonusScoreApplyPageDTO bonusScoreApplyPageDTO, Long userId);
 
     /**
      * 根据模块Id查询项目等级学分信息
@@ -51,5 +60,6 @@ public interface BonusScoreApplyService extends IService<BonusScoreApplyEntity> 
      * @return
      */
     List<BonusScoreApplyVo> findBonusScoreSameDay(Long userId);
+
 }
 

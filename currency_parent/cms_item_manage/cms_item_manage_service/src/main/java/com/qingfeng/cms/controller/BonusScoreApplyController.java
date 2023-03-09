@@ -1,9 +1,13 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.bonus.service.BonusScoreApplyService;
+import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyPageDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplySaveDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyUpdateDTO;
+import com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums;
+import com.qingfeng.cms.domain.bonus.ro.EnumsRo;
 import com.qingfeng.cms.domain.bonus.vo.BonusScoreApplyVo;
+import com.qingfeng.cms.domain.bonus.vo.BonusScorePageVo;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.currency.base.BaseController;
@@ -23,11 +27,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -40,9 +46,14 @@ import java.util.Map;
 @Slf4j
 @Validated
 @RestController
-@Api(value = "提供的相关功能", tags = "")
+@Api(value = "提供加分申报表的相关功能", tags = "提供加分申报表的相关功能")
 @RequestMapping("/bonus_score_apply")
 public class BonusScoreApplyController extends BaseController {
+
+    /**
+     * 使用默认时区和语言环境获得一个日历。
+     */
+    private static Calendar calendar = Calendar.getInstance();
 
     @Autowired
     private BonusScoreApplyService bonusScoreApplyService;
@@ -53,15 +64,15 @@ public class BonusScoreApplyController extends BaseController {
     @ApiOperation(value = "分页查询用户申请的加分申报信息", notes = "分页查询用户申请的加分申报信息")
     @PostMapping("/page/list")
     @SysLog("分页查询用户申请的加分申报信息")
-    public R list(@RequestParam Map<String, Object> params) {
-
-        return success();
+    public R<BonusScorePageVo> list(@RequestBody @Validated BonusScoreApplyPageDTO bonusScoreApplyPageDTO) {
+        BonusScorePageVo bonusScorePageVo = bonusScoreApplyService.findBonusScorePage(bonusScoreApplyPageDTO, getUserId());
+        return success(bonusScorePageVo);
     }
 
     @ApiOperation(value = "查询当日项目加分申报信息", notes = "查询当日项目加分申报信息")
     @GetMapping("/same/day")
     @SysLog("查询当日项目加分申报信息")
-    public R<List<BonusScoreApplyVo>> findBonusScoreSameDay(){
+    public R<List<BonusScoreApplyVo>> findBonusScoreSameDay() {
         List<BonusScoreApplyVo> bonusScoreApplyVoList = bonusScoreApplyService.findBonusScoreSameDay(getUserId());
         return success(bonusScoreApplyVoList);
     }
@@ -103,5 +114,32 @@ public class BonusScoreApplyController extends BaseController {
     public R<List<ProjectListVo>> projectList(@PathVariable("moduleId") Long moduleId) {
         List<ProjectListVo> projectVoList = bonusScoreApplyService.projectList(moduleId, getUserId());
         return success(projectVoList);
+    }
+
+    @ApiOperation(value = "枚举信息返回实体", notes = "枚举信息返回实体")
+    @GetMapping("/anno/enums")
+    public R enumsList() {
+        return success(Arrays.stream(BonusStatusEnums.values())
+                .map(b -> EnumsRo.builder()
+                        .label(b.getDesc())
+                        .value(b.getCode())
+                        .build()
+                )
+                .collect(Collectors.toList())
+        );
+    }
+
+    @ApiOperation(value="获取学年集合", notes = "获取学年集合")
+    @GetMapping("/anno/schoolYear")
+    public R getSchoolYear(){
+        List<String> list = new ArrayList<>();
+        //获取当前年份
+        int year = calendar.get(Calendar.YEAR)-4;
+        for (int i = 0; i < 5 ; i++) {
+            list.add(year+"-"+(year+1)+"  第一学期");
+            list.add(year+"-"+(year+1)+"  第二学期");
+            year++;
+        }
+        return success(list);
     }
 }

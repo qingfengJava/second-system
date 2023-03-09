@@ -10,6 +10,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -31,7 +32,7 @@ public class BonusScoreApplyUpdateDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "主键id")
-	@NotBlank(message = "主键Id不能为空")
+	@NotNull(message = "主键Id不能为空")
 	private Long id;
 
 	@ApiModelProperty(value = "证明材料（一般为提供照片为准）zip包")
