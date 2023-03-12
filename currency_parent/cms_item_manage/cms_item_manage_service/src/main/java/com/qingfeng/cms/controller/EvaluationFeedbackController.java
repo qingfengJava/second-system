@@ -1,10 +1,14 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.evaluation.service.EvaluationFeedbackService;
+import com.qingfeng.cms.domain.evaluation.dto.EvaluationFeedbackSaveDTO;
 import com.qingfeng.cms.domain.evaluation.entity.EvaluationFeedbackEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.dozer.DozerUtils;
+import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -12,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 
 /**
@@ -27,18 +30,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(value = "提供项目在线评价反馈的相关功能", tags = "提供项目在线评价反馈的相关功能")
 @RequestMapping("/evaluation_feedback")
-public class EvaluationFeedbackController extends BaseController  {
+public class EvaluationFeedbackController extends BaseController {
 
     @Autowired
     private EvaluationFeedbackService evaluationFeedbackService;
+    @Autowired
+    private DozerUtils dozerUtils;
 
-    /**
-     * 保存
-     */
-    @PostMapping("/save")
-    public R save(@RequestBody EvaluationFeedbackEntity evaluationFeedback){
-		evaluationFeedbackService.save(evaluationFeedback);
-
+    @ApiOperation(value = "项目评价信息保存", notes = "项目评价信息保存")
+    @PostMapping
+    @SysLog("项目评价信息保存")
+    public R saveEvaluation(@RequestBody @Validated EvaluationFeedbackSaveDTO evaluationFeedbackDTO) {
+        EvaluationFeedbackEntity feedbackEntity = dozerUtils.map2(
+                evaluationFeedbackDTO,
+                EvaluationFeedbackEntity.class);
+        feedbackEntity.setUserId(getUserId());
+        evaluationFeedbackService.save(feedbackEntity);
         return success();
     }
 
