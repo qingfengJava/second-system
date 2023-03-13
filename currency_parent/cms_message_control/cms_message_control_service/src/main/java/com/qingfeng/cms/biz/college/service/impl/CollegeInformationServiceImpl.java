@@ -42,6 +42,8 @@ public class CollegeInformationServiceImpl extends ServiceImpl<CollegeInformatio
      */
     @Override
     public void saveCollegeInformation(CollegeInformationSaveDTO collegeInformationSaveDTO, Long userId) {
+        // TODO 要进行修改  不能只是二级学院
+
         //校验用户信息是不是属于二级学院
         R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.YUAN_LEVEL_LEADER.name()});
         if (userIdByCode.getData().contains(collegeInformationSaveDTO.getUserId()) &&

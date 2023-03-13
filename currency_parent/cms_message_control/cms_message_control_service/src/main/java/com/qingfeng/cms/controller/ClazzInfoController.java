@@ -4,7 +4,7 @@ import com.qingfeng.cms.biz.clazz.service.ClazzInfoService;
 import com.qingfeng.cms.domain.clazz.dto.ClazzInfoSaveDTO;
 import com.qingfeng.cms.domain.clazz.entity.ClazzInfoEntity;
 import com.qingfeng.cms.domain.clazz.ro.EnumsRo;
-import com.qingfeng.cms.domain.clazz.vo.EnumsVoList;
+import com.qingfeng.cms.domain.clazz.vo.UserVo;
 import com.qingfeng.cms.domain.student.enums.EducationalSystemEnum;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
 @RestController
 @Api(value = "提供班级信息的相关功能", tags = "提供班级信息的相关功能")
 @RequestMapping("/clazz_info")
-public class ClazzInfoController extends BaseController  {
+public class ClazzInfoController extends BaseController {
 
     @Autowired
     private ClazzInfoService clazzInfoService;
@@ -45,31 +46,37 @@ public class ClazzInfoController extends BaseController  {
     @ApiOperation(value = "根据用户Id查询班级信息", notes = "根据用户id查询班级信息")
     @GetMapping("/info")
     @SysLog("根据Id查询班级信息")
-    public R info(){
-		ClazzInfoEntity clazzInfo = clazzInfoService.getOne(Wraps.lbQ(new ClazzInfoEntity())
+    public R info() {
+        ClazzInfoEntity clazzInfo = clazzInfoService.getOne(Wraps.lbQ(new ClazzInfoEntity())
                 .eq(ClazzInfoEntity::getUserId, getUserId()));
         return success(clazzInfo);
     }
 
     @ApiOperation(value = "保存/修改班级信息", notes = "保存/修改班级信息")
     @PostMapping("/save")
-    public R saveClazzInfo(@RequestBody @Validated ClazzInfoSaveDTO clazzInfoSaveDTO){
-		clazzInfoService.saveClazzInfo(clazzInfoSaveDTO, getUserId());
+    public R saveClazzInfo(@RequestBody @Validated ClazzInfoSaveDTO clazzInfoSaveDTO) {
+        clazzInfoService.saveClazzInfo(clazzInfoSaveDTO, getUserId());
         return success();
     }
 
     @ApiOperation(value = "返回所有的枚举类型", notes = "返回所有的枚举类型")
-    @GetMapping("/find/enums")
+    @GetMapping("/anno/find/enums")
     @SysLog("返回所有的枚举类型")
-    public R<EnumsVoList> findEnums() {
-        return success(EnumsVoList.builder()
-                .educationalSystem(Arrays.stream(EducationalSystemEnum.values())
-                        .map(e -> EnumsRo
-                                .builder()
-                                .label(e.getDesc())
-                                .value(e.name())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build());
+    public R findEnums() {
+        return success(Arrays.stream(EducationalSystemEnum.values())
+                .map(e -> EnumsRo
+                        .builder()
+                        .label(e.getDesc())
+                        .value(e.name())
+                        .build())
+                .collect(Collectors.toList())
+        );
+    }
+
+    @ApiOperation(value = "查询班级下的学生信息", notes = "查询班级下的学生信息")
+    @GetMapping("/stu/list")
+    @SysLog("查询班级下的学生信息")
+    public R<List<UserVo>> stuList(){
+        return success(clazzInfoService.stuList(getUserId()));
     }
 }

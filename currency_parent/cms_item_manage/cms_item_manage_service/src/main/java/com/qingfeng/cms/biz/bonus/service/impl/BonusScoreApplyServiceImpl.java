@@ -1,11 +1,16 @@
 package com.qingfeng.cms.biz.bonus.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.biz.bonus.dao.BonusScoreApplyDao;
 import com.qingfeng.cms.biz.bonus.service.BonusScoreApplyService;
 import com.qingfeng.cms.biz.check.service.ScoreCheckService;
 import com.qingfeng.cms.biz.evaluation.service.EvaluationFeedbackService;
+import com.qingfeng.cms.biz.service.producer.RabbitSendMsg;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyPageDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplySaveDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyUpdateDTO;
@@ -19,20 +24,30 @@ import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.evaluation.entity.EvaluationFeedbackEntity;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
 import com.qingfeng.cms.domain.project.dto.ProjectQueryDTO;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.project.enums.ProjectCheckEnum;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
+import com.qingfeng.currency.authority.entity.auth.User;
+import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
+import com.qingfeng.currency.exception.BizException;
+import com.qingfeng.currency.exception.code.ExceptionCode;
+import com.qingfeng.sdk.auth.role.UserRoleApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
+import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
 import com.qingfeng.sdk.oss.file.FileOssApi;
 import com.qingfeng.sdk.planstandard.level.LevelApi;
 import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import com.qingfeng.sdk.planstandard.project.ProjectApi;
 import com.qingfeng.sdk.planstandard.rule.RulesApi;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +87,14 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
     private RulesApi rulesApi;
     @Autowired
     private FileOssApi fileOssApi;
+    @Autowired
+    private RabbitSendMsg rabbitSendMsg;
+    @Autowired
+    private UserRoleApi userRoleApi;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private NewsNotifyApi newsNotifyApi;
 
     /**
      * 分页查询加分申报表
@@ -187,7 +210,8 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
         scoreCheck.setScoreApplyId(bonusScoreApply.getId());
         scoreCheckService.save(scoreCheck);
 
-        // TODO 需要通知班级管理员进行审核
+        //需要通知班级管理员进行审核
+        sendMasg(bonusScoreApply);
     }
 
     /**
@@ -236,7 +260,74 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
                 .setStudentOfficeFeedback("");
         scoreCheckService.updateById(scoreCheck);
 
-        // TODO 通知对应的班级管理员进行审核
+        // 通知对应的班级管理员进行审核  消息队列
+        sendMasg(baseMapper.selectById(bonusScoreApplyUpdateDTO.getId()));
+    }
+
+    private void sendMasg(BonusScoreApplyEntity bonusScoreApply) {
+        User user = userRoleApi.findStuClazzInfo().getData();
+
+        // 查询模块等信息
+        CreditModuleEntity creditModule = (CreditModuleEntity) creditModuleApi.info(
+                        bonusScoreApply.getModuleId()
+                )
+                .getData();
+
+        ProjectEntity project = projectApi.findInfoById(bonusScoreApply.getProjectId())
+                .getData();
+
+        LevelEntity level = levelApi.levelInfoById(bonusScoreApply.getLevelId())
+                .getData();
+
+
+        String title = "";
+        String body = "";
+        if (ObjectUtil.isNotEmpty(bonusScoreApply.getId())) {
+            title = "模块《"+creditModule.getModuleName()+"》加分申报修改待审核通知";
+            body = "亲爱的班级负责人：\r\n       "
+                    + "模块《"+creditModule.getModuleName()+"》->"
+                    + "项目：（" + project.getProjectName() +"）->"
+                    + "等级：（" + level.getLevelContent() +"）->"
+                    + "加分申请已经修改，并申请成功，请尽早进行审核，以免影响加分进度！";
+        } else {
+            title = "模块《"+creditModule.getModuleName()+"》加分申报待审核通知";
+            body = "亲爱的班级负责人：\r\n       "
+                    + "模块《"+creditModule.getModuleName()+"》->"
+                    + "项目：（" + project.getProjectName() +"）->"
+                    + "等级：（" + level.getLevelContent() +"）->"
+                    + "加分申请已经申请成功，请尽早进行审核，以免影响加分进度！";
+        }
+
+        if (StrUtil.isNotBlank(user.getEmail())) {
+            //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+            try {
+                rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
+                        .email(user.getEmail())
+                        .title(title)
+                        .body(body)
+                        .key("bonus.item.email")
+                        .build()), "bonus.item.email");
+
+                // 进行消息存储
+                //将消息通知写入数据库
+                R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                        .userId(user.getId())
+                        .newsType(NewsTypeEnum.MAILBOX)
+                        .newsTitle(title)
+                        .newsContent(body)
+                        .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                        .build());
+
+                if (r.getIsError()) {
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "消息通知保存失败！");
+                }
+            } catch (JsonProcessingException e) {
+                throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "项目加分申请审核异常");
+            }
+
+        } else {
+            // TODO 短信发送
+        }
     }
 
     /**

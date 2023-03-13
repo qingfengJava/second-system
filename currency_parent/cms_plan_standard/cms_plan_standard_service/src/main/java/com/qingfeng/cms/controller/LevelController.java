@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -85,6 +87,12 @@ public class LevelController extends BaseController {
                         .in(LevelEntity::getId, levelIds)
                 )
         );
+    }
+
+    @ApiOperation(value = "根据Id查询等级信息", notes = "根据Id查询等级信息")
+    @GetMapping("/info/{levelId}")
+    public R<LevelEntity> levelInfoById(@PathVariable("levelId") Long levelId) {
+        return success(levelService.getById(levelId));
     }
 
 }

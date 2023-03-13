@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -113,5 +114,11 @@ public class ProjectController extends BaseController {
     public R<List<ProjectEntity>> projectInfoByIds(@RequestBody List<Long> projectIds) {
         return success(projectService.list(Wraps.lbQ(new ProjectEntity())
                 .in(ProjectEntity::getId, projectIds)));
+    }
+
+    @ApiOperation(value = "根据Id查询项目信息", notes = "根据Id查询项目信息")
+    @GetMapping("/info/{projectId}")
+    public R<ProjectEntity> findInfoById(@PathVariable("projectId") Long projectId){
+        return success(projectService.getById(projectId));
     }
 }

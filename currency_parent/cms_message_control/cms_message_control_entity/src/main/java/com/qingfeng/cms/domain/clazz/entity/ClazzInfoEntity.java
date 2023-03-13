@@ -59,14 +59,14 @@ public class ClazzInfoEntity extends Entity<Long> {
     private String assistant;
 
     @ApiModelProperty(value = "班级描述")
-    private String describe;
+    private String clazzDescribe;
 
     @Builder
     public ClazzInfoEntity(Long id, LocalDateTime createTime, Long createUser,
                            LocalDateTime updateTime, Long updateUser, Long userId,
                            DictDepartmentEnum department, String major, String clazz, String grade,
                            EducationalSystemEnum educationalSystem, String clazzMonitor,
-                           String assistant, String describe) {
+                           String assistant, String clazzDescribe) {
         super(id, createTime, createUser, updateTime, updateUser);
         this.userId = userId;
         this.department = department;
@@ -76,6 +76,6 @@ public class ClazzInfoEntity extends Entity<Long> {
         this.educationalSystem = educationalSystem;
         this.clazzMonitor = clazzMonitor;
         this.assistant = assistant;
-        this.describe = describe;
+        this.clazzDescribe = clazzDescribe;
     }
 }

@@ -123,12 +123,13 @@ public class SystemFeedbackServiceImpl extends ServiceImpl<SystemFeedbackDao, Sy
         UserRoleVo userRoleVo = userRoleApi.findRoleIdByUserId(userId).getData();
         if (ObjectUtil.isNotEmpty(userRoleVo)) {
             if (RoleEnum.STUDENT.name().equals(userRoleVo.getCode())) {
-                //学生  社团联、（自己）学院、学生处处长、系统管理员
+                //学生  社团联、（自己）学院、学生处处长、系统管理员、班级领导
                 return Arrays.stream(RoleEnum.values()).filter(r ->
                                 r.name().equals(RoleEnum.SHETUANLIAN_LEADER.name())
                                         || r.name().equals(RoleEnum.YUAN_LEVEL_LEADER.name())
                                         || r.name().equals(RoleEnum.STU_OFFICE_ADMIN.name())
-                                        || r.name().equals(RoleEnum.PT_ADMIN.name()))
+                                        || r.name().equals(RoleEnum.PT_ADMIN.name())
+                                        || r.name().equals(RoleEnum.CLASS_GRADE))
                         .map(r -> UserLeaderVo.builder()
                                 .userCode(r.name())
                                 .userName(r.getRoleType())
@@ -162,6 +163,19 @@ public class SystemFeedbackServiceImpl extends ServiceImpl<SystemFeedbackDao, Sy
             } else if (RoleEnum.STU_OFFICE_ADMIN.name().equals(userRoleVo.getCode())) {
                 //学生处   系统管理员
                 return Arrays.stream(RoleEnum.values()).filter(r -> r.name().equals(RoleEnum.PT_ADMIN.name()))
+                        .map(r -> UserLeaderVo.builder()
+                                .userCode(r.name())
+                                .userName(r.getRoleType())
+                                .build())
+                        .collect(Collectors.toList());
+            } else if (RoleEnum.CLASS_GRADE.name().equals(userRoleVo.getCode())) {
+                //学生处   社团联、（自己）学院、学生处处长、系统管理员
+                return Arrays.stream(RoleEnum.values()).filter(r ->
+                                r.name().equals(RoleEnum.SHETUANLIAN_LEADER.name())
+                                        || r.name().equals(RoleEnum.YUAN_LEVEL_LEADER.name())
+                                        || r.name().equals(RoleEnum.STU_OFFICE_ADMIN.name())
+                                        || r.name().equals(RoleEnum.PT_ADMIN.name())
+                        )
                         .map(r -> UserLeaderVo.builder()
                                 .userCode(r.name())
                                 .userName(r.getRoleType())

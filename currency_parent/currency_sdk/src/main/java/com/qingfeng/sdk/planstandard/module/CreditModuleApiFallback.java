@@ -21,4 +21,9 @@ public class CreditModuleApiFallback implements CreditModuleApi{
     public R<List<CreditModuleEntity>> moduleByIds(List<Long> moduleIds) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R info(Long moduleId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

@@ -15,7 +15,8 @@ public enum RoleEnum {
     SHETUANLIAN_LEADER("社团联联长"),
     YUAN_LEVEL_LEADER("二级学院领导"),
     STUDENT("学生"),
-    SOCIAL_ORGANIZATION("社团组织");
+    SOCIAL_ORGANIZATION("社团组织"),
+    CLASS_GRADE("班级领导");
 
     private String roleType;
 

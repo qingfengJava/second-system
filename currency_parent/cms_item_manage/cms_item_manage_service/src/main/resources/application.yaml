@@ -8,6 +8,30 @@ currency:
     description: 第二课堂——项目管理模块
 
 
+spring:
+  rabbitmq:
+    username: guest
+    password: guest
+    port: 5670
+    host: 101.42.160.177
+    virtual-host: /
+    #开启消息确认模式
+    publisher-returns: true
+    publisher-confirms: true
+    template:
+      # 消息发送失败返回到队列中, yml需要配置 publisher-returns: true
+      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: manual #手动ACK
+        default-requeue-rejected: false #个字段一定要设置成 false 不然无法消费的数据不会进入死信队列的
+        concurrency: 1 #同一个队列启动几个消费者
+        max-concurrency: 5 #启动消费者最大数量
+        prefetch: 1 #限制每次发送一条数据
+        retry:
+          enabled: true #是否支持重试
+
+
 # 配置全局的逻辑删除值
 #mybatis-plus:
 #  global-config:

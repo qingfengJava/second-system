@@ -9,6 +9,7 @@ import com.qingfeng.currency.authority.entity.auth.UserRole;
 import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
@@ -71,10 +72,24 @@ public class UserRoleController extends BaseController {
     public R<User> findRoleInfo(){
         //查询出社团联用户的角色Id
         Role role = roleService.getOne(Wraps.lbQ(new Role())
-                .eq(Role::getCode, "SHETUANLIAN_LEADER")
+                .eq(Role::getCode, RoleEnum.SHETUANLIAN_LEADER)
                 .eq(Role::getStatus, 1));
         UserRole userRole = userRoleService.getOne(Wraps.lbQ(new UserRole())
                 .eq(UserRole::getRoleId, role.getId()));
         return success(userService.getById(userRole.getUserId()));
     }
+
+    @ApiOperation(value = "查询班级用户信息", notes = "查询班级用户信息")
+    @GetMapping("/stu/clazzInfo")
+    @SysLog("查询班级用户信息")
+    public R<User> findStuClazzInfo(){
+        //查询出社团联用户的角色Id
+        Role role = roleService.getOne(Wraps.lbQ(new Role())
+                .eq(Role::getCode, RoleEnum.CLASS_GRADE)
+                .eq(Role::getStatus, 1));
+        UserRole userRole = userRoleService.getOne(Wraps.lbQ(new UserRole())
+                .eq(UserRole::getRoleId, role.getId()));
+        return success(userService.getById(userRole.getUserId()));
+    }
+
 }

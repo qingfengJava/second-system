@@ -6,6 +6,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 /**
  * @author 清风学Java
@@ -33,4 +37,12 @@ public interface UserApi {
     @GetMapping("/user/{orgId}/{stationId}")
     public R<User> getByOrgIdAndStationId(@PathVariable("orgId") Long orgId,
                                           @PathVariable("stationId") Long stationId);
+
+    /**
+     * 根据用户主键Id查询用户信息
+     * @param ids
+     * @return
+     */
+    @PostMapping("/user/user/info")
+    public R<List<User>> userInfoList(@RequestBody List<Long> ids);
 }

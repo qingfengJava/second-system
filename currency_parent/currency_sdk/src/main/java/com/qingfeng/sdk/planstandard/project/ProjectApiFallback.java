@@ -23,4 +23,9 @@ public class ProjectApiFallback implements ProjectApi {
     public R<List<ProjectEntity>> projectInfoByIds(List<Long> projectIds) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R<ProjectEntity> findInfoById(Long projectId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

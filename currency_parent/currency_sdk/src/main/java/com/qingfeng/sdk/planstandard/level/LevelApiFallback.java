@@ -16,4 +16,9 @@ public class LevelApiFallback implements LevelApi {
     public R<List<LevelEntity>> levelInfoByIds(List<Long> levelIds) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R<LevelEntity> levelInfoById(Long levelId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

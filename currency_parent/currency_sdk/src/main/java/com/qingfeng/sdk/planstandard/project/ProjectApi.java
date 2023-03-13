@@ -7,6 +7,8 @@ import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -36,4 +38,12 @@ public interface ProjectApi {
      */
     @PostMapping("/project/info/list")
     public R<List<ProjectEntity>> projectInfoByIds(@RequestBody List<Long> projectIds);
+
+    /**
+     * 根据Id查询项目信息
+     * @param projectId
+     * @return
+     */
+    @GetMapping("/project/info/{projectId}")
+    public R<ProjectEntity> findInfoById(@PathVariable("projectId") Long projectId);
 }

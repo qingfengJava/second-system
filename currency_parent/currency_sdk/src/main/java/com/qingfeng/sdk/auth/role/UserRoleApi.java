@@ -31,4 +31,11 @@ public interface UserRoleApi {
      */
     @GetMapping("/user_role/findroleUserInfo")
     public R<User> findRoleInfo();
+
+    /**
+     * 查询班级用户信息
+     * @return
+     */
+    @GetMapping("/user_role/stu/clazzInfo")
+    public R<User> findStuClazzInfo();
 }

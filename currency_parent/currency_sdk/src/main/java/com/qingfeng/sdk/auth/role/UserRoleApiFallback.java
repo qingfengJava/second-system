@@ -20,4 +20,9 @@ public class UserRoleApiFallback implements UserRoleApi {
     public R<User> findRoleInfo() {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R<User> findStuClazzInfo() {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

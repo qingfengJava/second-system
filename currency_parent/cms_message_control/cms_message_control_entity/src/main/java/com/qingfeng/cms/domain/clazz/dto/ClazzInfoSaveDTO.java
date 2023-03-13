@@ -66,5 +66,5 @@ public class ClazzInfoSaveDTO implements Serializable {
 
     @ApiModelProperty(value = "班级描述")
     @NotBlank(message = "班级描述不能为空")
-    private String describe;
+    private String clazzDescribe;
 }

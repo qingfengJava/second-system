@@ -4,6 +4,8 @@ import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,4 +27,12 @@ public interface LevelApi {
      */
     @PostMapping("/level/info/list")
     public R<List<LevelEntity>> levelInfoByIds(@RequestBody List<Long> levelIds);
+
+    /**
+     * 根据Id查询等级信息
+     * @param levelId
+     * @return
+     */
+    @GetMapping("/level/info/{levelId}")
+    public R<LevelEntity> levelInfoById(@PathVariable("levelId") Long levelId);
 }

@@ -3,6 +3,9 @@ package com.qingfeng.cms.biz.clazz.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.clazz.dto.ClazzInfoSaveDTO;
 import com.qingfeng.cms.domain.clazz.entity.ClazzInfoEntity;
+import com.qingfeng.cms.domain.clazz.vo.UserVo;
+
+import java.util.List;
 
 /**
  * 班级信息
@@ -18,5 +21,12 @@ public interface ClazzInfoService extends IService<ClazzInfoEntity> {
      * @param clazzInfoSaveDTO
      */
     void saveClazzInfo(ClazzInfoSaveDTO clazzInfoSaveDTO, Long userId);
+
+    /**
+     * 查询班级下的学生信息
+     * @param userId
+     * @return
+     */
+    List<UserVo> stuList(Long userId);
 }
 

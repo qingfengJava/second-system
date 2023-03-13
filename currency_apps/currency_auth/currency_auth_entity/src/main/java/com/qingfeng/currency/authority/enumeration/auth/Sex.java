@@ -67,7 +67,7 @@ public enum Sex implements BaseEnum {
 
     @Override
     @ApiModelProperty(value = "编码")
-    public String getCode() {
+    public String getDesc() {
         return this.desc;
     }
 

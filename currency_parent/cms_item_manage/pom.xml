@@ -17,4 +17,13 @@
         <module>cms_item_manage_entity</module>
         <module>cms_item_manage_service</module>
     </modules>
+
+    <dependencies>
+
+        <!-- rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+    </dependencies>
 </project>

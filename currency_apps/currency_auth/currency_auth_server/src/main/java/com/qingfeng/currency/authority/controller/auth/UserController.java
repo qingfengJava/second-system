@@ -275,4 +275,13 @@ public class UserController extends BaseController {
                 .eq(User::getOrgId, orgId)
                 .eq(User::getStationId, stationId)));
     }
+
+    @ApiOperation(value = "根据用户主键Id查询用户信息", notes = "根据用户主键Id查询用户信息")
+    @PostMapping("/user/info")
+    public R<List<User>> userInfoList(@RequestBody List<Long> ids) {
+        List<User> list = userService.list(Wraps.lbQ(new User())
+                .in(User::getId, ids)
+        );
+        return success(list);
+    }
 }
