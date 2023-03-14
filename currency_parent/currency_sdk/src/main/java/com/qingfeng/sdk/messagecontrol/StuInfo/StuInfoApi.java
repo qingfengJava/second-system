@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 /**
  * @author 清风学Java
  * @version 1.0.0
@@ -38,4 +40,13 @@ public interface StuInfoApi {
     @ApiOperation(value = "保存用户详情信息", notes = "保存用户详情信息")
     @PostMapping("/stuinfo/save")
     public R save(@RequestBody @Validated StuInfoSaveDTO stuInfoSaveDTO);
+
+    /**
+     * 根据用户Id集合查询用户信息
+     * @param userIds
+     * @return
+     */
+    @PostMapping("/stuinfo/list")
+    public R<List<StuInfoEntity>> stuInfoList(@RequestBody List<Long> userIds);
+
 }

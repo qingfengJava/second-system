@@ -1,6 +1,7 @@
 package com.qingfeng.sdk.planstandard.module;
 
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.currency.base.R;
 
 import java.util.List;
@@ -24,6 +25,16 @@ public class CreditModuleApiFallback implements CreditModuleApi{
 
     @Override
     public R info(Long moduleId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<List<PlanTreeRo>> findPlanAndModule() {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<List<CreditModuleEntity>> findModuleListByPlanId(Long planId) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }

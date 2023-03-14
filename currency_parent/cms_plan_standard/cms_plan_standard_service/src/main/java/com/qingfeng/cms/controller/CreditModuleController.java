@@ -145,4 +145,14 @@ public class CreditModuleController extends BaseController {
         );
     }
 
+    @ApiOperation(value = "根据方案Id查询模块信息", notes = "根据方案Id查询模块信息")
+    @GetMapping("/module/{planId}")
+    public R<List<CreditModuleEntity>> findModuleListByPlanId(@PathVariable("planId") Long planId) {
+        return success(creditModuleService.list(
+                        Wraps.lbQ(new CreditModuleEntity())
+                                .eq(CreditModuleEntity::getPlanId, planId)
+                )
+        );
+    }
+
 }

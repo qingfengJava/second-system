@@ -4,6 +4,8 @@ import com.qingfeng.cms.domain.student.dto.StuInfoSaveDTO;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.base.R;
 
+import java.util.List;
+
 /**
  * @author 清风学Java
  * @version 1.0.0
@@ -28,6 +30,11 @@ public class StuInfoApiFallback implements StuInfoApi{
      */
     @Override
     public R save(StuInfoSaveDTO stuInfoSaveDTO) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<List<StuInfoEntity>> stuInfoList(List<Long> userIds) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }

@@ -132,4 +132,12 @@ public class PlanController extends BaseController {
         return success(planEntityVo);
     }
 
+    @ApiOperation(value = "根据学生用户Id查询方案信息", notes = "根据学生用户Id查询方案信息")
+    @GetMapping("/{userId}")
+    @SysLog("根据学生用户Id查询方案信息")
+    public R<PlanEntity> getPlanByUserId(@PathVariable("userId") Long userId){
+        PlanEntity planEntity = planService.getPlanByUserId(userId);
+        return success(planEntity);
+    }
+
 }

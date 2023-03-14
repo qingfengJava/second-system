@@ -403,7 +403,7 @@ public class BonusScoreApplyServiceImpl extends ServiceImpl<BonusScoreApplyDao, 
     }
 
     /**
-     * 查询项目申请评价嘻嘻
+     * 查询项目申请评价信息
      *
      * @param scoreApplyIds
      * @return

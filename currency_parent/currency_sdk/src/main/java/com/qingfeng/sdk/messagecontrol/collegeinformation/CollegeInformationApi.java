@@ -3,6 +3,7 @@ package com.qingfeng.sdk.messagecontrol.collegeinformation;
 import com.qingfeng.cms.domain.college.dto.CollegeInformationSaveDTO;
 import com.qingfeng.cms.domain.college.dto.CollegeInformationUpdateDTO;
 import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
+import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author 清风学Java
@@ -48,4 +50,12 @@ public interface CollegeInformationApi {
      */
     @PutMapping("/collegeinformation/update")
     public R update(@RequestBody @Validated(SuperEntity.Update.class) CollegeInformationUpdateDTO collegeInformationUpdateDTO);
+
+    /**
+     * 根据二级学院领导id查询学院下的学生信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/collegeinformation/user/{userId}")
+    public R<List<StuInfoEntity>> getUserInfoList(@PathVariable("userId") Long userId);
 }

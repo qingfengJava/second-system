@@ -237,6 +237,36 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
         return planEntityVo;
     }
 
+    @Override
+    public PlanEntity getPlanByUserId(Long userId) {
+        //首先要判断用户是不是学生，只有学生可以查看
+        R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.STUDENT.name()});
+        if (userIdByCode.getData().contains(userId)) {
+            //说明是学生  查询学生信息，找到对应的年级
+            StuInfoEntity stuInfoEntity = stuInfoApi.info(userId).getData();
+            AtomicReference<Integer> applicationObject = new AtomicReference<>(0);
+            Optional.ofNullable(stuInfoEntity)
+                    .ifPresent(s -> {
+                        if (s.getType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FOUR_YEARS) ||
+                                s.getType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FIVE_YEARS)) {
+                            applicationObject.set(1);
+                        } else if (s.getType().equals(StudentTypeEnum.SPECIALTY)) {
+                            applicationObject.set(2);
+                        } else if (s.getType().equals(StudentTypeEnum.GRADUATE_STUDENT)) {
+                            applicationObject.set(3);
+                        }
+                    });
+            //根据年级和本专科查询对应的方案信息
+            return baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
+                    .likeLeft(PlanEntity::getGrade, stuInfoEntity.getGrade())
+                    .eq(PlanEntity::getApplicationObject, applicationObject.get())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable()));
+
+        }
+
+        return null;
+    }
+
     private PlanEntityVo getPlanEntityVo(PlanEntity planEntity) {
         PlanEntityVo planEntityVo = dozerUtils.map2(planEntity, PlanEntityVo.class);
         //封装方案下的模块信息

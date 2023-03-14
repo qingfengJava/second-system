@@ -23,12 +23,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -74,6 +74,17 @@ public class StuInfoController extends BaseController {
         stuInfoService.saveStuInfo(stuInfoSaveDTO);
 
         return success();
+    }
+
+    @ApiOperation(value = "根据用户Id集合查询用户信息", notes = "根据用户Id集合查询用户信息")
+    @PostMapping("/list")
+    @SysLog("根据用户Id集合查询用户信息")
+    public R<List<StuInfoEntity>> stuInfoList(@RequestBody List<Long> userIds) {
+        return success(stuInfoService.list(
+                        Wraps.lbQ(new StuInfoEntity())
+                                .in(StuInfoEntity::getUserId, userIds)
+                )
+        );
     }
 
     @ApiOperation(value = "返回所有的枚举类型", notes = "返回所有的枚举类型")

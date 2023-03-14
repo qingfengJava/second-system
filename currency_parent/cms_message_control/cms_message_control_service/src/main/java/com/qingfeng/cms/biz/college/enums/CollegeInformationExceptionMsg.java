@@ -12,7 +12,8 @@ import lombok.Getter;
 @Getter
 public enum CollegeInformationExceptionMsg {
 
-    ILLEGAL_USER("非法用户！");
+    ILLEGAL_USER("非法用户！"),
+    IMPROVE_COLLEGE_INFORMATION("请前往个人中心完善关联的二级学院信息");
 
     private String msg;
 }

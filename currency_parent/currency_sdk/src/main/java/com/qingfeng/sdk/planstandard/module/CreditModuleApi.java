@@ -1,6 +1,7 @@
 package com.qingfeng.sdk.planstandard.module;
 
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.currency.base.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -42,4 +43,19 @@ public interface CreditModuleApi {
      */
     @GetMapping("/creditmodule/info/{moduleId}")
     public R info(@PathVariable("moduleId") Long moduleId);
+
+    /**
+     * 查询所有方案和模块内容，并分组排序
+     * @return
+     */
+    @GetMapping("/creditmodule/findPlanAndModule")
+    public R<List<PlanTreeRo>> findPlanAndModule();
+
+    /**
+     * 根据方案Id查询模块信息
+     * @param planId
+     * @return
+     */
+    @GetMapping("/creditmodule/module/{planId}")
+    public R<List<CreditModuleEntity>> findModuleListByPlanId(@PathVariable("planId") Long planId);
 }

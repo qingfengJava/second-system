@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.college.dto.CollegeInformationSaveDTO;
 import com.qingfeng.cms.domain.college.dto.CollegeInformationUpdateDTO;
 import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
+import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
+
+import java.util.List;
 
 /**
  * 院级信息（包含班级），数据字典
@@ -34,5 +37,12 @@ public interface CollegeInformationService extends IService<CollegeInformationEn
      * @param userId
      */
     void updateCollegeInformationById(CollegeInformationUpdateDTO collegeInformationUpdateDTO, Long userId);
+
+    /**
+     * 查询二级学院下的学生信息
+     * @param userId
+     * @return
+     */
+    List<StuInfoEntity> getUserInfoList(Long userId);
 }
 

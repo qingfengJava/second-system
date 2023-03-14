@@ -73,5 +73,148 @@
         LIMIT #{bonusScoreApplyPageDTO.pageNo}, #{bonusScoreApplyPageDTO.pageSize}
     </select>
 
+    <!-- 查询班级下学生报名的活动总数 -->
+    <select id="selectBonusScoreCheckCount"
+            resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM im_bonus_score_apply b LEFT JOIN im_score_check s ON b.id = s.score_apply_id
+        WHERE b.user_id in
+        <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="bonusScoreApplyPageDTO.moduleId != null">
+            AND b.module_id = #{bonusScoreApplyPageDTO.moduleId}
+        </if>
+        <if test="bonusScoreApplyPageDTO.classStatus != null">
+            AND s.class_status = #{bonusScoreApplyPageDTO.classStatus}
+        </if>
+        <if test="bonusScoreApplyPageDTO.schoolYear != null and  bonusScoreApplyPageDTO.schoolYear != ''">
+            AND b.school_year = #{bonusScoreApplyPageDTO.schoolYear}
+        </if>
+    </select>
+
+    <!-- 查询班级下学生报名的活动列表 -->
+    <select id="selectBonusScoreClazzCheckList"
+            resultType="com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity">
+        SELECT b.*
+        FROM im_bonus_score_apply b LEFT JOIN im_score_check s ON b.id = s.score_apply_id
+        WHERE b.user_id in
+        <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="bonusScoreApplyPageDTO.moduleId != null">
+            AND b.module_id = #{bonusScoreApplyPageDTO.moduleId}
+        </if>
+        <if test="bonusScoreApplyPageDTO.classStatus != null">
+            AND s.class_status = #{bonusScoreApplyPageDTO.classStatus}
+        </if>
+        <if test="bonusScoreApplyPageDTO.schoolYear != null and  bonusScoreApplyPageDTO.schoolYear != ''">
+            AND b.school_year = #{bonusScoreApplyPageDTO.schoolYear}
+        </if>
+
+        ORDER BY
+            CASE
+                s.class_status
+                WHEN '${@com.qingfeng.cms.domain.check.enums.CheckStatusEnums@INIT.name}' THEN 1
+                WHEN '${@com.qingfeng.cms.domain.check.enums.CheckStatusEnums@FAIL.name}' THEN 2
+                ELSE 3
+                END,
+            CASE
+                b.bonus_status
+                WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@HAVING.name}' THEN 1
+                WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@FAIL.name}' THEN 2
+                ELSE 3
+                END,
+        b.create_time DESC,
+        b.school_year
+        LIMIT #{bonusScoreApplyPageDTO.pageNo}, #{bonusScoreApplyPageDTO.pageSize}
+    </select>
+
+    <select id="selectBonusScoreCollegeCheckList"
+            resultType="com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity">
+        SELECT b.*
+        FROM im_bonus_score_apply b LEFT JOIN im_score_check s ON b.id = s.score_apply_id
+        WHERE b.user_id in
+        <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="bonusScoreApplyPageDTO.moduleId != null">
+            AND b.module_id = #{bonusScoreApplyPageDTO.moduleId}
+        </if>
+        <if test="bonusScoreApplyPageDTO.classStatus != null">
+            AND s.class_status = #{bonusScoreApplyPageDTO.classStatus}
+        </if>
+        <if test="bonusScoreApplyPageDTO.schoolYear != null and  bonusScoreApplyPageDTO.schoolYear != ''">
+            AND b.school_year = #{bonusScoreApplyPageDTO.schoolYear}
+        </if>
+
+        ORDER BY
+            CASE
+                s.college_status
+                WHEN '${@com.qingfeng.cms.domain.check.enums.CheckStatusEnums@INIT.name}' THEN 1
+                WHEN '${@com.qingfeng.cms.domain.check.enums.CheckStatusEnums@FAIL.name}' THEN 2
+                ELSE 3
+                END,
+            CASE
+                b.bonus_status
+                WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@HAVING.name}' THEN 1
+                WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@FAIL.name}' THEN 2
+                ELSE 3
+                END,
+        b.create_time DESC,
+        b.school_year
+        LIMIT #{bonusScoreApplyPageDTO.pageNo}, #{bonusScoreApplyPageDTO.pageSize}
+    </select>
+
+    <!-- 查询所有的加分申请总数 -->
+    <select id="selectAllBonusScoreCheckCount"
+            resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM im_bonus_score_apply b LEFT JOIN im_score_check s ON b.id = s.score_apply_id
+        WHERE 1=1
+        <if test="bonusScoreApplyPageDTO.moduleId != null">
+            AND b.module_id = #{bonusScoreApplyPageDTO.moduleId}
+        </if>
+        <if test="bonusScoreApplyPageDTO.classStatus != null">
+            AND s.class_status = #{bonusScoreApplyPageDTO.classStatus}
+        </if>
+        <if test="bonusScoreApplyPageDTO.schoolYear != null and  bonusScoreApplyPageDTO.schoolYear != ''">
+            AND b.school_year = #{bonusScoreApplyPageDTO.schoolYear}
+        </if>
+    </select>
+
+    <select id="selectAllBonusScoreCheckList"
+            resultType="com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity">
+        SELECT b.*
+        FROM im_bonus_score_apply b LEFT JOIN im_score_check s ON b.id = s.score_apply_id
+        WHERE 1=1
+        <if test="bonusScoreApplyPageDTO.moduleId != null">
+            AND b.module_id = #{bonusScoreApplyPageDTO.moduleId}
+        </if>
+        <if test="bonusScoreApplyPageDTO.classStatus != null">
+            AND s.class_status = #{bonusScoreApplyPageDTO.classStatus}
+        </if>
+        <if test="bonusScoreApplyPageDTO.schoolYear != null and  bonusScoreApplyPageDTO.schoolYear != ''">
+            AND b.school_year = #{bonusScoreApplyPageDTO.schoolYear}
+        </if>
+
+        ORDER BY
+            CASE
+                s.student_office_status
+                WHEN '${@com.qingfeng.cms.domain.check.enums.CheckStatusEnums@INIT.name}' THEN 1
+                WHEN '${@com.qingfeng.cms.domain.check.enums.CheckStatusEnums@FAIL.name}' THEN 2
+                ELSE 3
+                END,
+            CASE
+                b.bonus_status
+                WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@HAVING.name}' THEN 1
+                WHEN '${@com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums@FAIL.name}' THEN 2
+                ELSE 3
+                END,
+        b.create_time DESC,
+        b.school_year
+        LIMIT #{bonusScoreApplyPageDTO.pageNo}, #{bonusScoreApplyPageDTO.pageSize}
+    </select>
+
 
 </mapper>
