@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.check.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qingfeng.cms.biz.bonus.dao.BonusScoreApplyDao;
 import com.qingfeng.cms.biz.check.dao.ScoreCheckDao;
@@ -8,13 +9,16 @@ import com.qingfeng.cms.biz.check.service.ScoreCheckService;
 import com.qingfeng.cms.biz.evaluation.service.EvaluationFeedbackService;
 import com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity;
 import com.qingfeng.cms.domain.check.dto.BonusScoreApplyCheckPageDTO;
+import com.qingfeng.cms.domain.check.dto.ScoreCheckSaveDTO;
 import com.qingfeng.cms.domain.check.entity.ScoreCheckEntity;
+import com.qingfeng.cms.domain.check.enums.CheckStatusEnums;
 import com.qingfeng.cms.domain.check.vo.BonusScoreApplyVo;
 import com.qingfeng.cms.domain.check.vo.BonusScoreCheckPageVo;
 import com.qingfeng.cms.domain.check.vo.PlanModuleVo;
 import com.qingfeng.cms.domain.check.vo.ScoreCheckVo;
 import com.qingfeng.cms.domain.clazz.vo.UserVo;
 import com.qingfeng.cms.domain.evaluation.entity.EvaluationFeedbackEntity;
+import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleSaveDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
@@ -25,6 +29,7 @@ import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.sdk.auth.role.UserRoleApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
@@ -34,9 +39,12 @@ import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import com.qingfeng.sdk.planstandard.plan.PlanApi;
 import com.qingfeng.sdk.planstandard.project.ProjectApi;
 import com.qingfeng.sdk.planstandard.rule.RulesApi;
+import com.qingfeng.sdk.school.item.ItemAchievementModuleApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +85,8 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
     private StuInfoApi stuInfoApi;
     @Autowired
     private PlanApi planApi;
+    @Autowired
+    private ItemAchievementModuleApi itemAchievementModuleApi;
 
     /**
      * 查询不同管理员需要审核的加分信息
@@ -97,6 +107,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
 
         // 先要判断用户的身份
         UserRoleVo userRoleVo = userRoleApi.findRoleIdByUserId(userId).getData();
+        Integer count = 0;
         if (userRoleVo.getCode().equals(RoleEnum.CLASS_GRADE.name())) {
             // 班级领导 查询班级下的学生
             List<UserVo> userVoList = clazzInfoApi.stuList().getData();
@@ -107,7 +118,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
                         .collect(Collectors.toList());
 
                 // 先查询用户申请的项目加分总数
-                Integer count = bonusScoreApplyDao.selectBonusScoreCheckCount(bonusScoreApplyPageDTO, userIds);
+                count = bonusScoreApplyDao.selectBonusScoreCheckCount(bonusScoreApplyPageDTO, userIds);
                 if (count == 0) {
                     return BonusScoreCheckPageVo.builder()
                             .total(count)
@@ -137,7 +148,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
                         .collect(Collectors.toList());
 
                 // 先查询用户申请的项目加分总数
-                Integer count = bonusScoreApplyDao.selectBonusScoreCheckCount(bonusScoreApplyPageDTO, userIds);
+                count = bonusScoreApplyDao.selectBonusScoreCheckCount(bonusScoreApplyPageDTO, userIds);
                 if (count == 0) {
                     return BonusScoreCheckPageVo.builder()
                             .total(count)
@@ -160,7 +171,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
 
         } else if (userRoleVo.getCode().equals(RoleEnum.STU_OFFICE_ADMIN.name())) {
             // 学生处领导  需要查询所有学生的
-            Integer count = bonusScoreApplyDao.selectAllBonusScoreCheckCount(bonusScoreApplyPageDTO);
+            count = bonusScoreApplyDao.selectAllBonusScoreCheckCount(bonusScoreApplyPageDTO);
             if (count == 0) {
                 return BonusScoreCheckPageVo.builder()
                         .total(count)
@@ -214,7 +225,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
         );
 
         return BonusScoreCheckPageVo.builder()
-                .total(0)
+                .total(count)
                 .bonusScoreApplyList(bonusScoreApplyVoList)
                 .pageNo(pageNo)
                 .pageSize(pageSize)
@@ -464,4 +475,135 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
 
         return Collections.emptyList();
     }
+
+    /**
+     * 项目加分申请审核
+     * 1. 要判断用户角色：班级、学院、学生处
+     * 2. 审核加分环节，必须是在最后一级学生处审核完成后进行加分（调用加分服务进行加分）
+     * 3. 一旦有审核未通过的环节，需要给学生发送通知
+     *
+     * @param scoreCheckSaveDTO
+     * @param userId
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public void saveCheck(ScoreCheckSaveDTO scoreCheckSaveDTO, Long userId) {
+        // 查询出之前的原始信息
+        ScoreCheckEntity scoreCheck = baseMapper.selectOne(
+                Wraps.lbQ(new ScoreCheckEntity())
+                        .eq(ScoreCheckEntity::getScoreApplyId, scoreCheckSaveDTO.getScoreApplyId())
+        );
+        // 先要判断用户的身份
+        UserRoleVo userRoleVo = userRoleApi.findRoleIdByUserId(userId).getData();
+        if (userRoleVo.getCode().equals(RoleEnum.CLASS_GRADE.name())) {
+            // 班级领导
+            scoreCheck.setClassStatus(scoreCheckSaveDTO.getStatus());
+            scoreCheck.setClassFeedback(scoreCheckSaveDTO.getFeedback());
+        } else if (userRoleVo.getCode().equals(RoleEnum.YUAN_LEVEL_LEADER.name())) {
+            // 学院领导
+            scoreCheck.setCollegeStatus(scoreCheckSaveDTO.getStatus());
+            scoreCheck.setCollegeFeedback(scoreCheckSaveDTO.getFeedback());
+        } else if (userRoleVo.getCode().equals(RoleEnum.STU_OFFICE_ADMIN.name())) {
+            // 学生处领导
+            scoreCheck.setStudentOfficeStatus(scoreCheckSaveDTO.getStatus());
+            scoreCheck.setStudentOfficeFeedback(scoreCheckSaveDTO.getFeedback());
+
+            if (scoreCheckSaveDTO.getStatus().eq(CheckStatusEnums.COMPLETE)) {
+                BonusScoreApplyEntity bonusScore = bonusScoreApplyDao.selectById(scoreCheckSaveDTO.getScoreApplyId());
+                CreditModuleEntity creditModule = (CreditModuleEntity) creditModuleApi.info(bonusScore.getModuleId()).getData();
+                CreditRulesEntity rules = rulesApi.ruleInfoByIds(Collections.singletonList(
+                                        bonusScore.getCreditRulesId()
+                                )
+                        ).getData()
+                        .get(0);
+                // 审核通过，调用加分的服务进行加分
+                itemAchievementModuleApi.save(
+                        ItemAchievementModuleSaveDTO.builder()
+                                .userId(bonusScore.getUserId())
+                                .moduleId(bonusScore.getModuleId())
+                                .moduleCode(creditModule.getCode().getCode())
+                                .projectId(bonusScore.getProjectId())
+                                .levelId(bonusScore.getLevelId())
+                                .creditRulesId(bonusScore.getCreditRulesId())
+                                .score(ObjectUtil.isEmpty(scoreCheckSaveDTO.getScore()) ?
+                                        BigDecimal.valueOf(rules.getScore()) : scoreCheckSaveDTO.getScore())
+                                .build()
+                );
+            }
+        }
+
+        // 进行修改
+        baseMapper.updateById(scoreCheck);
+
+        // TODO 如果审核是不通过的，那么需要发送邮件给对应的学生进行修改
+        if(scoreCheckSaveDTO.getStatus().eq(CheckStatusEnums.FAIL)) {
+//            sendMsg(scoreCheckSaveDTO, userRoleVo);
+        }
+    }
+
+    /*private void sendMsg(ScoreCheckSaveDTO scoreCheckSaveDTO, UserRoleVo userRoleVo) {
+        User user = userRoleApi.findStuClazzInfo().getData();
+
+        // 查询模块等信息
+        CreditModuleEntity creditModule = (CreditModuleEntity) creditModuleApi.info(
+                        bonusScoreApply.getModuleId()
+                )
+                .getData();
+
+        ProjectEntity project = projectApi.findInfoById(bonusScoreApply.getProjectId())
+                .getData();
+
+        LevelEntity level = levelApi.levelInfoById(bonusScoreApply.getLevelId())
+                .getData();
+
+
+        String title = "";
+        String body = "";
+        if (ObjectUtil.isNotEmpty(bonusScoreApply.getId())) {
+            title = "模块《"+creditModule.getModuleName()+"》加分申报修改待审核通知";
+            body = "亲爱的班级负责人：\r\n       "
+                    + "模块《"+creditModule.getModuleName()+"》->"
+                    + "项目：（" + project.getProjectName() +"）->"
+                    + "等级：（" + level.getLevelContent() +"）->"
+                    + "加分申请已经修改，并申请成功，请尽早进行审核，以免影响加分进度！";
+        } else {
+            title = "模块《"+creditModule.getModuleName()+"》加分申报待审核通知";
+            body = "亲爱的班级负责人：\r\n       "
+                    + "模块《"+creditModule.getModuleName()+"》->"
+                    + "项目：（" + project.getProjectName() +"）->"
+                    + "等级：（" + level.getLevelContent() +"）->"
+                    + "加分申请已经申请成功，请尽早进行审核，以免影响加分进度！";
+        }
+
+        if (StrUtil.isNotBlank(user.getEmail())) {
+            //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+            try {
+                rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
+                        .email(user.getEmail())
+                        .title(title)
+                        .body(body)
+                        .key("bonus.item.email")
+                        .build()), "bonus.item.email");
+
+                // 进行消息存储
+                //将消息通知写入数据库
+                R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                        .userId(user.getId())
+                        .newsType(NewsTypeEnum.MAILBOX)
+                        .newsTitle(title)
+                        .newsContent(body)
+                        .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                        .build());
+
+                if (r.getIsError()) {
+                    throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "消息通知保存失败！");
+                }
+            } catch (JsonProcessingException e) {
+                throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), "项目加分申请审核异常");
+            }
+
+        } else {
+            // TODO 短信发送
+        }
+    }*/
 }

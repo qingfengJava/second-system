@@ -2,6 +2,7 @@ package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.check.service.ScoreCheckService;
 import com.qingfeng.cms.domain.check.dto.BonusScoreApplyCheckPageDTO;
+import com.qingfeng.cms.domain.check.dto.ScoreCheckSaveDTO;
 import com.qingfeng.cms.domain.check.enums.CheckStatusEnums;
 import com.qingfeng.cms.domain.check.ro.EnumsRo;
 import com.qingfeng.cms.domain.check.vo.BonusScoreCheckPageVo;
@@ -56,6 +57,14 @@ public class ScoreCheckController extends BaseController {
     public R<List<PlanModuleVo>> moduleList(){
         List<PlanModuleVo> planModuleVoList = scoreCheckService.findPlanModuleList(getUserId());
         return success(planModuleVoList);
+    }
+
+    @ApiOperation(value = "项目加分申请审核", notes = "项目加分申请审核")
+    @PostMapping("/save/check")
+    @SysLog("项目加分申请审核")
+    public R saveCheck(@RequestBody @Validated ScoreCheckSaveDTO scoreCheckSaveDTO){
+        scoreCheckService.saveCheck(scoreCheckSaveDTO, getUserId());
+        return success();
     }
 
     @ApiOperation(value = "返回审核枚举状态值", notes = "返回审核枚举状态值")

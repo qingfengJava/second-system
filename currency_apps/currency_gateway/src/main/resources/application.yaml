@@ -50,3 +50,11 @@ spring:
             - Path=/api/item/**
           filters: # 指定路径重写
             - RewritePath=/api/item/(?<segment>.*),/$\{segment}
+
+        # 成绩单管理服务的网关路由
+        - id: cms-school-report # 网关Id
+          uri: lb://cms-school-report
+          predicates:
+            - Path=/api/school/**
+          filters: # 指定路径重写
+            - RewritePath=/api/school/(?<segment>.*),/$\{segment}

@@ -2,6 +2,7 @@ package com.qingfeng.cms.biz.check.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.check.dto.BonusScoreApplyCheckPageDTO;
+import com.qingfeng.cms.domain.check.dto.ScoreCheckSaveDTO;
 import com.qingfeng.cms.domain.check.entity.ScoreCheckEntity;
 import com.qingfeng.cms.domain.check.vo.BonusScoreCheckPageVo;
 import com.qingfeng.cms.domain.check.vo.PlanModuleVo;
@@ -31,5 +32,12 @@ public interface ScoreCheckService extends IService<ScoreCheckEntity> {
      * @return
      */
     List<PlanModuleVo> findPlanModuleList(Long userId);
+
+    /**
+     * 项目加分申请审核
+     * @param scoreCheckSaveDTO
+     * @param userId
+     */
+    void saveCheck(ScoreCheckSaveDTO scoreCheckSaveDTO, Long userId);
 }
 
