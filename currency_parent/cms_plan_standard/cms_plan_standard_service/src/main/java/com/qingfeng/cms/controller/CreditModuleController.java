@@ -84,7 +84,7 @@ public class CreditModuleController extends BaseController {
     @ApiOperation(value = "根据Id查询学分认定模块信息", notes = "根据Id查询学分认定模块信息")
     @GetMapping("/info/{moduleId}")
     @SysLog("根据Id查询学分认定模块信息")
-    public R info(@ApiParam(value = "学分认定模块Id", required = true)
+    public R<CreditModuleEntity> info(@ApiParam(value = "学分认定模块Id", required = true)
                   @PathVariable("moduleId") @NotNull Long moduleId) {
         CreditModuleEntity creditModule = creditModuleService.getById(moduleId);
         return success(creditModule);

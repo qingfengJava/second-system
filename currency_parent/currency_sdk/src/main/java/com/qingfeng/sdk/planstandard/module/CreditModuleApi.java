@@ -42,7 +42,7 @@ public interface CreditModuleApi {
      * @return
      */
     @GetMapping("/creditmodule/info/{moduleId}")
-    public R info(@PathVariable("moduleId") Long moduleId);
+    public R<CreditModuleEntity> info(@PathVariable("moduleId") Long moduleId);
 
     /**
      * 查询所有方案和模块内容，并分组排序

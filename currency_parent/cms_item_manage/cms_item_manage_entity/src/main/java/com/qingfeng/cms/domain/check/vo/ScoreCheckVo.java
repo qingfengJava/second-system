@@ -59,4 +59,7 @@ public class ScoreCheckVo implements Serializable {
 
 	@ApiModelProperty(value = "不同阶段的审核一键，展示在页面上使用的")
 	private String feedback;
+
+	@ApiModelProperty(value = "是否能被当前用户处理")
+	private Boolean canBeHandled;
 }

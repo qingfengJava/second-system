@@ -2,12 +2,17 @@ package com.qingfeng.cms.biz.check.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qingfeng.cms.biz.bonus.dao.BonusScoreApplyDao;
 import com.qingfeng.cms.biz.check.dao.ScoreCheckDao;
 import com.qingfeng.cms.biz.check.service.ScoreCheckService;
 import com.qingfeng.cms.biz.evaluation.service.EvaluationFeedbackService;
+import com.qingfeng.cms.biz.service.producer.RabbitSendMsg;
 import com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity;
+import com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums;
 import com.qingfeng.cms.domain.check.dto.BonusScoreApplyCheckPageDTO;
 import com.qingfeng.cms.domain.check.dto.ScoreCheckSaveDTO;
 import com.qingfeng.cms.domain.check.entity.ScoreCheckEntity;
@@ -21,25 +26,34 @@ import com.qingfeng.cms.domain.evaluation.entity.EvaluationFeedbackEntity;
 import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleSaveDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
+import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
+import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
 import com.qingfeng.cms.domain.plan.ro.PlanTreeRo;
 import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
+import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
+import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.exception.BizException;
+import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.auth.role.UserRoleApi;
+import com.qingfeng.sdk.auth.user.UserApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
 import com.qingfeng.sdk.messagecontrol.collegeinformation.CollegeInformationApi;
+import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
 import com.qingfeng.sdk.planstandard.level.LevelApi;
 import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import com.qingfeng.sdk.planstandard.plan.PlanApi;
 import com.qingfeng.sdk.planstandard.project.ProjectApi;
 import com.qingfeng.sdk.planstandard.rule.RulesApi;
 import com.qingfeng.sdk.school.item.ItemAchievementModuleApi;
+import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,6 +101,14 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
     private PlanApi planApi;
     @Autowired
     private ItemAchievementModuleApi itemAchievementModuleApi;
+    @Autowired
+    private UserApi userApi;
+    @Autowired
+    private RabbitSendMsg rabbitSendMsg;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private NewsNotifyApi newsNotifyApi;
 
     /**
      * 查询不同管理员需要审核的加分信息
@@ -384,12 +406,18 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
                             if (userRoleVo.getCode().equals(RoleEnum.CLASS_GRADE.name())) {
                                 scoreCheckVo.setStatus(scoreCheck.getClassStatus());
                                 scoreCheckVo.setFeedback(scoreCheck.getClassFeedback());
+                                scoreCheckVo.setCanBeHandled(Boolean.TRUE);
                             } else if (userRoleVo.getCode().equals(RoleEnum.YUAN_LEVEL_LEADER.name())) {
                                 scoreCheckVo.setStatus(scoreCheck.getCollegeStatus());
                                 scoreCheckVo.setFeedback(scoreCheck.getCollegeFeedback());
+                                scoreCheckVo.setCanBeHandled(scoreCheck.getClassStatus().eq(CheckStatusEnums.COMPLETE));
                             } else if (userRoleVo.getCode().equals(RoleEnum.STU_OFFICE_ADMIN.name())) {
                                 scoreCheckVo.setStatus(scoreCheck.getStudentOfficeStatus());
                                 scoreCheckVo.setFeedback(scoreCheck.getStudentOfficeFeedback());
+                                scoreCheckVo.setCanBeHandled(
+                                        scoreCheck.getClassStatus().eq(CheckStatusEnums.COMPLETE)
+                                                && scoreCheck.getCollegeStatus().eq(CheckStatusEnums.COMPLETE)
+                                );
                             }
                             return BonusScoreApplyVo.builder()
                                     .id(bonusScoreApply.getId())
@@ -508,8 +536,8 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
             scoreCheck.setStudentOfficeStatus(scoreCheckSaveDTO.getStatus());
             scoreCheck.setStudentOfficeFeedback(scoreCheckSaveDTO.getFeedback());
 
+            BonusScoreApplyEntity bonusScore = bonusScoreApplyDao.selectById(scoreCheckSaveDTO.getScoreApplyId());
             if (scoreCheckSaveDTO.getStatus().eq(CheckStatusEnums.COMPLETE)) {
-                BonusScoreApplyEntity bonusScore = bonusScoreApplyDao.selectById(scoreCheckSaveDTO.getScoreApplyId());
                 CreditModuleEntity creditModule = (CreditModuleEntity) creditModuleApi.info(bonusScore.getModuleId()).getData();
                 CreditRulesEntity rules = rulesApi.ruleInfoByIds(Collections.singletonList(
                                         bonusScore.getCreditRulesId()
@@ -529,61 +557,73 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
                                         BigDecimal.valueOf(rules.getScore()) : scoreCheckSaveDTO.getScore())
                                 .build()
                 );
+
+                // 审核通过，修改最终的加分项目申请状态
+                bonusScore.setBonusStatus(BonusStatusEnums.COMPLETE);
+                bonusScoreApplyDao.updateById(bonusScore);
             }
         }
 
         // 进行修改
         baseMapper.updateById(scoreCheck);
 
-        // TODO 如果审核是不通过的，那么需要发送邮件给对应的学生进行修改
-        if(scoreCheckSaveDTO.getStatus().eq(CheckStatusEnums.FAIL)) {
-//            sendMsg(scoreCheckSaveDTO, userRoleVo);
+        // 如果审核是不通过的，那么需要发送邮件给对应的学生进行修改
+        if (scoreCheckSaveDTO.getStatus().eq(CheckStatusEnums.FAIL)) {
+            sendMsg(scoreCheckSaveDTO, userRoleVo);
         }
     }
 
-    /*private void sendMsg(ScoreCheckSaveDTO scoreCheckSaveDTO, UserRoleVo userRoleVo) {
-        User user = userRoleApi.findStuClazzInfo().getData();
+    private void sendMsg(ScoreCheckSaveDTO scoreCheckSaveDTO, UserRoleVo userRoleVo) {
+        BonusScoreApplyEntity bonusScore = bonusScoreApplyDao.selectById(scoreCheckSaveDTO.getScoreApplyId());
+
+        // 审核不通过，修改整体审核状态
+        bonusScore.setBonusStatus(BonusStatusEnums.FAIL);
+        bonusScoreApplyDao.updateById(bonusScore);
+
+        User user = userApi.get(bonusScore.getUserId()).getData();
+
 
         // 查询模块等信息
-        CreditModuleEntity creditModule = (CreditModuleEntity) creditModuleApi.info(
-                        bonusScoreApply.getModuleId()
+        CreditModuleEntity creditModule = creditModuleApi.info(
+                        bonusScore.getModuleId()
                 )
                 .getData();
 
-        ProjectEntity project = projectApi.findInfoById(bonusScoreApply.getProjectId())
+        ProjectEntity project = projectApi.findInfoById(bonusScore.getProjectId())
                 .getData();
 
-        LevelEntity level = levelApi.levelInfoById(bonusScoreApply.getLevelId())
+        LevelEntity level = levelApi.levelInfoById(bonusScore.getLevelId())
                 .getData();
 
-
-        String title = "";
-        String body = "";
-        if (ObjectUtil.isNotEmpty(bonusScoreApply.getId())) {
-            title = "模块《"+creditModule.getModuleName()+"》加分申报修改待审核通知";
-            body = "亲爱的班级负责人：\r\n       "
-                    + "模块《"+creditModule.getModuleName()+"》->"
-                    + "项目：（" + project.getProjectName() +"）->"
-                    + "等级：（" + level.getLevelContent() +"）->"
-                    + "加分申请已经修改，并申请成功，请尽早进行审核，以免影响加分进度！";
-        } else {
-            title = "模块《"+creditModule.getModuleName()+"》加分申报待审核通知";
-            body = "亲爱的班级负责人：\r\n       "
-                    + "模块《"+creditModule.getModuleName()+"》->"
-                    + "项目：（" + project.getProjectName() +"）->"
-                    + "等级：（" + level.getLevelContent() +"）->"
-                    + "加分申请已经申请成功，请尽早进行审核，以免影响加分进度！";
+        String title = "模块《" + creditModule.getModuleName() + "》";
+        String body = "亲爱的" + user.getName() + "同学：\r\n       "
+                + "模块《" + creditModule.getModuleName() + "》->"
+                + "项目：（" + project.getProjectName() + "）->"
+                + "等级：（" + level.getLevelContent() + "）->";
+        if (userRoleVo.getCode().equals(RoleEnum.CLASS_GRADE.name())) {
+            // 班级领导
+            title += "班级审核不通过通知";
+            body += "经班级审核不予通过，具体原因【" + scoreCheckSaveDTO.getFeedback() + "】，如有疑问请联系相关管理员，并重新进行申请！！！";
+        } else if (userRoleVo.getCode().equals(RoleEnum.YUAN_LEVEL_LEADER.name())) {
+            // 二级学院领导
+            title += "学院审核不通过通知";
+            body += "经学院审核不予通过，具体原因【" + scoreCheckSaveDTO.getFeedback() + "】，如有疑问请联系相关管理员，并重新进行申请！！！";
+        } else if (userRoleVo.getCode().equals(RoleEnum.STU_OFFICE_ADMIN.name())) {
+            // 学生处领导
+            title += "学生处审核不通过通知";
+            body += "经学生处审核不予通过，具体原因【" + scoreCheckSaveDTO.getFeedback() + "】，如有疑问请联系相关管理员，并重新进行申请！！！";
         }
 
+
         if (StrUtil.isNotBlank(user.getEmail())) {
-            //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+            //有邮箱就先向邮箱中发送消息
             try {
                 rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
                         .email(user.getEmail())
                         .title(title)
                         .body(body)
-                        .key("bonus.item.email")
-                        .build()), "bonus.item.email");
+                        .key("score.item.email")
+                        .build()), "score.item.email");
 
                 // 进行消息存储
                 //将消息通知写入数据库
@@ -605,5 +645,5 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
         } else {
             // TODO 短信发送
         }
-    }*/
+    }
 }

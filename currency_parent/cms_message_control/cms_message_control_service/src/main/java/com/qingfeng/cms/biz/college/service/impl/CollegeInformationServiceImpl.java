@@ -106,7 +106,7 @@ public class CollegeInformationServiceImpl extends ServiceImpl<CollegeInformatio
         }
 
         return stuInfoService.list(Wraps.lbQ(new StuInfoEntity())
-                .eq(StuInfoEntity::getDepartment, collegeInformationEntity.getUserId())
+                .eq(StuInfoEntity::getDepartment, collegeInformationEntity.getOrganizationCode())
         );
     }
 }
