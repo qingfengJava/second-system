@@ -2,6 +2,7 @@ package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.item.service.ItemAchievementModuleService;
 import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleSaveDTO;
+import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleUpdateDTO;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.log.annotation.SysLog;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,5 +42,16 @@ public class ItemAchievementModuleController extends BaseController  {
         return success();
     }
 
-    // TODO 存在方案模块误判，取消加分的情况
+    /**
+     * 存在方案模块误判的情况，只能在最后一级
+     *      一旦取消，需要将记录删除，状态更改
+     * @return
+     */
+    @ApiOperation(value = "误判，取消方案模块加分", notes = "误判，取消方案模块加分")
+    @PutMapping
+    @SysLog("误判、取消方案模块加分")
+    public R cancelBonusPoints(@RequestBody @Validated ItemAchievementModuleUpdateDTO itemAchievementModuleUpdateDTO){
+        itemAchievementModuleService.cancelBonusPoints(itemAchievementModuleUpdateDTO);
+        return success();
+    }
 }

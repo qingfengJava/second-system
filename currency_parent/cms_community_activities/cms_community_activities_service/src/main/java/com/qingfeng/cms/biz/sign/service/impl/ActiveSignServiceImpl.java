@@ -10,6 +10,7 @@ import com.qingfeng.cms.biz.sign.service.ActiveSignService;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.enums.IsBonusPointsApplyEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
+import com.qingfeng.cms.domain.club.dto.ClubScoreModuleSaveDTO;
 import com.qingfeng.cms.domain.organize.entity.OrganizeImgEntity;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
@@ -38,10 +39,12 @@ import com.qingfeng.sdk.auth.user.UserApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import com.qingfeng.sdk.messagecontrol.organize.OrganizeImgApi;
 import com.qingfeng.sdk.messagecontrol.organize.OrganizeInfoApi;
+import com.qingfeng.sdk.school.club.ClubScoreModuleApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -80,6 +83,8 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
     private StuInfoApi stuInfoApi;
     @Autowired
     private UserApi userApi;
+    @Autowired
+    private ClubScoreModuleApi clubScoreModuleApi;
 
     /**
      * 查询社团组织列表
@@ -310,8 +315,12 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
         //查询活动信息
         ApplyEntity applyEntity = applyDao.selectById(baseMapper.selectById(activeSignEntity.getId()).getApplyId());
         if (IsBonusPointsApplyEnum.NOT.equals(applyEntity.getIsBonusPointsApply())) {
-            // TODO 需要直接进行加分的
-
+            // 需要直接进行加分的
+            clubScoreModuleApi.save(ClubScoreModuleSaveDTO.builder()
+                    .userId(applyEntity.getApplyUserId())
+                    .activeApplyId(applyEntity.getId())
+                    .score(BigDecimal.valueOf(applyEntity.getActiveScore()))
+                    .build());
         }
     }
 

@@ -15,6 +15,7 @@ import com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity;
 import com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums;
 import com.qingfeng.cms.domain.check.dto.BonusScoreApplyCheckPageDTO;
 import com.qingfeng.cms.domain.check.dto.ScoreCheckSaveDTO;
+import com.qingfeng.cms.domain.check.dto.ScoreCheckUpdateDTO;
 import com.qingfeng.cms.domain.check.entity.ScoreCheckEntity;
 import com.qingfeng.cms.domain.check.enums.CheckStatusEnums;
 import com.qingfeng.cms.domain.check.vo.BonusScoreApplyVo;
@@ -24,6 +25,7 @@ import com.qingfeng.cms.domain.check.vo.ScoreCheckVo;
 import com.qingfeng.cms.domain.clazz.vo.UserVo;
 import com.qingfeng.cms.domain.evaluation.entity.EvaluationFeedbackEntity;
 import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleSaveDTO;
+import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleUpdateDTO;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
@@ -538,7 +540,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
 
             BonusScoreApplyEntity bonusScore = bonusScoreApplyDao.selectById(scoreCheckSaveDTO.getScoreApplyId());
             if (scoreCheckSaveDTO.getStatus().eq(CheckStatusEnums.COMPLETE)) {
-                CreditModuleEntity creditModule = (CreditModuleEntity) creditModuleApi.info(bonusScore.getModuleId()).getData();
+                CreditModuleEntity creditModule = creditModuleApi.info(bonusScore.getModuleId()).getData();
                 CreditRulesEntity rules = rulesApi.ruleInfoByIds(Collections.singletonList(
                                         bonusScore.getCreditRulesId()
                                 )
@@ -548,6 +550,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
                 itemAchievementModuleApi.save(
                         ItemAchievementModuleSaveDTO.builder()
                                 .userId(bonusScore.getUserId())
+                                .bonusScoreApplyId(bonusScore.getId())
                                 .moduleId(bonusScore.getModuleId())
                                 .moduleCode(creditModule.getCode().getCode())
                                 .projectId(bonusScore.getProjectId())
@@ -645,5 +648,37 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
         } else {
             // TODO 短信发送
         }
+    }
+
+    /**
+     * 取消已审核的加分
+     *
+     * @param scoreCheckUpdateDTO
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public void updateBonusPoints(ScoreCheckUpdateDTO scoreCheckUpdateDTO) {
+        // 修改申请和审核的 一个状态
+        ScoreCheckEntity scoreCheck = baseMapper.selectOne(
+                Wraps.lbQ(new ScoreCheckEntity())
+                        .eq(ScoreCheckEntity::getScoreApplyId, scoreCheckUpdateDTO.getScoreApplyId())
+        );
+
+        scoreCheck.setStudentOfficeStatus(CheckStatusEnums.FAIL)
+                .setStudentOfficeFeedback(scoreCheckUpdateDTO.getFeedback());
+        baseMapper.updateById(scoreCheck);
+
+        // 修改项目申请的状态
+        BonusScoreApplyEntity bonusScoreApply = bonusScoreApplyDao.selectById(scoreCheckUpdateDTO.getScoreApplyId());
+        bonusScoreApply.setBonusStatus(BonusStatusEnums.FAIL);
+        bonusScoreApplyDao.updateById(bonusScoreApply);
+
+        // 调用服务修改学分
+        itemAchievementModuleApi.cancelBonusPoints(
+                ItemAchievementModuleUpdateDTO.builder()
+                        .userId(bonusScoreApply.getUserId())
+                        .bonusScoreApplyId(bonusScoreApply.getId())
+                        .build()
+        );
     }
 }

@@ -3,6 +3,7 @@ package com.qingfeng.cms.controller;
 import com.qingfeng.cms.biz.check.service.ScoreCheckService;
 import com.qingfeng.cms.domain.check.dto.BonusScoreApplyCheckPageDTO;
 import com.qingfeng.cms.domain.check.dto.ScoreCheckSaveDTO;
+import com.qingfeng.cms.domain.check.dto.ScoreCheckUpdateDTO;
 import com.qingfeng.cms.domain.check.enums.CheckStatusEnums;
 import com.qingfeng.cms.domain.check.ro.EnumsRo;
 import com.qingfeng.cms.domain.check.vo.BonusScoreCheckPageVo;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,6 +68,15 @@ public class ScoreCheckController extends BaseController {
         scoreCheckService.saveCheck(scoreCheckSaveDTO, getUserId());
         return success();
     }
+
+    @ApiOperation(value = "误判，取消项目申请加分", notes = "误判、取消项目申请加分")
+    @PutMapping
+    @SysLog("误判，取消项目申请加分")
+    public R updateBonusPoints(@RequestBody @Validated ScoreCheckUpdateDTO scoreCheckUpdateDTO){
+        scoreCheckService.updateBonusPoints(scoreCheckUpdateDTO);
+        return success();
+    }
+
 
     @ApiOperation(value = "返回审核枚举状态值", notes = "返回审核枚举状态值")
     @GetMapping("/anno/enums")

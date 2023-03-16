@@ -2,6 +2,7 @@ package com.qingfeng.cms.biz.item.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleSaveDTO;
+import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleUpdateDTO;
 import com.qingfeng.cms.domain.item.entity.ItemAchievementModuleEntity;
 
 /**
@@ -18,5 +19,11 @@ public interface ItemAchievementModuleService extends IService<ItemAchievementMo
      * @param itemAchievementModuleSaveDTO
      */
     void saveItemAchievementModule(ItemAchievementModuleSaveDTO itemAchievementModuleSaveDTO);
+
+    /**
+     * 取消模块加分申请
+     * @param itemAchievementModuleUpdateDTO
+     */
+    void cancelBonusPoints(ItemAchievementModuleUpdateDTO itemAchievementModuleUpdateDTO);
 }
 

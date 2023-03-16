@@ -6,14 +6,17 @@ import com.qingfeng.cms.biz.item.dao.ItemAchievementModuleDao;
 import com.qingfeng.cms.biz.item.service.ItemAchievementModuleService;
 import com.qingfeng.cms.biz.total.dao.StudentScoreTotalDao;
 import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleSaveDTO;
+import com.qingfeng.cms.domain.item.dto.ItemAchievementModuleUpdateDTO;
 import com.qingfeng.cms.domain.item.entity.ItemAchievementModuleEntity;
 import com.qingfeng.cms.domain.plan.entity.PlanEntity;
 import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.dozer.DozerUtils;
+import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.sdk.planstandard.plan.PlanApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -38,6 +41,7 @@ public class ItemAchievementModuleServiceImpl extends ServiceImpl<ItemAchievemen
 
     /**
      * 保存方案模块得分详情
+     *
      * @param itemAchievementModuleSaveDTO
      */
     @Override
@@ -66,5 +70,35 @@ public class ItemAchievementModuleServiceImpl extends ServiceImpl<ItemAchievemen
             studentScoreTotal.setScore(studentScoreTotal.getScore().add(itemAchievementModuleSaveDTO.getScore()));
             studentScoreTotalDao.updateById(studentScoreTotal);
         }
+    }
+
+    /**
+     * 取消模块加分申请
+     *
+     * @param itemAchievementModuleUpdateDTO
+     */
+    @Override
+    @Transactional(rollbackFor = BizException.class)
+    public void cancelBonusPoints(ItemAchievementModuleUpdateDTO itemAchievementModuleUpdateDTO) {
+        // 查询出当前信息，
+        ItemAchievementModuleEntity itemAchievementModule = baseMapper.selectOne(
+                Wraps.lbQ(new ItemAchievementModuleEntity())
+                        .eq(ItemAchievementModuleEntity::getUserId, itemAchievementModuleUpdateDTO.getUserId())
+                        .eq(ItemAchievementModuleEntity::getBonusScoreApplyId, itemAchievementModuleUpdateDTO.getBonusScoreApplyId())
+        );
+
+        // 查询用户总学分记录
+        StudentScoreTotalEntity studentScoreTotal = studentScoreTotalDao.selectOne(
+                Wraps.lbQ(new StudentScoreTotalEntity())
+                        .eq(StudentScoreTotalEntity::getUserId, itemAchievementModuleUpdateDTO.getUserId())
+        );
+
+        // 修改总学分记录
+        studentScoreTotalDao.updateById(studentScoreTotal.setScore(
+                studentScoreTotal.getScore().subtract(itemAchievementModule.getScore())
+        ));
+
+        // 删除当前记录
+        baseMapper.deleteById(itemAchievementModule.getId());
     }
 }

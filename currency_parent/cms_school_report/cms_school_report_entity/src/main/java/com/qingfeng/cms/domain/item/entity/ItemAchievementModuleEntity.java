@@ -36,6 +36,9 @@ public class ItemAchievementModuleEntity extends Entity<Long> {
 	@ApiModelProperty(value = "用户Id")
 	private Long userId;
 
+	@ApiModelProperty(value = "项目加分申请表Id")
+	private Long bonusScoreApplyId;
+
 	@ApiModelProperty(value = "模块Id")
 	private Long moduleId;
 
