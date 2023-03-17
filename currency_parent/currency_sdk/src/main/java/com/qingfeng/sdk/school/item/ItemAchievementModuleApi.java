@@ -31,6 +31,6 @@ public interface ItemAchievementModuleApi {
      * @param itemAchievementModuleUpdateDTO
      * @return
      */
-    @PutMapping
+    @PutMapping("/item_achievement_module")
     public R cancelBonusPoints(@RequestBody ItemAchievementModuleUpdateDTO itemAchievementModuleUpdateDTO);
 }
