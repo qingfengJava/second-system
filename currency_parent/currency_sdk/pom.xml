@@ -58,6 +58,12 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.qingfeng</groupId>
+            <artifactId>cms_community_activities_entity</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

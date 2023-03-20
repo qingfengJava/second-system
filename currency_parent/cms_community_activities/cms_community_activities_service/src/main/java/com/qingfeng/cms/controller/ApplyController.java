@@ -23,6 +23,7 @@ import com.qingfeng.cms.domain.apply.vo.BonusFileVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -82,6 +84,16 @@ public class ApplyController extends BaseController {
     public R<ApplyEntity> info(@ApiParam(value = "活动申请Id", required = true)
                                @PathVariable("id") @NotNull Long id) {
         return success(applyService.getById(id));
+    }
+
+    @ApiOperation(value = "根据Ids查询活动集合", notes = "根据Ids查询活动集合")
+    @PostMapping("/info_list")
+    @SysLog("根据Ids查询活动集合")
+    public R<List<ApplyEntity>> infoListByIds(@RequestBody List<Long> ids) {
+        return success(applyService.list(Wraps.lbQ(new ApplyEntity())
+                        .in(ApplyEntity::getId, ids)
+                )
+        );
     }
 
     @ApiOperation(value = "活动申请信息保存", notes = "活动申请信息保存")
@@ -127,7 +139,7 @@ public class ApplyController extends BaseController {
     @ApiOperation(value = "提交加分文件", notes = "提交加分文件")
     @PostMapping("/bonus/file")
     @SysLog("提交加分文件")
-    public R uploadBonusFile(@RequestBody @Validated BonusFileVo bonusFileVo){
+    public R uploadBonusFile(@RequestBody @Validated BonusFileVo bonusFileVo) {
         applyService.uploadBonusFile(bonusFileVo);
         return success();
     }
