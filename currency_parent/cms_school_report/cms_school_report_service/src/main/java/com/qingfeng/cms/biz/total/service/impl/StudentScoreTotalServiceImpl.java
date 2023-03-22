@@ -9,6 +9,7 @@ import com.qingfeng.cms.biz.item.service.ItemAchievementModuleService;
 import com.qingfeng.cms.biz.total.dao.StudentScoreTotalDao;
 import com.qingfeng.cms.biz.total.service.StudentScoreTotalService;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
+import com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity;
 import com.qingfeng.cms.domain.club.entity.ClubScoreModuleEntity;
 import com.qingfeng.cms.domain.item.entity.ItemAchievementModuleEntity;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
@@ -23,6 +24,7 @@ import com.qingfeng.cms.domain.total.vo.StudentScoreTotalVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.sdk.active.apply.ApplyApi;
+import com.qingfeng.sdk.item.bonusapply.BonusScoreApplyApi;
 import com.qingfeng.sdk.planstandard.level.LevelApi;
 import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import com.qingfeng.sdk.planstandard.plan.PlanApi;
@@ -66,6 +68,8 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
     private LevelApi levelApi;
     @Autowired
     private RulesApi rulesApi;
+    @Autowired
+    private BonusScoreApplyApi bonusScoreApplyApi;
 
     /**
      * 查询学生模块得分情况
@@ -184,6 +188,7 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
         List<StudentScoreDetailsVo> studentScoreDetailsItemList = Collections.emptyList();
         if (CollUtil.isNotEmpty(itemAchievementModuleList)) {
             // 查询用户加分信息
+            Map<Long, BonusScoreApplyEntity> bonusScoreMap = bonusScoreMap(itemAchievementModuleList);
 
             // 封装模块的信息
             Map<Long, CreditModuleEntity> moduleMap = getModuleMap(
@@ -216,13 +221,17 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
                             .moduleName(moduleMap.get(i.getModuleId()).getModuleName())
                             .projectActiveName(projectMap.get(i.getProjectId()).getProjectName())
                             .levelName(levelMap.get(i.getLevelId()).getLevelContent())
-                            .rule(CollUtil.isEmpty(rulesMap) ? ""
-                                    : ObjectUtil.isEmpty(
-                                    rulesMap.getOrDefault(i.getCreditRulesId(), null)
+                            .rule(
+                                    CollUtil.isEmpty(rulesMap) ? ""
+                                            :
+                                            ObjectUtil.isEmpty(
+                                                    rulesMap.getOrDefault(i.getCreditRulesId(), null)
+                                            )
+                                                    ? ""
+                                                    : getRules(rulesMap.get(i.getCreditRulesId()))
                             )
-                                    ? ""
-                                    : getRules(rulesMap.get(i.getCreditRulesId())))
                             .score(i.getScore())
+                            .schoolYear(bonusScoreMap.get(i.getBonusScoreApplyId()).getSchoolYear())
                             .build())
                     .collect(Collectors.toList()
                     );
@@ -266,6 +275,22 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
         studentScoreDetailsItemList.addAll(studentScoreDetailsActiveList);
 
         return studentScoreDetailsItemList;
+    }
+
+    private Map<Long, BonusScoreApplyEntity> bonusScoreMap(List<ItemAchievementModuleEntity> itemAchievementModuleList) {
+        Map<Long, BonusScoreApplyEntity> bonusScoreMap = bonusScoreApplyApi.findByIds(
+                        itemAchievementModuleList.stream()
+                                .map(ItemAchievementModuleEntity::getBonusScoreApplyId)
+                                .collect(Collectors.toList())
+                )
+                .getData()
+                .stream()
+                .collect(Collectors.toMap(
+                                BonusScoreApplyEntity::getId,
+                                Function.identity()
+                        )
+                );
+        return bonusScoreMap;
     }
 
 
