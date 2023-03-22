@@ -4,6 +4,7 @@ import com.qingfeng.cms.biz.bonus.service.BonusScoreApplyService;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyPageDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplySaveDTO;
 import com.qingfeng.cms.domain.bonus.dto.BonusScoreApplyUpdateDTO;
+import com.qingfeng.cms.domain.bonus.entity.BonusScoreApplyEntity;
 import com.qingfeng.cms.domain.bonus.enums.BonusStatusEnums;
 import com.qingfeng.cms.domain.bonus.ro.EnumsRo;
 import com.qingfeng.cms.domain.bonus.vo.BonusScoreApplyVo;
@@ -12,6 +13,8 @@ import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.project.vo.ProjectListVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import io.swagger.annotations.Api;
@@ -116,6 +119,17 @@ public class BonusScoreApplyController extends BaseController {
         return success(projectVoList);
     }
 
+    @ApiOperation(value = "根据加分申请id查询加分信息", notes = "根据加分申请id查询加分信息")
+    @PostMapping("/score/apply/list")
+    @SysLog("根据加分申请id查询加分信息")
+    public R<List<BonusScoreApplyEntity>> findByIds(@RequestBody List<Long> ids) {
+        return success(bonusScoreApplyService.list(
+                        Wraps.lbQ(new BonusScoreApplyEntity())
+                                .in(SuperEntity::getId, ids)
+                )
+        );
+    }
+
     @ApiOperation(value = "枚举信息返回实体", notes = "枚举信息返回实体")
     @GetMapping("/anno/enums")
     public R enumsList() {
@@ -129,15 +143,15 @@ public class BonusScoreApplyController extends BaseController {
         );
     }
 
-    @ApiOperation(value="获取学年集合", notes = "获取学年集合")
+    @ApiOperation(value = "获取学年集合", notes = "获取学年集合")
     @GetMapping("/anno/schoolYear")
-    public R getSchoolYear(){
+    public R getSchoolYear() {
         List<String> list = new ArrayList<>();
         //获取当前年份
-        int year = calendar.get(Calendar.YEAR)-4;
-        for (int i = 0; i < 5 ; i++) {
-            list.add(year+"-"+(year+1)+"  第一学期");
-            list.add(year+"-"+(year+1)+"  第二学期");
+        int year = calendar.get(Calendar.YEAR) - 4;
+        for (int i = 0; i < 5; i++) {
+            list.add(year + "-" + (year + 1) + "  第一学期");
+            list.add(year + "-" + (year + 1) + "  第二学期");
             year++;
         }
         return success(list);

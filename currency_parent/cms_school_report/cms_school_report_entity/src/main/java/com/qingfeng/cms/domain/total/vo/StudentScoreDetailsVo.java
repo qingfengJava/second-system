@@ -39,4 +39,7 @@ public class StudentScoreDetailsVo {
 
     @ApiModelProperty(value = "实际得分")
     private BigDecimal score;
+
+    @ApiModelProperty(value = "学年——学期")
+    private String schoolYear;
 }

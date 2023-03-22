@@ -183,6 +183,8 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
         );
         List<StudentScoreDetailsVo> studentScoreDetailsItemList = Collections.emptyList();
         if (CollUtil.isNotEmpty(itemAchievementModuleList)) {
+            // 查询用户加分信息
+
             // 封装模块的信息
             Map<Long, CreditModuleEntity> moduleMap = getModuleMap(
                     itemAchievementModuleList.stream()
@@ -214,8 +216,10 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
                             .moduleName(moduleMap.get(i.getModuleId()).getModuleName())
                             .projectActiveName(projectMap.get(i.getProjectId()).getProjectName())
                             .levelName(levelMap.get(i.getLevelId()).getLevelContent())
-                            .rule(ObjectUtil.isEmpty(
-                                    rulesMap.computeIfAbsent(i.getCreditRulesId(), null))
+                            .rule(CollUtil.isEmpty(rulesMap) ? ""
+                                    : ObjectUtil.isEmpty(
+                                    rulesMap.getOrDefault(i.getCreditRulesId(), null)
+                            )
                                     ? ""
                                     : getRules(rulesMap.get(i.getCreditRulesId())))
                             .score(i.getScore())
@@ -252,6 +256,7 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
                             .projectActiveName(applyMap.get(c.getActiveApplyId()).getActiveName())
                             .rule(applyMap.get(c.getActiveApplyId()).getActiveScore().toString())
                             .score(c.getScore())
+                            .schoolYear(applyMap.get(c.getActiveApplyId()).getSchoolYear())
                             .build()
                     )
                     .collect(Collectors.toList());
