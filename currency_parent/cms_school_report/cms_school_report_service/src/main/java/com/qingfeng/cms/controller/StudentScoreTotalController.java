@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.total.service.StudentScoreTotalService;
+import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreDetailsVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreTotalVo;
 import com.qingfeng.currency.base.BaseController;
@@ -48,5 +49,13 @@ public class StudentScoreTotalController extends BaseController  {
     public R<List<StudentScoreDetailsVo>> queryScoreDetails(){
         List<StudentScoreDetailsVo> studentScoreDetailsVoList = studentScoreTotalService.queryScoreDetails(getUserId());
         return success(studentScoreDetailsVoList);
+    }
+
+    @ApiOperation(value = "数据统计模块得分情况", notes = "数据统计模块得分情况")
+    @GetMapping("/module/data/analysis")
+    @SysLog("数据统计模块得分情况")
+    public R<StuModuleDataAnalysisVo> moduleDataAnalysis(){
+        StuModuleDataAnalysisVo stuModuleDataAnalysisVo = studentScoreTotalService.moduleDataAnalysis(getUserId());
+        return success(stuModuleDataAnalysisVo);
     }
 }

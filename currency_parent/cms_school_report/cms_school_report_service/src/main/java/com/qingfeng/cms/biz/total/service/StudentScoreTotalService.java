@@ -2,6 +2,7 @@ package com.qingfeng.cms.biz.total.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
+import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreDetailsVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreTotalVo;
 
@@ -29,5 +30,12 @@ public interface StudentScoreTotalService extends IService<StudentScoreTotalEnti
      * @return
      */
     List<StudentScoreDetailsVo> queryScoreDetails(Long userId);
+
+    /**
+     * 统计学生各个模块的活动参与情况
+     * @param userId
+     * @return
+     */
+    StuModuleDataAnalysisVo moduleDataAnalysis(Long userId);
 }
 

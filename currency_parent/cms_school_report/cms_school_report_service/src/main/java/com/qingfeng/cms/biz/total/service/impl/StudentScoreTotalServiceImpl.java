@@ -19,6 +19,7 @@ import com.qingfeng.cms.domain.project.entity.ProjectEntity;
 import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
 import com.qingfeng.cms.domain.total.ro.ModuleRo;
+import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreDetailsVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreTotalVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -35,9 +36,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -275,6 +278,92 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
         studentScoreDetailsItemList.addAll(studentScoreDetailsActiveList);
 
         return studentScoreDetailsItemList;
+    }
+
+    /**
+     * 统计学生下，各个模块的参与情况
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public StuModuleDataAnalysisVo moduleDataAnalysis(Long userId) {
+        // 查询改学生下的各个模块信息
+        List<CreditModuleEntity> creditModuleList = creditModuleApi.moduleListByStuId().getData();
+
+        // 查询学生社团活动加分情况
+        List<ClubScoreModuleEntity> clubScoreModuleList = clubScoreModuleService.list(
+                Wraps.lbQ(new ClubScoreModuleEntity())
+                        .eq(ClubScoreModuleEntity::getUserId, userId)
+        );
+
+        // 查询学生项目情况
+        List<ItemAchievementModuleEntity> itemAchievementModuleList = itemAchievementModuleService.list(
+                Wraps.lbQ(new ItemAchievementModuleEntity())
+                        .eq(ItemAchievementModuleEntity::getUserId, userId)
+        );
+        if (CollUtil.isEmpty(itemAchievementModuleList) && CollUtil.isEmpty(clubScoreModuleList)) {
+            // 如果社团活动都为空，说明学生还没有参与活动
+            // 模块对应的学分
+            List<Double> moduleScore = new ArrayList<>(10);
+            // 模块下的活动/项目个数
+            List<Integer> itemNum = new ArrayList<>(10);
+            List<String> moduleList = creditModuleList.stream()
+                    .map(m -> {
+                        moduleScore.add(0.00);
+                        itemNum.add(0);
+                        return m.getModuleName();
+                    })
+                    .collect(Collectors.toList());
+
+            return StuModuleDataAnalysisVo.builder()
+                    .moduleNames(moduleList)
+                    .moduleScore(moduleScore)
+                    .itemNum(itemNum)
+                    .build();
+        }
+
+        List<Double> moduleScore = new ArrayList<>(10);
+        // 模块下的活动/项目个数
+        List<Integer> itemNum = new ArrayList<>(10);
+        // 根据模块进行分类
+        List<String> moduleNameList = creditModuleList.stream()
+                .map(module -> {
+                    // 封装其它数据
+                    final Double[] score = {0.00};
+                    AtomicInteger item = new AtomicInteger();
+                    if (CollUtil.isNotEmpty(itemAchievementModuleList)) {
+                        // 不为空，可以对方案模块下的活动进行数据封装
+                        itemAchievementModuleList.stream()
+                                .filter(i -> i.getModuleId().equals(module.getId()))
+                                .forEach(i -> {
+                                    score[0] = score[0] + i.getScore().doubleValue();
+                                    item.getAndIncrement();
+                                });
+
+                        if (module.getCode().equals(CreditModuleTypeEnum.COMMUNITY_WORK)
+                                && CollUtil.isNotEmpty(clubScoreModuleList)) {
+                            // 社团活动也存在参与的情况，一并进行统计
+                            clubScoreModuleList.forEach(c -> {
+                                        score[0] = score[0] + c.getScore().doubleValue();
+                                        item.getAndIncrement();
+                                    }
+                            );
+                        }
+                    }
+
+                    moduleScore.add(score[0]);
+                    itemNum.add(item.get());
+                    return module.getModuleName();
+                })
+                .collect(Collectors.toList());
+
+
+        return StuModuleDataAnalysisVo.builder()
+                .moduleNames(moduleNameList)
+                .moduleScore(moduleScore)
+                .itemNum(itemNum)
+                .build();
     }
 
     private Map<Long, BonusScoreApplyEntity> bonusScoreMap(List<ItemAchievementModuleEntity> itemAchievementModuleList) {
