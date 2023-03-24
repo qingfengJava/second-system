@@ -287,7 +287,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                         return userWriteVo;
 
                                     }
-                            ))
+                            )
+                    )
                     .collect(Collectors.toList())
                     .stream()
                     .map(CompletableFuture::join)

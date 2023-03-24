@@ -289,7 +289,7 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
      */
     @Override
     public StuModuleDataAnalysisVo moduleDataAnalysis(Long userId) {
-        // 查询改学生下的各个模块信息
+        // 查询该学生下的各个模块信息
         List<CreditModuleEntity> creditModuleList = creditModuleApi.moduleListByStuId().getData();
 
         // 查询学生社团活动加分情况
@@ -327,7 +327,43 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
         List<Double> moduleScore = new ArrayList<>(10);
         // 模块下的活动/项目个数
         List<Integer> itemNum = new ArrayList<>(10);
+
         // 根据模块进行分类
+        /*List<String> moduleNameList = creditModuleList.stream()
+                .map(module ->
+                        // 异步处理
+                        CompletableFuture.supplyAsync(() -> {
+                            // 封装其它数据
+                            final Double[] score = {0.00};
+                            AtomicInteger item = new AtomicInteger();
+                            if (CollUtil.isNotEmpty(itemAchievementModuleList)) {
+                                // 不为空，可以对方案模块下的活动进行数据封装
+                                itemAchievementModuleList.stream()
+                                        .filter(i -> i.getModuleId().equals(module.getId()))
+                                        .forEach(i -> {
+                                            score[0] = score[0] + i.getScore().doubleValue();
+                                            item.getAndIncrement();
+                                        });
+
+                                if (module.getCode().equals(CreditModuleTypeEnum.COMMUNITY_WORK)
+                                        && CollUtil.isNotEmpty(clubScoreModuleList)) {
+                                    // 社团活动也存在参与的情况，一并进行统计
+                                    clubScoreModuleList.forEach(c -> {
+                                                score[0] = score[0] + c.getScore().doubleValue();
+                                                item.getAndIncrement();
+                                            }
+                                    );
+                                }
+                            }
+
+                            moduleScore.add(score[0]);
+                            itemNum.add(item.get());
+                            return module.getModuleName();
+                        }))
+                .collect(Collectors.toList())
+                .stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());*/
         List<String> moduleNameList = creditModuleList.stream()
                 .map(module -> {
                     // 封装其它数据
@@ -369,14 +405,71 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
 
     /**
      * 学分模块下活动个数占比
+     *
      * @param userId
      * @return
      */
     @Override
     public List<StuModuleDataProportionVo> moduleDataProportion(Long userId) {
+        // 查询该学生下的各个模块信息
+        List<CreditModuleEntity> creditModuleList = creditModuleApi.moduleListByStuId().getData();
 
+        // 查询学生社团活动加分情况
+        List<ClubScoreModuleEntity> clubScoreModuleList = clubScoreModuleService.list(
+                Wraps.lbQ(new ClubScoreModuleEntity())
+                        .eq(ClubScoreModuleEntity::getUserId, userId)
+        );
 
-        return null;
+        // 查询学生项目情况
+        List<ItemAchievementModuleEntity> itemAchievementModuleList = itemAchievementModuleService.list(
+                Wraps.lbQ(new ItemAchievementModuleEntity())
+                        .eq(ItemAchievementModuleEntity::getUserId, userId)
+        );
+
+        if (ObjectUtil.isEmpty(clubScoreModuleList) && ObjectUtil.isEmpty(itemAchievementModuleList)) {
+            // 如果为空，直接返回
+            return creditModuleList.stream()
+                    .map(c ->
+                            StuModuleDataProportionVo.builder()
+                                    .name(c.getModuleName())
+                                    .value(0)
+                                    .build()
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        /**
+         * key: moduleId
+         * value: 每个模块下面的活动个数，但是这里如果是社团活动类还需要加上社团活动的个数
+         */
+        Map<Long, Long> itemMap = Collections.emptyMap();
+        if (ObjectUtil.isNotEmpty(itemAchievementModuleList)) {
+            itemMap = itemAchievementModuleList.stream()
+                    .collect(Collectors.groupingBy(
+                            ItemAchievementModuleEntity::getModuleId,
+                            Collectors.counting()
+                    ));
+        }
+
+        // 封装数据
+        Map<Long, Long> finalItemMap = itemMap;
+        return creditModuleList.stream()
+                .map(creditModuleEntity ->
+                        StuModuleDataProportionVo.builder()
+                                .name(creditModuleEntity.getModuleName())
+                                .value(
+                                        creditModuleEntity.getCode().equals(CreditModuleTypeEnum.COMMUNITY_WORK)
+                                                ? ObjectUtil.isEmpty(clubScoreModuleList)
+                                                ? 0 : clubScoreModuleList.size() + finalItemMap.getOrDefault(
+                                                creditModuleEntity.getId(),
+                                                0L).intValue()
+                                                : finalItemMap.getOrDefault(
+                                                creditModuleEntity.getId(),
+                                                0L).intValue()
+                                )
+                                .build()
+                )
+                .collect(Collectors.toList());
     }
 
     private Map<Long, BonusScoreApplyEntity> bonusScoreMap(List<ItemAchievementModuleEntity> itemAchievementModuleList) {
