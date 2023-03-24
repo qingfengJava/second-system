@@ -20,6 +20,7 @@ import com.qingfeng.cms.domain.rule.entity.CreditRulesEntity;
 import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
 import com.qingfeng.cms.domain.total.ro.ModuleRo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
+import com.qingfeng.cms.domain.total.vo.StuModuleDataProportionVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreDetailsVo;
 import com.qingfeng.cms.domain.total.vo.StudentScoreTotalVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -364,6 +365,18 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
                 .moduleScore(moduleScore)
                 .itemNum(itemNum)
                 .build();
+    }
+
+    /**
+     * 学分模块下活动个数占比
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<StuModuleDataProportionVo> moduleDataProportion(Long userId) {
+
+
+        return null;
     }
 
     private Map<Long, BonusScoreApplyEntity> bonusScoreMap(List<ItemAchievementModuleEntity> itemAchievementModuleList) {
