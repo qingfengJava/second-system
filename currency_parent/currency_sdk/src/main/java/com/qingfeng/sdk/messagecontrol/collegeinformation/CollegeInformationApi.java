@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -58,4 +59,12 @@ public interface CollegeInformationApi {
      */
     @GetMapping("/collegeinformation/user/{userId}")
     public R<List<StuInfoEntity>> getUserInfoList(@PathVariable("userId") Long userId);
+
+    /**
+     * 根据学院编码，查询学院用户Id
+     * @param organizationCode
+     * @return
+     */
+    @GetMapping("/collegeinformation/dep/info")
+    public R<List<Long>> depInfo(@RequestParam String organizationCode);
 }

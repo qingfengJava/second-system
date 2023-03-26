@@ -6,6 +6,7 @@ import com.qingfeng.cms.domain.notice.dto.NoticeSaveDTO;
 import com.qingfeng.cms.domain.notice.dto.NoticeUpdateDTO;
 import com.qingfeng.cms.domain.notice.entity.NoticeEntity;
 import com.qingfeng.cms.domain.notice.vo.NoticePageVo;
+import com.qingfeng.cms.domain.notice.vo.NoticeUserPageVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.log.annotation.SysLog;
@@ -50,8 +51,13 @@ public class NoticeController extends BaseController {
         return success(noticePageVo);
     }
 
-    // TODO 查询用户需要查看的公告信息
-
+    @ApiOperation(value = "查询用户可以查看的公告信息", notes = "查询用户可以查看的公告信息")
+    @PostMapping("/user_notice/list")
+    @SysLog("查询用户可以查看的公告信息")
+    public R<NoticeUserPageVo> noticeListByUserId(@RequestBody NoticeQueryDTO noticeQueryDTO) {
+        NoticeUserPageVo noticeUserPageVo = noticeService.noticeListByUserId(noticeQueryDTO, getUserId());
+        return success(noticeUserPageVo);
+    }
 
     @ApiOperation(value = "根据Id查询公告信息", notes = "根据Id查询公告信息")
     @GetMapping("/info/{id}")

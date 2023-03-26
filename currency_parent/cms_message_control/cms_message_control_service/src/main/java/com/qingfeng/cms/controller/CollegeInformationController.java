@@ -8,6 +8,7 @@ import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.base.entity.SuperEntity;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,10 +22,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -76,9 +79,22 @@ public class CollegeInformationController extends BaseController {
     @GetMapping("/user/{userId}")
     @SysLog("根据二级学院领导id查询学院下的学生信息")
     public R<List<StuInfoEntity>> getUserInfoList(@ApiParam(value = "二级学院领导Id", required = true)
-                             @PathVariable("userId") @NotNull Long userId) {
+                                                  @PathVariable("userId") @NotNull Long userId) {
         List<StuInfoEntity> stuInfoList = collegeInformationService.getUserInfoList(userId);
         return success(stuInfoList);
     }
 
+    @ApiOperation(value = "根据学院编码，查询学院用户Id", notes = "根据学院编码，查询学院用户Id")
+    @GetMapping("/dep/info")
+    @SysLog("根据学院编码，查询学院用户Id")
+    public R<List<Long>> depInfo(@RequestParam String organizationCode) {
+        return success(
+                collegeInformationService.list(
+                                Wraps.lbQ(new CollegeInformationEntity())
+                                        .eq(CollegeInformationEntity::getOrganizationCode, organizationCode)
+                        ).stream()
+                        .map(CollegeInformationEntity::getUserId)
+                        .collect(Collectors.toList())
+        );
+    }
 }

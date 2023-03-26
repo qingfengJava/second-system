@@ -34,4 +34,9 @@ public class CollegeInformationFallback implements CollegeInformationApi {
     public R<List<StuInfoEntity>> getUserInfoList(Long userId) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R<List<Long>> depInfo(String organizationCode) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

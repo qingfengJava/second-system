@@ -1,5 +1,7 @@
 package com.qingfeng.sdk.messagecontrol.clazz;
 
+import com.qingfeng.cms.domain.clazz.dto.ClazzInfoDTO;
+import com.qingfeng.cms.domain.clazz.entity.ClazzInfoEntity;
 import com.qingfeng.cms.domain.clazz.vo.UserVo;
 import com.qingfeng.currency.base.R;
 
@@ -18,6 +20,16 @@ public class ClazzInfoApiFallback implements ClazzInfoApi {
      */
     @Override
     public R<List<UserVo>> stuList() {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<ClazzInfoEntity> classInfo(ClazzInfoDTO clazzInfoDTO) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<ClazzInfoEntity> info() {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }

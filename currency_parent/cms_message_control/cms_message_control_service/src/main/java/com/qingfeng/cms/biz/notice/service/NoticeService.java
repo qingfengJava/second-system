@@ -6,6 +6,7 @@ import com.qingfeng.cms.domain.notice.dto.NoticeSaveDTO;
 import com.qingfeng.cms.domain.notice.dto.NoticeUpdateDTO;
 import com.qingfeng.cms.domain.notice.entity.NoticeEntity;
 import com.qingfeng.cms.domain.notice.vo.NoticePageVo;
+import com.qingfeng.cms.domain.notice.vo.NoticeUserPageVo;
 
 /**
  * 系统公告表
@@ -51,5 +52,13 @@ public interface NoticeService extends IService<NoticeEntity> {
      * @return
      */
     NoticePageVo noticeList(NoticeQueryDTO noticeQueryDTO, Long userId);
+
+    /**
+     * 查询用户可以查看的公告信息
+     * @param noticeQueryDTO
+     * @param userId
+     * @return
+     */
+    NoticeUserPageVo noticeListByUserId(NoticeQueryDTO noticeQueryDTO, Long userId);
 }
 

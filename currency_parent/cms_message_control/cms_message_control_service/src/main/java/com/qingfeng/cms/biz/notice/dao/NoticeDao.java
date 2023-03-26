@@ -27,4 +27,14 @@ public interface NoticeDao extends BaseMapper<NoticeEntity> {
     List<NoticeEntity> selectNoticeList(
             @Param("noticeQueryDTO") NoticeQueryDTO noticeQueryDTO,
             @Param("userId") Long userId);
+
+    /**
+     * 查询用户可以查看的公告信息
+     * @param noticeQueryDTO
+     * @param userIds
+     * @return
+     */
+    List<NoticeEntity> selectNoticeListByUserIds(
+            @Param("noticeQueryDTO") NoticeQueryDTO noticeQueryDTO,
+            @Param("userIds") List<Long> userIds);
 }

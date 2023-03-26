@@ -55,7 +55,6 @@ public class StuInfoController extends BaseController {
     public R<StuInfoEntity> info(@PathVariable("userId") Long userId) {
         StuInfoEntity stuInfo = stuInfoService.getOne(Wraps.lbQ(new StuInfoEntity())
                 .eq(StuInfoEntity::getUserId, userId));
-
         return success(stuInfo);
     }
 

@@ -30,4 +30,17 @@
     </select>
 
 
+    <select id="selectNoticeListByUserIds"
+            resultType="com.qingfeng.cms.domain.notice.entity.NoticeEntity">
+        select *
+        from mc_notice
+        where user_id in
+        <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        order by update_time desc
+        limit #{noticeQueryDTO.pageNo}, #{noticeQueryDTO.pageSize}
+    </select>
+
+
 </mapper>
