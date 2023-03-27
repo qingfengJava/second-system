@@ -125,13 +125,21 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeDao, NoticeEntity> impl
             noticeEntity.setReadNum(noticeEntity.getReadNum() + 1);
             baseMapper.updateById(noticeEntity);
 
-            // 保存用户查看记录
-            userNoticeCheckDao.insert(
-                    UserNoticeCheckEntity.builder()
-                            .userId(userId)
-                            .noticeId(noticeEntity.getId())
-                            .build()
+            // 查询用户是否查看该条公告
+            UserNoticeCheckEntity userNoticeCheckEntity = userNoticeCheckDao.selectOne(
+                    Wraps.lbQ(new UserNoticeCheckEntity())
+                            .eq(UserNoticeCheckEntity::getNoticeId, noticeEntity.getId())
+                            .eq(UserNoticeCheckEntity::getUserId, userId)
             );
+            if (ObjectUtil.isEmpty(userNoticeCheckEntity)) {
+                // 保存用户查看记录
+                userNoticeCheckDao.insert(
+                        UserNoticeCheckEntity.builder()
+                                .userId(userId)
+                                .noticeId(noticeEntity.getId())
+                                .build()
+                );
+            }
         }
 
         return noticeEntity;

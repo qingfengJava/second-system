@@ -20,13 +20,15 @@ import lombok.NoArgsConstructor;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EducationalSystemEnum implements BaseEnum {
 
-    TWO_YEAR_SYSTEM("两年制"),
-    THREE_YEAR_SYSTEM("三年制"),
-    FOUR_YEAR_SYSTEM("四年制"),
-    FIVE_YEAR_SYSTEM("五年制");
+    TWO_YEAR_SYSTEM("两年制", 2),
+    THREE_YEAR_SYSTEM("三年制", 3),
+    FOUR_YEAR_SYSTEM("四年制", 4),
+    FIVE_YEAR_SYSTEM("五年制", 5);
 
     @ApiModelProperty(value = "描述")
     private String desc;
+
+    private Integer variable;
 
     public static EducationalSystemEnum match(String val, EducationalSystemEnum def) {
         for (EducationalSystemEnum enm : EducationalSystemEnum.values()) {
