@@ -558,6 +558,7 @@ public class ScoreCheckServiceImpl extends ServiceImpl<ScoreCheckDao, ScoreCheck
                                 .creditRulesId(bonusScore.getCreditRulesId())
                                 .score(ObjectUtil.isEmpty(scoreCheckSaveDTO.getScore()) ?
                                         BigDecimal.valueOf(rules.getScore()) : scoreCheckSaveDTO.getScore())
+                                .schoolYear(bonusScore.getSchoolYear())
                                 .build()
                 );
 

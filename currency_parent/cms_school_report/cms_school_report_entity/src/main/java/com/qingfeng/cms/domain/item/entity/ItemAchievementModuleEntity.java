@@ -57,18 +57,24 @@ public class ItemAchievementModuleEntity extends Entity<Long> {
 	@ApiModelProperty(value = "得分")
 	private BigDecimal score;
 
+	@ApiModelProperty(value = "学期-学年")
+	private String schoolYear;
+
 	@Builder
 	public ItemAchievementModuleEntity(Long id, LocalDateTime createTime, Long createUser,
 									   LocalDateTime updateTime, Long updateUser, Long userId,
-									   Long moduleId, String moduleCode, Long projectId,
-									   Long levelId, Long creditRulesId, BigDecimal score) {
+									   Long bonusScoreApplyId, Long moduleId, String moduleCode,
+									   Long projectId, Long levelId, Long creditRulesId, BigDecimal score,
+									   String schoolYear) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.userId = userId;
+		this.bonusScoreApplyId = bonusScoreApplyId;
 		this.moduleId = moduleId;
 		this.moduleCode = moduleCode;
 		this.projectId = projectId;
 		this.levelId = levelId;
 		this.creditRulesId = creditRulesId;
 		this.score = score;
+		this.schoolYear = schoolYear;
 	}
 }

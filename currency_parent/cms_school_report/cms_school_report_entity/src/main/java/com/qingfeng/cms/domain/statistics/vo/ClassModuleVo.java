@@ -1,4 +1,4 @@
-package com.qingfeng.cms.domain.statistics.ro;
+package com.qingfeng.cms.domain.statistics.vo;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author 清风学Java
  * @version 1.0.0
- * @date 2023/3/27
+ * @date 2023/3/28
  */
 @Data
 @Builder
@@ -21,22 +21,16 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@ApiModel(value = "StuSemesterCreditsRo", description = "学生学期得分情况")
-public class StuSemesterCreditsRo {
+@ApiModel(value = "ClassModuleVo", description = "班级的方案模块下的学生参与人数")
+public class ClassModuleVo {
 
     /**
-     * 名字
+     * x轴的值
      */
-    private String name;
-
-    @Builder.Default
-    private String type = "line";
-
-    @Builder.Default
-    private String stack = "Total";
+    private List<String> xData;
 
     /**
-     * 每一条折线对应的数据
+     * 真实的数据
      */
-    private List<Double> data;
+    private List<Integer> data;
 }

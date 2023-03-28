@@ -63,4 +63,7 @@ public class ItemAchievementModuleSaveDTO implements Serializable {
 	@NotNull(message = "得分不能为空")
 	private BigDecimal score;
 
+	@ApiModelProperty(value = "学期-学年")
+	@NotBlank(message = "学年学期不能为空")
+	private String schoolYear;
 }

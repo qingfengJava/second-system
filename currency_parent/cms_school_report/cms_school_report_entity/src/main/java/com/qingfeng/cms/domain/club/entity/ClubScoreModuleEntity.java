@@ -42,13 +42,17 @@ public class ClubScoreModuleEntity extends Entity<Long> {
 	@ApiModelProperty(value = "得分")
 	private BigDecimal score;
 
+	@ApiModelProperty(value = "学期-学年")
+	private String schoolYear;
+
 	@Builder
 	public ClubScoreModuleEntity(Long id, LocalDateTime createTime, Long createUser,
 								 LocalDateTime updateTime, Long updateUser, Long userId,
-								 Long activeApplyId, BigDecimal score) {
+								 Long activeApplyId, BigDecimal score, String schoolYear) {
 		super(id, createTime, createUser, updateTime, updateUser);
 		this.userId = userId;
 		this.activeApplyId = activeApplyId;
 		this.score = score;
+		this.schoolYear = schoolYear;
 	}
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,4 +43,8 @@ public class ClubScoreModuleSaveDTO implements Serializable {
 	@ApiModelProperty(value = "得分")
 	@NotNull(message = "得分不能为空")
 	private BigDecimal score;
+
+	@ApiModelProperty(value = "学期-学年")
+	@NotBlank(message = "学年学期不能为空")
+	private String schoolYear;
 }

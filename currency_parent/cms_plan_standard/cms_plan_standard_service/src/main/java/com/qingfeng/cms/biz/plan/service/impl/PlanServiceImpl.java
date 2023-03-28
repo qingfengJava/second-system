@@ -12,6 +12,7 @@ import com.qingfeng.cms.biz.plan.service.PlanService;
 import com.qingfeng.cms.biz.project.dao.ProjectDao;
 import com.qingfeng.cms.biz.project.enums.ProjectEnable;
 import com.qingfeng.cms.biz.rule.dao.CreditRulesDao;
+import com.qingfeng.cms.domain.clazz.entity.ClazzInfoEntity;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.level.enums.LevelCheckEnum;
 import com.qingfeng.cms.domain.level.vo.LevelListVo;
@@ -34,6 +35,7 @@ import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.auth.role.RoleApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
+import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,6 +76,8 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
     private RoleApi roleApi;
     @Autowired
     private StuInfoApi stuInfoApi;
+    @Autowired
+    private ClazzInfoApi clazzInfoApi;
 
     /**
      * 保存方案：新增保存方案的时候要判断该类型是否已经有启用的方案
@@ -190,6 +194,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
     public PlanEntityVo getPlan(Long userId) {
         //首先要判断用户是不是学生，只有学生可以查看
         R<List<Long>> userIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.STUDENT.name()});
+        R<List<Long>> clazzIdByCode = roleApi.findUserIdByCode(new String[]{RoleEnum.CLASS_GRADE.name()});
         if (userIdByCode.getData().contains(userId)) {
             //说明是学生  查询学生信息，找到对应的年级
             StuInfoEntity stuInfoEntity = stuInfoApi.info(userId).getData();
@@ -215,8 +220,10 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
 
             return planEntityVo;
 
-        } else {
-            // TODO 新增班级可以查看的
+        } else if (clazzIdByCode.getData().contains(userId)){
+            // 查询班级信息
+            ClazzInfoEntity clazzInfo = clazzInfoApi.info().getData();
+            // TODO 待补充班级的本科类型
         }
         return null;
     }

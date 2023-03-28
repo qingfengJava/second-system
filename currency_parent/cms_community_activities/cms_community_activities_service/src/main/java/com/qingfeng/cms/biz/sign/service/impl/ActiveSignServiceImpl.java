@@ -320,6 +320,7 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
                     .userId(applyEntity.getApplyUserId())
                     .activeApplyId(applyEntity.getId())
                     .score(BigDecimal.valueOf(applyEntity.getActiveScore()))
+                    .schoolYear(applyEntity.getSchoolYear())
                     .build());
         }
     }
