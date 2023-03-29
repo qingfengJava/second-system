@@ -1,5 +1,6 @@
 package com.qingfeng.sdk.messagecontrol.StuInfo;
 
+import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.student.dto.StuInfoSaveDTO;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.base.R;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -49,4 +51,11 @@ public interface StuInfoApi {
     @PostMapping("/stuinfo/list")
     public R<List<StuInfoEntity>> stuInfoList(@RequestBody List<Long> userIds);
 
+    /**
+     * 查询指定学院下的学生信息
+     * @param dictDepartment
+     * @return
+     */
+    @GetMapping("/stuinfo/dep/stu")
+    public R<List<StuInfoEntity>> depStuList(@RequestParam("dictDepartment") DictDepartmentEnum dictDepartment);
 }

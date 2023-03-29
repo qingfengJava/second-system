@@ -3,6 +3,7 @@ package com.qingfeng.cms.controller.statistics;
 import com.qingfeng.cms.biz.statistics.service.StatisticsService;
 import com.qingfeng.cms.domain.statistics.vo.ClassModuleVo;
 import com.qingfeng.cms.domain.statistics.vo.ClazzCreditsVo;
+import com.qingfeng.cms.domain.statistics.vo.GradeScoreVo;
 import com.qingfeng.cms.domain.statistics.vo.StuSemesterCreditsVo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.currency.base.BaseController;
@@ -87,16 +88,17 @@ public class StatisticsController extends BaseController {
     @ApiOperation(value = "各年级学分修读情况", notes = "各年级学分修读情况")
     @GetMapping("/grade/score")
     @SysLog("各年级学分修读情况")
-    public R gradeScore(){
-
-        return success();
+    public R<GradeScoreVo> gradeScore(){
+        // 学院下每个年级（优、良、差）
+        GradeScoreVo gradeScoreVo = statisticsService.gradeScore(getUserId());
+        return success(gradeScoreVo);
     }
 
     @ApiOperation(value = "各年级各模块参与人数", notes = "各年级各模块参与人数")
     @GetMapping("/grade/module")
     @SysLog("各年级各模块参与人数")
-    public R gradeModule(){
-
-        return success();
+    public R<GradeScoreVo> gradeModule(){
+        GradeScoreVo gradeScoreVo = statisticsService.gradeModule(getUserId());
+        return success(gradeScoreVo);
     }
 }

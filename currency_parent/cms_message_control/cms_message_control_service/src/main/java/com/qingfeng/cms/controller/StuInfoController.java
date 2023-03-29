@@ -1,6 +1,7 @@
 package com.qingfeng.cms.controller;
 
 import com.qingfeng.cms.biz.student.service.StuInfoService;
+import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.student.dto.StuInfoSaveDTO;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.cms.domain.student.enums.EducationalSystemEnum;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -83,6 +85,16 @@ public class StuInfoController extends BaseController {
                         Wraps.lbQ(new StuInfoEntity())
                                 .in(StuInfoEntity::getUserId, userIds)
                 )
+        );
+    }
+
+    @ApiOperation(value = "查询指定学院下的学生信息", notes = "查询指定学院下的学生信息")
+    @GetMapping("/dep/stu")
+    @SysLog("查询指定学院下的学生信息")
+    public R<List<StuInfoEntity>> depStuList(@RequestParam("dictDepartment") DictDepartmentEnum dictDepartment) {
+        return success(stuInfoService.list(
+                Wraps.lbQ(new StuInfoEntity())
+                .eq(StuInfoEntity::getDepartment, dictDepartment))
         );
     }
 
