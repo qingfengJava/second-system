@@ -3,6 +3,7 @@ package com.qingfeng.cms.domain.clazz.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.student.enums.EducationalSystemEnum;
+import com.qingfeng.cms.domain.student.enums.StudentTypeEnum;
 import com.qingfeng.currency.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -61,12 +62,15 @@ public class ClazzInfoEntity extends Entity<Long> {
     @ApiModelProperty(value = "班级描述")
     private String clazzDescribe;
 
+    @ApiModelProperty(value = "班级类型，本科、专科")
+    private StudentTypeEnum clazzType;
+
     @Builder
-    public ClazzInfoEntity(Long id, LocalDateTime createTime, Long createUser,
-                           LocalDateTime updateTime, Long updateUser, Long userId,
-                           DictDepartmentEnum department, String major, String clazz, String grade,
-                           EducationalSystemEnum educationalSystem, String clazzMonitor,
-                           String assistant, String clazzDescribe) {
+    public ClazzInfoEntity(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime,
+                           Long updateUser, Long userId, DictDepartmentEnum department, String major,
+                           String clazz, String grade, EducationalSystemEnum educationalSystem,
+                           String clazzMonitor, String assistant, String clazzDescribe,
+                           StudentTypeEnum clazzType) {
         super(id, createTime, createUser, updateTime, updateUser);
         this.userId = userId;
         this.department = department;
@@ -77,5 +81,6 @@ public class ClazzInfoEntity extends Entity<Long> {
         this.clazzMonitor = clazzMonitor;
         this.assistant = assistant;
         this.clazzDescribe = clazzDescribe;
+        this.clazzType = clazzType;
     }
 }

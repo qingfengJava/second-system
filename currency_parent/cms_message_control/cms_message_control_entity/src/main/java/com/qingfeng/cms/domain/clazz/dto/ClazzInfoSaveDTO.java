@@ -2,6 +2,7 @@ package com.qingfeng.cms.domain.clazz.dto;
 
 import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.student.enums.EducationalSystemEnum;
+import com.qingfeng.cms.domain.student.enums.StudentTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -67,4 +68,9 @@ public class ClazzInfoSaveDTO implements Serializable {
     @ApiModelProperty(value = "班级描述")
     @NotBlank(message = "班级描述不能为空")
     private String clazzDescribe;
+
+    @ApiModelProperty(value = "班级类型，本科、专科")
+    @NotNull(message = "班级类型")
+    private StudentTypeEnum clazzType;
+
 }

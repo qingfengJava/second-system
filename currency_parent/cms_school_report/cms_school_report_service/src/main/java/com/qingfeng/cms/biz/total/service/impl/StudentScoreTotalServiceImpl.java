@@ -290,7 +290,7 @@ public class StudentScoreTotalServiceImpl extends ServiceImpl<StudentScoreTotalD
     @Override
     public StuModuleDataAnalysisVo moduleDataAnalysis(Long userId) {
         // 查询该学生下的各个模块信息
-        List<CreditModuleEntity> creditModuleList = creditModuleApi.moduleListByStuId().getData();
+        List<CreditModuleEntity> creditModuleList = creditModuleApi.moduleListByStuId(userId).getData();
 
         // 查询学生社团活动加分情况
         List<ClubScoreModuleEntity> clubScoreModuleList = clubScoreModuleService.list(

@@ -125,6 +125,22 @@ public class CreditModuleController extends BaseController {
         return success(moduleList);
     }
 
+    @ApiOperation(value = "查询学生下的方案模块", notes = "查询学生下的方案模块")
+    @GetMapping("/stuId/{stuId}")
+    @SysLog("查询学生下的方案模块")
+    public R<List<CreditModuleEntity>> moduleListByStuId(@PathVariable("stuId") Long stuId) {
+        List<CreditModuleEntity> moduleList = creditModuleService.moduleListByStuId(stuId);
+        return success(moduleList);
+    }
+
+    @ApiOperation(value = "查询班级下的方案模块", notes = "查询班级下的方案模块")
+    @GetMapping("/clazz/module")
+    @SysLog("查询班级下的方案模块")
+    public R<List<CreditModuleEntity>> clazzModule(){
+        List<CreditModuleEntity> moduleList = creditModuleService.moduleListByClazzId(getUserId());
+        return success(moduleList);
+    }
+
     @ApiOperation(value = "返回模块类型枚举", notes = "返回模块类型枚举")
     @GetMapping("/anno/module/enum")
     public R<List<EnumsRo>> moduleEnum() {

@@ -19,6 +19,11 @@ public class CreditModuleApiFallback implements CreditModuleApi{
     }
 
     @Override
+    public R<List<CreditModuleEntity>> moduleListByStuId(Long stuId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
     public R<List<CreditModuleEntity>> moduleByIds(List<Long> moduleIds) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
@@ -35,6 +40,11 @@ public class CreditModuleApiFallback implements CreditModuleApi{
 
     @Override
     public R<List<CreditModuleEntity>> findModuleListByPlanId(Long planId) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
+
+    @Override
+    public R<List<CreditModuleEntity>> clazzModule() {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
 }

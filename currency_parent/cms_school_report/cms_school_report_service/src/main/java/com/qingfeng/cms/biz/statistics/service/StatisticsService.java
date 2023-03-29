@@ -3,19 +3,27 @@ package com.qingfeng.cms.biz.statistics.service;
 import cn.hutool.core.collection.CollUtil;
 import com.qingfeng.cms.biz.club.service.ClubScoreModuleService;
 import com.qingfeng.cms.biz.item.service.ItemAchievementModuleService;
+import com.qingfeng.cms.biz.total.service.StudentScoreTotalService;
+import com.qingfeng.cms.domain.clazz.vo.UserVo;
 import com.qingfeng.cms.domain.club.entity.ClubScoreModuleEntity;
 import com.qingfeng.cms.domain.item.entity.ItemAchievementModuleEntity;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
+import com.qingfeng.cms.domain.module.enums.CreditModuleTypeEnum;
 import com.qingfeng.cms.domain.statistics.ro.StuSemesterCreditsRo;
 import com.qingfeng.cms.domain.statistics.vo.ClassModuleVo;
+import com.qingfeng.cms.domain.statistics.vo.ClazzCreditsVo;
 import com.qingfeng.cms.domain.statistics.vo.StuSemesterCreditsVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
+import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
+import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
+import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
 import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,11 +43,15 @@ public class StatisticsService {
     private ClubScoreModuleService clubScoreModuleService;
     @Autowired
     private ItemAchievementModuleService itemAchievementModuleService;
+    @Autowired
+    private StudentScoreTotalService studentScoreTotalService;
 
     @Autowired
     private StuInfoApi stuInfoApi;
     @Autowired
     private CreditModuleApi creditModuleApi;
+    @Autowired
+    private ClazzInfoApi clazzInfoApi;
 
 
     /**
@@ -183,13 +195,170 @@ public class StatisticsService {
 
     /**
      * 班级的方案模块下的学生参与人数
+     *
      * @param userId
      * @return
      */
     public ClassModuleVo classModule(Long userId) {
         // 查询班级下的学生
+        List<UserVo> stuList = clazzInfoApi.stuList().getData();
+        // 查询方案模块信息
+        List<CreditModuleEntity> moduleList = creditModuleApi.clazzModule().getData();
+        if (CollUtil.isEmpty(stuList)) {
+            // 还没有学生，直接返回空数据
+            List<String> xData = new ArrayList<>();
+            List<Integer> data = new ArrayList<>();
+            moduleList.forEach(m -> {
+                xData.add(m.getModuleName());
+                data.add(0);
+            });
+
+            return ClassModuleVo.builder()
+                    .xData(xData)
+                    .data(data)
+                    .build();
+        }
+
+        List<Long> stuIds = stuList.stream()
+                .map(UserVo::getId)
+                .collect(Collectors.toList());
+
+        // 查询社团活动情况
+        List<ClubScoreModuleEntity> clubScoreModuleList = clubScoreModuleService.list(
+                Wraps.lbQ(new ClubScoreModuleEntity())
+                        .in(ClubScoreModuleEntity::getUserId, stuIds)
+        );
+        // 查询项目情况
+        List<ItemAchievementModuleEntity> itemAchievementModuleList = itemAchievementModuleService.list(
+                Wraps.lbQ(new ItemAchievementModuleEntity())
+                        .in(ItemAchievementModuleEntity::getUserId, stuIds)
+        );
+
+        if (CollUtil.isEmpty(clubScoreModuleList) && CollUtil.isEmpty(itemAchievementModuleList)) {
+            // 还没有学生，直接返回空数据
+            List<String> xData = new ArrayList<>();
+            List<Integer> data = new ArrayList<>();
+            moduleList.forEach(m -> {
+                xData.add(m.getModuleName());
+                data.add(0);
+            });
+
+            return ClassModuleVo.builder()
+                    .xData(xData)
+                    .data(data)
+                    .build();
+        }
+
+        // 方案模块根据模块Id进行分组
+        Map<Long, Long> itemMap = new HashMap<>();
+        if (CollUtil.isNotEmpty(itemAchievementModuleList)) {
+            itemMap = itemAchievementModuleList.stream()
+                    .collect(Collectors.groupingBy(
+                                    ItemAchievementModuleEntity::getModuleId,
+                                    Collectors.counting()
+                            )
+                    );
+        }
+
+        List<String> xData = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
+        Map<Long, Long> finalItemMap = itemMap;
+        moduleList.forEach(m -> {
+            xData.add(m.getModuleName());
+            if (m.getCode().equals(CreditModuleTypeEnum.COMMUNITY_WORK)) {
+                data.add(finalItemMap.getOrDefault(m.getId(), 0L).intValue() + clubScoreModuleList.size());
+            } else {
+                data.add(finalItemMap.getOrDefault(m.getId(), 0L).intValue());
+            }
+        });
 
 
-        return ClassModuleVo.builder().build();
+        return ClassModuleVo.builder()
+                .xData(xData)
+                .data(data)
+                .build();
+    }
+
+    /**
+     * 班级的学生学分修读情况
+     *
+     * @return
+     */
+    public List<ClazzCreditsVo> clazzCredits() {
+        // 查询班级下的学生信息
+        List<UserVo> userList = clazzInfoApi.stuList().getData();
+        if (CollUtil.isEmpty(userList)) {
+            return Collections.singletonList(
+                    ClazzCreditsVo.builder()
+                            .name("无学生参与")
+                            .y(0)
+                            .build()
+            );
+        }
+
+        // 查询学生成绩
+        List<Long> userIds = userList.stream()
+                .map(UserVo::getId)
+                .collect(Collectors.toList());
+        List<StudentScoreTotalEntity> scoreTotalList = studentScoreTotalService.list(
+                Wraps.lbQ(new StudentScoreTotalEntity())
+                        .in(StudentScoreTotalEntity::getUserId, userIds)
+        );
+
+        List<Long> scoreTotalListIds = scoreTotalList.stream()
+                .map(StudentScoreTotalEntity::getUserId)
+                .collect(Collectors.toList());
+
+        int count = scoreTotalList.get(0).getCreditsScore().intValue();
+
+        ArrayList<ClazzCreditsVo> clazzCreditsVos = new ArrayList<>();
+        clazzCreditsVos.add(
+                ClazzCreditsVo.builder()
+                        .name("0分以下的学生人数")
+                        .y(userIds.stream()
+                                .filter(id -> !scoreTotalListIds.contains(id))
+                                .collect(Collectors.counting())
+                                .intValue()
+                        )
+                        .build()
+        );
+        for (int i = 0; i < count; i++) {
+            int finalI = i;
+            clazzCreditsVos.add(ClazzCreditsVo.builder()
+                    .name(i + "~" + (i + 1) + "分数段的人数")
+                    .y(scoreTotalList.stream()
+                            .filter(s ->
+                                    ((s.getScore().compareTo(BigDecimal.valueOf(finalI)) == 0)
+                                            || (s.getScore().compareTo(BigDecimal.valueOf(finalI)) == 1)
+                                    )
+                                            && s.getScore().compareTo(BigDecimal.valueOf(finalI + 1)) == -1
+                            )
+                            .collect(Collectors.counting())
+                            .intValue()
+                    )
+                    .build());
+        }
+        clazzCreditsVos.add(
+                ClazzCreditsVo.builder()
+                        .name(count + "以上的学生人数")
+                        .y(scoreTotalList.stream()
+                                .filter(s -> (s.getScore().compareTo(s.getCreditsScore()) == 0 || s.getScore().compareTo(s.getCreditsScore()) == 1))
+                                .collect(Collectors.counting())
+                                .intValue()
+                        )
+                        .build()
+        );
+
+
+        return clazzCreditsVos;
+    }
+
+    /**
+     * 根据学生Id，查询学生第二课堂参与情况
+     * @param stuId
+     * @return
+     */
+    public StuModuleDataAnalysisVo clazzStuId(Long stuId) {
+        return studentScoreTotalService.moduleDataAnalysis(stuId);
     }
 }

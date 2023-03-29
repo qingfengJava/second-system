@@ -223,7 +223,28 @@ public class PlanServiceImpl extends ServiceImpl<PlanDao, PlanEntity> implements
         } else if (clazzIdByCode.getData().contains(userId)){
             // 查询班级信息
             ClazzInfoEntity clazzInfo = clazzInfoApi.info().getData();
-            // TODO 待补充班级的本科类型
+            AtomicReference<Integer> applicationObject = new AtomicReference<>(0);
+            Optional.ofNullable(clazzInfo)
+                    .ifPresent(s -> {
+                        if (s.getClazzType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FOUR_YEARS) ||
+                                s.getClazzType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FIVE_YEARS)) {
+                            applicationObject.set(1);
+                        } else if (s.getClazzType().equals(StudentTypeEnum.SPECIALTY)) {
+                            applicationObject.set(2);
+                        } else if (s.getClazzType().equals(StudentTypeEnum.GRADUATE_STUDENT)) {
+                            applicationObject.set(3);
+                        }
+                    });
+
+            //根据年级和本专科查询对应的方案信息
+            PlanEntity planEntity = baseMapper.selectOne(Wraps.lbQ(new PlanEntity())
+                    .likeLeft(PlanEntity::getGrade, clazzInfo.getGrade())
+                    .eq(PlanEntity::getApplicationObject, applicationObject.get())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable()));
+
+            PlanEntityVo planEntityVo = getPlanEntityVo(planEntity);
+
+            return planEntityVo;
         }
         return null;
     }

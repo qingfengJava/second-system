@@ -29,6 +29,15 @@ public interface CreditModuleApi {
     public R<List<CreditModuleEntity>> moduleListByStuId();
 
     /**
+     * 查询学生下的方案模块
+     * @param stuId
+     * @return
+     */
+    @GetMapping("/creditmodule/stuId/{stuId}")
+    public R<List<CreditModuleEntity>> moduleListByStuId(@PathVariable("stuId") Long stuId);
+
+
+    /**
      * 根据模块Id集合查询模块详细信息
      * @param moduleIds
      * @return
@@ -58,4 +67,11 @@ public interface CreditModuleApi {
      */
     @GetMapping("/creditmodule/module/{planId}")
     public R<List<CreditModuleEntity>> findModuleListByPlanId(@PathVariable("planId") Long planId);
+
+    /**
+     * 查询班级下的方案模块
+     * @return
+     */
+    @GetMapping("/creditmodule/clazz/module")
+    public R<List<CreditModuleEntity>> clazzModule();
 }

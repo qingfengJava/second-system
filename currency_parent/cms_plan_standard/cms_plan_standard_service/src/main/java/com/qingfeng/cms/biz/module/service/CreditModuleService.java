@@ -59,5 +59,12 @@ public interface CreditModuleService extends IService<CreditModuleEntity> {
      * @return
      */
     List<CreditModuleEntity> moduleListByStuId(Long userId);
+
+    /**
+     * 查询班级下的方案模块
+     * @param userId
+     * @return
+     */
+    List<CreditModuleEntity> moduleListByClazzId(Long userId);
 }
 

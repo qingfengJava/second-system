@@ -13,6 +13,7 @@ import com.qingfeng.cms.biz.plan.enums.PlanIsEnable;
 import com.qingfeng.cms.biz.plan.service.PlanService;
 import com.qingfeng.cms.biz.project.service.ProjectService;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
+import com.qingfeng.cms.domain.clazz.entity.ClazzInfoEntity;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.module.dto.CreditModuleQueryDTO;
 import com.qingfeng.cms.domain.module.dto.CreditModuleSaveDTO;
@@ -33,6 +34,7 @@ import com.qingfeng.currency.dozer.DozerUtils;
 import com.qingfeng.currency.exception.BizException;
 import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
+import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,8 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
 
     @Autowired
     private StuInfoApi stuInfoApi;
+    @Autowired
+    private ClazzInfoApi clazzInfoApi;
 
     /**
      * 保存学分认定模块：要判断模块名是否重复
@@ -285,5 +289,36 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
         return baseMapper.selectList(Wraps.lbQ(new CreditModuleEntity())
                 .eq(CreditModuleEntity::getPlanId, planEntity.getId())
                 .orderByAsc(CreditModuleEntity::getModuleContent));
+    }
+
+    @Override
+    public List<CreditModuleEntity> moduleListByClazzId(Long userId) {
+        //查询班级信息
+        ClazzInfoEntity clazzInfo = clazzInfoApi.info().getData();
+        if (ObjectUtil.isNotEmpty(clazzInfo)) {
+            AtomicReference<Integer> applicationObject = new AtomicReference<>(0);
+            Optional.ofNullable(clazzInfo)
+                    .ifPresent(s -> {
+                        if (s.getClazzType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FOUR_YEARS) ||
+                                s.getClazzType().equals(StudentTypeEnum.UNDERGRADUATE_FOR_FIVE_YEARS)) {
+                            applicationObject.set(1);
+                        } else if (s.getClazzType().equals(StudentTypeEnum.SPECIALTY)) {
+                            applicationObject.set(2);
+                        } else if (s.getClazzType().equals(StudentTypeEnum.GRADUATE_STUDENT)) {
+                            applicationObject.set(3);
+                        }
+                    });
+            //根据年级和本专科查询对应的方案信息
+            PlanEntity planEntity = planService.getOne(Wraps.lbQ(new PlanEntity())
+                    .likeLeft(PlanEntity::getGrade, clazzInfo.getGrade())
+                    .eq(PlanEntity::getApplicationObject, applicationObject.get())
+                    .eq(PlanEntity::getIsEnable, PlanIsEnable.ENABLE_TURE.getEnable()));
+
+            return baseMapper.selectList(Wraps.lbQ(new CreditModuleEntity())
+                    .eq(CreditModuleEntity::getPlanId, planEntity.getId())
+                    .orderByAsc(CreditModuleEntity::getModuleContent));
+        }
+
+        throw new BizException("班级信息未补全，请先去补全班级信息！");
     }
 }
