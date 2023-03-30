@@ -1,6 +1,7 @@
 package com.qingfeng.cms.biz.statistics.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.qingfeng.cms.biz.club.service.ClubScoreModuleService;
 import com.qingfeng.cms.biz.item.service.ItemAchievementModuleService;
 import com.qingfeng.cms.biz.total.service.StudentScoreTotalService;
@@ -19,6 +20,7 @@ import com.qingfeng.cms.domain.statistics.vo.GradeScoreVo;
 import com.qingfeng.cms.domain.statistics.vo.StuSemesterCreditsVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
+import com.qingfeng.cms.domain.total.vo.OrganizeActiveVo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
@@ -462,7 +464,7 @@ public class StatisticsService {
                             });
                             dataYou.add(you[0]);
                             dataLang.add(lang[0]);
-                            dataCha.add(cha[0]+(stuInfos.size() - stuScoreList.size()));
+                            dataCha.add(cha[0] + (stuInfos.size() - stuScoreList.size()));
                         }
                     }
                 }
@@ -490,10 +492,11 @@ public class StatisticsService {
 
     /**
      * 各年级各模块参与人数
+     *
      * @param userId
      * @return
      */
-    public GradeScoreVo gradeModule(Long userId) {
+    public GradeScoreVo gradeModule(Long userId, String grade) {
         List<StuInfoEntity> stuInfoList = getStuInfoList(userId);
 
         // 如果没有学生就可以直接进行返回了
@@ -510,19 +513,115 @@ public class StatisticsService {
                     .build();
         }
 
-        // 先将学生按照年级进行分组
-        Map<String, List<StuInfoEntity>> stuGradeMap = stuInfoList.stream()
-                .collect(Collectors.groupingBy(
-                                StuInfoEntity::getGrade
+        // 过滤出需要查询的改年级的学生
+        if (StrUtil.isEmpty(grade)) {
+            grade = LocalDate.now().getMonthValue() > 9 ? LocalDate.now().getYear() + "级" : (LocalDate.now().getYear() - 1) + "级";
+        }
+        String finalGrade = grade;
+        List<StuInfoEntity> stuGradeList = stuInfoList.stream()
+                .filter(s -> s.getGrade().equals(finalGrade))
+                .collect(Collectors.toList());
+
+        if (CollUtil.isEmpty(stuGradeList)) {
+            return GradeScoreVo.builder()
+                    .xAxis(Collections.singletonList("无学生"))
+                    .gradeScoreRoList(Collections.singletonList(
+                                    GradeScoreRo.builder()
+                                            .name("无学生")
+                                            .data(Collections.singletonList(0))
+                                            .build()
+                            )
+                    )
+                    .build();
+        }
+
+        // 根据一个学生获取方案模块信息
+        Map<Long, CreditModuleEntity> moduleMap = creditModuleApi.moduleListByStuId(stuGradeList.get(0).getUserId())
+                .getData()
+                .stream()
+                .collect(Collectors.toMap(
+                                CreditModuleEntity::getId,
+                                Function.identity()
                         )
                 );
 
-        // 取一个学生的学制 计算年级
-        List<String> xAxis = getXAxis(stuInfoList.get(0).getEducationalSystem().getVariable());
+        // 查询每个学生的社团活动
+        List<ClubScoreModuleEntity> clubScoreModule = clubScoreModuleService.list(
+                Wraps.lbQ(new ClubScoreModuleEntity())
+                        .in(
+                                ClubScoreModuleEntity::getUserId,
+                                stuGradeList.stream()
+                                        .map(StuInfoEntity::getUserId)
+                                        .collect(Collectors.toList())
+                        )
+        );
 
-        // 这次先按照每个年级把每个模块的参与情况给统计出来
+        List<ItemAchievementModuleEntity> itemAchievementModule = itemAchievementModuleService.list(
+                Wraps.lbQ(new ItemAchievementModuleEntity())
+                        .in(
+                                ItemAchievementModuleEntity::getUserId,
+                                stuGradeList.stream()
+                                        .map(StuInfoEntity::getUserId)
+                                        .collect(Collectors.toList())
+                        )
+        );
 
-        return GradeScoreVo.builder().build();
+        List<String> xAxis = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
+        moduleMap.entrySet()
+                .stream()
+                .forEach(m -> {
+                    xAxis.add(m.getValue().getModuleName());
+
+                    // 查询这个模块下有多少学生参与
+                    if (CollUtil.isEmpty(clubScoreModule) && CollUtil.isEmpty(itemAchievementModule)) {
+                        data.add(0);
+                    } else {
+                        int value  = 0;
+                        if (CollUtil.isNotEmpty(itemAchievementModule)) {
+                            value = itemAchievementModule.stream()
+                                    .filter(i -> i.getModuleId().equals(m.getValue().getId()))
+                                    .collect(Collectors.counting())
+                                    .intValue();
+                        }
+
+                        if (m.getValue().getCode().eq(CreditModuleTypeEnum.COMMUNITY_WORK)) {
+                            value += clubScoreModule.size();
+                        }
+
+                        data.add(value);
+
+                    }
+
+                });
+
+        return GradeScoreVo.builder()
+                .xAxis(xAxis)
+                .gradeScoreRoList(Collections.singletonList(
+                        GradeScoreRo.builder()
+                                .name("参与人数")
+                                .data(data)
+                                .build()
+                ))
+                .build();
+    }
+
+    /**
+     * 返回各个年级集合
+     *
+     * @param userId
+     * @return
+     */
+    public List<String> gradeList(Long userId) {
+        List<StuInfoEntity> stuInfoList = getStuInfoList(userId);
+        if (CollUtil.isEmpty(stuInfoList)) {
+            // 没有学生，默认就是四年制
+            return getXAxis(4);
+
+        }
+
+        return getXAxis(stuInfoList.get(0).getEducationalSystem().getVariable());
+
     }
 
     private List<StuInfoEntity> getStuInfoList(Long userId) {
@@ -551,5 +650,16 @@ public class StatisticsService {
             year--;
         }
         return gradeList;
+    }
+
+    /**
+     * 社团活动举办情况
+     * @param userId
+     * @return
+     */
+    public OrganizeActiveVo organizeActive(Long userId) {
+
+
+        return OrganizeActiveVo.builder().build();
     }
 }

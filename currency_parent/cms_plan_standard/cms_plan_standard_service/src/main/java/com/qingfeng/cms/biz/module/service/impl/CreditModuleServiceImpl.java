@@ -321,4 +321,6 @@ public class CreditModuleServiceImpl extends ServiceImpl<CreditModuleDao, Credit
 
         throw new BizException("班级信息未补全，请先去补全班级信息！");
     }
+
+
 }

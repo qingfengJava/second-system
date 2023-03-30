@@ -187,7 +187,7 @@ public class LevelServiceImpl extends ServiceImpl<LevelDao, LevelEntity> impleme
             user = userApi.get(level.getCreateUser()).getData();
         }
         if (ObjectUtil.isNotEmpty(user)) {
-            // TODO 审核结果发送消息通知  目前先发送邮件通知
+            // 审核结果发送消息通知  目前先发送邮件通知
             if (ObjectUtil.isNotEmpty(user.getEmail())) {
                 String title = levelCheckDTO.getIsCheck().equals(LevelCheckEnum.IS_FINISHED) ?
                         "项目等级<" + level.getLevelContent() + ">申请审核通过通知" :

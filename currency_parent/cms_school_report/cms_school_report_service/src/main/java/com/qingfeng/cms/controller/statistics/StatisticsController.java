@@ -5,6 +5,7 @@ import com.qingfeng.cms.domain.statistics.vo.ClassModuleVo;
 import com.qingfeng.cms.domain.statistics.vo.ClazzCreditsVo;
 import com.qingfeng.cms.domain.statistics.vo.GradeScoreVo;
 import com.qingfeng.cms.domain.statistics.vo.StuSemesterCreditsVo;
+import com.qingfeng.cms.domain.total.vo.OrganizeActiveVo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
@@ -95,10 +96,33 @@ public class StatisticsController extends BaseController {
     }
 
     @ApiOperation(value = "各年级各模块参与人数", notes = "各年级各模块参与人数")
-    @GetMapping("/grade/module")
+    @GetMapping("/grade/module/{grade}")
     @SysLog("各年级各模块参与人数")
-    public R<GradeScoreVo> gradeModule(){
-        GradeScoreVo gradeScoreVo = statisticsService.gradeModule(getUserId());
+    public R<GradeScoreVo> gradeModule(@PathVariable("grade") String grade){
+        GradeScoreVo gradeScoreVo = statisticsService.gradeModule(getUserId(), grade);
         return success(gradeScoreVo);
+    }
+
+    @ApiOperation(value = "返回各年级集合", notes = "返回各个年级集合")
+    @GetMapping("/grade/list")
+    @SysLog("返回各个年级集合")
+    public R<List<String>> gradeList() {
+        List<String> gradeList = statisticsService.gradeList(getUserId());
+        return success(gradeList);
+    }
+
+    @ApiOperation(value = "社团活动举办情况", notes = "社团活动举办情况")
+    @GetMapping("/organize/active")
+    @SysLog("社团活动举办情况")
+    public R<OrganizeActiveVo> organizeActive(){
+        OrganizeActiveVo organizeActiveVo = statisticsService.organizeActive(getUserId());
+        return success(organizeActiveVo);
+    }
+
+    @ApiOperation(value = "每学期社团活动评分详情", notes = "每学期社团活动评分详情")
+    @GetMapping("/activity/score/{schoolYear}")
+    public R activityScore(@PathVariable("schoolYear") String schoolYear){
+
+        return success();
     }
 }

@@ -66,5 +66,6 @@ public interface CreditModuleService extends IService<CreditModuleEntity> {
      * @return
      */
     List<CreditModuleEntity> moduleListByClazzId(Long userId);
+
 }
 
