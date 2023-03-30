@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.qingfeng.cms.biz.club.service.ClubScoreModuleService;
 import com.qingfeng.cms.biz.item.service.ItemAchievementModuleService;
 import com.qingfeng.cms.biz.total.service.StudentScoreTotalService;
+import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.clazz.vo.UserVo;
 import com.qingfeng.cms.domain.club.entity.ClubScoreModuleEntity;
 import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
@@ -23,6 +24,7 @@ import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
 import com.qingfeng.cms.domain.total.vo.OrganizeActiveVo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
+import com.qingfeng.sdk.active.apply.ApplyApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
 import com.qingfeng.sdk.messagecontrol.collegeinformation.CollegeInformationApi;
@@ -65,6 +67,8 @@ public class StatisticsService {
     private ClazzInfoApi clazzInfoApi;
     @Autowired
     private CollegeInformationApi collegeInformationApi;
+    @Autowired
+    private ApplyApi applyApi;
 
 
     /**
@@ -658,6 +662,22 @@ public class StatisticsService {
      * @return
      */
     public OrganizeActiveVo organizeActive(Long userId) {
+        // 查询目前该社团申请的所有活动
+        List<ApplyEntity> applyEntityList = applyApi.getUserActivityList(userId).getData();
+        if (CollUtil.isEmpty(applyEntityList)) {
+            List<Integer> asList = Arrays.asList(0, 0, 0);
+            // 为空直接返回
+            return OrganizeActiveVo.builder()
+                    .actNum(asList)
+                    .bigActNum(asList)
+                    .mediumActNum(asList)
+                    .smallActNum(asList)
+                    .applyActNum(asList)
+                    .inActNum(asList)
+                    .completeActNum(asList)
+                    .abandonActNum(asList)
+                    .build();
+        }
 
 
         return OrganizeActiveVo.builder().build();

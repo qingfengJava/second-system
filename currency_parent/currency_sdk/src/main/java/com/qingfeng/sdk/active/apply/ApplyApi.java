@@ -35,4 +35,12 @@ public interface ApplyApi {
      */
     @PostMapping("/apply/info_list")
     public R<List<ApplyEntity>> infoListByIds(@RequestBody List<Long> ids);
+
+    /**
+     * 根据用户Id查询用户申请的活动信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/apply/user/{userId}")
+    public R<List<ApplyEntity>> getUserActivityList(@PathVariable("userId") Long userId);
 }

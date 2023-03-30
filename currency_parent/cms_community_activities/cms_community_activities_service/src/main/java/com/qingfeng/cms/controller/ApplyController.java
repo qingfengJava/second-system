@@ -144,6 +144,18 @@ public class ApplyController extends BaseController {
         return success();
     }
 
+    @ApiOperation(value = "根据用户Id查询用户申请的活动信息", notes = "根据用户Id查询用户申请的活动信息")
+    @GetMapping("/user/{userId}")
+    @SysLog("根据用户Id查询用户申请的活动信息")
+    public R<List<ApplyEntity>> getUserActivityList(@PathVariable("userId") Long userId) {
+        return success(
+                applyService.list(
+                        Wraps.lbQ(new ApplyEntity())
+                                .eq(ApplyEntity::getApplyUserId, userId)
+                )
+        );
+    }
+
     @ApiOperation(value = "返回相关的枚举值", notes = "返回相关的枚举值")
     @GetMapping("/anno/enums")
     public R<ApplyEnumsVoList> getApplyEnumsVoList() {
