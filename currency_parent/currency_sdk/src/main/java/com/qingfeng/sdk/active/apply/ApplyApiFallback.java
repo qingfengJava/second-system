@@ -25,4 +25,9 @@ public class ApplyApiFallback implements ApplyApi {
     public R<List<ApplyEntity>> getUserActivityList(Long userId) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R<List<ApplyEntity>> getUserActivityListByuserIdAndSchoolYear(Long userId, String schoolYear) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

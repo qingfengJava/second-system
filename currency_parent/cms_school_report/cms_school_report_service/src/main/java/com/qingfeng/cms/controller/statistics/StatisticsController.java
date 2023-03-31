@@ -5,7 +5,7 @@ import com.qingfeng.cms.domain.statistics.vo.ClassModuleVo;
 import com.qingfeng.cms.domain.statistics.vo.ClazzCreditsVo;
 import com.qingfeng.cms.domain.statistics.vo.GradeScoreVo;
 import com.qingfeng.cms.domain.statistics.vo.StuSemesterCreditsVo;
-import com.qingfeng.cms.domain.total.vo.OrganizeActiveVo;
+import com.qingfeng.cms.domain.statistics.vo.OrganizeActiveVo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -121,8 +122,43 @@ public class StatisticsController extends BaseController {
 
     @ApiOperation(value = "每学期社团活动评分详情", notes = "每学期社团活动评分详情")
     @GetMapping("/activity/score/{schoolYear}")
-    public R activityScore(@PathVariable("schoolYear") String schoolYear){
+    public R<List<Integer>> activityScore(@PathVariable("schoolYear") String schoolYear){
+        List<Integer> activityScoreVo = statisticsService.activityScore(schoolYear, getUserId());
+        return success(activityScoreVo);
+    }
+
+    @ApiOperation(value = "根据年份获取学年-学期集合", notes = "根据年份获取学年-学期集合")
+    @GetMapping("/anno/schoolYear/{year}")
+    public R getSchoolYear(@PathVariable("year") Integer year) {
+        List<String> list = new ArrayList<>();
+        //获取当前年份
+        year -= 4;
+        for (int i = 0; i < 6; i++) {
+            list.add(year + "-" + (year + 1) + "  第一学期");
+            list.add(year + "-" + (year + 1) + "  第二学期");
+            year++;
+        }
+        return success(list);
+    }
+
+    @ApiOperation(value = "查询每个社团的活动举办情况", notes = "查询每个社团的活动举办情况")
+    @GetMapping("/community/situation/{academicYear}")
+    @SysLog("查询每个社团的活动举办情况")
+    public R communitySituation(@PathVariable("academicYear") String academicYear){
 
         return success();
     }
+
+    @ApiOperation(value = "根据年份获取学年集合", notes = "根据年份获取学年集合")
+    @GetMapping("/anno/academic/{year}")
+    public R academicYear(@PathVariable("year") Integer year){
+        List<String> list = new ArrayList<>();
+        year -= 4;
+        for (int i = 0; i < 6; i++) {
+            list.add(year + "-" + (year + 1));
+            year++;
+        }
+        return success(list);
+    }
+
 }

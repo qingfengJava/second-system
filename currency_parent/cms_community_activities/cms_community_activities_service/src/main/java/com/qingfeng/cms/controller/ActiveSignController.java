@@ -11,6 +11,7 @@ import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
+import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.currency.log.annotation.SysLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
-
 /**
  * 活动报名表
  *
@@ -42,7 +42,7 @@ import java.util.List;
 @RestController
 @Api(value = "提供活动报名的相关功能", tags = "提供活动报名的相关功能")
 @RequestMapping("/active_sign")
-public class ActiveSignController extends BaseController  {
+public class ActiveSignController extends BaseController {
 
     @Autowired
     private ActiveSignService activeSignService;
@@ -50,21 +50,21 @@ public class ActiveSignController extends BaseController  {
     @ApiOperation(value = "查询所有的社团组织信息列表", notes = "查询所有的社团组织信息列表")
     @GetMapping("/anno/organize/list")
     @SysLog("查询所有的社团组织信息列表")
-    public R<List<OrganizeVo>> organizeList(){
+    public R<List<OrganizeVo>> organizeList() {
         return success(activeSignService.organizeList());
     }
 
     @ApiOperation(value = "查询所有已发布的活动", notes = "查询所有已发布的活动")
     @PostMapping("/apply/list")
     @SysLog("查询所有已发布的活动")
-    public R<ApplyPageVo> applyList(@RequestBody @Validated ActiveQueryDTO activeQueryDTO){
+    public R<ApplyPageVo> applyList(@RequestBody @Validated ActiveQueryDTO activeQueryDTO) {
         return success(activeSignService.applyList(activeQueryDTO, getUserId()));
     }
 
     @ApiOperation(value = "查询用户已报名的活动信息", notes = "查询用户已报名的活动信息")
     @PostMapping("/apply/sign")
     @SysLog("查询用户已报名的活动信息")
-    public R<ActiveApplySignVo> getActiveSignList(@RequestBody @Validated ActiveApplySignQueryDTO activeApplySignQueryDTO){
+    public R<ActiveApplySignVo> getActiveSignList(@RequestBody @Validated ActiveApplySignQueryDTO activeApplySignQueryDTO) {
         // 设计查询用户已经报名的活动信息
         return success(activeSignService.getActiveSignList(activeApplySignQueryDTO, getUserId()));
     }
@@ -72,16 +72,16 @@ public class ActiveSignController extends BaseController  {
     @ApiOperation(value = "活动报名", notes = "活动报名")
     @PostMapping("/sign")
     @SysLog("活动报名")
-    public R save(@RequestBody @Validated ActiveSignSaveDTO activeSignSaveDTO){
-		activeSignService.saveSign(activeSignSaveDTO, getUserId());
+    public R save(@RequestBody @Validated ActiveSignSaveDTO activeSignSaveDTO) {
+        activeSignService.saveSign(activeSignSaveDTO, getUserId());
         return success();
     }
 
     @ApiOperation(value = "取消活动报名", notes = "取消活动报名")
     @DeleteMapping("/delete/{id}")
     @SysLog("取消活动报名")
-    public R delete(@PathVariable("id") Long id){
-		//取消活动报名，直接根据id删除报名信息
+    public R delete(@PathVariable("id") Long id) {
+        //取消活动报名，直接根据id删除报名信息
         activeSignService.deleteById(id);
         return success();
     }
@@ -89,7 +89,7 @@ public class ActiveSignController extends BaseController  {
     @ApiOperation(value = "活动评价", notes = "活动评价")
     @PostMapping("/evaluation")
     @SysLog("活动评价")
-    public R activityEvaluation(@RequestBody @Validated ActiveEvaluationDTO activeEvaluationDTO){
+    public R activityEvaluation(@RequestBody @Validated ActiveEvaluationDTO activeEvaluationDTO) {
         activeSignService.setActivityEvaluation(activeEvaluationDTO);
         return success();
     }
@@ -97,7 +97,7 @@ public class ActiveSignController extends BaseController  {
     @ApiOperation(value = "查询活动报名表（学生）", notes = "查询活动报名表（学生）")
     @GetMapping("/stu/sign/list/{applyId}")
     @SysLog("查询活动报名表（学生）")
-    public R<List<ActiveSignEntity>> studentSignList(@PathVariable("applyId") Long applyId){
+    public R<List<ActiveSignEntity>> studentSignList(@PathVariable("applyId") Long applyId) {
         List<ActiveSignEntity> signList = activeSignService.getStudentSignList(applyId);
         return success(signList);
     }
@@ -106,21 +106,33 @@ public class ActiveSignController extends BaseController  {
     @GetMapping("/export/sign/{applyId}")
     @SysLog("导出加分报表")
     public void exportStuBonusPoints(HttpServletResponse response,
-                                     @PathVariable("applyId") Long applyId){
+                                     @PathVariable("applyId") Long applyId) {
         activeSignService.exportStuBonusPoints(response, applyId);
     }
 
+    @ApiOperation(value = "根据Id集合查询学生报名的活动信息", notes = "根据Id集合查询学生报名的活动信息")
+    @PostMapping("/applyIds/list")
+    @SysLog("根据Id集合查询学生报名的活动信息")
+    public R<List<ActiveSignEntity>> findByApplyIdsList(@RequestBody List<Long> applyIds) {
+        return success(
+                activeSignService.list(
+                        Wraps.lbQ(new ActiveSignEntity())
+                                .in(ActiveSignEntity::getApplyId, applyIds)
+                )
+        );
+    }
 
     /**
-     * TODO 单独签到的服务调用SDK
+     * 单独签到的服务调用SDK
+     *
      * @param id
      * @return
      */
     @ApiOperation(value = "进行活动一键签到", notes = "进行活动一键签到")
     @GetMapping("/sign/check/{id}")
     @SysLog("进行活动一键签到")
-    public R oneClickCheckIn(@PathVariable("id") Long id){
-        // 活动签到
+    public R oneClickCheckIn(@PathVariable("id") Long id) {
+        // TODO 活动签到
         return success();
     }
 }

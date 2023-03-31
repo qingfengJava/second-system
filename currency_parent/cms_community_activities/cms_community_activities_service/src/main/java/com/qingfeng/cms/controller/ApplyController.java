@@ -156,6 +156,21 @@ public class ApplyController extends BaseController {
         );
     }
 
+    @ApiOperation(value = "根据用户Id查询用户每学期申请的活动信息", notes = "根据用户Id查询用户每学期申请的活动信息")
+    @GetMapping("/user/{userId}/{schoolYear}")
+    @SysLog("根据用户Id查询用户每学期申请的活动信息")
+    public R<List<ApplyEntity>> getUserActivityListByuserIdAndSchoolYear(
+            @PathVariable("userId") Long userId,
+            @PathVariable("schoolYear") String schoolYear) {
+        return success(
+                applyService.list(
+                        Wraps.lbQ(new ApplyEntity())
+                                .eq(ApplyEntity::getApplyUserId, userId)
+                                .eq(ApplyEntity::getSchoolYear, schoolYear)
+                )
+        );
+    }
+
     @ApiOperation(value = "返回相关的枚举值", notes = "返回相关的枚举值")
     @GetMapping("/anno/enums")
     public R<ApplyEnumsVoList> getApplyEnumsVoList() {

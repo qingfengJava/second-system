@@ -1,11 +1,17 @@
 package com.qingfeng.cms.biz.statistics.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.qingfeng.cms.biz.club.service.ClubScoreModuleService;
 import com.qingfeng.cms.biz.item.service.ItemAchievementModuleService;
 import com.qingfeng.cms.biz.total.service.StudentScoreTotalService;
+import com.qingfeng.cms.domain.apply.entity.ApplyCheckEntity;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
+import com.qingfeng.cms.domain.apply.enums.ActiveLevelEnum;
+import com.qingfeng.cms.domain.apply.enums.ActiveScaleEnum;
+import com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum;
+import com.qingfeng.cms.domain.apply.enums.ApplyCheckStatusEnum;
 import com.qingfeng.cms.domain.clazz.vo.UserVo;
 import com.qingfeng.cms.domain.club.entity.ClubScoreModuleEntity;
 import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
@@ -13,6 +19,7 @@ import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.item.entity.ItemAchievementModuleEntity;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.module.enums.CreditModuleTypeEnum;
+import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import com.qingfeng.cms.domain.statistics.ro.GradeScoreRo;
 import com.qingfeng.cms.domain.statistics.ro.StuSemesterCreditsRo;
 import com.qingfeng.cms.domain.statistics.vo.ClassModuleVo;
@@ -21,10 +28,12 @@ import com.qingfeng.cms.domain.statistics.vo.GradeScoreVo;
 import com.qingfeng.cms.domain.statistics.vo.StuSemesterCreditsVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
-import com.qingfeng.cms.domain.total.vo.OrganizeActiveVo;
+import com.qingfeng.cms.domain.statistics.vo.OrganizeActiveVo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.sdk.active.apply.ApplyApi;
+import com.qingfeng.sdk.active.apply_check.ApplyCheckApi;
+import com.qingfeng.sdk.active.sign.ActiveSignApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
 import com.qingfeng.sdk.messagecontrol.collegeinformation.CollegeInformationApi;
@@ -38,9 +47,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -69,7 +80,10 @@ public class StatisticsService {
     private CollegeInformationApi collegeInformationApi;
     @Autowired
     private ApplyApi applyApi;
-
+    @Autowired
+    private ApplyCheckApi applyCheckApi;
+    @Autowired
+    private ActiveSignApi activeSignApi;
 
     /**
      * 学生学期学分修读情况
@@ -581,7 +595,7 @@ public class StatisticsService {
                     if (CollUtil.isEmpty(clubScoreModule) && CollUtil.isEmpty(itemAchievementModule)) {
                         data.add(0);
                     } else {
-                        int value  = 0;
+                        int value = 0;
                         if (CollUtil.isNotEmpty(itemAchievementModule)) {
                             value = itemAchievementModule.stream()
                                     .filter(i -> i.getModuleId().equals(m.getValue().getId()))
@@ -658,6 +672,7 @@ public class StatisticsService {
 
     /**
      * 社团活动举办情况
+     *
      * @param userId
      * @return
      */
@@ -679,7 +694,140 @@ public class StatisticsService {
                     .build();
         }
 
+        // 过滤所有的大型活动
+        List<ApplyEntity> bigActList = applyEntityList.stream()
+                .filter(a -> a.getActiveScale().eq(ActiveScaleEnum.BIG))
+                .collect(Collectors.toList());
+        // 过滤所有的中型活动
+        List<ApplyEntity> mediumActList = applyEntityList.stream()
+                .filter(a -> a.getActiveScale().eq(ActiveScaleEnum.MIDDLE))
+                .collect(Collectors.toList());
+        // 过滤所有的小型项目
+        List<ApplyEntity> smallActList = applyEntityList.stream()
+                .filter(a -> a.getActiveScale().eq(ActiveScaleEnum.SMALL))
+                .collect(Collectors.toList());
+        // 过滤所有申请中的活动 只要没有活动状态的都是在申请中的活动
+        List<ApplyEntity> applyActList = applyEntityList.stream()
+                .filter(a -> ObjectUtil.isEmpty(a.getActiveStatus()))
+                .collect(Collectors.toList());
 
-        return OrganizeActiveVo.builder().build();
+        // 查询所有进行中的活动
+        List<ApplyEntity> inActList = applyEntityList.stream()
+                .filter(a ->
+                        ObjectUtil.isNotEmpty(a.getActiveStatus())
+                                && (a.getActiveStatus().equals(ActiveStatusEnum.INIT)
+                                || a.getActiveStatus().equals(ActiveStatusEnum.HAVING))
+                )
+                .collect(Collectors.toList());
+
+        // 查询所有已完成的活动
+        List<ApplyEntity> completeActList = applyEntityList.stream()
+                .filter(a -> ObjectUtil.isNotEmpty(a.getActiveStatus()) && a.getActiveStatus().equals(ActiveStatusEnum.COMPLETE))
+                .collect(Collectors.toList());
+
+        // 查询所有废弃的活动
+        List<ApplyEntity> abandonActList = applyEntityList.stream()
+                .filter(a -> ObjectUtil.isNotEmpty(a.getActiveStatus()) && a.getActiveStatus().equals(ActiveStatusEnum.ABANDONMENT))
+                .collect(Collectors.toList());
+
+        // 查询所有已经终审的活动
+        List<ApplyCheckEntity> applyCheckList = applyCheckApi.findByApplyIds(
+                applyEntityList.stream()
+                        .map(ApplyEntity::getId)
+                        .collect(Collectors.toList())
+        ).getData();
+        // 查询所有已完成，但终审为通过的活动
+        Set<Long> ids = new HashSet<>();
+        if (ObjectUtil.isNotEmpty(applyCheckList)) {
+            ids = applyCheckList.stream()
+                    .filter(a -> a.getCheckStatus().equals(ApplyCheckStatusEnum.IS_NOT_PASSED))
+                    .map(ApplyCheckEntity::getApplyId)
+                    .collect(Collectors.toSet());
+        }
+        Set<Long> finalIds = ids;
+        List<ApplyEntity> isNotPassList = completeActList.stream()
+                .filter(c -> finalIds.contains(c.getId()))
+                .collect(Collectors.toList());
+
+        return OrganizeActiveVo.builder()
+                .actNum(getActiveNum(applyEntityList))
+                .bigActNum(getActiveNum(bigActList))
+                .mediumActNum(getActiveNum(mediumActList))
+                .smallActNum(getActiveNum(smallActList))
+                .applyActNum(getActiveNum(applyActList))
+                .inActNum(getActiveNum(inActList))
+                .completeActNum(getActiveNum(completeActList))
+                .abandonActNum(getActiveNum(abandonActList))
+                .applyNotPassActNum(getActiveNum(isNotPassList))
+                .build();
+    }
+
+    /**
+     * 封装总活动中的校级活动，院级活动，一般活动
+     *
+     * @param applyEntityList
+     * @return
+     */
+    private List<Integer> getActiveNum(List<ApplyEntity> applyEntityList) {
+        if (CollUtil.isEmpty(applyEntityList)) {
+            return Arrays.asList(0, 0, 0);
+        }
+        int schoolItemNum = applyEntityList.stream()
+                .filter(a -> a.getActiveLevel().eq(ActiveLevelEnum.SCHOOL_ITEMS))
+                .collect(Collectors.counting())
+                .intValue();
+
+        int instituteItemNum = applyEntityList.stream()
+                .filter(a -> a.getActiveLevel().eq(ActiveLevelEnum.INSTITUTE_ITEMS))
+                .collect(Collectors.counting())
+                .intValue();
+
+        int generalItemNum = applyEntityList.stream()
+                .filter(a -> a.getActiveLevel().eq(ActiveLevelEnum.GENERAL_ITEMS))
+                .collect(Collectors.counting())
+                .intValue();
+
+        return Arrays.asList(schoolItemNum, instituteItemNum, generalItemNum);
+    }
+
+    /**
+     * 每学期社团活动评分详情
+     *
+     * @param schoolYear
+     * @param userId
+     * @return
+     */
+    public List<Integer> activityScore(String schoolYear, Long userId) {
+        List<ApplyEntity> applyList = applyApi.getUserActivityListByuserIdAndSchoolYear(userId, schoolYear).getData();
+
+        if (CollUtil.isEmpty(applyList)) {
+            return Arrays.asList(0, 0, 0, 0, 0);
+        }
+
+        List<ActiveSignEntity> activeSignList = activeSignApi.findByApplyIdsList(
+                applyList.stream()
+                        .map(ApplyEntity::getId)
+                        .collect(Collectors.toList())
+        ).getData();
+
+        if (CollUtil.isEmpty(activeSignList)) {
+            return Arrays.asList(0, 0, 0, 0, 0);
+        }
+
+        // 活动个数
+        return Arrays.asList(
+                getActNum(activeSignList, 1),
+                getActNum(activeSignList, 2),
+                getActNum(activeSignList, 3),
+                getActNum(activeSignList, 4),
+                getActNum(activeSignList, 5)
+        );
+    }
+
+    private int getActNum(List<ActiveSignEntity> activeSignList, int i) {
+        return activeSignList.stream()
+                .filter(a -> ObjectUtil.isNotEmpty(a.getEvaluationValue()) && a.getEvaluationValue() == i)
+                .collect(Collectors.counting())
+                .intValue();
     }
 }

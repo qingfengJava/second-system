@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -78,6 +79,14 @@ public class ApplyCheckController extends BaseController {
     public R submitApplyCheck(@RequestBody @Validated ApplyCheckDTO applyCheckDTO) {
         applyCheckService.submitApplyCheck(applyCheckDTO);
         return success();
+    }
+
+    @ApiOperation(value = "根据活动Id查询所有已经终审的活动信息", notes = "根据活动Id查询所有已经终审的活动信息")
+    @PostMapping("/ids/list")
+    @SysLog("根据活动Id查询所有已经终审的活动信息")
+    public R<List<ApplyCheckEntity>> findByApplyIds(@RequestBody List<Long> applyIds) {
+        return success(applyCheckService.list(Wraps.lbQ(new ApplyCheckEntity())
+                .in(ApplyCheckEntity::getApplyId, applyIds)));
     }
 
     @ApiOperation(value = "返回活动终审枚举")
