@@ -31,6 +31,7 @@ import com.qingfeng.currency.exception.code.ExceptionCode;
 import com.qingfeng.sdk.auth.user.UserApi;
 import com.qingfeng.sdk.messagecontrol.news.NewsNotifyApi;
 import com.qingfeng.sdk.messagecontrol.organize.OrganizeInfoApi;
+import com.qingfeng.sdk.school.club.ClubScoreModuleApi;
 import com.qingfeng.sdk.sms.email.domain.EmailEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,8 @@ public class BonusCheckServiceImpl extends ServiceImpl<BonusCheckDao, BonusCheck
     private UserApi userApi;
     @Autowired
     private OrganizeInfoApi organizeInfoApi;
+    @Autowired
+    private ClubScoreModuleApi clubScoreModuleApi;
 
     /**
      * 查询需要加分审核的活动列表
@@ -163,7 +166,7 @@ public class BonusCheckServiceImpl extends ServiceImpl<BonusCheckDao, BonusCheck
         }
 
 
-        // TODO 添加学分，待学分服务完善才能做，后期使用MQ去做
+        // 添加学分
         // 获取加分文件的连接
         String bonusFile = applyService.getById(
                 baseMapper.selectById(bonusCheckSaveDTO.getId())
@@ -174,7 +177,7 @@ public class BonusCheckServiceImpl extends ServiceImpl<BonusCheckDao, BonusCheck
         EasyExcel.read(
                         inputStream,
                         SingBonusPointsVo.class,
-                        new BonusExcelListener()
+                        new BonusExcelListener(applyEntity, clubScoreModuleApi)
                 ).sheet()
                 .doRead();
     }

@@ -28,7 +28,7 @@ public interface ProjectService extends IService<ProjectEntity> {
      * @param projectSaveDTO
      * @param userId
      */
-    void saveProject(ProjectSaveDTO projectSaveDTO, Long userId);
+    void saveProject(ProjectSaveDTO projectSaveDTO, Long userId) throws JsonProcessingException;
 
     /**
      * 修改模块项目内容

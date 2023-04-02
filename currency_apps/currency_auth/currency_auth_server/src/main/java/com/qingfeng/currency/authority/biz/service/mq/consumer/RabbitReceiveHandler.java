@@ -13,15 +13,20 @@ import com.qingfeng.cms.domain.student.enums.IsChangeEnum;
 import com.qingfeng.cms.domain.student.enums.PoliticsStatusEnum;
 import com.qingfeng.cms.domain.student.enums.StateSchoolEnum;
 import com.qingfeng.cms.domain.student.enums.StudentTypeEnum;
+import com.qingfeng.currency.authority.biz.service.auth.RoleService;
+import com.qingfeng.currency.authority.biz.service.auth.UserRoleService;
 import com.qingfeng.currency.authority.biz.service.auth.UserService;
 import com.qingfeng.currency.authority.biz.service.core.OrgService;
 import com.qingfeng.currency.authority.biz.service.core.StationService;
 import com.qingfeng.currency.authority.config.mq.RabbitMqConfig;
+import com.qingfeng.currency.authority.entity.auth.Role;
 import com.qingfeng.currency.authority.entity.auth.User;
+import com.qingfeng.currency.authority.entity.auth.UserRole;
 import com.qingfeng.currency.authority.entity.auth.vo.UserReadVo;
 import com.qingfeng.currency.authority.entity.core.Org;
 import com.qingfeng.currency.authority.entity.core.Station;
 import com.qingfeng.currency.authority.enumeration.auth.Sex;
+import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.sdk.auth.user.UserApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
@@ -64,6 +69,10 @@ public class RabbitReceiveHandler {
     private OrgService orgService;
     @Autowired
     private StationService stationService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private StuInfoApi stuInfoApi;
@@ -152,7 +161,15 @@ public class RabbitReceiveHandler {
         //直接进行保存
         stuInfoApi.save(stuInfoSaveDTO);
 
-        // TODO 还要将用户与角色进行绑定
+        // 查询学生角色Id
+        Role role = roleService.getOne(Wraps.lbQ(new Role())
+                .eq(Role::getCode, RoleEnum.STUDENT.name()));
+
+        // 将用户与角色进行绑定
+        userRoleService.save(UserRole.builder()
+                .userId(user.getId())
+                .roleId(role.getId())
+                .build());
 
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
     }

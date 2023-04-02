@@ -18,6 +18,6 @@ public class ShortMessageServiceImpl implements ShortMessageService {
      */
     @Override
     public void sendMessage(ShortMessageEntity shortMessageEntity) {
-        // TODO 待封装
+        // TODO 短信待封装
     }
 }

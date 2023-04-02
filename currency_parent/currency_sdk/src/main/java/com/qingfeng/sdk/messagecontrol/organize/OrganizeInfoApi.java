@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -51,4 +52,12 @@ public interface OrganizeInfoApi {
      */
     @PostMapping("/organizeinfo/info")
     public R<List<OrganizeInfoEntity>> infoList(@RequestBody List<Long> userIds);
+
+    /**
+     * 根据社团名查询社团信息
+     * @param orgName
+     * @return
+     */
+    @GetMapping("/organizeinfo/info/name")
+    public R<OrganizeInfoEntity> findInfoByName(@RequestParam("orgName") String orgName);
 }

@@ -62,7 +62,7 @@ public class ProjectController extends BaseController {
     @PostMapping("/save")
     @SysLog("添加模块项目")
     public R save(@ApiParam(value = "方案实体", required = true)
-                  @RequestBody @Validated ProjectSaveDTO projectSaveDTO) {
+                  @RequestBody @Validated ProjectSaveDTO projectSaveDTO) throws JsonProcessingException {
         projectService.saveProject(projectSaveDTO, getUserId());
         return success();
     }

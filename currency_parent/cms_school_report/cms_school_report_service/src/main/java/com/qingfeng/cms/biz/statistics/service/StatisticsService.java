@@ -19,24 +19,29 @@ import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.item.entity.ItemAchievementModuleEntity;
 import com.qingfeng.cms.domain.module.entity.CreditModuleEntity;
 import com.qingfeng.cms.domain.module.enums.CreditModuleTypeEnum;
+import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import com.qingfeng.cms.domain.statistics.ro.GradeScoreRo;
 import com.qingfeng.cms.domain.statistics.ro.StuSemesterCreditsRo;
 import com.qingfeng.cms.domain.statistics.vo.ClassModuleVo;
 import com.qingfeng.cms.domain.statistics.vo.ClazzCreditsVo;
+import com.qingfeng.cms.domain.statistics.vo.CommunitySituationVo;
 import com.qingfeng.cms.domain.statistics.vo.GradeScoreVo;
+import com.qingfeng.cms.domain.statistics.vo.OrganizeActiveVo;
 import com.qingfeng.cms.domain.statistics.vo.StuSemesterCreditsVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.cms.domain.total.entity.StudentScoreTotalEntity;
-import com.qingfeng.cms.domain.statistics.vo.OrganizeActiveVo;
 import com.qingfeng.cms.domain.total.vo.StuModuleDataAnalysisVo;
+import com.qingfeng.currency.common.enums.RoleEnum;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
 import com.qingfeng.sdk.active.apply.ApplyApi;
 import com.qingfeng.sdk.active.apply_check.ApplyCheckApi;
 import com.qingfeng.sdk.active.sign.ActiveSignApi;
+import com.qingfeng.sdk.auth.role.RoleApi;
 import com.qingfeng.sdk.messagecontrol.StuInfo.StuInfoApi;
 import com.qingfeng.sdk.messagecontrol.clazz.ClazzInfoApi;
 import com.qingfeng.sdk.messagecontrol.collegeinformation.CollegeInformationApi;
+import com.qingfeng.sdk.messagecontrol.organize.OrganizeInfoApi;
 import com.qingfeng.sdk.planstandard.module.CreditModuleApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,6 +89,10 @@ public class StatisticsService {
     private ApplyCheckApi applyCheckApi;
     @Autowired
     private ActiveSignApi activeSignApi;
+    @Autowired
+    private RoleApi roleApi;
+    @Autowired
+    private OrganizeInfoApi organizeInfoApi;
 
     /**
      * 学生学期学分修读情况
@@ -825,9 +834,161 @@ public class StatisticsService {
     }
 
     private int getActNum(List<ActiveSignEntity> activeSignList, int i) {
+        if (CollUtil.isEmpty(activeSignList)) {
+            return 0;
+        }
         return activeSignList.stream()
                 .filter(a -> ObjectUtil.isNotEmpty(a.getEvaluationValue()) && a.getEvaluationValue() == i)
                 .collect(Collectors.counting())
                 .intValue();
+    }
+
+    /**
+     * 查询每个社团的活动举办情况
+     *
+     * @param academicYear
+     * @return
+     */
+    public CommunitySituationVo communitySituation(String academicYear) {
+        // 查询所有的社团用户Id
+        List<Long> userIds = roleApi.findUserIdByCode(
+                new String[]{
+                        RoleEnum.SOCIAL_ORGANIZATION.name()
+                }
+        ).getData();
+
+        // 查询所有的社团组织
+        List<OrganizeInfoEntity> organizeInfoList = organizeInfoApi.infoList(userIds).getData();
+        // 如果社团组织不存在，直接返回数据
+        if (CollUtil.isEmpty(organizeInfoList)) {
+            return CommunitySituationVo.builder()
+                    .xData(Collections.emptyList())
+                    .actNum(Collections.emptyList())
+                    .bigActNum(Collections.emptyList())
+                    .mediumActNum(Collections.emptyList())
+                    .smallActNum(Collections.emptyList())
+                    .build();
+        }
+
+        // 封装社团信息Map
+        Map<Long, OrganizeInfoEntity> organizeInfoMap = organizeInfoList.stream()
+                .collect(Collectors.toMap(
+                        OrganizeInfoEntity::getUserId,
+                        Function.identity()
+                ));
+
+        // 查询所有的社团活动信息，根据学年去查询
+        List<ApplyEntity> applyEntityList = applyApi.getActivityListByUserIdsAndSchoolYear(userIds, academicYear).getData();
+
+        Map<Long, List<ApplyEntity>> applyMap = new HashMap<>(16);
+        if (CollUtil.isNotEmpty(applyEntityList)) {
+            applyMap = applyEntityList.stream()
+                    .collect(Collectors.groupingBy(
+                            ApplyEntity::getApplyUserId
+                    ));
+        }
+
+        List<String> xData = new ArrayList<>();
+        List<Integer> actNum = new ArrayList<>();
+        List<Integer> bigActNum = new ArrayList<>();
+        List<Integer> mediumActNum = new ArrayList<>();
+        List<Integer> smallActNum = new ArrayList<>();
+        // 社团信息一定会有，不用去排除
+        Map<Long, List<ApplyEntity>> finalApplyMap = applyMap;
+        userIds.forEach(id -> {
+            OrganizeInfoEntity organizeInfoEntity = organizeInfoMap.get(id);
+            xData.add(organizeInfoEntity.getOrganizeName());
+
+            List<ApplyEntity> applyList = finalApplyMap.getOrDefault(id, new ArrayList<ApplyEntity>());
+
+            actNum.add(applyList.size());
+            bigActNum.add(getValue(applyList, ActiveScaleEnum.BIG));
+            mediumActNum.add(getValue(applyList, ActiveScaleEnum.MIDDLE));
+            smallActNum.add(getValue(applyList, ActiveScaleEnum.SMALL));
+        });
+
+        return CommunitySituationVo.builder()
+                .xData(xData)
+                .actNum(actNum)
+                .bigActNum(bigActNum)
+                .mediumActNum(mediumActNum)
+                .smallActNum(smallActNum)
+                .build();
+    }
+
+    private int getValue(List<ApplyEntity> applyList, ActiveScaleEnum middle) {
+        if (CollUtil.isEmpty(applyList)) {
+            return 0;
+        }
+        return applyList.stream()
+                .filter(a -> a.getActiveScale().equals(middle))
+                .collect(Collectors.counting())
+                .intValue();
+    }
+
+    /**
+     * 根据社团名和学年查询社团活动质量分析情况
+     *
+     * @param orgName
+     * @param schoolYear
+     * @return
+     */
+    public List<Integer> evaluationQuality(String orgName, String schoolYear) {
+        OrganizeInfoEntity organizeInfoEntity = organizeInfoApi.findInfoByName(orgName).getData();
+        // 根据社团组织Id和学年查询举办的活动信息
+        List<ApplyEntity> applyEntityList = applyApi.getActivityListByUserIdsAndSchoolYear(
+                Collections.singletonList(organizeInfoEntity.getUserId()),
+                schoolYear
+        ).getData();
+
+        if (CollUtil.isEmpty(applyEntityList)) {
+            return Arrays.asList(0, 0, 0, 0, 0);
+        }
+
+        // 查询学生报名参与并评价的活动信息
+        List<ActiveSignEntity> signList = activeSignApi.findByApplyIdsList(
+                applyEntityList.stream()
+                        .map(ApplyEntity::getId)
+                        .collect(Collectors.toList())
+        ).getData();
+
+        return Arrays.asList(
+                getActNum(signList, 1),
+                getActNum(signList, 2),
+                getActNum(signList, 3),
+                getActNum(signList, 4),
+                getActNum(signList, 5)
+        );
+    }
+
+    /**
+     * 查询所有学院的各年级修读情况
+     * @param dictDep
+     * @return
+     */
+    public GradeScoreVo findDepAllModule(String dictDep) {
+        List<Long> depIds = collegeInformationApi.depInfo(dictDep).getData();
+        return this.gradeScore(CollUtil.isEmpty(depIds) ? -1L : depIds.get(0));
+    }
+
+    /**
+     * 返回学院对应的年级信息
+     * @param depName
+     * @return
+     */
+    public List<String> gradeListByDepName(String depName) {
+        List<Long> depIds = collegeInformationApi.depInfo(depName).getData();
+        return this.gradeList(CollUtil.isEmpty(depIds) ? -1L : depIds.get(0));
+    }
+
+    /**
+     * 查询学院个年级学生模块修读情况
+     * @param depName
+     * @param grade
+     * @return
+     */
+    public GradeScoreVo findDepStuByDepName(String depName, String grade) {
+        List<Long> depIds = collegeInformationApi.depInfo(depName).getData();
+        return this.gradeModule(CollUtil.isEmpty(depIds) ? -1L : depIds.get(0), grade);
     }
 }

@@ -12,6 +12,7 @@ import com.qingfeng.cms.biz.project.enums.ProjectExceptionMsg;
 import com.qingfeng.cms.biz.project.service.ProjectService;
 import com.qingfeng.cms.biz.rule.service.CreditRulesService;
 import com.qingfeng.cms.domain.college.entity.CollegeInformationEntity;
+import com.qingfeng.cms.domain.dict.enums.DictDepartmentEnum;
 import com.qingfeng.cms.domain.level.entity.LevelEntity;
 import com.qingfeng.cms.domain.level.vo.LevelListVo;
 import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
@@ -102,7 +103,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
      */
     @Override
     @Transactional(rollbackFor = BizException.class)
-    public void saveProject(ProjectSaveDTO projectSaveDTO, Long userId) {
+    public void saveProject(ProjectSaveDTO projectSaveDTO, Long userId) throws JsonProcessingException {
         //排除项目名字一样的内容
         ProjectEntity projectEntity = dozer.map2(projectSaveDTO, ProjectEntity.class);
         checkProject(projectEntity);
@@ -117,15 +118,68 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
                 projectEntity.setDepartment(r.getData().getOrganizationCode());
             }
             //封装信息
-//            projectEntity.setDepartment("SJ");
             projectEntity.setIsCheck(ProjectCheckEnum.INIT);
         } else {
             // 不是学院直接封装 PZHU
-            projectEntity.setDepartment("PZHU");
+            projectEntity.setDepartment(DictDepartmentEnum.PZHU.name());
             projectEntity.setIsCheck(ProjectCheckEnum.IS_FINISHED);
         }
 
-        // TODO 如果是需要审核的，发送审核通知
+        if (userIdByCode.getData().contains(userId)) {
+            // 查询用户对应的学院信息
+            R<CollegeInformationEntity> r = collegeInformationApi.info(userId);
+            //查询用户详细信息
+            User user = userApi.get(
+                            roleApi.findUserIdByCode(
+                                            new String[]{
+                                                    RoleEnum.STU_OFFICE_ADMIN.name()
+                                            }
+                                    )
+                                    .getData()
+                                    .get(0)
+                    )
+                    .getData();
+
+
+            if (ObjectUtil.isNotEmpty(user)) {
+                // 审核结果发送消息通知  目前先发送邮件通知
+                if (ObjectUtil.isNotEmpty(user.getEmail())) {
+                    String title = r.getData().getOrganizationName()+ "项目申请待审核通过通知";
+                    String body = "亲爱的学生处管理员：\r\n"
+                            + r.getData().getOrganizationName()+"申请的项目<"
+                            + projectSaveDTO.getProjectName()+">待审核，请及时审核，避免影响项目后序进展。";
+
+                    //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+                    rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
+                            .email(user.getEmail())
+                            .title(title)
+                            .body(body)
+                            .key(PROJECT_KEY)
+                            .build()), PROJECT_KEY);
+
+                    //将消息通知写入数据库
+                    R result = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                            .userId(user.getId())
+                            .newsType(NewsTypeEnum.MAILBOX)
+                            .newsTitle(title)
+                            .newsContent(body)
+                            .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                            .build());
+
+                    if (result.getIsError()) {
+                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.NEWS_SAVE_FAILED.getMsg());
+                    }
+
+                } else if (ObjectUtil.isNotEmpty(user.getMobile())) {
+                    // TODO 向短信发送信息 待完善  失败重试三次
+
+                }
+            } else {
+                throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ProjectExceptionMsg.USER_NOT_EXITS.getMsg());
+
+            }
+
+        }
 
         //保存
         baseMapper.insert(projectEntity);
@@ -287,7 +341,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectDao, ProjectEntity> i
         User user = userApi.get(project.getCreateUser()).getData();
 
         if (ObjectUtil.isNotEmpty(user)) {
-            // TODO 审核结果发送消息通知  目前先发送邮件通知
+            // 审核结果发送消息通知  目前先发送邮件通知
             if (ObjectUtil.isNotEmpty(user.getEmail())) {
                 String title = projectCheckDTO.getIsCheck().equals(ProjectCheckEnum.IS_FINISHED) ?
                         "项目<" + project.getProjectName() + ">申请审核通过通知" : "项目<" + project.getProjectName() + ">审核不通过通知";

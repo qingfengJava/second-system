@@ -162,7 +162,7 @@ public class CreditRulesServiceImpl extends ServiceImpl<CreditRulesDao, CreditRu
         }
 
         if (ObjectUtil.isNotEmpty(user)) {
-            // TODO 审核结果发送消息通知  目前先发送邮件通知
+            // 审核结果发送消息通知  目前先发送邮件通知
             if (ObjectUtil.isNotEmpty(user.getEmail())) {
                 String title = creditRulesCheckDTO.getIsCheck().equals(RuleCheckEnum.IS_FINISHED) ?
                         "项目等级<" + level.getLevelContent() + ">关联的学分申请审核通过通知" :

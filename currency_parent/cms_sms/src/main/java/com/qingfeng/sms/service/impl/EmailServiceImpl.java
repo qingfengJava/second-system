@@ -28,7 +28,7 @@ public class EmailServiceImpl implements EmailService {
      */
     @Override
     public Integer sendEmail(EmailEntity emailEntity) {
-        // TODO 目前先这样发，后面整合消息队列，使用消息队列进行发送
+        // 目前先这样发，后面整合消息队列，使用消息队列进行发送
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("攀枝花学院第二课堂素质拓展学分管理系统 <2562777581@qq.com>");
         message.setSentDate(new Date());

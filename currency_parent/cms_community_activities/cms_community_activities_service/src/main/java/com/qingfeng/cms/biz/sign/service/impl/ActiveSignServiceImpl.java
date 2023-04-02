@@ -317,7 +317,7 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
         if (IsBonusPointsApplyEnum.NOT.equals(applyEntity.getIsBonusPointsApply())) {
             // 需要直接进行加分的
             clubScoreModuleApi.save(ClubScoreModuleSaveDTO.builder()
-                    .userId(applyEntity.getApplyUserId())
+                    .userId(baseMapper.selectById(activeEvaluationDTO.getId()).getUserId())
                     .activeApplyId(applyEntity.getId())
                     .score(BigDecimal.valueOf(applyEntity.getActiveScore()))
                     .schoolYear(applyEntity.getSchoolYear())

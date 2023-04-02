@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -89,9 +90,19 @@ public class OrganizeInfoController extends BaseController {
     @ApiOperation(value = "删除视频信息", notes = "删除视频信息")
     @DeleteMapping("/vod/{vodId}")
     @SysLog("删除视频信息")
-    public R removeVod(@PathVariable("vodId") String vodId){
+    public R removeVod(@PathVariable("vodId") String vodId) {
         organizeInfoService.removeVodId(vodId);
         return success();
     }
 
+    @ApiOperation(value = "根据社团名查询社团信息", notes = "根据社团名查询社团信息")
+    @GetMapping("/info/name")
+    @SysLog("根据社团名查询社团信息")
+    public R<OrganizeInfoEntity> findInfoByName(@RequestParam("orgName") String orgName) {
+        return success(organizeInfoService.getOne(
+                        Wraps.lbQ(new OrganizeInfoEntity())
+                                .eq(OrganizeInfoEntity::getOrganizeName, orgName)
+                )
+        );
+    }
 }

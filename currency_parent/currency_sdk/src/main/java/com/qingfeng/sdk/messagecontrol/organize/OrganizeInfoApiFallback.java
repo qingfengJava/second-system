@@ -40,4 +40,9 @@ public class OrganizeInfoApiFallback implements OrganizeInfoApi {
     public R<List<OrganizeInfoEntity>> infoList(List<Long> userIds) {
         return R.fail(R.HYSTRIX_ERROR_MESSAGE);
     }
+
+    @Override
+    public R<OrganizeInfoEntity> findInfoByName(String orgName) {
+        return R.fail(R.HYSTRIX_ERROR_MESSAGE);
+    }
 }

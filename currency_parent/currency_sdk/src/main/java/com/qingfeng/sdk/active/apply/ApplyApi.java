@@ -54,4 +54,15 @@ public interface ApplyApi {
     public R<List<ApplyEntity>> getUserActivityListByuserIdAndSchoolYear(
             @PathVariable("userId") Long userId,
             @PathVariable("schoolYear") String schoolYear);
+
+    /**
+     * 根据用户Id社团每个学年申请的活动信息
+     * @param userIds
+     * @param schoolYear
+     * @return
+     */
+    @PostMapping("/apply/userIds/{schoolYear}")
+    public R<List<ApplyEntity>> getActivityListByUserIdsAndSchoolYear(
+            @RequestBody List<Long> userIds,
+            @PathVariable("schoolYear") String schoolYear);
 }
