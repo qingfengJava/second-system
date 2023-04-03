@@ -2,6 +2,7 @@ package com.qingfeng.currency.authority.biz.service.auth;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qingfeng.currency.authority.entity.auth.UserRole;
+import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
 
 /**
  * 业务接口
@@ -13,4 +14,11 @@ import com.qingfeng.currency.authority.entity.auth.UserRole;
  * @date 2022/9/17
  */
 public interface UserRoleService extends IService<UserRole> {
+
+    /**
+     * 根据用户Id查询角色Id及编码
+     * @param userId
+     * @return
+     */
+    UserRoleVo findRoleIdByUserId(Long userId);
 }

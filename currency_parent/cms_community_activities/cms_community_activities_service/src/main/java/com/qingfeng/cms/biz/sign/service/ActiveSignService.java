@@ -9,6 +9,7 @@ import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import com.qingfeng.cms.domain.sign.vo.ActiveApplySignVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
+import com.qingfeng.cms.domain.sign.vo.UserActiveSignFrontVo;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -74,5 +75,12 @@ public interface ActiveSignService extends IService<ActiveSignEntity> {
      * @param response
      */
     void exportStuBonusPoints(HttpServletResponse response, Long applyId);
+
+    /**
+     * 查询学生报名的活动，按活动时间正序排序，已结束的活动排在最后
+     * @param userId
+     * @return
+     */
+    List<UserActiveSignFrontVo> findUserSignActiveForFront(Long userId);
 }
 

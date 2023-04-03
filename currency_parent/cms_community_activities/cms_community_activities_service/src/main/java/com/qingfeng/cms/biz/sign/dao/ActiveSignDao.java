@@ -3,6 +3,7 @@ package com.qingfeng.cms.biz.sign.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qingfeng.cms.domain.sign.dto.ActiveApplySignQueryDTO;
 import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
+import com.qingfeng.cms.domain.sign.vo.UserActiveSignFrontVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -35,4 +36,11 @@ public interface ActiveSignDao extends BaseMapper<ActiveSignEntity> {
      */
     List<ActiveSignEntity> selectSignList(@Param("activeApplySignQueryDTO") ActiveApplySignQueryDTO activeApplySignQueryDTO,
                                           @Param("userId") Long userId);
+
+    /**
+     * 查询学生报名的活动，按活动时间正序排序，已结束的活动排在最后
+     * @param userId
+     * @return
+     */
+    List<UserActiveSignFrontVo> findUserSignActiveForFront(Long userId);
 }

@@ -80,4 +80,49 @@
     </select>
 
 
+    <select id="findUserSignActiveForFront"
+            resultType="com.qingfeng.cms.domain.sign.vo.UserActiveSignFrontVo">
+        select a.active_name,
+               a.active_scale,
+               a.active_level,
+               a.active_principal,
+               a.active_start_time,
+               a.active_end_time,
+               a.school_year,
+               a.active_content,
+               a.active_introduction,
+               a.active_status,
+               s.sign_status
+        from ca_active_sign s left join ca_apply a
+                                        on s.apply_id =  a.id
+        where s.user_id = #{userId}
+        order by
+        CASE
+            a.agree_status
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum@IS_PASSED.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum@INIT.name}' THEN 2
+            ELSE 3
+            END,
+        CASE
+            a.is_release
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.IsReleaseEnum@FINISH.name}' THEN 1
+            ELSE 2
+            END,
+        CASE
+            a.active_status
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@HAVING.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@INIT.name}' THEN 2
+            WHEN '${@com.qingfeng.cms.domain.apply.enums.ActiveStatusEnum@COMPLETE.name}' THEN 3
+            ELSE 4
+            END,
+        CASE
+            s.sign_status
+            WHEN '${@com.qingfeng.cms.domain.sign.enums.SignStatusEnum@INIT.name}' THEN 1
+            WHEN '${@com.qingfeng.cms.domain.sign.enums.SignStatusEnum@FINISH.name}' THEN 2
+            ELSE 3
+            END
+
+    </select>
+
+
 </mapper>

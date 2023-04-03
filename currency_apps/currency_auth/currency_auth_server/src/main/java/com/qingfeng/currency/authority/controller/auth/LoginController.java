@@ -1,10 +1,13 @@
 package com.qingfeng.currency.authority.controller.auth;
 
+import com.qingfeng.currency.authority.biz.service.auth.UserRoleService;
 import com.qingfeng.currency.authority.biz.service.auth.ValidateCodeService;
 import com.qingfeng.currency.authority.biz.service.auth.impl.AuthManager;
 import com.qingfeng.currency.authority.dto.auth.LoginDTO;
 import com.qingfeng.currency.authority.dto.auth.LoginParamDTO;
 import com.qingfeng.currency.authority.dto.auth.UserLoginDTO;
+import com.qingfeng.currency.authority.dto.auth.UserLoginInfoDTO;
+import com.qingfeng.currency.authority.entity.auth.vo.UserRoleVo;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.exception.BizException;
@@ -40,6 +43,8 @@ public class LoginController extends BaseController {
     private ValidateCodeService validateCodeService;
     @Autowired
     private AuthManager authManager;
+    @Autowired
+    private UserRoleService userRoleService;
 
     @ApiOperation(value = "生成验证码", notes = "为前端系统生成验证码")
     @GetMapping(value = "/captcha", produces = "image/png")
@@ -72,7 +77,15 @@ public class LoginController extends BaseController {
     @ApiOperation(value = "签到服务用户登录", notes = "签到服务用户登录")
     @PostMapping("/user/login")
     @SysLog("签到服务用户登录")
-    public R<LoginDTO> userLogin(@Validated @RequestBody UserLoginDTO login) throws BizException {
-        return authManager.login(login.getAccount(), login.getPassword());
+    public R<UserLoginInfoDTO> userLogin(@Validated @RequestBody UserLoginDTO login) throws BizException {
+        LoginDTO loginDTO = authManager.login(login.getAccount(), login.getPassword()).getData();
+
+        // 查询用户角色编码
+        UserRoleVo userRoleVo = userRoleService.findRoleIdByUserId(loginDTO.getUser().getId());
+
+        return success(UserLoginInfoDTO.builder()
+                .user(loginDTO.getUser())
+                .role(userRoleVo.getCode())
+                .build());
     }
 }

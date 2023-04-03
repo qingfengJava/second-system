@@ -27,6 +27,7 @@ import com.qingfeng.cms.domain.sign.vo.ApplyPageVo;
 import com.qingfeng.cms.domain.sign.vo.ApplyVo;
 import com.qingfeng.cms.domain.sign.vo.OrganizeVo;
 import com.qingfeng.cms.domain.sign.vo.SingBonusPointsVo;
+import com.qingfeng.cms.domain.sign.vo.UserActiveSignFrontVo;
 import com.qingfeng.cms.domain.student.entity.StuInfoEntity;
 import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -400,5 +401,15 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
         } catch (Exception e) {
             throw new BizException(ExceptionCode.OPERATION_EX.getCode(), "出现未知异常，导出失败，请稍后重试！！！");
         }
+    }
+
+    /**
+     * 查询学生报名的活动，按活动时间正序排序，已结束的活动排在最后
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<UserActiveSignFrontVo> findUserSignActiveForFront(Long userId) {
+        return baseMapper.findUserSignActiveForFront(userId);
     }
 }

@@ -121,18 +121,4 @@ public class ActiveSignController extends BaseController {
                 )
         );
     }
-
-    /**
-     * 单独签到的服务调用SDK
-     *
-     * @param id
-     * @return
-     */
-    @ApiOperation(value = "进行活动一键签到", notes = "进行活动一键签到")
-    @GetMapping("/sign/check/{id}")
-    @SysLog("进行活动一键签到")
-    public R oneClickCheckIn(@PathVariable("id") Long id) {
-        // TODO 活动签到
-        return success();
-    }
 }

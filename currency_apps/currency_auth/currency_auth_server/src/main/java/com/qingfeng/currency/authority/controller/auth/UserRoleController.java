@@ -50,20 +50,8 @@ public class UserRoleController extends BaseController {
     public R<UserRoleVo> findRoleIdByUserId(@ApiParam(value = "用户Id")
                                       @PathVariable("userId") Long userId) {
 
-        List<UserRole> list = userRoleService.list(Wraps.lbQ(new UserRole())
-                .eq(UserRole::getUserId, userId));
-        for (UserRole userRole : list) {
-            System.out.println(userRole);
-        }
-
-        UserRole userRole = userRoleService.getOne(Wraps.lbQ(new UserRole())
-                .eq(UserRole::getUserId, userId));
-        Role role = roleService.getById(userRole.getRoleId());
-
-        return success(UserRoleVo.builder()
-                .roleId(role.getId())
-                .code(role.getCode())
-                .build());
+        UserRoleVo userRoleVo = userRoleService.findRoleIdByUserId(userId);
+        return success(userRoleVo);
     }
 
     @ApiOperation(value = "查询社团联用户信息", notes = "查询社团联用户信息")
