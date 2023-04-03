@@ -4,6 +4,7 @@ import com.qingfeng.currency.authority.biz.service.auth.ValidateCodeService;
 import com.qingfeng.currency.authority.biz.service.auth.impl.AuthManager;
 import com.qingfeng.currency.authority.dto.auth.LoginDTO;
 import com.qingfeng.currency.authority.dto.auth.LoginParamDTO;
+import com.qingfeng.currency.authority.dto.auth.UserLoginDTO;
 import com.qingfeng.currency.base.BaseController;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.exception.BizException;
@@ -64,7 +65,14 @@ public class LoginController extends BaseController {
 
     @ApiOperation(value = "校验验证码", notes = "校验验证码")
     @PostMapping(value = "/check")
-    public boolean check(@RequestBody LoginParamDTO login){
+    public boolean check(@RequestBody LoginParamDTO login) {
         return validateCodeService.check(login.getKey(), login.getCode());
+    }
+
+    @ApiOperation(value = "签到服务用户登录", notes = "签到服务用户登录")
+    @PostMapping("/user/login")
+    @SysLog("签到服务用户登录")
+    public R<LoginDTO> userLogin(@Validated @RequestBody UserLoginDTO login) throws BizException {
+        return authManager.login(login.getAccount(), login.getPassword());
     }
 }
