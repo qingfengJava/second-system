@@ -247,9 +247,11 @@ public class ActiveApplyTimingDetection {
                 .eq(ApplyEntity::getIsRelease, IsReleaseEnum.FINISH)
                 .ne(ApplyEntity::getActiveStatus, ActiveStatusEnum.INIT)
                 .eq(ApplyEntity::getActiveStartTime, LocalDate.now()));
-        // 将活动状态修改为进行中
-        applyEntityList.forEach(a -> a.setActiveStatus(ActiveStatusEnum.HAVING));
-        applyService.updateBatchById(applyEntityList);
+        if (CollUtil.isNotEmpty(applyEntityList)) {
+            // 将活动状态修改为进行中
+            applyEntityList.forEach(a -> a.setActiveStatus(ActiveStatusEnum.HAVING));
+            applyService.updateBatchById(applyEntityList);
+        }
         return ReturnT.SUCCESS;
     }
 
@@ -266,9 +268,12 @@ public class ActiveApplyTimingDetection {
                 .eq(ApplyEntity::getIsRelease, IsReleaseEnum.FINISH)
                 .ne(ApplyEntity::getActiveStatus, ActiveStatusEnum.HAVING)
                 .eq(ApplyEntity::getActiveEndTime, LocalDate.now()));
-        // 将活动状态修改为进行中
-        applyEntityList.forEach(a -> a.setActiveStatus(ActiveStatusEnum.COMPLETE));
-        applyService.updateBatchById(applyEntityList);
+
+        if (CollUtil.isNotEmpty(applyEntityList)) {
+            // 将活动状态修改为进行中
+            applyEntityList.forEach(a -> a.setActiveStatus(ActiveStatusEnum.COMPLETE));
+            applyService.updateBatchById(applyEntityList);
+        }
         return ReturnT.SUCCESS;
     }
 
@@ -290,10 +295,12 @@ public class ActiveApplyTimingDetection {
                 .eq(ApplyEntity::getIsRelease, IsReleaseEnum.INIT)
                 .ge(ApplyEntity::getActiveStartTime, LocalDate.now()));
 
-        // 修改活动状态为废弃
-        applyNotPassList.forEach(a -> a.setActiveStatus(ActiveStatusEnum.ABANDONMENT));
+        if (CollUtil.isNotEmpty(applyNotPassList)) {
+            // 修改活动状态为废弃
+            applyNotPassList.forEach(a -> a.setActiveStatus(ActiveStatusEnum.ABANDONMENT));
 
-        applyService.updateBatchById(applyNotPassList);
+            applyService.updateBatchById(applyNotPassList);
+        }
 
         return ReturnT.SUCCESS;
     }

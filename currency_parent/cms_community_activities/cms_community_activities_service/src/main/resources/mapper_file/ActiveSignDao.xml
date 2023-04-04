@@ -82,15 +82,17 @@
 
     <select id="findUserSignActiveForFront"
             resultType="com.qingfeng.cms.domain.sign.vo.UserActiveSignFrontVo">
-        select a.active_name,
-               a.active_scale,
+        select a.id,
+               a.apply_user_id,
+               a.active_name,
                a.active_level,
                a.active_principal,
                a.active_start_time,
                a.active_end_time,
                a.school_year,
-               a.active_content,
                a.active_introduction,
+               a.is_bonus_points_apply,
+               a.active_score,
                a.active_status,
                s.sign_status
         from ca_active_sign s left join ca_apply a

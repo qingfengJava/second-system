@@ -11,6 +11,7 @@ import com.qingfeng.cms.biz.apply.enums.ApplyExceptionMsg;
 import com.qingfeng.cms.biz.apply.service.ApplyService;
 import com.qingfeng.cms.biz.bonus.service.BonusCheckService;
 import com.qingfeng.cms.biz.mq.service.producer.RabbitSendMsg;
+import com.qingfeng.cms.biz.sign.service.ActiveSignService;
 import com.qingfeng.cms.domain.apply.dto.ApplyCheckQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplyQueryDTO;
 import com.qingfeng.cms.domain.apply.dto.ApplySaveDTO;
@@ -22,6 +23,7 @@ import com.qingfeng.cms.domain.apply.enums.AgreeStatusEnum;
 import com.qingfeng.cms.domain.apply.enums.IsReleaseEnum;
 import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
 import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
+import com.qingfeng.cms.domain.apply.vo.ActiveApplyVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyCheckEntityVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
@@ -32,6 +34,7 @@ import com.qingfeng.cms.domain.news.dto.NewsNotifySaveDTO;
 import com.qingfeng.cms.domain.news.enums.IsSeeEnum;
 import com.qingfeng.cms.domain.news.enums.NewsTypeEnum;
 import com.qingfeng.cms.domain.organize.entity.OrganizeInfoEntity;
+import com.qingfeng.cms.domain.sign.entity.ActiveSignEntity;
 import com.qingfeng.currency.authority.entity.auth.User;
 import com.qingfeng.currency.base.R;
 import com.qingfeng.currency.database.mybatis.conditions.Wraps;
@@ -50,8 +53,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -74,6 +79,8 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
     private BonusCheckService bonusCheckService;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private ActiveSignService activeSignService;
 
     @Autowired
     private FileOssApi fileOssApi;
@@ -401,6 +408,125 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyDao, ApplyEntity> impleme
             bonusCheckService.updateById(bonusCheck);
         }
 
+    }
+
+    /**
+     * 根据活动Id和用户Id查询活动信息
+     *
+     * @param applyId
+     * @param userId
+     * @return
+     */
+    @Override
+    public ActiveApplyVo findActiveByApplyIdAndUserId(Long applyId, Long userId) {
+        // 查询活动申请信息
+        ApplyEntity applyEntity = baseMapper.selectById(applyId);
+        // 查询用户签到信息
+        ActiveSignEntity sign = activeSignService.getOne(
+                Wraps.lbQ(new ActiveSignEntity())
+                        .eq(ActiveSignEntity::getApplyId, applyId)
+                        .eq(ActiveSignEntity::getUserId, userId)
+        );
+
+        // 查询社团组织信息
+        OrganizeInfoEntity organizeInfo = organizeInfoApi.info(applyEntity.getApplyUserId()).getData();
+
+        return ActiveApplyVo.builder()
+                .apply(applyEntity)
+                .activeSign(sign)
+                .organizeInfo(organizeInfo)
+                .build();
+    }
+
+    /**
+     * 查询社团申请并已经通过的活动，并且按照活动开始时间正序排序
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<ApplyEntity> applyByUserId(Long userId) {
+        return baseMapper.selectList(Wraps.lbQ(new ApplyEntity())
+                .eq(ApplyEntity::getApplyUserId, userId)
+                .eq(ApplyEntity::getAgreeStatus, AgreeStatusEnum.IS_PASSED)
+                .in(ApplyEntity::getActiveStatus, Arrays.asList(
+                                ActiveStatusEnum.INIT,
+                                ActiveStatusEnum.HAVING
+                        )
+                )
+                .orderByAsc(ApplyEntity::getActiveStartTime)
+        );
+    }
+
+    /**
+     * 发布活动开始通知
+     *
+     * @param applyId
+     */
+    @Override
+    public void applyStartNotice(Long applyId) {
+        // 查询改活动所有以报名的用户报名信息
+        List<ActiveSignEntity> signEntityList = activeSignService.list(
+                Wraps.lbQ(new ActiveSignEntity())
+                        .eq(ActiveSignEntity::getApplyId, applyId)
+        );
+
+        if (CollUtil.isNotEmpty(signEntityList)) {
+            ApplyEntity applyEntity = baseMapper.selectById(applyId);
+
+            // 给对应的用户发送邮件信息
+            Map<Long, User> userMap = userApi.userInfoList(
+                            signEntityList.stream()
+                                    .map(ActiveSignEntity::getUserId)
+                                    .collect(Collectors.toList())
+                    ).getData()
+                    .stream()
+                    .collect(Collectors.toMap(
+                                    User::getId,
+                                    Function.identity()
+                            )
+                    );
+
+            signEntityList.forEach(s -> {
+                String title = "活动《" + applyEntity.getActiveName() + "》已开始通知";
+                String body = "亲爱的同学：\r\n       "
+                        + "，您报名的活动《" + applyEntity.getActiveName()
+                        + "》已经开始了，请及时参与活动，并前往签到服务进行活动签到，否则将视为弃权活动！";
+                User user = userMap.get(s.getUserId());
+                if (StrUtil.isNotBlank(user.getEmail())) {
+                    //有邮箱就先向邮箱中发送消息   使用消息队列进行发送  失败重试三次
+                    try {
+
+                        rabbitSendMsg.sendEmail(objectMapper.writeValueAsString(EmailEntity.builder()
+                                .email(user.getEmail())
+                                .title(title)
+                                .body(body)
+                                .key("apply_active.check.email")
+                                .build()), "apply_active.check.email");
+
+                        // 进行消息存储
+                        //将消息通知写入数据库
+                        R r = newsNotifyApi.save(NewsNotifySaveDTO.builder()
+                                .userId(user.getId())
+                                .newsType(NewsTypeEnum.MAILBOX)
+                                .newsTitle(title)
+                                .newsContent(body)
+                                .isSee(IsSeeEnum.IS_NOT_VIEWED)
+                                .build());
+
+                        if (r.getIsError()) {
+                            throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.NEWS_SAVE_FAILED.getMsg());
+                        }
+                    } catch (JsonProcessingException e) {
+                        throw new BizException(ExceptionCode.SYSTEM_BUSY.getCode(), ApplyExceptionMsg.ACTIVITY_APPLICATION_APPROVAL_EXCEPTION.getMsg());
+                    }
+
+                } else {
+                    // TODO 短信发送
+                }
+            });
+
+        }
     }
 
     private void inspectionTime(ApplyEntity applyEntity) {

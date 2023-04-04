@@ -405,11 +405,53 @@ public class ActiveSignServiceImpl extends ServiceImpl<ActiveSignDao, ActiveSign
 
     /**
      * 查询学生报名的活动，按活动时间正序排序，已结束的活动排在最后
+     *
      * @param userId
      * @return
      */
     @Override
     public List<UserActiveSignFrontVo> findUserSignActiveForFront(Long userId) {
-        return baseMapper.findUserSignActiveForFront(userId);
+        List<UserActiveSignFrontVo> userSignActiveForFront = baseMapper.findUserSignActiveForFront(userId);
+
+        // 查询社团组织名
+        Map<Long, OrganizeInfoEntity> organizeInfoEntityMap = organizeInfoApi.infoList(
+                        userSignActiveForFront.stream()
+                                .map(UserActiveSignFrontVo::getApplyUserId)
+                                .collect(Collectors.toList())
+                )
+                .getData()
+                .stream()
+                .collect(Collectors.toMap(
+                                OrganizeInfoEntity::getUserId,
+                                Function.identity()
+                        )
+                );
+
+        userSignActiveForFront.forEach(a ->
+                a.setOrganizeName(
+                        organizeInfoEntityMap.get(a.getApplyUserId())
+                                .getOrganizeName()
+                )
+        );
+
+        return userSignActiveForFront;
+    }
+
+    /**
+     * 进行用户一键签到
+     *
+     * @param userId
+     * @param applyId
+     */
+    @Override
+    public void oneClickCheckIn(Long userId, Long applyId) {
+        ActiveSignEntity activeSignEntity = baseMapper.selectOne(
+                Wraps.lbQ(new ActiveSignEntity())
+                        .eq(ActiveSignEntity::getUserId, userId)
+                        .eq(ActiveSignEntity::getApplyId, applyId)
+        );
+
+        activeSignEntity.setSignStatus(SignStatusEnum.FINISH);
+        baseMapper.updateById(activeSignEntity);
     }
 }

@@ -8,9 +8,12 @@ import com.qingfeng.cms.domain.apply.dto.ApplyUpdateDTO;
 import com.qingfeng.cms.domain.apply.entity.ApplyEntity;
 import com.qingfeng.cms.domain.apply.ro.ActiveApplyCheckRo;
 import com.qingfeng.cms.domain.apply.ro.ActiveReleaseRo;
+import com.qingfeng.cms.domain.apply.vo.ActiveApplyVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyCheckListVo;
 import com.qingfeng.cms.domain.apply.vo.ApplyListVo;
 import com.qingfeng.cms.domain.apply.vo.BonusFileVo;
+
+import java.util.List;
 
 /**
  * 社团活动申请表
@@ -71,5 +74,26 @@ public interface ApplyService extends IService<ApplyEntity> {
      * @param bonusFileVo
      */
     void uploadBonusFile(BonusFileVo bonusFileVo);
+
+    /**
+     * 根据活动Id和用户Id查询活动信息
+     * @param applyId
+     * @param userId
+     * @return
+     */
+    ActiveApplyVo findActiveByApplyIdAndUserId(Long applyId, Long userId);
+
+    /**
+     * 查询社团申请并已经通过的活动，并且按照活动开始时间正序排序
+     * @param userId
+     * @return
+     */
+    List<ApplyEntity> applyByUserId(Long userId);
+
+    /**
+     * 发布活动开始通知
+     * @param applyId
+     */
+    void applyStartNotice(Long applyId);
 }
 

@@ -82,5 +82,12 @@ public interface ActiveSignService extends IService<ActiveSignEntity> {
      * @return
      */
     List<UserActiveSignFrontVo> findUserSignActiveForFront(Long userId);
+
+    /**
+     * 进行活动一键签到
+     * @param userId
+     * @param applyId
+     */
+    void oneClickCheckIn(Long userId, Long applyId);
 }
 
