@@ -34,7 +34,7 @@ public class SuperEntity<T> implements Serializable, Cloneable {
     public static final String CREATE_TIME = "createTime";
     public static final String CREATE_USER = "createUser";
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.INPUT)
     @ApiModelProperty(value = "主键")
     @NotNull(message = "id不能为空", groups = Update.class)
     protected T id;
